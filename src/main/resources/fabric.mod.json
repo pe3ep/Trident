@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "trident",
+  "version": "${version}",
+
+  "name": "Trident",
+  "description": "",
+  "authors": [],
+  "contact": {},
+
+  "license": "LGPL-3.0",
+  "icon": "assets/trident/icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "client": ["cc.pe3epwithyou.trident.client.TridentClient"],
+    "main": ["cc.pe3epwithyou.trident.Trident"]
+  },
+
+  "mixins": [
+    "trident.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-language-kotlin": ">=${kotlin_loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
