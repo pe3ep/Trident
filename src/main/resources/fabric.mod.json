@@ -4,10 +4,10 @@
   "version": "${version}",
 
   "name": "Trident",
-  "description": "",
-  "authors": [],
+  "description": "The #1 client-side utility mod for MCC Island, providing a huge range of utility and quality of life features.",
+  "authors": ["Pe3ep", "SirArchibald97"],
   "contact": {},
-
+  
   "license": "LGPL-3.0",
   "icon": "assets/trident/icon.png",
 
@@ -20,6 +20,15 @@
   "mixins": [
     "trident.mixins.json"
   ],
+
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/qVRpEWdGvh"
+      },
+      "update_checker": true
+    }
+  },
 
   "depends": {
     "fabricloader": ">=${loader_version}",

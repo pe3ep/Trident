@@ -1,0 +1,9 @@
+{
+  "sources": [
+    {
+      "type": "directory",
+      "source": "_font/",
+      "prefix": "_font"
+    }
+  ]
+}
