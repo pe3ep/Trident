@@ -1,6 +1,10 @@
 package cc.pe3epwithyou.trident.state
 
-enum class MCCGame(name: String, server: String, subtype: String? = null) {
+enum class MCCGame(
+    val title: String,
+    val server: String,
+    val subtype: String? = null
+) {
     HUB("Hub", ""),
     FISHING("Fishing", ""),
     SKY_BATTLE("Sky Battle", "sky_battle"),

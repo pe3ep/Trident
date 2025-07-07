@@ -16,6 +16,7 @@ import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
@@ -24,7 +25,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.inventory.Slot
 
 class TridentClient : ClientModInitializer {
-    companion object { val playerState = PlayerState() }
 
     private val debugDialogs = mapOf(
         "supplies" to ::SuppliesDialog,
@@ -36,6 +36,7 @@ class TridentClient : ClientModInitializer {
         fun onMCCIJoin() {
             Minecraft.getInstance().gui.chat.addMessage(Component.literal("You've joined MCC Island!"))
         }
+        val playerState = PlayerState()
     }
 
     private val DEBUG_COMMANDS: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")
@@ -75,7 +76,6 @@ class TridentClient : ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             dispatcher.register(DEBUG_COMMANDS)
         }
-    }
 
         // SCREEN EVENT
         ScreenEvents.AFTER_INIT.register { client, screen: Screen, _, _ ->
@@ -91,15 +91,32 @@ class TridentClient : ClientModInitializer {
                         val bait = screen.menu.slots[19]
                         val baitLore = ItemParser().getLore(bait.item)
                         if (!bait.item.displayName.string.contains("Empty Bait Slot")) {
-                            val baitCount = baitLore?.get(15)?.string?.split(" ")[2]?.replace(",", "")?.toInt()
+                            val baitCount = baitLore?.get(15)?.string?.split(" ")?.get(2)?.replace(",", "")?.toInt()
                             playerState.supplies.bait.amount = baitCount
-                            when(bait.item.displayName.string.split(" ")[0] ) {
-                                "Common" -> { playerState.supplies.bait.type = Rarity.COMMON }
-                                "Uncommon" -> { playerState.supplies.bait.type = Rarity.UNCOMMON }
-                                "Rare" -> { playerState.supplies.bait.type = Rarity.RARE }
-                                "Epic" -> { playerState.supplies.bait.type = Rarity.EPIC }
-                                "Legendary" -> { playerState.supplies.bait.type = Rarity.LEGENDARY }
-                                "Mythic" -> { playerState.supplies.bait.type = Rarity.MYTHIC }
+                            when (bait.item.displayName.string.split(" ")[0]) {
+                                "Common" -> {
+                                    playerState.supplies.bait.type = Rarity.COMMON
+                                }
+
+                                "Uncommon" -> {
+                                    playerState.supplies.bait.type = Rarity.UNCOMMON
+                                }
+
+                                "Rare" -> {
+                                    playerState.supplies.bait.type = Rarity.RARE
+                                }
+
+                                "Epic" -> {
+                                    playerState.supplies.bait.type = Rarity.EPIC
+                                }
+
+                                "Legendary" -> {
+                                    playerState.supplies.bait.type = Rarity.LEGENDARY
+                                }
+
+                                "Mythic" -> {
+                                    playerState.supplies.bait.type = Rarity.MYTHIC
+                                }
                             }
                         } else {
                             playerState.supplies.bait.type = null
@@ -108,15 +125,33 @@ class TridentClient : ClientModInitializer {
 
                         val line = screen.menu.slots[37]
                         val lineLore = ItemParser().getLore(line.item)
-                        val lineUses = lineLore?.get(15)?.string?.split(" ")[2]?.split("/")[0]?.replace(",", "")?.toInt()
+                        val lineUses =
+                            lineLore?.get(15)?.string?.split(" ")?.get(2)?.split("/")?.get(0)?.replace(",", "")?.toInt()
                         playerState.supplies.line.uses = lineUses
-                        when(bait.item.displayName.string.split(" ")[0] ) {
-                            "Common" -> { playerState.supplies.line.type = Rarity.COMMON }
-                            "Uncommon" -> { playerState.supplies.line.type = Rarity.UNCOMMON }
-                            "Rare" -> { playerState.supplies.line.type = Rarity.RARE }
-                            "Epic" -> { playerState.supplies.line.type = Rarity.EPIC }
-                            "Legendary" -> { playerState.supplies.line.type = Rarity.LEGENDARY }
-                            "Mythic" -> { playerState.supplies.line.type = Rarity.MYTHIC }
+                        when (bait.item.displayName.string.split(" ")[0]) {
+                            "Common" -> {
+                                playerState.supplies.line.type = Rarity.COMMON
+                            }
+
+                            "Uncommon" -> {
+                                playerState.supplies.line.type = Rarity.UNCOMMON
+                            }
+
+                            "Rare" -> {
+                                playerState.supplies.line.type = Rarity.RARE
+                            }
+
+                            "Epic" -> {
+                                playerState.supplies.line.type = Rarity.EPIC
+                            }
+
+                            "Legendary" -> {
+                                playerState.supplies.line.type = Rarity.LEGENDARY
+                            }
+
+                            "Mythic" -> {
+                                playerState.supplies.line.type = Rarity.MYTHIC
+                            }
                         }
 
                         // augments
@@ -132,11 +167,14 @@ class TridentClient : ClientModInitializer {
                             screen.menu.slots[42].item.displayName.string,
                             screen.menu.slots[43].item.displayName.string,
                         )
-                        playerState.supplies.augments = augments.map { AUGMENT_NAMES.getValue(it
-                            .replace("A.N.G.L.R. ", "")
-                            .replace("[", "")
-                            .replace("]", "")
-                        ) }
+                        playerState.supplies.augments = augments.map {
+                            AUGMENT_NAMES.getValue(
+                                it
+                                    .replace("A.N.G.L.R. ", "")
+                                    .replace("[", "")
+                                    .replace("]", "")
+                            )
+                        }
 
                         // overclocks
                         val hookOverclock = screen.menu.slots[12]
@@ -149,6 +187,7 @@ class TridentClient : ClientModInitializer {
                     }
                 }
             }
+
         }
     }
 }

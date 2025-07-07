@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.widgets
 
 import cc.pe3epwithyou.trident.dialogs.themes.DialogTheme
+import cc.pe3epwithyou.trident.state.MCCGame
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.CanvasLayout
 import com.noxcrew.sheeplib.theme.Themed

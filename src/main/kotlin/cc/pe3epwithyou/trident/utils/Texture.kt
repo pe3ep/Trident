@@ -7,8 +7,8 @@ import net.minecraft.resources.ResourceLocation
 
 public data class Texture(
     val location: ResourceLocation,
-    val height: Int,
     val width: Int,
+    val height: Int,
     val textureWidth: Int = width,
     val textureHeight: Int = height,
     val hoverLocation: ResourceLocation = location,

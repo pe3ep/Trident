@@ -2,8 +2,9 @@ package cc.pe3epwithyou.trident.dialogs
 
 import cc.pe3epwithyou.trident.dialogs.themes.DialogTheme
 import cc.pe3epwithyou.trident.dialogs.themes.DialogTitle
+import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.TridentFont
-import cc.pe3epwithyou.trident.widgets.IconStackWidget
+import cc.pe3epwithyou.trident.widgets.fishing.AugmentStackWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.Dialog
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
@@ -28,17 +29,16 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
 
     private companion object {
         private val mockAugments = listOf(
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_elusive_pop.png"),
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_elusive_pop.png"),
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_auto_rod.png"),
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_lure_strong.png"),
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_lure_glimmering.png"),
-
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_lure_battery.png"),
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_lure_glimmering.png"),
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_auto_rod.png"),
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_lure_strong.png"),
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_ultralure_strong.png"),
+            Augment.WISE_HOOK,
+            Augment.ELUSUVE_ULTRALURE,
+            Augment.GRACEFUL_ROD,
+            Augment.STRONG_HOOK,
+            Augment.WAYFINDER_LURE,
+            Augment.SPIRIT_ULTRALURE,
+            Augment.XP_MAGNET,
+            Augment.BOOSTED_ROD,
+            Augment.GLIMMERING_HOOK,
+            Augment.ELUSIVE_SODA,
         )
     }
 
@@ -69,13 +69,13 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
 
         StringWidget(Component.literal("Augments (4/6)".uppercase()).withStyle(mccFontStyle), mcFont).at(1,0, 1, 2, settings = LayoutConstants.LEFT)
 
-        IconStackWidget(
+        AugmentStackWidget(
             width = 12,
             height = 12,
             theme = this@SuppliesDialog,
             entries = mockAugments.subList(0, 7)
         ).at(2, 0, 1, 2, LayoutConstants.LEFT)
-        IconStackWidget(
+        AugmentStackWidget(
             width = 12,
             height = 12,
             theme = this@SuppliesDialog,
