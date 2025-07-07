@@ -1,0 +1,12 @@
+{
+  "providers": [
+    { "type": "space", "advances": { " ": 4 } },
+    {
+      "type": "ttf",
+      "file": "mcc:hud.ttf",
+      "shift": [0.0, -1.0],
+      "size": 7,
+      "oversample": 4
+    }
+  ]
+}
