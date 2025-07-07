@@ -49,6 +49,12 @@ dependencies {
     api("com.noxcrew.noxesium:api:2.7.6")
 }
 
+loom {
+    mixin {
+        defaultRefmapName.set("trident.refmap.json")
+    }
+}
+
 tasks.processResources {
     inputs.property("version", project.version)
     inputs.property("minecraft_version", project.property("minecraft_version"))
