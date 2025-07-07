@@ -1,0 +1,23 @@
+package cc.pe3epwithyou.trident.state
+
+import cc.pe3epwithyou.trident.state.fishing.Augment
+
+data class Bait(var type: Rarity? = null, var amount: Int? = null)
+data class Line(var type: Rarity? = null, var uses: Int? = null)
+data class UnstableOverclock(var type: Augment? = null, var timeLeft: Int = 60 * 5, var cooldown: Int = 60 * 45)
+data class Overclocks(
+    var hook: Augment? = null,
+    var magnet: Augment? = null,
+    var rod: Augment? = null,
+    var unstable: UnstableOverclock? = UnstableOverclock(),
+)
+
+data class Supplies(
+    var bait: Bait = Bait(),
+    var line: Line = Line(),
+    var augments: List<Augment> = listOf(),
+    var overclocks: Overclocks = Overclocks(),
+)
+data class PlayerState(
+    var supplies: Supplies = Supplies(),
+)
