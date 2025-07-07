@@ -18,7 +18,7 @@ public class JoinIslandMixin {
 
     @Inject(method = "handleLoginFinished", at = @At("HEAD"))
     private void inject(ClientboundLoginFinishedPacket clientboundLoginFinishedPacket, CallbackInfo ci) {
-        if (this.serverData.ip == null) return;
+        if (this.serverData == null) return;
         if (!this.serverData.ip.toLowerCase().contains("mccisland.net")) return;
         TridentClient.Companion.onMCCIJoin();
     }
