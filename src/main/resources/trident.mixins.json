@@ -3,9 +3,11 @@
   "minVersion": "0.8",
   "package": "cc.pe3epwithyou.trident.mixin",
   "compatibilityLevel": "JAVA_21",
+  "refmap": "trident.refmap.json",
   "mixins": [
   ],
   "client": [
+    "JoinIslandMixin"
   ],
   "injectors": {
     "defaultRequire": 1
