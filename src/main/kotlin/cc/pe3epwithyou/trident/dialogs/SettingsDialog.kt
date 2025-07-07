@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Style
 class SettingsDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
     private fun getTitle(): Component {
         val icon = Component.literal("\uE000").withStyle(Style.EMPTY.withFont(TridentFont.getTridentFont()).withShadowColor(0x0 opacity 0))
-        val text = Component.literal(" Trident Settings".uppercase()).withStyle(Style.EMPTY.withFont(TridentFont.getMCCFont()))
+        val text = Component.literal(" Trident Settings".uppercase()).withStyle(Style.EMPTY.withFont(TridentFont.getTridentFont("hud_title")))
         return icon.append(text)
     }
     override val title: DialogTitleWidget = DialogTitle(this, getTitle(), 0x4572e3 opacity 63)
