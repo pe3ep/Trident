@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.client
 import cc.pe3epwithyou.trident.dialogs.SettingsDialog
 import cc.pe3epwithyou.trident.dialogs.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.TestDialog
+import cc.pe3epwithyou.trident.state.MCCIslandState
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.noxcrew.sheeplib.DialogContainer
@@ -10,7 +11,9 @@ import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.Minecraft
+import net.minecraft.network.chat.Component
 
 class TridentClient : ClientModInitializer {
     private val debugDialogs = mapOf(
@@ -44,5 +47,13 @@ class TridentClient : ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             dispatcher.register(DEBUG_COMMANDS)
         }
+
+        ClientPlayConnectionEvents.JOIN.register { handler, _, _ ->
+            if (handler.serverData?.ip!!.contains("mccisland.net", true)) {
+                Minecraft.getInstance().player?.displayClientMessage(Component.literal("You have joined MCC Island"), false)
+            }
+        }
     }
+
+
 }
