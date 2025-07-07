@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.client
 
 import cc.pe3epwithyou.trident.dialogs.SettingsDialog
 import cc.pe3epwithyou.trident.dialogs.SuppliesDialog
+import cc.pe3epwithyou.trident.dialogs.TestDialog
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.noxcrew.sheeplib.DialogContainer
@@ -14,7 +15,8 @@ import net.minecraft.client.Minecraft
 class TridentClient : ClientModInitializer {
     private val debugDialogs = mapOf(
         "supplies" to ::SuppliesDialog,
-        "settings" to ::SettingsDialog
+        "settings" to ::SettingsDialog,
+        "test" to ::TestDialog
     )
 
     private val DEBUG_COMMANDS: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")

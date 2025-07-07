@@ -19,7 +19,7 @@ class OptionWidget(
 
     override val layout: CanvasLayout = CanvasLayout(
         100,
-        100
+        60
     ).apply {
         val font = Minecraft.getInstance().font
         StringWidget(component, font).at(left = theme.dimensions.paddingOuter, top = theme.dimensions.paddingOuter)
