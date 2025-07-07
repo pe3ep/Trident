@@ -25,6 +25,7 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
         val titleWidget = DialogTitle(this, icon.append(text), 0x640000 opacity 63)
         return titleWidget
     }
+
     override val title = getWidgetTitle()
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
