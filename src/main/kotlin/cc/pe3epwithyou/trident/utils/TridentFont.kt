@@ -1,5 +1,9 @@
 package cc.pe3epwithyou.trident.utils
 
+import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
 
 object TridentFont {
@@ -9,10 +13,18 @@ object TridentFont {
         }
         return ResourceLocation.fromNamespaceAndPath("mcc", "${font}_offset_${offset}")
     }
+
     fun getTridentFont(font: String = "icon", offset: Int = 0): ResourceLocation {
         if (offset == 0) {
             return ResourceLocation.fromNamespaceAndPath("trident", font)
         }
         return ResourceLocation.fromNamespaceAndPath("trident", "${font}_offset_${offset}")
+    }
+
+    fun tridentPrefix(): MutableComponent {
+        val a = Component.literal("<").withStyle(ChatFormatting.RED)
+        val b = Component.literal("\uE000").withStyle(Style.EMPTY.withFont(getTridentFont()).withColor(ChatFormatting.RED.color!!))
+        val c = Component.literal("> ").withStyle(ChatFormatting.RED)
+        return a.append(b).append(c)
     }
 }
