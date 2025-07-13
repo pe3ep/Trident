@@ -118,10 +118,11 @@ class TridentClient : ClientModInitializer {
                             screen.menu.slots[42].item.displayName.string,
                             screen.menu.slots[43].item.displayName.string,
                         )
-                        playerState.supplies.augments = augments.map { AUGMENT_NAMES.getValue(it
+                        playerState.supplies.augments = augments.filter { it != "[Locked Supply Slot]" }.map { AUGMENT_NAMES.getValue(it
                             .replace("A.N.G.L.R. ", "")
                             .replace("[", "")
                             .replace("]", "")
+                            .replace(" Augment", "")
                         ) }
 
                         // overclocks
