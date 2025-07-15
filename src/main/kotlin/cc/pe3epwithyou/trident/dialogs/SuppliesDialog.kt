@@ -27,23 +27,8 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
         return titleWidget
     }
 
-    private companion object {
-        private val mockAugments = listOf(
-            Augment.WISE_HOOK,
-            Augment.ELUSUVE_ULTRALURE,
-            Augment.GRACEFUL_ROD,
-            Augment.STRONG_HOOK,
-            Augment.WAYFINDER_LURE,
-            Augment.SPIRIT_ULTRALURE,
-            Augment.XP_MAGNET,
-            Augment.BOOSTED_ROD,
-            Augment.GLIMMERING_HOOK,
-            Augment.ELUSIVE_SODA,
-        )
-    }
-
     override val title = getWidgetTitle()
-    override fun getWidth(): Int = 106
+//    override fun getWidth(): Int = 106
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
         val mccIconStyle = Style.EMPTY.withFont(TridentFont.getTridentFont())
@@ -59,28 +44,50 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
 
 
 //        Line component
+        val lineDurability = TridentClient.playerState.supplies.line.uses
         val lineComponent = Component.literal("\uE004").withStyle(mccIconStyle)
             .append(Component.empty().withStyle(ChatFormatting.RESET))
-            .append(Component.literal(" 25/100").withStyle(mccFontStyle))
+            .append(Component.literal(" ${lineDurability}/100").withStyle(mccFontStyle))
         StringWidget(lineComponent, mcFont).at(0,1)
             .alignLeft()
             .width = 46
 
+        val augmentsEquipped = TridentClient.playerState.supplies.augments.size
+        val augmentsTotal = TridentClient.playerState.supplies.augmentsAvailable
+        StringWidget(Component.literal("Augments ".uppercase()).withStyle(mccFontStyle)
+            .append(Component.literal("(${augmentsEquipped}/${augmentsTotal})").withStyle(mccFontStyle.withColor(ChatFormatting.GRAY))), mcFont)
+            .at(1,0, 1, 2, settings = LayoutConstants.LEFT)
 
-        StringWidget(Component.literal("Augments (4/6)".uppercase()).withStyle(mccFontStyle), mcFont).at(1,0, 1, 2, settings = LayoutConstants.LEFT)
+        val augmentLine1 = mutableListOf<Augment>()
+        val augmentLine2 = mutableListOf<Augment>()
+        TridentClient.playerState.supplies.augments.forEach { augment: Augment ->
+            if (augmentLine1.size <= 7) {
+                augmentLine1.add(augment)
+            } else {
+                augmentLine2.add(augment)
+            }
+        }
+        if (augmentLine1.isEmpty()) {
+            StringWidget(Component.literal("No augments selected".uppercase()).withStyle(
+                mccFontStyle.withColor(ChatFormatting.GOLD)
+            ), mcFont).at(2, 0, 1, 2, LayoutConstants.CENTRE)
+        } else {
+            AugmentStackWidget(
+                width = 12,
+                height = 12,
+                theme = this@SuppliesDialog,
+                entries = augmentLine1
+            ).at(2, 0, 1, 2, LayoutConstants.LEFT)
+        }
 
-        AugmentStackWidget(
-            width = 12,
-            height = 12,
-            theme = this@SuppliesDialog,
-            entries = mockAugments.subList(0, 7)
-        ).at(2, 0, 1, 2, LayoutConstants.LEFT)
-        AugmentStackWidget(
-            width = 12,
-            height = 12,
-            theme = this@SuppliesDialog,
-            entries = mockAugments.subList(7, 10)
-        ).at(3, 0, 1, 2, LayoutConstants.LEFT)
+        if (augmentLine2.isNotEmpty()) {
+            AugmentStackWidget(
+                width = 12,
+                height = 12,
+                theme = this@SuppliesDialog,
+                entries = augmentLine2
+            ).at(3, 0, 1, 2, LayoutConstants.LEFT)
+        }
 
         StringWidget(Component.literal("Overclocks".uppercase()).withStyle(mccFontStyle), mcFont).at(4,0, 1, 2, settings = LayoutConstants.LEFT)
 

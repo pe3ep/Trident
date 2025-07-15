@@ -166,7 +166,7 @@ val AUGMENT_NAMES = hashMapOf<String, Augment>(
     "Boosted Rod" to Augment.BOOSTED_ROD,
     "Speedy Rod" to Augment.SPEEDY_ROD,
     "Graceful Rod" to Augment.GRACEFUL_ROD,
-    "Glithced Rod" to Augment.GLITCHED_ROD,
+    "Glitched Rod" to Augment.GLITCHED_ROD,
     "Stable Rod" to Augment.STABLE_ROD,
 
     "Elusive Lure" to Augment.ELUSUVE_LURE,

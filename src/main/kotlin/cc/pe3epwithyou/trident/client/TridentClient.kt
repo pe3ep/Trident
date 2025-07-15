@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.client
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.client.events.ChatEventListener
+import cc.pe3epwithyou.trident.client.events.ChestScreenListener
 import cc.pe3epwithyou.trident.dialogs.SettingsDialog
 import cc.pe3epwithyou.trident.dialogs.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.TestDialog
@@ -11,6 +12,7 @@ import cc.pe3epwithyou.trident.state.fishing.AUGMENT_NAMES
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.TimerUtil
 import cc.pe3epwithyou.trident.utils.TridentFont
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
@@ -39,7 +41,7 @@ class TridentClient : ClientModInitializer {
             ChatUtils.info("Player has joined MCC Island")
         }
         val playerState = PlayerState()
-        var openedDialogs = hashMapOf<String, Dialog>()
+        val openedDialogs = hashMapOf<String, Dialog>()
         const val DEBUG_MODE = false
     }
     private val DEBUG_COMMANDS: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")
@@ -79,117 +81,8 @@ class TridentClient : ClientModInitializer {
         }
 
         ChatEventListener().register()
+        ChestScreenListener().register()
+        TimerUtil.register()
 
-        // SCREEN EVENT
-        ScreenEvents.AFTER_INIT.register { client, screen: Screen, _, _ ->
-            // check the screen is a chest
-            if (screen is ContainerScreen) {
-                // check it's the supplies menu
-                if (screen.title.string.contains("FISHING SUPPLIES")) {
-                    // get supplies info and add to state
-                    client.execute {
-                        ChatUtils.info("Opened menu: ${screen.title.string}")
-                        // supplies
-                        val bait = screen.menu.slots[19]
-                        val baitLore = ItemParser().getLore(bait.item)
-                        if (!bait.item.displayName.string.contains("Empty Bait Slot")) {
-                            val baitCount = baitLore?.get(15)?.string?.split(" ")?.get(2)?.replace(",", "")?.toInt()
-                            playerState.supplies.bait.amount = baitCount
-                            when (bait.item.displayName.string.split(" ")[0]) {
-                                "Common" -> {
-                                    playerState.supplies.bait.type = Rarity.COMMON
-                                }
-
-                                "Uncommon" -> {
-                                    playerState.supplies.bait.type = Rarity.UNCOMMON
-                                }
-
-                                "Rare" -> {
-                                    playerState.supplies.bait.type = Rarity.RARE
-                                }
-
-                                "Epic" -> {
-                                    playerState.supplies.bait.type = Rarity.EPIC
-                                }
-
-                                "Legendary" -> {
-                                    playerState.supplies.bait.type = Rarity.LEGENDARY
-                                }
-
-                                "Mythic" -> {
-                                    playerState.supplies.bait.type = Rarity.MYTHIC
-                                }
-                            }
-                        } else {
-                            playerState.supplies.bait.type = null
-                            playerState.supplies.bait.amount = null
-                        }
-
-                        val line = screen.menu.slots[37]
-                        val lineLore = ItemParser().getLore(line.item)
-                        val lineUses =
-                            lineLore?.get(15)?.string?.split(" ")?.get(2)?.split("/")?.get(0)?.replace(",", "")?.toInt()
-                        playerState.supplies.line.uses = lineUses
-                        when (bait.item.displayName.string.split(" ")[0]) {
-                            "Common" -> {
-                                playerState.supplies.line.type = Rarity.COMMON
-                            }
-
-                            "Uncommon" -> {
-                                playerState.supplies.line.type = Rarity.UNCOMMON
-                            }
-
-                            "Rare" -> {
-                                playerState.supplies.line.type = Rarity.RARE
-                            }
-
-                            "Epic" -> {
-                                playerState.supplies.line.type = Rarity.EPIC
-                            }
-
-                            "Legendary" -> {
-                                playerState.supplies.line.type = Rarity.LEGENDARY
-                            }
-
-                            "Mythic" -> {
-                                playerState.supplies.line.type = Rarity.MYTHIC
-                            }
-                        }
-
-                        // augments
-                        val augments = listOf<String>(
-                            screen.menu.slots[30].item.displayName.string,
-                            screen.menu.slots[31].item.displayName.string,
-                            screen.menu.slots[32].item.displayName.string,
-                            screen.menu.slots[33].item.displayName.string,
-                            screen.menu.slots[34].item.displayName.string,
-                            screen.menu.slots[39].item.displayName.string,
-                            screen.menu.slots[40].item.displayName.string,
-                            screen.menu.slots[41].item.displayName.string,
-                            screen.menu.slots[42].item.displayName.string,
-                            screen.menu.slots[43].item.displayName.string,
-                        )
-                        playerState.supplies.augments = augments.map {
-                            AUGMENT_NAMES.getValue(
-                                it
-                                    .replace("A.N.G.L.R. ", "")
-                                    .replace("[", "")
-                                    .replace("]", "")
-                            )
-                        }
-
-                        // overclocks
-                        val hookOverclock = screen.menu.slots[12]
-                        val hookLore = ItemParser().getActiveOverclock(hookOverclock.item)
-
-
-                        val magnetOverclock = screen.menu.slots[13]
-                        val rodOverclock = screen.menu.slots[14]
-                        val unstableOverclock = screen.menu.slots[15]
-                    }
-                }
-            }
-
-        }
     }
 }
