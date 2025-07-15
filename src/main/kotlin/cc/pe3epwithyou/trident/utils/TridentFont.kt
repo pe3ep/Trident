@@ -7,6 +7,8 @@ import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
 
 object TridentFont {
+    const val TRIDENT_COLOR: Int = 0x4572e3
+
     fun getMCCFont(font: String = "hud", offset: Int = 0): ResourceLocation {
         if (offset == 0) {
             return ResourceLocation.fromNamespaceAndPath("mcc", font)
@@ -22,9 +24,9 @@ object TridentFont {
     }
 
     fun tridentPrefix(): MutableComponent {
-        val a = Component.literal("<").withStyle(ChatFormatting.RED)
-        val b = Component.literal("\uE000").withStyle(Style.EMPTY.withFont(getTridentFont()).withColor(ChatFormatting.RED.color!!))
-        val c = Component.literal("> ").withStyle(ChatFormatting.RED)
-        return a.append(b).append(c)
+        val a = Component.literal("<").withColor(TRIDENT_COLOR)
+        val b = Component.literal("\uE000").withStyle(Style.EMPTY.withFont(getTridentFont("glyph")))
+        val c = Component.literal("> ")
+        return a.append(b).append(c).append(Component.empty().withStyle(ChatFormatting.RESET))
     }
 }

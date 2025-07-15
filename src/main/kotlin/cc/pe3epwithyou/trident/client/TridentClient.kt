@@ -1,5 +1,7 @@
 package cc.pe3epwithyou.trident.client
 
+import cc.pe3epwithyou.trident.Trident
+import cc.pe3epwithyou.trident.client.events.ChatEventListener
 import cc.pe3epwithyou.trident.dialogs.SettingsDialog
 import cc.pe3epwithyou.trident.dialogs.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.TestDialog
@@ -8,21 +10,21 @@ import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.AUGMENT_NAMES
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.state.MCCIslandState
+import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.TridentFont
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.noxcrew.sheeplib.DialogContainer
+import com.noxcrew.sheeplib.dialog.Dialog
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
-import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
-import net.minecraft.world.inventory.Slot
 
 class TridentClient : ClientModInitializer {
 
@@ -34,11 +36,12 @@ class TridentClient : ClientModInitializer {
 
     companion object {
         fun onMCCIJoin() {
-            Minecraft.getInstance().gui.chat.addMessage(Component.literal("You've joined MCC Island!"))
+            ChatUtils.info("Player has joined MCC Island")
         }
         val playerState = PlayerState()
+        var openedDialogs = hashMapOf<String, Dialog>()
+        const val DEBUG_MODE = false
     }
-
     private val DEBUG_COMMANDS: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")
         .then(ClientCommandManager.literal("open").then(
             ClientCommandManager.argument("dialog", StringArgumentType.string())
@@ -46,23 +49,21 @@ class TridentClient : ClientModInitializer {
                     debugDialogs.keys.forEach(builder::suggest)
                     builder.buildFuture()
                 }
-                .executes {
-                    if (!MCCIslandState.isOnIsland()) {
-                        Minecraft.getInstance().gui.chat.addMessage(TridentFont.tridentPrefix().append(
-                            Component.literal("You are not currently playing MCC Island").withStyle(ChatFormatting.RED)
-                        ))
+                .executes { ctx ->
+                    if (!DEBUG_MODE && !MCCIslandState.isOnIsland()) {
+                        ChatUtils.sendMessage(Component.literal("You are not currently playing on MCC Island").withColor(TridentFont.TRIDENT_COLOR))
                         return@executes 0
                     }
-                    debugDialogs[it.getArgument("dialog", String::class.java)]?.let {
-                        DialogContainer += it(10, 10)
+                    debugDialogs[ctx.getArgument("dialog", String::class.java)]?.let {
+                        val d = it(10, 10)
+                        openedDialogs.putIfAbsent(ctx.getArgument("dialog", String::class.java), d)
+                        DialogContainer += d
                     }
                     0
                 }
         )).then(ClientCommandManager.literal("settings").executes {
-            if (!MCCIslandState.isOnIsland()) {
-                Minecraft.getInstance().gui.chat.addMessage(TridentFont.tridentPrefix().append(
-                    Component.literal("You are not currently playing MCC Island").withStyle(ChatFormatting.RED)
-                ))
+            if (!DEBUG_MODE && !MCCIslandState.isOnIsland()) {
+                ChatUtils.sendMessage(Component.literal("You are not currently playing on MCC Island").withColor(TridentFont.TRIDENT_COLOR))
                 return@executes 0
             }
             val dialog = SettingsDialog(10, 100)
@@ -77,6 +78,8 @@ class TridentClient : ClientModInitializer {
             dispatcher.register(DEBUG_COMMANDS)
         }
 
+        ChatEventListener().register()
+
         // SCREEN EVENT
         ScreenEvents.AFTER_INIT.register { client, screen: Screen, _, _ ->
             // check the screen is a chest
@@ -85,8 +88,7 @@ class TridentClient : ClientModInitializer {
                 if (screen.title.string.contains("FISHING SUPPLIES")) {
                     // get supplies info and add to state
                     client.execute {
-                        Minecraft.getInstance().gui.chat.addMessage(Component.literal("Opened menu: ${screen.title.string}"))
-
+                        ChatUtils.info("Opened menu: ${screen.title.string}")
                         // supplies
                         val bait = screen.menu.slots[19]
                         val baitLore = ItemParser().getLore(bait.item)
@@ -181,7 +183,7 @@ class TridentClient : ClientModInitializer {
                         val hookLore = ItemParser().getActiveOverclock(hookOverclock.item)
 
 
-                        val magnetkOverclock = screen.menu.slots[13]
+                        val magnetOverclock = screen.menu.slots[13]
                         val rodOverclock = screen.menu.slots[14]
                         val unstableOverclock = screen.menu.slots[15]
                     }

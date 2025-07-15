@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.state
 
-import cc.pe3epwithyou.trident.state.fishing.Augment
 import net.minecraft.client.Minecraft
 
 object MCCIslandState {

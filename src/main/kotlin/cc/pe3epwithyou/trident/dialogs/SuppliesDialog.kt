@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.dialogs
 
+import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.dialogs.themes.DialogTheme
 import cc.pe3epwithyou.trident.dialogs.themes.DialogTitle
 import cc.pe3epwithyou.trident.state.fishing.Augment
@@ -17,7 +18,6 @@ import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.resources.ResourceLocation
 
 class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
     private fun getWidgetTitle(): DialogTitleWidget {
@@ -52,7 +52,7 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
 //        Bait component
         val baitComponent = Component.literal("\uE00A").withStyle(mccIconStyle)
             .append(Component.empty().withStyle(ChatFormatting.RESET))
-            .append(Component.literal(" 512").withStyle(mccFontStyle))
+            .append(Component.literal(" ${TridentClient.playerState.supplies.bait.amount}").withStyle(mccFontStyle))
         StringWidget(baitComponent, mcFont).at(0,0)
             .alignLeft()
             .width = 46
@@ -81,12 +81,16 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
             theme = this@SuppliesDialog,
             entries = mockAugments.subList(7, 10)
         ).at(3, 0, 1, 2, LayoutConstants.LEFT)
-//        StringWidget(Component.empty(), mcFont).at(2,0, 1, 2, settings = LayoutConstants.LEFT)
-//        StringWidget(Component.empty(), mcFont).at(3,0, 1, 2, settings = LayoutConstants.LEFT)
+
         StringWidget(Component.literal("Overclocks".uppercase()).withStyle(mccFontStyle), mcFont).at(4,0, 1, 2, settings = LayoutConstants.LEFT)
 
-        StringWidget(Component.empty(), mcFont).at(5,0, 1, 2, settings = LayoutConstants.LEFT)
-        StringWidget(Component.empty(), mcFont).at(6,0, 1, 2, settings = LayoutConstants.LEFT)
+    }
 
+    fun refresh() {
+        super.init()
+    }
+
+    override fun onClose() {
+        TridentClient.openedDialogs.remove("supplies")
     }
 }
