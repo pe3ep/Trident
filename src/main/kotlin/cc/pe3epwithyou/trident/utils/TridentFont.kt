@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
 
 object TridentFont {
-    const val TRIDENT_COLOR: Int = 0x4572e3
+    const val TRIDENT_COLOR: Int = 0xcfe3fc
 
     fun getMCCFont(font: String = "hud", offset: Int = 0): ResourceLocation {
         if (offset == 0) {

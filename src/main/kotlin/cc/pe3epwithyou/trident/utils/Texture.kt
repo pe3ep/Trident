@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.utils
 
-import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.resources.ResourceLocation

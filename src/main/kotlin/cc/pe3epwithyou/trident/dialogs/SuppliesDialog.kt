@@ -15,6 +15,7 @@ import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -23,22 +24,30 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
     private fun getWidgetTitle(): DialogTitleWidget {
         val icon = Component.literal("\uE0E4").withStyle(Style.EMPTY.withFont(TridentFont.getMCCFont("icon")).withShadowColor(0x0 opacity 0))
         val text = Component.literal(" Supplies".uppercase()).withStyle(Style.EMPTY.withFont(TridentFont.getTridentFont("hud_title")))
+        if (TridentClient.playerState.supplies.updateRequired) {
+            val warn = Component.literal(" ⚠").withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.GOLD))
+            val tooltip = Tooltip.create(Component.literal("Module is not synced").withStyle(ChatFormatting.GOLD)
+                .append(Component.literal("\nTrident has detected that you've received bait, meaning your Supply Module is out of date. \nPlease open your Supply menu to update it.")
+                    .withStyle(ChatFormatting.GRAY))
+            )
+            val titleWidget = DialogTitle(this, icon.append(text).append(warn), 0x640000 opacity 63, tooltip = tooltip)
+            return titleWidget
+        }
         val titleWidget = DialogTitle(this, icon.append(text), 0x640000 opacity 63)
         return titleWidget
     }
 
-    override val title = getWidgetTitle()
-//    override fun getWidth(): Int = 106
+    override var title = getWidgetTitle()
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
         val mccIconStyle = Style.EMPTY.withFont(TridentFont.getTridentFont())
         val mccFontStyle = Style.EMPTY.withFont(TridentFont.getMCCFont())
-
+        val isDesynced = TridentClient.playerState.supplies.updateRequired
 //        Bait component
         val baitComponent = Component.literal("\uE00A").withStyle(mccIconStyle)
             .append(Component.empty().withStyle(ChatFormatting.RESET))
-            .append(Component.literal(" ${TridentClient.playerState.supplies.bait.amount}").withStyle(mccFontStyle))
-        StringWidget(baitComponent, mcFont).at(0,0)
+            .append(Component.literal(" ${TridentClient.playerState.supplies.bait.amount ?: "0"}").withStyle(mccFontStyle).withColor(if (isDesynced) ChatFormatting.GOLD.color!! else ChatFormatting.WHITE.color!!))
+        StringWidget(baitComponent, mcFont).at(0,0, settings = LayoutConstants.LEFT)
             .alignLeft()
             .width = 46
 
@@ -47,8 +56,8 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
         val lineDurability = TridentClient.playerState.supplies.line.uses
         val lineComponent = Component.literal("\uE004").withStyle(mccIconStyle)
             .append(Component.empty().withStyle(ChatFormatting.RESET))
-            .append(Component.literal(" ${lineDurability}/100").withStyle(mccFontStyle))
-        StringWidget(lineComponent, mcFont).at(0,1)
+            .append(Component.literal(" ${lineDurability ?: "0"}/50").withStyle(mccFontStyle))
+        StringWidget(lineComponent, mcFont).at(0,1, settings = LayoutConstants.LEFT)
             .alignLeft()
             .width = 46
 
@@ -94,6 +103,7 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
     }
 
     fun refresh() {
+        this.title = getWidgetTitle()
         super.init()
     }
 

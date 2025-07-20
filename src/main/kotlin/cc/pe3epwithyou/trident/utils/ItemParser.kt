@@ -14,11 +14,11 @@ class ItemParser {
         return item.getTooltipLines(Item.TooltipContext.EMPTY, Minecraft.getInstance().player, TooltipFlag.Default.NORMAL)
     }
 
-    fun getActiveOverclock(item: ItemStack): Augment? {
+    fun getActiveOverclock(item: ItemStack): Augment {
         val options = getLore(item)?.subList(12, 16)
         var active = options?.first()
         for (option in options!!) {
-            Minecraft.getInstance().gui.chat.addMessage(option)
+            ChatUtils.info(option.string)
             if (option.string.contains(">")) {
                 active = option
             }

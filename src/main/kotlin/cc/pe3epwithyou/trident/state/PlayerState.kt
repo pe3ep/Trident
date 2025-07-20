@@ -18,6 +18,7 @@ data class Supplies(
     var augments: List<Augment> = listOf(),
     var augmentsAvailable: Int = 0,
     var overclocks: Overclocks = Overclocks(),
+    var updateRequired: Boolean = true,
 )
 data class PlayerState(
     var supplies: Supplies = Supplies(),

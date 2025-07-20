@@ -13,9 +13,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 
-class ChestScreenListener {
+object ChestScreenListener {
     private fun handleScreen(client: Minecraft, screen: ContainerScreen) {
-        findAugments(client, screen)
+        findAugments(screen)
     }
 
     fun register() {
@@ -24,7 +24,7 @@ class ChestScreenListener {
         }
     }
 
-    private fun findAugments(client: Minecraft, screen: ContainerScreen) {
+    fun findAugments(screen: ContainerScreen) {
         if (screen.title.string.contains("FISHING SUPPLIES")) {
             // get supplies info and add to state
             TimerUtil.INSTANCE.setTimer(3) {
@@ -68,35 +68,43 @@ class ChestScreenListener {
                 }
 
                 val line = screen.menu.slots[37]
-                val lineLore = ItemParser().getLore(line.item)
-                val lineUses =
-                    lineLore?.get(15)?.string?.split(" ")?.get(2)?.split("/")?.get(0)?.replace(",", "")?.toInt()
-                playerState.supplies.line.uses = lineUses
-                when (bait.item.displayName.string.split(" ")[0]) {
-                    "Common" -> {
-                        playerState.supplies.line.type = Rarity.COMMON
+
+                if (line.item.displayName.string.contains("Empty Line Slot")) {
+                    playerState.supplies.line.uses = null
+                    playerState.supplies.line.type = null
+                } else {
+                    val lineLore = ItemParser().getLore(line.item)
+                    val lineUses =
+                        lineLore?.get(15)?.string?.split(" ")?.get(2)?.split("/")?.get(0)?.replace(",", "")?.toInt()
+                    playerState.supplies.line.uses = lineUses
+                    when (bait.item.displayName.string.split(" ")[0]) {
+                        "Common" -> {
+                            playerState.supplies.line.type = Rarity.COMMON
+                        }
+
+                        "Uncommon" -> {
+                            playerState.supplies.line.type = Rarity.UNCOMMON
+                        }
+
+                        "Rare" -> {
+                            playerState.supplies.line.type = Rarity.RARE
+                        }
+
+                        "Epic" -> {
+                            playerState.supplies.line.type = Rarity.EPIC
+                        }
+
+                        "Legendary" -> {
+                            playerState.supplies.line.type = Rarity.LEGENDARY
+                        }
+
+                        "Mythic" -> {
+                            playerState.supplies.line.type = Rarity.MYTHIC
+                        }
                     }
 
-                    "Uncommon" -> {
-                        playerState.supplies.line.type = Rarity.UNCOMMON
-                    }
-
-                    "Rare" -> {
-                        playerState.supplies.line.type = Rarity.RARE
-                    }
-
-                    "Epic" -> {
-                        playerState.supplies.line.type = Rarity.EPIC
-                    }
-
-                    "Legendary" -> {
-                        playerState.supplies.line.type = Rarity.LEGENDARY
-                    }
-
-                    "Mythic" -> {
-                        playerState.supplies.line.type = Rarity.MYTHIC
-                    }
                 }
+
 
                 // augments
                 val augments = listOf<String>(
@@ -129,7 +137,7 @@ class ChestScreenListener {
                     )
                 }
                 playerState.supplies.augmentsAvailable = availableSlots
-
+                playerState.supplies.updateRequired = false
                 // Update supplies menu if it's opened
                 (TridentClient.openedDialogs["supplies"] as SuppliesDialog?)?.refresh()
 
