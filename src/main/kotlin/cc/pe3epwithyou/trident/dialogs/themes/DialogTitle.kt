@@ -10,6 +10,7 @@ import com.noxcrew.sheeplib.widget.IconButton
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.network.chat.Component
 
@@ -18,6 +19,7 @@ class DialogTitle(
     private val component: Component,
     private val color: Int = 0x111111 opacity 127,
     private val isCloseable: Boolean = true,
+    private val tooltip: Tooltip? = null
 ) :
     CompoundWidget(0, 0, dialog.width, FONT_HEIGHT + dialog.theme.dimensions.paddingOuter * 2),
     DialogTitleWidget,
@@ -38,10 +40,14 @@ class DialogTitle(
         FONT_HEIGHT + theme.dimensions.paddingOuter * 2,
     ).apply {
         val font = Minecraft.getInstance().font
-        StringWidget(
+        val w = StringWidget(
             component,
-            font,
-        ).at(top = theme.dimensions.paddingOuter, left = theme.dimensions.paddingOuter)
+            font
+        )
+        if (tooltip != null) {
+            w.tooltip = tooltip
+        }
+        w.at(top = theme.dimensions.paddingOuter, left = theme.dimensions.paddingOuter)
         if (isCloseable) {
             IconButton(
                 theme.icons.close,

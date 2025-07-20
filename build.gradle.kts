@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.2.0"
-    id("fabric-loom") version "1.10-SNAPSHOT"
+    id("fabric-loom") version "1.11-SNAPSHOT"
     id("maven-publish")
 }
 
@@ -35,6 +35,12 @@ repositories {
         name = "noxcrew-public"
         url = uri("https://maven.noxcrew.com/public")
     }
+    maven("https://maven.isxander.dev/releases") {
+        name = "Xander Maven"
+    }
+    maven("https://maven.terraformersmc.com/") {
+        name = "Terraformers"
+    }
 }
 
 dependencies {
@@ -46,6 +52,9 @@ dependencies {
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
     include(modImplementation("com.noxcrew.sheeplib:api:1.3.6+1.21.5")!!)
+    modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
+    modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
+    modImplementation("com.noxcrew.noxesium:common:2.7.6")
     api("com.noxcrew.noxesium:api:2.7.6")
 }
 

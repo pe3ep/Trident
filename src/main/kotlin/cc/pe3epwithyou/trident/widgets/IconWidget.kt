@@ -1,9 +1,6 @@
 package cc.pe3epwithyou.trident.widgets
 
 import cc.pe3epwithyou.trident.utils.Texture
-import com.noxcrew.sheeplib.util.Icon
-import com.noxcrew.sheeplib.util.opacity
-import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -18,7 +15,6 @@ public class IconWidget(
     AbstractWidget(0, 0, icon.width + marginRight, icon.height, Component.empty()) {
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         icon.blit(guiGraphics, x, y, isHovered = isHovered())
-//        guiGraphics.fill(x, y, x + icon.width, y + height, 0xFF0000 opacity 127)
         if (isHovered() && hoverText != null) {
             guiGraphics.renderTooltip(Minecraft.getInstance().font, hoverText, x, y)
         }

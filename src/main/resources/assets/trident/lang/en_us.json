@@ -1,0 +1,24 @@
+{
+  "config.trident": "Trident",
+
+  "config.trident.debug": "Debug",
+  "config.trident.debug.description": "Options dedicated for the development of Trident.",
+  "config.trident.debug.enable_logging.name": "Enable logging",
+  "config.trident.debug.enable_logging.description": "Intended for developers. Displays a bunch of useful information in chat",
+
+  "config.trident.global.name": "Global Settings",
+  "config.trident.global.description": "Universal non-game specific settings that apply across MCC Island.",
+
+  "config.trident.global.rarity_overlay.name": "Rarity Overlay",
+  "config.trident.global.rarity_overlay.description": "Displays an outline around the item in its slot, matching the item's rarity color.",
+
+
+  "config.trident.fishing.name": "Fishing Modules",
+  "config.trident.fishing.description": "Modules that apply to the Fishing game",
+
+  "config.trident.fishing.supplies_module.name": "Supplies Module",
+  "config.trident.fishing.supplies_module.description": "Shows a window that displays your current Bait, Line durability, your equipped Augments and your active Overclocks.",
+
+  "config.trident.fishing.wayfinder_module.name": "Wayfinder Module",
+  "config.trident.fishing.wayfinder_module.description": "Shows a window that displays your progress towards a Grotto in your current climate."
+}

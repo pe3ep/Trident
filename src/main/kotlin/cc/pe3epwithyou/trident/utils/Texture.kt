@@ -1,14 +1,13 @@
 package cc.pe3epwithyou.trident.utils
 
-import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.resources.ResourceLocation
 
 public data class Texture(
     val location: ResourceLocation,
-    val height: Int,
     val width: Int,
+    val height: Int,
     val textureWidth: Int = width,
     val textureHeight: Int = height,
     val hoverLocation: ResourceLocation = location,

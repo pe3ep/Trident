@@ -2,14 +2,6 @@
   "providers": [
     {
       "type": "bitmap",
-      "file": "trident:_font/trident_glyph.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": ["\uE000"]
-    },
-
-    {
-      "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/line_common.png",
       "ascent": 7,
       "height": 8,
