@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.TooltipFlag
 
-class ItemParser {
+object ItemParser {
     fun getLore(item: ItemStack): List<Component>? {
         if (Minecraft.getInstance().player == null) return null
         return item.getTooltipLines(Item.TooltipContext.EMPTY, Minecraft.getInstance().player, TooltipFlag.Default.NORMAL)

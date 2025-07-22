@@ -33,11 +33,6 @@ class AugmentStackWidget(width: Int, height: Int, theme: Themed, entries: List<A
 
     override fun mouseClicked(d: Double, e: Double, i: Int): Boolean = false
 
-    override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
-//        graphics.fill(x, y, x + (width + 2) * 7, y + height, 0x0000FF.opaqueColor())
-        super.renderWidget(graphics, i, j, f)
-    }
-
     init {
         layout.arrangeElements()
         layout.visitWidgets(this::addChild)
