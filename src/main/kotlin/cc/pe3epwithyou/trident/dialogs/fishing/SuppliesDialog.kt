@@ -10,7 +10,6 @@ import cc.pe3epwithyou.trident.widgets.fishing.AugmentStackWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
-import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.ChatFormatting

@@ -1,9 +1,7 @@
 package cc.pe3epwithyou.trident.client.events
 
-import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
-import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.AUGMENT_NAMES
 import cc.pe3epwithyou.trident.utils.ChatUtils
