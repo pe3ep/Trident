@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.config
 
+import cc.pe3epwithyou.trident.dialogs.themes.TridentThemes
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry
@@ -15,6 +16,9 @@ class Config {
     var globalRarityOverlay: Boolean = false
 
     @SerialEntry
+    var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
+
+    @SerialEntry
     var fishingSuppliesModule: Boolean = true
 
     @SerialEntry
@@ -26,6 +30,9 @@ class Config {
     object Global {
         val rarityOverlay: Boolean
             get() = handler.instance().globalRarityOverlay
+
+        val currentTheme: TridentThemes
+            get() = handler.instance().globalCurrentTheme
     }
 
     object Debug {
@@ -40,6 +47,7 @@ class Config {
         val wayfinderModule: Boolean
             get() = handler.instance().fishingWayfinderModule
     }
+
 
     companion object {
         val handler: ConfigClassHandler<Config> by lazy {
@@ -78,6 +86,13 @@ class Config {
                         binding(handler.instance()::globalRarityOverlay, false)
                         controller(tickBox())
                     }
+
+                    options.register<TridentThemes>("theme") {
+                        name(Component.translatable("config.trident.global.theme.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.global.theme.description")))
+                        binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
+                        controller(enumSwitch(TridentThemes::class.java) { v -> v.displayName })
+                    }
                 }
 
                 groups.register("fishing") {
@@ -86,10 +101,7 @@ class Config {
 
                     options.register<Boolean>("rarity_overlay") {
                         name(Component.translatable("config.trident.fishing.supplies_module.name"))
-                        description(OptionDescription.createBuilder()
-                            .text(Component.translatable("config.trident.fishing.supplies_module.description"))
-                            .build()
-                        )
+                        description(OptionDescription.of(Component.translatable("config.trident.fishing.supplies_module.description")))
                         binding(handler.instance()::fishingSuppliesModule, true)
                         controller(tickBox())
                     }

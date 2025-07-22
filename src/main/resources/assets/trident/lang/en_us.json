@@ -12,6 +12,8 @@
   "config.trident.global.rarity_overlay.name": "Rarity Overlay",
   "config.trident.global.rarity_overlay.description": "Displays an outline around the item in its slot, matching the item's rarity color.",
 
+  "config.trident.global.theme.name": "Module theme",
+  "config.trident.global.theme.description": "Changes the current theme that Modules are using.",
 
   "config.trident.fishing.name": "Fishing Modules",
   "config.trident.fishing.description": "Modules that apply to the Fishing game",
@@ -20,5 +22,7 @@
   "config.trident.fishing.supplies_module.description": "Shows a window that displays your current Bait, Line durability, your equipped Augments and your active Overclocks.",
 
   "config.trident.fishing.wayfinder_module.name": "Wayfinder Module",
-  "config.trident.fishing.wayfinder_module.description": "Shows a window that displays your progress towards a Grotto in your current climate."
+  "config.trident.fishing.wayfinder_module.description": "Shows a window that displays your progress towards a Grotto in your current climate.",
+
+  "trident.not_island": "You are not currently playing on MCC Island"
 }

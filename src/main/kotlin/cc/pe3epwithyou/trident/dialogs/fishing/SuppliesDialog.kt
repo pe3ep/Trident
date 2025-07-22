@@ -1,15 +1,16 @@
-package cc.pe3epwithyou.trident.dialogs
+package cc.pe3epwithyou.trident.dialogs.fishing
 
 import cc.pe3epwithyou.trident.client.TridentClient
-import cc.pe3epwithyou.trident.dialogs.themes.DialogTheme
+import cc.pe3epwithyou.trident.dialogs.TridentDialog
 import cc.pe3epwithyou.trident.dialogs.themes.DialogTitle
+import cc.pe3epwithyou.trident.dialogs.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.widgets.fishing.AugmentStackWidget
 import com.noxcrew.sheeplib.LayoutConstants
-import com.noxcrew.sheeplib.dialog.Dialog
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
+import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.ChatFormatting
@@ -20,9 +21,9 @@ import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
-class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
+class SuppliesDialog(x: Int, y: Int) : TridentDialog(x, y), Themed by TridentThemed {
     private fun getWidgetTitle(): DialogTitleWidget {
-        val icon = Component.literal("\uE0E4").withStyle(Style.EMPTY.withFont(TridentFont.getMCCFont("icon")).withShadowColor(0x0 opacity 0))
+        val icon = Component.literal("\uE10C").withStyle(Style.EMPTY.withFont(TridentFont.getMCCFont("icon")).withShadowColor(0x0 opacity 0))
         val text = Component.literal(" Supplies".uppercase()).withStyle(Style.EMPTY.withFont(TridentFont.getTridentFont("hud_title")))
         if (TridentClient.playerState.supplies.updateRequired) {
             val warn = Component.literal(" ⚠").withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.GOLD))
@@ -30,10 +31,10 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
                 .append(Component.literal("\nTrident has detected that you've received bait, meaning your Supply Module is out of date. \nPlease open your Supply menu to update it.")
                     .withStyle(ChatFormatting.GRAY))
             )
-            val titleWidget = DialogTitle(this, icon.append(text).append(warn), 0x640000 opacity 63, tooltip = tooltip)
+            val titleWidget = DialogTitle(this, icon.append(text).append(warn), 0x640000 opacity 63, tooltip = tooltip, isCloseable = false)
             return titleWidget
         }
-        val titleWidget = DialogTitle(this, icon.append(text), 0x640000 opacity 63)
+        val titleWidget = DialogTitle(this, icon.append(text), 0x640000 opacity 63, isCloseable = false)
         return titleWidget
     }
 
@@ -102,12 +103,8 @@ class SuppliesDialog(x: Int, y: Int) : Dialog(x, y), Themed by DialogTheme {
 
     }
 
-    fun refresh() {
+    override fun refresh() {
         this.title = getWidgetTitle()
-        super.init()
-    }
-
-    override fun onClose() {
-        TridentClient.openedDialogs.remove("supplies")
+        super.refresh()
     }
 }
