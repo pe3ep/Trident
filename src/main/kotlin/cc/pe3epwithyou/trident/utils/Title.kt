@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.utils
 
-import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
