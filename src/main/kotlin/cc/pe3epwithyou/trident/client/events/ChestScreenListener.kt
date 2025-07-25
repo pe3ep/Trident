@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.client.events
 
 import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.AUGMENT_NAMES
@@ -108,6 +109,11 @@ object ChestScreenListener {
                     AUGMENT_NAMES[cleanedName]
                 }
             }
+        }
+        if (Config.Debug.enableLogging) {
+            ChatUtils.sendMessage("""
+                Augments: ${playerState.supplies.augments}
+            """.trimIndent())
         }
         playerState.supplies.augmentsAvailable = availableSlots
         playerState.supplies.updateRequired = false

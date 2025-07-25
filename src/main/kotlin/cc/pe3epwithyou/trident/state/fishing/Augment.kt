@@ -107,7 +107,9 @@ enum class Augment(
     ),
     WAYFINDER_ULTRALURE(
         "Wayfinder Ultralure",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_lure_wise.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_lure_wise.png"),
+        16,
+        256
     ),
     PEARL_ULTRALURE(
         "Pearl Ultralure",
@@ -146,8 +148,48 @@ enum class Augment(
     LURE_BATTERY(
         "Lure Battery",
         ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_lure_battery.png"),
-    )
+    ),
+    STOCK_REPLENISHER(
+        "Stock Replenisher",
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_stock_replenisher.png"),
+    ),
+    AUTO_ROD(
+        "Auto Rod",
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_auto_rod.png"),
+    ),
 
+
+    // Amulets Augments
+    STRONG_AMULET(
+    "Strong Amulet",
+    ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/amulet_strong.png"),
+    16,
+    208
+    ),
+    WISE_AMULET(
+    "Wise Amulet",
+    ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/amulet_wise.png"),
+    16,
+    208
+    ),
+    GLIMMERING_AMULET(
+    "Glimmering Amulet",
+    ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/amulet_glimmering.png"),
+    16,
+    208
+    ),
+    GREEDY_AMULET(
+    "Greedy Amulet",
+    ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/amulet_greedy.png"),
+    16,
+    208
+    ),
+    LUCKY_AMULET(
+    "Lucky Amulet",
+    ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/amulet_lucky.png"),
+    16,
+    208
+    )
 }
 
 val AUGMENT_NAMES = hashMapOf<String, Augment>(
@@ -175,5 +217,22 @@ val AUGMENT_NAMES = hashMapOf<String, Augment>(
     "Treasure Lure" to Augment.TREASURE_LURE,
     "Spirit Lure" to Augment.SPIRIT_LURE,
 
+    "Elusive Ultralure" to Augment.ELUSUVE_ULTRALURE,
+    "Wayfinder Ultralure" to Augment.WAYFINDER_ULTRALURE,
+    "Pearl Ultralure" to Augment.PEARL_ULTRALURE,
+    "Treasure Ultralure" to Augment.TREASURE_ULTRALURE,
+    "Spirit Ultralure" to Augment.SPIRIT_ULTRALURE,
+
     "Elusive Soda" to Augment.ELUSIVE_SODA,
+    "Rarity Rod" to Augment.RARITY_ROD,
+    "Pure Beacon" to Augment.PURE_BEACON,
+    "Lure Battery" to Augment.LURE_BATTERY,
+    "Stock Replenisher" to Augment.STOCK_REPLENISHER,
+    "Auto Rod" to Augment.AUTO_ROD,
+
+    "Strong Amulet" to Augment.STRONG_AMULET,
+    "Wise Amulet" to Augment.WISE_AMULET,
+    "Glimmering Amulet" to Augment.GLIMMERING_AMULET,
+    "Greedy Amulet" to Augment.GREEDY_AMULET,
+    "Lucky Amulet" to Augment.LUCKY_AMULET,
 )
