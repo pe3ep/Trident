@@ -20,7 +20,7 @@ import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
-class SuppliesDialog(x: Int, y: Int) : TridentDialog(x, y), Themed by TridentThemed {
+class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
     private fun getWidgetTitle(): DialogTitleWidget {
         val icon = Component.literal("\uE10C").withStyle(Style.EMPTY.withFont(TridentFont.getMCCFont("icon")).withShadowColor(0x0 opacity 0))
         val text = Component.literal(" Supplies".uppercase()).withStyle(Style.EMPTY.withFont(TridentFont.getTridentFont("hud_title")))
@@ -30,10 +30,10 @@ class SuppliesDialog(x: Int, y: Int) : TridentDialog(x, y), Themed by TridentThe
                 .append(Component.literal("\nTrident has detected that you've received bait, meaning your Supply Module is out of date. \nPlease open your Supply menu to update it.")
                     .withStyle(ChatFormatting.GRAY))
             )
-            val titleWidget = DialogTitle(this, icon.append(text).append(warn), 0x640000 opacity 63, tooltip = tooltip, isCloseable = false)
+            val titleWidget = DialogTitle(this, icon.append(text).append(warn), 0x640000 opacity 127, tooltip = tooltip, isCloseable = false)
             return titleWidget
         }
-        val titleWidget = DialogTitle(this, icon.append(text), 0x640000 opacity 63, isCloseable = false)
+        val titleWidget = DialogTitle(this, icon.append(text), 0x640000 opacity 127, isCloseable = false)
         return titleWidget
     }
 

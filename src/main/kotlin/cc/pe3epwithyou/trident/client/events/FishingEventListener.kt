@@ -1,9 +1,13 @@
 package cc.pe3epwithyou.trident.client.events
 
 import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
+import cc.pe3epwithyou.trident.feature.DepletedDisplay
 import cc.pe3epwithyou.trident.state.MCCIslandState
+import cc.pe3epwithyou.trident.utils.WindowExtensions.requestAttentionIfInactive
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
+import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object FishingEventListener {
@@ -28,10 +32,22 @@ object FishingEventListener {
     private fun Component.isIconMessage() = Regex("^\\s*. (Triggered|Special): .+").matches(this.string)
     private fun Component.isXPMessage() = Regex("^\\s*. You earned: .+").matches(this.string)
     private fun Component.isReceivedItem() = Regex("^\\(.\\) You receive: .+").matches(this.string)
+    private fun Component.isDepletedSpot() = Regex("^\\[.] This spot is Depleted, so you can no longer fish here\\.").matches(this.string)
+    private fun Component.isOutOfGrotto() = Regex("^\\[.] Your Grotto has become unstable, teleporting you back to safety\\.\\.\\.").matches(this.string)
 
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowMessage@{ message, _ ->
             if (!MCCIslandState.isOnIsland()) return@allowMessage true
+
+            if (message.isDepletedSpot() && Config.Fishing.flashIfDepleted) {
+                Minecraft.getInstance().window.requestAttentionIfInactive()
+                DepletedDisplay.showDepletedTitle()
+            }
+
+            if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
+                Minecraft.getInstance().window.requestAttentionIfInactive()
+                DepletedDisplay.showGrottoTitle()
+            }
 
             // Check if player received bait and mark supplies as desynced
             if (message.isReceivedItem() && "Bait" in message.string) {

@@ -8,9 +8,11 @@ import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.utils.TimerUtil
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
+import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
+import net.minecraft.network.chat.Component
 
 object ChestScreenListener {
 

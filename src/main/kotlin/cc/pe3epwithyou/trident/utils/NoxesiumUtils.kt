@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.utils
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
+import cc.pe3epwithyou.trident.feature.FocusGame
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
@@ -37,7 +38,8 @@ object NoxesiumUtils {
         DialogCollection.clear()
 
         if (currentGame == MCCGame.FISHING && Config.Fishing.suppliesModule) {
-            DialogCollection.open("supplies", SuppliesDialog(10, 10))
+            val k = "supplies"
+            DialogCollection.open(k, SuppliesDialog(10, 10, k))
         }
     }
 

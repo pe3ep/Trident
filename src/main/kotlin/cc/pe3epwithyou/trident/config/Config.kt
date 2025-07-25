@@ -25,7 +25,13 @@ class Config {
     var fishingWayfinderModule: Boolean = true
 
     @SerialEntry
+    var fishingFlashIfDepleted: Boolean = true
+
+    @SerialEntry
     var debugEnableLogging: Boolean = false
+
+    @SerialEntry
+    var gamesAutoFocus: Boolean = false
 
     object Global {
         val rarityOverlay: Boolean
@@ -46,8 +52,15 @@ class Config {
 
         val wayfinderModule: Boolean
             get() = handler.instance().fishingWayfinderModule
+
+        val flashIfDepleted: Boolean
+            get() = handler.instance().fishingFlashIfDepleted
     }
 
+    object Games {
+        val autoFocus: Boolean
+            get() = handler.instance().gamesAutoFocus
+    }
 
     companion object {
         val handler: ConfigClassHandler<Config> by lazy {
@@ -91,7 +104,19 @@ class Config {
                         name(Component.translatable("config.trident.global.theme.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.global.theme.description")))
                         binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
-                        controller(enumSwitch(TridentThemes::class.java) { v -> v.displayName })
+                        controller(enumSwitch<TridentThemes> { v -> v.displayName })
+                    }
+                }
+
+                groups.register("games") {
+                    name(Component.translatable("config.trident.games.name"))
+                    description(OptionDescription.of(Component.translatable("config.trident.games.description")))
+
+                    options.register<Boolean>("auto_focus") {
+                        name(Component.translatable("config.trident.games.auto_focus.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.games.auto_focus.description")))
+                        binding(handler.instance()::gamesAutoFocus, false)
+                        controller(tickBox())
                     }
                 }
 
@@ -103,6 +128,13 @@ class Config {
                         name(Component.translatable("config.trident.fishing.supplies_module.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.fishing.supplies_module.description")))
                         binding(handler.instance()::fishingSuppliesModule, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("flash_if_depleted") {
+                        name(Component.translatable("config.trident.fishing.flash_if_depleted.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.fishing.flash_if_depleted.description")))
+                        binding(handler.instance()::fishingFlashIfDepleted, true)
                         controller(tickBox())
                     }
 //                    options.register<Boolean>("wayfinder_module") {

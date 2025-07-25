@@ -14,7 +14,6 @@ class TimerUtil : ClientTickEvents.EndTick {
 
     override fun onEndTick(client: Minecraft) {
         if (--this.ticksUntilSomething == 0L) {
-            ChatUtils.info("Something was scheduled and it sorta ran?")
             try {
                 this.schedueledTask()
             } catch (e: Exception) {
