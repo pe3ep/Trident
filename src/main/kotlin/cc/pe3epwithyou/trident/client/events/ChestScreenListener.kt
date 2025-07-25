@@ -8,26 +8,28 @@ import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.utils.TimerUtil
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
-import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
-import net.minecraft.network.chat.Component
 
 object ChestScreenListener {
 
-    private fun parseRarity(name: String): Rarity? = when (name) {
-        "Common" -> Rarity.COMMON
-        "Uncommon" -> Rarity.UNCOMMON
-        "Rare" -> Rarity.RARE
-        "Epic" -> Rarity.EPIC
-        "Legendary" -> Rarity.LEGENDARY
-        "Mythic" -> Rarity.MYTHIC
-        else -> null
+    private fun parseRarity(name: String): Rarity = when {
+        "Common" in name    -> Rarity.COMMON
+        "Uncommon" in name  -> Rarity.UNCOMMON
+        "Rare" in name      -> Rarity.RARE
+        "Epic" in name      -> Rarity.EPIC
+        "Legendary" in name -> Rarity.LEGENDARY
+        "Mythic" in name    -> Rarity.MYTHIC
+        else -> Rarity.COMMON
     }
 
     private fun handleScreen(client: Minecraft, screen: ContainerScreen) {
-        findAugments(screen)
+        if (screen.title.string.contains("FISHING SUPPLIES")) {
+            TimerUtil.INSTANCE.setTimer(2) {
+                findAugments(screen)
+            }
+        }
     }
 
     fun register() {
@@ -38,92 +40,89 @@ object ChestScreenListener {
 
     fun findAugments(screen: ContainerScreen) {
         if (!screen.title.string.contains("FISHING SUPPLIES")) return
+        ChatUtils.info("Opened menu: ${screen.title.string}")
 
-        TimerUtil.INSTANCE.setTimer(3) {
-            ChatUtils.info("Opened menu: ${screen.title.string}")
+        // Process bait slot (slot 19)
+        val baitSlot = screen.menu.slots[19]
+        val baitItemName = baitSlot.item.displayName.string
+        val baitLore = ItemParser.getLore(baitSlot.item)
 
-            // Process bait slot (slot 19)
-            val baitSlot = screen.menu.slots[19]
-            val baitItemName = baitSlot.item.displayName.string
-            val baitLore = ItemParser.getLore(baitSlot.item)
+        if (!baitItemName.contains("Empty Bait Slot")) {
+            val baitCount = baitLore?.getOrNull(15)?.string
+                ?.split(" ")
+                ?.getOrNull(2)
+                ?.replace(",", "")
+                ?.toIntOrNull()
 
-            if (!baitItemName.contains("Empty Bait Slot")) {
-                val baitCount = baitLore?.getOrNull(15)?.string
-                    ?.split(" ")
-                    ?.getOrNull(2)
-                    ?.replace(",", "")
-                    ?.toIntOrNull()
+            playerState.supplies.bait.amount = baitCount
+            ChatUtils.info("Bait found - ${playerState.supplies.bait.amount}")
 
-                playerState.supplies.bait.amount = baitCount
-                ChatUtils.info("Bait found - ${playerState.supplies.bait.amount}")
+            val baitRarityName = baitItemName.split(" ").firstOrNull()
+            playerState.supplies.bait.type = parseRarity(baitRarityName ?: "")
+        } else {
+            playerState.supplies.bait.type = Rarity.COMMON
+            playerState.supplies.bait.amount = null
+        }
 
-                val baitRarityName = baitItemName.split(" ").firstOrNull()
-                playerState.supplies.bait.type = parseRarity(baitRarityName ?: "")
-            } else {
-                playerState.supplies.bait.type = null
-                playerState.supplies.bait.amount = null
-            }
+        // Process line slot (slot 37)
+        val lineSlot = screen.menu.slots[37]
+        val lineItemName = lineSlot.item.displayName.string
 
-            // Process line slot (slot 37)
-            val lineSlot = screen.menu.slots[37]
-            val lineItemName = lineSlot.item.displayName.string
+        if (lineItemName.contains("Empty Line Slot")) {
+            playerState.supplies.line.uses = null
+            playerState.supplies.line.type = Rarity.COMMON
+        } else {
+            val lineLore = ItemParser.getLore(lineSlot.item)
+            val lineUses = lineLore?.getOrNull(15)?.string
+                ?.split(" ")
+                ?.getOrNull(2)
+                ?.split("/")
+                ?.getOrNull(0)
+                ?.replace(",", "")
+                ?.toIntOrNull()
 
-            if (lineItemName.contains("Empty Line Slot")) {
-                playerState.supplies.line.uses = null
-                playerState.supplies.line.type = null
-            } else {
-                val lineLore = ItemParser.getLore(lineSlot.item)
-                val lineUses = lineLore?.getOrNull(15)?.string
-                    ?.split(" ")
-                    ?.getOrNull(2)
-                    ?.split("/")
-                    ?.getOrNull(0)
-                    ?.replace(",", "")
-                    ?.toIntOrNull()
+            playerState.supplies.line.uses = lineUses
 
-                playerState.supplies.line.uses = lineUses
+            val lineRarityName = lineItemName.split(" ").firstOrNull()
+            playerState.supplies.line.type = parseRarity(lineRarityName ?: "")
+        }
 
-                val lineRarityName = lineItemName.split(" ").firstOrNull()
-                playerState.supplies.line.type = parseRarity(lineRarityName ?: "")
-            }
+        // Process augments slots
+        val augmentSlotsIndices = listOf(30, 31, 32, 33, 34, 39, 40, 41, 42, 43)
+        val augmentsRaw = augmentSlotsIndices.map { screen.menu.slots[it].item.displayName.string }
 
-            // Process augments slots
-            val augmentSlotsIndices = listOf(30, 31, 32, 33, 34, 39, 40, 41, 42, 43)
-            val augmentsRaw = augmentSlotsIndices.map { screen.menu.slots[it].item.displayName.string }
-
-            var availableSlots = 10
-            playerState.supplies.augments = augmentsRaw.mapNotNull { rawName ->
-                when {
-                    rawName.contains("Locked Supply Slot") -> {
-                        availableSlots--
-                        null
-                    }
-                    rawName.contains("Empty Supply Slot") -> null
-                    else -> {
-                        val cleanedName = rawName
-                            .replace("A.N.G.L.R. ", "")
-                            .replace("[", "")
-                            .replace("]", "")
-                            .replace(" Augment", "")
-                        AUGMENT_NAMES[cleanedName]
-                    }
+        var availableSlots = 10
+        playerState.supplies.augments = augmentsRaw.mapNotNull { rawName ->
+            when {
+                rawName.contains("Locked Supply Slot") -> {
+                    availableSlots--
+                    null
+                }
+                rawName.contains("Empty Supply Slot") -> null
+                else -> {
+                    val cleanedName = rawName
+                        .replace("A.N.G.L.R. ", "")
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace(" Augment", "")
+                    AUGMENT_NAMES[cleanedName]
                 }
             }
-            playerState.supplies.augmentsAvailable = availableSlots
-            playerState.supplies.updateRequired = false
-
-            // Refresh supplies dialog if open
-            DialogCollection.refreshDialog("supplies")
-
-            // Overclocks (slots 12-15)
-            val hookOverclock = screen.menu.slots[12]
-            val hookLore = ItemParser.getActiveOverclock(hookOverclock.item)
-
-            val magnetOverclock = screen.menu.slots[13]
-            val rodOverclock = screen.menu.slots[14]
-            val unstableOverclock = screen.menu.slots[15]
-
-            // TODO: Process overclocks if needed
         }
+        playerState.supplies.augmentsAvailable = availableSlots
+        playerState.supplies.updateRequired = false
+
+        // Refresh supplies dialog if open
+        DialogCollection.refreshDialog("supplies")
+
+        // Overclocks (slots 12-15)
+        val hookOverclock = screen.menu.slots[12]
+        val hookLore = ItemParser.getActiveOverclock(hookOverclock.item)
+
+        val magnetOverclock = screen.menu.slots[13]
+        val rodOverclock = screen.menu.slots[14]
+        val unstableOverclock = screen.menu.slots[15]
+
+        // TODO: Process overclocks if needed
     }
 }

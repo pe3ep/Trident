@@ -18,7 +18,7 @@ object ItemParser {
         val options = getLore(item)?.subList(12, 16)
         var active = options?.first()
         for (option in options!!) {
-            ChatUtils.info(option.string)
+//            ChatUtils.info(option.string)
             if (option.string.contains(">")) {
                 active = option
             }
