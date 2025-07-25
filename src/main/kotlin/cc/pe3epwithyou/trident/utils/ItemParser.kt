@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.TooltipFlag
 
-class ItemParser {
+object ItemParser {
     fun getLore(item: ItemStack): List<Component>? {
         if (Minecraft.getInstance().player == null) return null
         return item.getTooltipLines(Item.TooltipContext.EMPTY, Minecraft.getInstance().player, TooltipFlag.Default.NORMAL)
@@ -18,7 +18,7 @@ class ItemParser {
         val options = getLore(item)?.subList(12, 16)
         var active = options?.first()
         for (option in options!!) {
-            ChatUtils.info(option.string)
+//            ChatUtils.info(option.string)
             if (option.string.contains(">")) {
                 active = option
             }

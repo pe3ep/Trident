@@ -1,46 +1,64 @@
 package cc.pe3epwithyou.trident.client.events
 
 import cc.pe3epwithyou.trident.client.TridentClient
-import cc.pe3epwithyou.trident.dialogs.SuppliesDialog
+import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.dialogs.DialogCollection
+import cc.pe3epwithyou.trident.feature.DepletedDisplay
 import cc.pe3epwithyou.trident.state.MCCIslandState
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.WindowExtensions.requestAttentionIfInactive
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
+import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
+import java.util.*
 
 object FishingEventListener {
-    private var isSupplyPreserve: Boolean = false
-    private var triggerBait: Boolean = true
-    private var catchFinished: Boolean = true
+    private var isSupplyPreserve = false
+    private var triggerBait = true
+    private var catchFinished = true
+
     private fun checkJunk(component: Component): Boolean {
-        val m = component.string
-        when {
-            m.contains("Rusted Can") -> return true
-            m.contains("Tangled Kelp") -> return true
-            m.contains("Lost Shoe") -> return true
-            m.contains("Royal Residue") -> return true
-            m.contains("Forgotten Crown") -> return true
-        }
-        return false
+        val message = component.string
+        return listOf(
+            "Rusted Can",
+            "Tangled Kelp",
+            "Lost Shoe",
+            "Royal Residue",
+            "Forgotten Crown"
+        ).any { message.contains(it) }
     }
 
-//    Regex matchers for fishing messages taken from the amazing Jamboree mod <3
-//    https://github.com/JamesMCo/jamboree
-    private fun Component.isCaughtMessage(): Boolean = Regex("^\\(.\\) You caught: \\[.+].*").matches(this.string)
-    private fun Component.isIconMessage(): Boolean   = Regex("^\\s*. (Triggered|Special): .+").matches(this.string)
-    private fun Component.isXPMessage(): Boolean     = Regex("^\\s*. You earned: .+").matches(this.string)
-    private fun Component.isReceivedItem(): Boolean  = Regex("^\\(.\\) You receive: .+").matches(this.string)
-
-
+    // Regex matchers for fishing messages taken from the amazing Jamboree mod <3
+    // https://github.com/JamesMCo/jamboree
+    private fun Component.isCaughtMessage() = Regex("^\\(.\\) You caught: \\[.+].*").matches(this.string)
+    private fun Component.isIconMessage() = Regex("^\\s*. (Triggered|Special): .+").matches(this.string)
+    private fun Component.isXPMessage() = Regex("^\\s*. You earned: .+").matches(this.string)
+    private fun Component.isReceivedItem() = Regex("^\\(.\\) You receive: .+").matches(this.string)
+    private fun Component.isDepletedSpot() = Regex("^\\[.] This spot is Depleted, so you can no longer fish here\\.").matches(this.string)
+    private fun Component.isOutOfGrotto() = Regex("^\\[.] Your Grotto has become unstable, teleporting you back to safety\\.\\.\\.").matches(this.string)
 
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowMessage@{ message, _ ->
             if (!MCCIslandState.isOnIsland()) return@allowMessage true
 
-//            Check if player received bait and mark supplies as desynced
-            if (message.isReceivedItem() && message.string.contains("Bait")) {
+            if (message.isDepletedSpot() && Config.Fishing.flashIfDepleted) {
+                Minecraft.getInstance().window.requestAttentionIfInactive()
+                Minecraft.getInstance().player?.playSound(
+                    SoundEvent(ResourceLocation.fromNamespaceAndPath("mcc", "games.fishing.stock_depleted"), Optional.empty())
+                )
+                DepletedDisplay.showDepletedTitle()
+            }
+
+            if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
+                Minecraft.getInstance().window.requestAttentionIfInactive()
+            }
+
+            // Check if player received bait and mark supplies as desynced
+            if (message.isReceivedItem() && "Bait" in message.string) {
                 if (!TridentClient.playerState.supplies.updateRequired) {
                     TridentClient.playerState.supplies.updateRequired = true
-                    (TridentClient.openedDialogs["supplies"] as SuppliesDialog?)?.refresh()
+                    DialogCollection.refreshDialog("supplies")
                 }
             }
 
@@ -49,26 +67,33 @@ object FishingEventListener {
                 isSupplyPreserve = false
                 triggerBait = !checkJunk(message)
             }
-            if (message.isIconMessage() && message.string.contains("Supply Preserve", true)) {
+
+            if (message.isIconMessage() && message.string.contains("Supply Preserve", ignoreCase = true)) {
                 isSupplyPreserve = true
             }
+
             if (message.isXPMessage()) {
                 if (isSupplyPreserve) {
                     isSupplyPreserve = false
                     catchFinished = true
                     return@allowMessage true
                 }
-                if (TridentClient.playerState.supplies.line.uses != null && TridentClient.playerState.supplies.line.uses != 0) {
-                    TridentClient.playerState.supplies.line.uses = TridentClient.playerState.supplies.line.uses!! - 1
+
+                TridentClient.playerState.supplies.line.uses?.let {
+                    if (it != 0) TridentClient.playerState.supplies.line.uses = it - 1
                 }
-                if (triggerBait && TridentClient.playerState.supplies.bait.amount != null && TridentClient.playerState.supplies.bait.amount != 0) {
-                    TridentClient.playerState.supplies.bait.amount = TridentClient.playerState.supplies.bait.amount!! - 1
+
+                if (triggerBait) {
+                    TridentClient.playerState.supplies.bait.amount?.let {
+                        if (it != 0) TridentClient.playerState.supplies.bait.amount = it - 1
+                    }
                 }
+
                 catchFinished = true
-                (TridentClient.openedDialogs["supplies"] as SuppliesDialog?)?.refresh()
+                DialogCollection.refreshDialog("supplies")
             }
 
-            return@allowMessage true
+            true
         }
     }
 }

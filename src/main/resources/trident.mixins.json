@@ -8,7 +8,8 @@
   ],
   "client": [
     "AbstractContainerScreenMixin",
-    "JoinIslandMixin"
+    "JoinIslandMixin",
+    "PacketListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

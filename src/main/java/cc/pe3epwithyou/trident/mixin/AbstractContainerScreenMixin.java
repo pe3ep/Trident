@@ -1,11 +1,9 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.client.TridentClient;
 import cc.pe3epwithyou.trident.client.events.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
-import cc.pe3epwithyou.trident.dialogs.SuppliesDialog;
 import cc.pe3epwithyou.trident.feature.RaritySlot;
-import com.noxcrew.sheeplib.dialog.Dialog;
+import cc.pe3epwithyou.trident.state.MCCIslandState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -29,7 +27,7 @@ public class AbstractContainerScreenMixin extends Screen {
     ))
     public void renderSlot(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci)
     {
-        if (Config.Global.INSTANCE.getRarityOverlay()) {
+        if (Config.Global.INSTANCE.getRarityOverlay() && MCCIslandState.INSTANCE.isOnIsland()) {
             RaritySlot.INSTANCE.render(guiGraphics, slot);
         }
     }
@@ -37,6 +35,8 @@ public class AbstractContainerScreenMixin extends Screen {
     @Inject(method = "onClose", at = @At(value = "HEAD"))
     public void onClose(CallbackInfo ci)
     {
+        if (!MCCIslandState.INSTANCE.isOnIsland()) return;
+
         Minecraft client = Minecraft.getInstance();
         if (client.screen instanceof ContainerScreen s) {
             if (s.getTitle().getString().contains("FISHING SUPPLIES")) {

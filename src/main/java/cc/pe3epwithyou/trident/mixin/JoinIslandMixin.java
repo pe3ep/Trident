@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.client.TridentClient;
 import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.protocol.login.ClientboundLoginFinishedPacket;
@@ -20,6 +19,5 @@ public class JoinIslandMixin {
     private void inject(ClientboundLoginFinishedPacket clientboundLoginFinishedPacket, CallbackInfo ci) {
         if (this.serverData == null) return;
         if (!this.serverData.ip.toLowerCase().contains("mccisland.net")) return;
-        TridentClient.Companion.onMCCIJoin();
     }
 }

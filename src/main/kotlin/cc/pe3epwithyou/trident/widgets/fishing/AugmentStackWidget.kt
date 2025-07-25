@@ -6,10 +6,7 @@ import cc.pe3epwithyou.trident.widgets.IconWidget
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import com.noxcrew.sheeplib.theme.Themed
-import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.layouts.LinearLayout
-import net.minecraft.resources.ResourceLocation
-import kotlin.enums.EnumEntries
 
 class AugmentStackWidget(width: Int, height: Int, theme: Themed, entries: List<Augment>) : CompoundWidget(0, 0, width, height) {
 
@@ -32,11 +29,6 @@ class AugmentStackWidget(width: Int, height: Int, theme: Themed, entries: List<A
     }
 
     override fun mouseClicked(d: Double, e: Double, i: Int): Boolean = false
-
-    override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
-//        graphics.fill(x, y, x + (width + 2) * 7, y + height, 0x0000FF.opaqueColor())
-        super.renderWidget(graphics, i, j, f)
-    }
 
     init {
         layout.arrangeElements()
