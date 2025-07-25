@@ -11,9 +11,6 @@ object DepletedDisplay {
     private const val DEPLETED_COLOR_ALT = 0xfca600
     private val depletedTitle = Component.literal("This spot is ").withColor(DEPLETED_COLOR)
         .append(Component.literal("depleted").withColor(DEPLETED_COLOR_ALT))
-    private val grottoTitle = Component.literal("Your ").withColor(DEPLETED_COLOR)
-        .append(Component.literal("Grotto ").withColor(DEPLETED_COLOR_ALT))
-        .append(Component.literal("is unstable").withColor(DEPLETED_COLOR))
 
     fun showDepletedTitle() {
         Title.sendTitle(
@@ -24,17 +21,6 @@ object DepletedDisplay {
             15
         )
         DepletedTimer.INSTANCE.startLoop(depletedTitle, 10)
-    }
-
-    fun showGrottoTitle() {
-        Title.sendTitle(
-            Component.empty(),
-            grottoTitle,
-            5,
-            110,
-            15
-        )
-        DepletedTimer.INSTANCE.startLoop(grottoTitle, 110)
     }
 
     class DepletedTimer : ClientTickEvents.EndTick {

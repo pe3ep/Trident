@@ -9,6 +9,9 @@ import cc.pe3epwithyou.trident.utils.WindowExtensions.requestAttentionIfInactive
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
+import java.util.*
 
 object FishingEventListener {
     private var isSupplyPreserve = false
@@ -41,12 +44,14 @@ object FishingEventListener {
 
             if (message.isDepletedSpot() && Config.Fishing.flashIfDepleted) {
                 Minecraft.getInstance().window.requestAttentionIfInactive()
+                Minecraft.getInstance().player?.playSound(
+                    SoundEvent(ResourceLocation.fromNamespaceAndPath("mcc", "games.fishing.stock_depleted"), Optional.empty())
+                )
                 DepletedDisplay.showDepletedTitle()
             }
 
             if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
                 Minecraft.getInstance().window.requestAttentionIfInactive()
-                DepletedDisplay.showGrottoTitle()
             }
 
             // Check if player received bait and mark supplies as desynced
