@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.feature.FocusGame
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
+import com.noxcrew.noxesium.NoxesiumFabricMod
 import com.noxcrew.noxesium.feature.skull.SkullContents
 import com.noxcrew.noxesium.network.NoxesiumPackets
 import net.fabricmc.loader.api.FabricLoader
@@ -44,7 +45,9 @@ object NoxesiumUtils {
     }
 
     fun registerListeners() {
-        if (!FabricLoader.getInstance().isModLoaded("noxesium")) return
+        if (FabricLoader.getInstance().isModLoaded("noxesium")) {
+            NoxesiumFabricMod.initialize()
+        }
 
         NoxesiumPackets.CLIENT_MCC_SERVER.addListener(this) { _, packet, _ ->
             val server = packet.serverType

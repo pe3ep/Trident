@@ -41,6 +41,19 @@ repositories {
     maven("https://maven.terraformersmc.com/") {
         name = "Terraformers"
     }
+    maven("https://maven.enginehub.org/repo/") {
+        name = "EngineHub"
+    }
+    exclusiveContent {
+        forRepository {
+            maven("https://api.modrinth.com/maven") {
+                name = "Modrinth"
+            }
+        }
+        filter {
+            includeGroup("maven.modrinth")
+        }
+    }
 }
 
 dependencies {
@@ -54,8 +67,7 @@ dependencies {
     include(modImplementation("com.noxcrew.sheeplib:api:1.3.6+1.21.5")!!)
     modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    modImplementation("com.noxcrew.noxesium:common:2.7.6")
-    api("com.noxcrew.noxesium:api:2.7.6")
+    modImplementation("com.noxcrew.noxesium:fabric:2.7.6")
 }
 
 loom {

@@ -115,14 +115,14 @@ object ChestScreenListener {
         // Refresh supplies dialog if open
         DialogCollection.refreshDialog("supplies")
 
+        // TODO: Process overclocks
         // Overclocks (slots 12-15)
-        val hookOverclock = screen.menu.slots[12]
-        val hookLore = ItemParser.getActiveOverclock(hookOverclock.item)
+//        val hookOverclock = screen.menu.slots[12]
+//        val hookLore = ItemParser.getActiveOverclock(hookOverclock.item)
+//
+//        val magnetOverclock = screen.menu.slots[13]
+//        val rodOverclock = screen.menu.slots[14]
+//        val unstableOverclock = screen.menu.slots[15]
 
-        val magnetOverclock = screen.menu.slots[13]
-        val rodOverclock = screen.menu.slots[14]
-        val unstableOverclock = screen.menu.slots[15]
-
-        // TODO: Process overclocks if needed
     }
 }
