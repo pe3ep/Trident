@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.client
 
-import cc.pe3epwithyou.trident.client.events.FishingEventListener
+import cc.pe3epwithyou.trident.client.events.ChatEventListener
 import cc.pe3epwithyou.trident.client.events.ChestScreenListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DebugDialog
@@ -83,7 +83,7 @@ class TridentClient : ClientModInitializer {
             dispatcher.register(DEBUG_COMMANDS)
         }
 
-        FishingEventListener.register()
+        ChatEventListener.register()
         ChestScreenListener.register()
         TimerUtil.register()
         DepletedDisplay.DepletedTimer.register()
