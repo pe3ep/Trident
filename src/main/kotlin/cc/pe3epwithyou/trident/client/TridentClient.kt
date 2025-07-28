@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.dialogs.DebugDialog
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.feature.DepletedDisplay
+import cc.pe3epwithyou.trident.feature.SupplyWidgetTimer
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.utils.ChatUtils
@@ -76,6 +77,16 @@ class TridentClient : ClientModInitializer {
                     DialogCollection.open(key, DebugDialog(10, 10, key))
                     0
                 })
+        ).then(ClientCommandManager.literal("fakeUnstableOverclock")
+            .executes { _ ->
+                SupplyWidgetTimer.INSTANCE.startUnstableOverclock()
+                0
+            }
+        ).then(ClientCommandManager.literal("testLerp")
+            .executes { _ ->
+
+                0
+            }
         )
 
     override fun onInitializeClient() {
@@ -87,6 +98,6 @@ class TridentClient : ClientModInitializer {
         ChestScreenListener.register()
         TimerUtil.register()
         DepletedDisplay.DepletedTimer.register()
-
+        SupplyWidgetTimer.register()
     }
 }

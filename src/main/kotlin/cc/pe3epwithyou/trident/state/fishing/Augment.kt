@@ -2,78 +2,92 @@ package cc.pe3epwithyou.trident.state.fishing
 
 import net.minecraft.resources.ResourceLocation
 
-
-
 enum class Augment(
     val augmentName: String,
     val texturePath: ResourceLocation,
     val textureWidth: Int = 16,
     val textureHeight: Int = textureWidth,
+    val asociatedOverclockTexture: OverclockTexture? = null
 ) {
    // Hook Augments (can be used by the hook overclock)
     STRONG_HOOK(
        "Strong Hook",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/strong_hook.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/strong_hook.png"),
+        asociatedOverclockTexture = OverclockTexture.STRONG_HOOK
     ),
     WISE_HOOK(
         "Wise Hook",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/wise_hook.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/wise_hook.png"),
+        asociatedOverclockTexture = OverclockTexture.WISE_HOOK
     ),
     GLIMMERING_HOOK(
         "Glimmering Hook",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/glimmering_hook.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/glimmering_hook.png"),
+        asociatedOverclockTexture = OverclockTexture.GLIMMERING_HOOK
     ),
     GREEDY_HOOK(
         "Greedy Hook",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/greedy_hook.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/greedy_hook.png"),
+        asociatedOverclockTexture = OverclockTexture.GREEDY_HOOK
     ),
     LUCKY_HOOK(
         "Lucky Hook",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/lucky_hook.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/lucky_hook.png"),
+        asociatedOverclockTexture = OverclockTexture.LUCKY_HOOK
     ),
 
     // Magnet Augments (can be used by the magnet overclock)
     XP_MAGNET(
         "XP Magnet",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/xp_magnet.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/xp_magnet.png"),
+        asociatedOverclockTexture = OverclockTexture.XP_MAGNET
     ),
     FISH_MAGNET(
         "Fish Magnet",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/fish_magnet.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/fish_magnet.png"),
+        asociatedOverclockTexture = OverclockTexture.FISH_MAGNET
     ),
     PEARL_MAGNET(
         "Pearl Magnet",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/pearl_magnet.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/pearl_magnet.png"),
+        asociatedOverclockTexture = OverclockTexture.PEARL_MAGNET
     ),
     TREASURE_MAGNET(
         "Treasure Magnet",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/treasure_magnet.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/treasure_magnet.png"),
+        asociatedOverclockTexture = OverclockTexture.TREASURE_MAGNET
     ),
     SPIRIT_MAGNET(
         "Spirit Magner",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/spirit_magnet.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/spirit_magnet.png"),
+        asociatedOverclockTexture = OverclockTexture.SPIRIT_MAGNET
     ),
 
     // Rod Augments (can be used by the rod overclock)
     BOOSTED_ROD(
         "Boosted Rod",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/boosted_rod.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/boosted_rod.png"),
+        asociatedOverclockTexture = OverclockTexture.BOOSTED_ROD
     ),
     SPEEDY_ROD(
         "Speedy Rod",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/speedy_rod.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/speedy_rod.png"),
+        asociatedOverclockTexture = OverclockTexture.SPEEDY_ROD
     ),
     GRACEFUL_ROD(
         "Graceful Rod",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/graceful_rod.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/graceful_rod.png"),
+        asociatedOverclockTexture = OverclockTexture.GRACEFUL_ROD
     ),
     GLITCHED_ROD(
         "Glitched Rod",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/glitched_rod.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/glitched_rod.png"),
+        asociatedOverclockTexture = OverclockTexture.GLITCHED_ROD
     ),
     STABLE_ROD(
         "Stable Rod",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/stable_rod.png")
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/perk_icon/stable_rod.png"),
+        asociatedOverclockTexture = OverclockTexture.STABLE_ROD
     ),
 
     // Lure Augments (can be used by the unstable overclock)
@@ -107,7 +121,7 @@ enum class Augment(
     ),
     WAYFINDER_ULTRALURE(
         "Wayfinder Ultralure",
-        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_lure_wise.png"),
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/anglr_ultralure_wise.png"),
         16,
         256
     ),
@@ -189,50 +203,13 @@ enum class Augment(
     ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/amulet_lucky.png"),
     16,
     208
-    )
+    );
+
 }
 
-val AUGMENT_NAMES = hashMapOf<String, Augment>(
-    "Strong Hook" to Augment.STRONG_HOOK,
-    "Wise Hook" to Augment.WISE_HOOK,
-    "Glimmering Hook" to Augment.GLIMMERING_HOOK,
-    "Greedy Hook" to Augment.GREEDY_HOOK,
-    "Lucky Hook" to Augment.LUCKY_HOOK,
-
-    "XP Magnet" to Augment.XP_MAGNET,
-    "Fish Magnet" to Augment.FISH_MAGNET,
-    "Pearl Magnet" to Augment.PEARL_MAGNET,
-    "Treasure Magnet" to Augment.TREASURE_MAGNET,
-    "Spirit Magnet" to Augment.SPIRIT_MAGNET,
-
-    "Boosted Rod" to Augment.BOOSTED_ROD,
-    "Speedy Rod" to Augment.SPEEDY_ROD,
-    "Graceful Rod" to Augment.GRACEFUL_ROD,
-    "Glitched Rod" to Augment.GLITCHED_ROD,
-    "Stable Rod" to Augment.STABLE_ROD,
-
-    "Elusive Lure" to Augment.ELUSUVE_LURE,
-    "Wayfinder Lure" to Augment.WAYFINDER_LURE,
-    "Pearl Lure" to Augment.PEARL_LURE,
-    "Treasure Lure" to Augment.TREASURE_LURE,
-    "Spirit Lure" to Augment.SPIRIT_LURE,
-
-    "Elusive Ultralure" to Augment.ELUSUVE_ULTRALURE,
-    "Wayfinder Ultralure" to Augment.WAYFINDER_ULTRALURE,
-    "Pearl Ultralure" to Augment.PEARL_ULTRALURE,
-    "Treasure Ultralure" to Augment.TREASURE_ULTRALURE,
-    "Spirit Ultralure" to Augment.SPIRIT_ULTRALURE,
-
-    "Elusive Soda" to Augment.ELUSIVE_SODA,
-    "Rarity Rod" to Augment.RARITY_ROD,
-    "Pure Beacon" to Augment.PURE_BEACON,
-    "Lure Battery" to Augment.LURE_BATTERY,
-    "Stock Replenisher" to Augment.STOCK_REPLENISHER,
-    "Auto Rod" to Augment.AUTO_ROD,
-
-    "Strong Amulet" to Augment.STRONG_AMULET,
-    "Wise Amulet" to Augment.WISE_AMULET,
-    "Glimmering Amulet" to Augment.GLIMMERING_AMULET,
-    "Greedy Amulet" to Augment.GREEDY_AMULET,
-    "Lucky Amulet" to Augment.LUCKY_AMULET,
-)
+fun getAugmentByName(name: String): Augment? {
+    Augment.entries.forEach { augment ->
+        if (augment.augmentName == name) return augment
+    }
+    return null
+}

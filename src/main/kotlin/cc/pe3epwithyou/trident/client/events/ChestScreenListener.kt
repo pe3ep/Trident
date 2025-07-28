@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.state.Rarity
-import cc.pe3epwithyou.trident.state.fishing.AUGMENT_NAMES
+import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.utils.TimerUtil
@@ -49,7 +49,7 @@ object ChestScreenListener {
         val baitLore = ItemParser.getLore(baitSlot.item)
 
         if (!baitItemName.contains("Empty Bait Slot")) {
-            val baitCount = baitLore?.getOrNull(15)?.string
+            val baitCount = baitLore.getOrNull(15)?.string
                 ?.split(" ")
                 ?.getOrNull(2)
                 ?.replace(",", "")
@@ -74,7 +74,7 @@ object ChestScreenListener {
             playerState.supplies.line.type = Rarity.COMMON
         } else {
             val lineLore = ItemParser.getLore(lineSlot.item)
-            val lineUses = lineLore?.getOrNull(15)?.string
+            val lineUses = lineLore.getOrNull(15)?.string
                 ?.split(" ")
                 ?.getOrNull(2)
                 ?.split("/")
@@ -106,7 +106,7 @@ object ChestScreenListener {
                         .replace("[", "")
                         .replace("]", "")
                         .replace(" Augment", "")
-                    AUGMENT_NAMES[cleanedName]
+                    getAugmentByName(cleanedName)
                 }
             }
         }
@@ -118,17 +118,18 @@ object ChestScreenListener {
         playerState.supplies.augmentsAvailable = availableSlots
         playerState.supplies.updateRequired = false
 
-        // Refresh supplies dialog if open
-        DialogCollection.refreshDialog("supplies")
-
         // TODO: Process overclocks
         // Overclocks (slots 12-15)
-//        val hookOverclock = screen.menu.slots[12]
-//        val hookLore = ItemParser.getActiveOverclock(hookOverclock.item)
-//
-//        val magnetOverclock = screen.menu.slots[13]
-//        val rodOverclock = screen.menu.slots[14]
-//        val unstableOverclock = screen.menu.slots[15]
+        val hookOverclock = screen.menu.slots[12]
+        playerState.supplies.overclocks.hook = ItemParser.getActiveOverclock(hookOverclock.item)
 
+        val magnetOverclock = screen.menu.slots[13]
+        playerState.supplies.overclocks.magnet = ItemParser.getActiveOverclock(magnetOverclock.item)
+
+        val rodOverclock = screen.menu.slots[14]
+        playerState.supplies.overclocks.rod = ItemParser.getActiveOverclock(rodOverclock.item)
+
+        // Refresh supplies dialog if open
+        DialogCollection.refreshDialog("supplies")
     }
 }
