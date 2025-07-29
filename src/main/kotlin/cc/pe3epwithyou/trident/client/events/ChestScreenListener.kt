@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.state.Rarity
+import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.ItemParser
@@ -90,7 +91,7 @@ object ChestScreenListener {
 
         // Process augments slots
         val augmentSlotsIndices = listOf(30, 31, 32, 33, 34, 39, 40, 41, 42, 43)
-        val augmentsRaw = augmentSlotsIndices.map { screen.menu.slots[it].item.displayName.string }
+        val augmentsRaw = augmentSlotsIndices.map { screen.menu.slots[it].item.displayName.string } as MutableList
 
         var availableSlots = 10
         playerState.supplies.augments = augmentsRaw.mapNotNull { rawName ->
@@ -109,7 +110,7 @@ object ChestScreenListener {
                     getAugmentByName(cleanedName)
                 }
             }
-        }
+        } as MutableList<Augment>
         if (Config.Debug.enableLogging) {
             ChatUtils.sendMessage("""
                 Augments: ${playerState.supplies.augments}
@@ -128,6 +129,9 @@ object ChestScreenListener {
 
         val rodOverclock = screen.menu.slots[14]
         playerState.supplies.overclocks.rod = ItemParser.getActiveOverclock(rodOverclock.item)
+
+        val unstableOverclock = screen.menu.slots[15]
+        playerState.supplies.overclocks.unstable.texture = ItemParser.getUnstableOverclock(unstableOverclock.item)
 
         // Refresh supplies dialog if open
         DialogCollection.refreshDialog("supplies")

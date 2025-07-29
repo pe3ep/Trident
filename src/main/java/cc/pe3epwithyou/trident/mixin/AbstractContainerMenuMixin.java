@@ -24,7 +24,7 @@ public class AbstractContainerMenuMixin {
         Minecraft client = Minecraft.getInstance();
         if (client.screen instanceof ContainerScreen screen) {
             Slot slot = screen.getMenu().getSlot(i);
-            boolean isLeftClick = j != 0;
+            boolean isLeftClick = j == 0;
             SlotClickListener.INSTANCE.handleClick(slot, clickType, isLeftClick);
         }
     }

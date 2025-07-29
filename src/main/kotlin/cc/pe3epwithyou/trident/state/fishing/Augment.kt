@@ -203,7 +203,12 @@ enum class Augment(
     ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_items/infinibag/fishing_item/amulet_lucky.png"),
     16,
     208
-    );
+    ),
+
+    EMPTY_AUGMENT(
+        "Empty Augment",
+        ResourceLocation.fromNamespaceAndPath("trident", "textures/_font/empty_augment.png")
+    )
 
 }
 

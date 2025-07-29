@@ -26,9 +26,7 @@ class UnstableOverclockWidget(width: Int, height: Int, overclockTexture: Overclo
             ),
             marginRight = 2
         )
-        +StringWidget(timeComponent, mcfont).apply {
-            alignLeft()
-        }
+        +StringWidget(timeComponent, mcfont).alignLeft()
     }
 
     override fun getHeight(): Int = layout.height

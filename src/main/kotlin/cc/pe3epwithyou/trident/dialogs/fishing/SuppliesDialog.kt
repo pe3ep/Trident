@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.dialogs.TridentDialog
 import cc.pe3epwithyou.trident.dialogs.themes.DialogTitle
 import cc.pe3epwithyou.trident.dialogs.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.Rarity
+import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.widgets.fishing.AugmentStackWidget
 import cc.pe3epwithyou.trident.widgets.fishing.OverclockStackWidget
@@ -149,9 +150,14 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         ).atBottom(0, 2, settings = LayoutConstants.LEFT)
 
         val augmentLine = supplies.augments
+        if (augmentLine.size < supplies.augmentsAvailable) {
+            for (i in 1..(supplies.augmentsAvailable - augmentLine.size)) {
+                augmentLine.add(Augment.EMPTY_AUGMENT)
+            }
+        }
         if (augmentLine.isEmpty()) {
             StringWidget(
-                Component.literal("NO AUGMENTS SELECTED")
+                Component.literal("AUGMENTS UNAVAILABLE")
                     .withStyle(mccFontStyle.withColor(ChatFormatting.GOLD)),
                 mcFont
             ).atBottom(0, 2, LayoutConstants.LEFT)

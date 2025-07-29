@@ -82,9 +82,9 @@ class TridentClient : ClientModInitializer {
                 SupplyWidgetTimer.INSTANCE.startUnstableOverclock()
                 0
             }
-        ).then(ClientCommandManager.literal("testLerp")
+        ).then(ClientCommandManager.literal("fakeSupremeOverclock")
             .executes { _ ->
-
+                SupplyWidgetTimer.INSTANCE.startSupremeOverclock()
                 0
             }
         )

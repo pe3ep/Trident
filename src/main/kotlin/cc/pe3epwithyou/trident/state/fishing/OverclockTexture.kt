@@ -57,4 +57,47 @@ enum class OverclockTexture(
     SPEEDY_ROD(
         ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/overclock/speedy_rod.png")
     ),
+
+//    Timed overclocks
+    GLIMMERING_UNSTABLE(
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/overclock/glimmering_unstable.png"),
+        16,
+        176
+    ),
+    GREEDY_UNSTABLE(
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/overclock/greedy_unstable.png"),
+        16,
+        176
+    ),
+    LUCKY_UNSTABLE(
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/overclock/lucky_unstable.png"),
+        16,
+        176
+    ),
+    STRONG_UNSTABLE(
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/overclock/strong_unstable.png"),
+        16,
+        176
+    ),
+    WISE_UNSTABLE(
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/overclock/wise_unstable.png"),
+        16,
+        176
+    ),
+
+    SUPREME(
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/overclock/supreme.png"),
+        16,
+        80
+    ),
+
+//    Misc
+    ACTIVATED(
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/overclock/activated.png"),
+        16,
+        48
+    ),
+    COOLDOWN(
+        ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/fishing/overclock/cooldown.png"),
+    ),
 }

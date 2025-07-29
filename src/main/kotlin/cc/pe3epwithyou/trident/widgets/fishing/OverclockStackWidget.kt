@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.widgets.fishing
 
 import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.state.Overclock
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.TridentColor
@@ -40,7 +41,25 @@ class OverclockStackWidget(
 
         val overclockState = TridentClient.playerState.supplies.overclocks
 
-        // Colors for unstable overclock (normal and cooldown)
+//        Get the needed overclock texture
+        var unstableTexture = OverclockTexture.COOLDOWN
+        when {
+            overclockState.unstable.isCooldown -> unstableTexture = OverclockTexture.COOLDOWN
+            overclockState.unstable.isActive -> unstableTexture = overclockState.unstable.texture ?: OverclockTexture.COOLDOWN
+            !overclockState.unstable.isActive && !overclockState.unstable.isCooldown -> unstableTexture = OverclockTexture.ACTIVATED
+        }
+        var supremeTexture = OverclockTexture.SUPREME
+        when {
+            overclockState.supreme.isCooldown -> supremeTexture = OverclockTexture.COOLDOWN
+            overclockState.supreme.isActive -> supremeTexture = OverclockTexture.SUPREME
+            !overclockState.supreme.isActive && !overclockState.supreme.isCooldown -> supremeTexture = OverclockTexture.ACTIVATED
+        }
+
+        +UnstableOverclockWidget(width, height, unstableTexture, 3, getOverclockComponent(overclockState.unstable))
+        +UnstableOverclockWidget(height, height, supremeTexture, 0, getOverclockComponent(overclockState.supreme))
+    }
+
+    private fun getOverclockComponent(state: Overclock): Component {
         val normalColors = listOf(
             TridentColor(0xFFFFFF),
             TridentColor(0xFFFFFF),
@@ -58,13 +77,13 @@ class OverclockStackWidget(
             TridentColor(0x1EFC00)
         )
 
-        val (colors, ratio, time) = if (overclockState.unstable.isCooldown) {
-            val ratio = overclockState.unstable.cooldownLeft.toFloat() / overclockState.unstable.cooldownDuration
-            val time = convertTicks(overclockState.unstable.cooldownLeft)
+        val (colors, ratio, time) = if (state.isCooldown) {
+            val ratio = state.cooldownLeft.toFloat() / state.cooldownDuration
+            val time = convertTicks(state.cooldownLeft)
             Triple(cooldownColors, ratio, time)
         } else {
-            val ratio = overclockState.unstable.timeLeft.toFloat() / overclockState.unstable.duration
-            val time = convertTicks(overclockState.unstable.timeLeft)
+            val ratio = state.timeLeft.toFloat() / state.duration
+            val time = convertTicks(state.timeLeft)
             Triple(normalColors, ratio, time)
         }
 
@@ -75,16 +94,14 @@ class OverclockStackWidget(
                 .withFont(TridentFont.getMCCFont(offset = 3))
         )
 
-        if (!overclockState.unstable.isActive && !overclockState.unstable.isCooldown) {
+        if (!state.isActive && !state.isCooldown) {
             component = Component.literal("READY").withStyle(
                 Style.EMPTY
                     .withColor(TridentColor(0x1EFC00).textColor)
                     .withFont(TridentFont.getMCCFont(offset = 3))
             )
         }
-
-        +UnstableOverclockWidget(width, height, OverclockTexture.TREASURE_MAGNET, 3, component)
-        +UnstableOverclockWidget(height, height, OverclockTexture.BOOSTED_ROD, 0, component)
+        return component
     }
 
     override fun getWidth(): Int = layout.width

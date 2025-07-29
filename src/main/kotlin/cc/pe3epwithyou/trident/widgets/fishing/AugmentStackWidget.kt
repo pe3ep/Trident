@@ -14,7 +14,7 @@ class AugmentStackWidget(width: Int, height: Int, theme: Themed, entries: List<A
         LinearLayout.Orientation.HORIZONTAL,
         0,
     ) {
-        entries.forEach { augment ->
+        entries.forEachIndexed { i, augment ->
             +IconWidget(
                 Texture(
                     augment.texturePath,
@@ -23,12 +23,14 @@ class AugmentStackWidget(width: Int, height: Int, theme: Themed, entries: List<A
                     augment.textureWidth,
                     augment.textureHeight
                 ),
-                marginRight = 2
+                marginRight = if (i == entries.lastIndex) 0 else 2
             )
         }
     }
 
     override fun mouseClicked(d: Double, e: Double, i: Int): Boolean = false
+    override fun getWidth(): Int = layout.width
+    override fun getHeight(): Int = layout.height
 
     init {
         layout.arrangeElements()
