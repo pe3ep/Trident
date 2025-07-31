@@ -1,8 +1,10 @@
 package cc.pe3epwithyou.trident.widgets.fishing
 
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
+import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.widgets.IconWidget
+import cc.pe3epwithyou.trident.widgets.ItemWidget
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import net.minecraft.client.Minecraft
@@ -16,13 +18,11 @@ class UnstableOverclockWidget(width: Int, height: Int, overclockTexture: Overclo
         0,
     ) {
         val mcfont = Minecraft.getInstance().font
-        +IconWidget(
-            Texture(
+        +ItemWidget(
+            Model(
                 overclockTexture.texturePath,
                 height,
                 height,
-                overclockTexture.textureWidth,
-                overclockTexture.textureHeight
             ),
             marginRight = 2
         )

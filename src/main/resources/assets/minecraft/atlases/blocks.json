@@ -1,0 +1,14 @@
+{
+  "sources": [
+    {
+      "type": "directory",
+      "source": "_font",
+      "prefix": "_font/"
+    },
+    {
+      "type": "directory",
+      "source": "interface",
+      "prefix": "interface/"
+    }
+  ]
+}

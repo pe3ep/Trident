@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.dialogs
 
+import cc.pe3epwithyou.trident.utils.ChatUtils
 import com.noxcrew.sheeplib.DialogContainer
 import net.minecraft.client.Minecraft
 
@@ -10,8 +11,9 @@ import net.minecraft.client.Minecraft
  * close, refresh, and clear dialogs.
  */
 object DialogCollection {
-    private val openedDialogs = hashMapOf<String, TridentDialog>()
+    private val openedDialogs = mutableMapOf<String, TridentDialog>()
     private const val DIALOG_GAP = 5
+    private val dialogPositions = mutableMapOf<String, Pair<Int, Int>>()
 
     /**
      * Opens a dialog with the specified [key] if it is not already opened.
@@ -22,10 +24,22 @@ object DialogCollection {
     fun open(key: String, dialog: TridentDialog) {
         if (openedDialogs.containsKey(key)) return
         DialogContainer += dialog
-        val (x, y) = findPositionForNewDialog(dialog.width, dialog.height)
+        if (dialogPositions.containsKey(key)) {
+//            This dialog has its position saved
+            val position = dialogPositions[key]!!
+            positionDialog(dialog, position)
+
+        } else {
+            val position = findPositionForNewDialog(dialog.width, dialog.height)
+            positionDialog(dialog, position)
+        }
+        openedDialogs.putIfAbsent(key, dialog)
+    }
+
+    private fun positionDialog(dialog: TridentDialog, position: Pair<Int, Int>) {
+        val (x, y) = position
         dialog.x = x
         dialog.y = y
-        openedDialogs.putIfAbsent(key, dialog)
     }
 
     /**
@@ -54,9 +68,21 @@ object DialogCollection {
      */
     fun close(key: String) {
         if (!openedDialogs.containsKey(key)) return
+//        Save dialog position
+        val d = openedDialogs[key]!!
+        saveDialogPosition(key, d)
 
         openedDialogs[key]?.close()
         openedDialogs.remove(key)
+    }
+
+    fun saveDialogPosition(key: String, dialog: TridentDialog) {
+        val position: Pair<Int, Int> = Pair(dialog.x, dialog.y)
+        dialogPositions[key] = position
+    }
+
+    fun saveDialogPosition(key: String, position: Pair<Int, Int>) {
+        dialogPositions[key] = position
     }
 
     /**
@@ -73,8 +99,23 @@ object DialogCollection {
      * Closes all opened dialogs and clears the internal collection.
      */
     fun clear() {
-        openedDialogs.forEach { (key, _) ->
-            close(key)
+        val keys = openedDialogs.keys.toList()
+        keys.forEach { key ->
+            ChatUtils.info("Attempting to clear $key")
+            openedDialogs[key]?.close()
+        }
+    }
+
+    /**
+     * Resets all saved dialog positions and automatically sets the position of all opened dialogs
+     * to be near the top left corner of the screen.
+     * Useful in case a saved position is in an inaccessible place
+     */
+    fun resetDialogPositions() {
+        dialogPositions.clear()
+        openedDialogs.entries.forEach { (_, dialog) ->
+            val position = findPositionForNewDialog(dialog.width, dialog.height)
+            positionDialog(dialog, position)
         }
     }
 

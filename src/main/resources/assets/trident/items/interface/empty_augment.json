@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "trident:interface/empty_augment"
+  },
+  "oversized_in_gui": true
+}

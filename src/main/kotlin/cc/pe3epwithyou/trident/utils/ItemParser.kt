@@ -44,11 +44,9 @@ object ItemParser {
                 val minutes = line.string.split(": ")[1]
                 if (minutes.split(" ").size == 1) {
                     val minuteInt = minutes.dropLast(1).toInt()
-                    ChatUtils.sendMessage("minutes: $minutes, minutesInt: $minuteInt")
                     TridentClient.playerState.supplies.overclocks.unstable.duration = minuteInt * 60L * 20L
                 } else {
                     val minuteInt = minutes.split(" ")[1].dropLast(1).toInt()
-                    ChatUtils.sendMessage("minutes: $minutes, minutesInt: $minuteInt")
                     TridentClient.playerState.supplies.overclocks.unstable.duration = minuteInt * 60L * 20L
                 }
             }

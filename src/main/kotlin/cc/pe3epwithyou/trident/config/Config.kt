@@ -78,7 +78,7 @@ class Config {
             handler.load()
         }
 
-        fun getScreen(parentScreen: Screen): Screen = YetAnotherConfigLib("trident") {
+        fun getScreen(parentScreen: Screen?): Screen = YetAnotherConfigLib("trident") {
             title(Component.translatable("config.trident"))
             save(handler::save)
 

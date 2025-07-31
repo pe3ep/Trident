@@ -21,8 +21,7 @@ public data class Texture(
      * @param y the Y coordinate to blit to (top edge)
      * @param scale a factor to scale the icon up by. Defaults to 1.
      */
-    public fun blit(guiGraphics: GuiGraphics, x: Int, y: Int, scale: Int = 1, isHovered: Boolean = false) {
-//        guiGraphics.fill(x, y, x + 12, y + 12, 0xFF0000.opaqueColor())
+    fun blit(guiGraphics: GuiGraphics, x: Int, y: Int, scale: Int = 1, isHovered: Boolean = false) {
         guiGraphics.blit(
             RenderType::guiTextured,
             if (isHovered) hoverLocation else location,
@@ -33,7 +32,7 @@ public data class Texture(
             width * scale,
             height * scale,
             textureWidth * scale,
-            textureWidth * scale,
+            textureHeight * scale,
             textureWidth,
             textureHeight
         )

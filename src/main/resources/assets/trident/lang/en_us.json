@@ -36,5 +36,8 @@
   "config.trident.games.auto_focus.name": "Focus game on countdown",
   "config.trident.games.auto_focus.description": "Automatically focuses Minecraft when your game is about to start.",
 
-  "trident.not_island": "You are not currently playing on MCC Island"
+  "trident.not_island": "You are not currently playing on MCC Island",
+
+  "category.trident.keys": "Trident",
+  "key.trident.config": "Open Trident settings"
 }

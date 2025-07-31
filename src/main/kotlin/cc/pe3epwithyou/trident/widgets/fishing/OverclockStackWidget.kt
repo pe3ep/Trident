@@ -3,10 +3,11 @@ package cc.pe3epwithyou.trident.widgets.fishing
 import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.state.Overclock
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
-import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.widgets.IconWidget
+import cc.pe3epwithyou.trident.widgets.ItemWidget
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import com.noxcrew.sheeplib.theme.Themed
@@ -27,13 +28,11 @@ class OverclockStackWidget(
         0
     ) {
         stableClocks.forEachIndexed { index, overclock ->
-            +IconWidget(
-                Texture(
+            +ItemWidget(
+                Model(
                     overclock.texturePath,
                     width,
                     height,
-                    overclock.textureWidth,
-                    overclock.textureHeight
                 ),
                 marginRight = if (index == stableClocks.lastIndex) 3 else 0
             )
