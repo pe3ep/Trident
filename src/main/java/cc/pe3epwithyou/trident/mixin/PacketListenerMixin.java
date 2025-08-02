@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
+import cc.pe3epwithyou.trident.client.events.KillChatListener;
 import cc.pe3epwithyou.trident.feature.FocusGame;
 import cc.pe3epwithyou.trident.state.MCCGame;
 import cc.pe3epwithyou.trident.state.MCCIslandState;

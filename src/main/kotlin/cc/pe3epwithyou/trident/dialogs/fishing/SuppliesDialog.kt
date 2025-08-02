@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.widgets.fishing.AugmentStackWidget
+import cc.pe3epwithyou.trident.widgets.fishing.OverclockStackWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
@@ -111,6 +112,30 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 width = 46
             }
 
+        // Overclocks
+        StringWidget(Component.literal("Overclocks".uppercase()).withStyle(mccFontStyle), mcFont)
+            .atBottom(0, 2, LayoutConstants.LEFT)
+
+        val stableOverclocks = listOfNotNull(
+            supplies.overclocks.hook?.asociatedOverclockTexture,
+            supplies.overclocks.magnet?.asociatedOverclockTexture,
+            supplies.overclocks.rod?.asociatedOverclockTexture
+        )
+        if (stableOverclocks.isEmpty()) {
+            StringWidget(
+                Component.literal("OVERCLOCKS UNAVAILABLE")
+                    .withStyle(mccFontStyle.withColor(ChatFormatting.GOLD)),
+                mcFont
+            ).atBottom(0, 2, LayoutConstants.LEFT)
+        } else {
+            OverclockStackWidget(
+                width = 14,
+                height = 14,
+                theme = this@SuppliesDialog,
+                stableClocks = stableOverclocks,
+            ).atBottom(0, 2, LayoutConstants.LEFT)
+        }
+
         // Augments
         val augmentsEquipped = supplies.augments.size
         val augmentsTotal = supplies.augmentsAvailable
@@ -122,46 +147,29 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                         .withStyle(mccFontStyle.withColor(ChatFormatting.GRAY))
                 ),
             mcFont
-        ).at(1, 0, 1, 2, settings = LayoutConstants.LEFT)
+        ).atBottom(0, 2, settings = LayoutConstants.LEFT)
 
-        // Split augments into two lines
-        val augmentLine1 = mutableListOf<Augment>()
-        val augmentLine2 = mutableListOf<Augment>()
-        supplies.augments.forEach { augment ->
-            if (augmentLine1.size < 8) {
-                augmentLine1.add(augment)
-            } else {
-                augmentLine2.add(augment)
+        val augmentLine = supplies.augments
+        if (augmentLine.size < supplies.augmentsAvailable) {
+            for (i in 1..(supplies.augmentsAvailable - augmentLine.size)) {
+                augmentLine.add(Augment.EMPTY_AUGMENT)
             }
         }
-
-        if (augmentLine1.isEmpty()) {
+        if (augmentLine.isEmpty()) {
             StringWidget(
-                Component.literal("NO AUGMENTS SELECTED")
+                Component.literal("AUGMENTS UNAVAILABLE")
                     .withStyle(mccFontStyle.withColor(ChatFormatting.GOLD)),
                 mcFont
-            ).at(2, 0, 1, 2, LayoutConstants.CENTRE)
+            ).atBottom(0, 2, LayoutConstants.LEFT)
         } else {
             AugmentStackWidget(
                 width = 12,
                 height = 12,
                 theme = this@SuppliesDialog,
-                entries = augmentLine1
-            ).at(2, 0, 1, 2, LayoutConstants.LEFT)
+                entries = augmentLine
+            ).atBottom(0, 2, LayoutConstants.LEFT)
         }
 
-        if (augmentLine2.isNotEmpty()) {
-            AugmentStackWidget(
-                width = 12,
-                height = 12,
-                theme = this@SuppliesDialog,
-                entries = augmentLine2
-            ).at(3, 0, 1, 2, LayoutConstants.LEFT)
-        }
-
-//        TODO: Overclocks
-//        StringWidget(Component.literal("Overclocl".uppercase()).withStyle(mccFontStyle), mcFont)
-//            .at(4, 0, 1, 2, settings = LayoutConstants.LEFT)
     }
 
     override fun refresh() {

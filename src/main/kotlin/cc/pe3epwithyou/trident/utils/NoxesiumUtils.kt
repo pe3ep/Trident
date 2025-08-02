@@ -1,9 +1,10 @@
 package cc.pe3epwithyou.trident.utils
 
+import cc.pe3epwithyou.trident.client.events.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
-import cc.pe3epwithyou.trident.feature.FocusGame
+import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
@@ -37,7 +38,6 @@ object NoxesiumUtils {
 
     private fun updateGameDialogs(currentGame: MCCGame) {
         DialogCollection.clear()
-
         if (currentGame == MCCGame.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
@@ -63,6 +63,9 @@ object NoxesiumUtils {
             updateFishingState(type)
 
             val currentGame = getCurrentGame(server, type, game)
+            if (currentGame in listOf(MCCGame.DYNABALL, MCCGame.BATTLE_BOX)) {
+                KillFeedDialog.clearKills()
+            }
             if (currentGame != MCCIslandState.game) {
                 MCCIslandState.game = currentGame
                 updateGameDialogs(currentGame)

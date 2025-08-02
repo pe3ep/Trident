@@ -1,8 +1,10 @@
 package cc.pe3epwithyou.trident.widgets.fishing
 
 import cc.pe3epwithyou.trident.state.fishing.Augment
+import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.widgets.IconWidget
+import cc.pe3epwithyou.trident.widgets.ItemWidget
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import com.noxcrew.sheeplib.theme.Themed
@@ -14,21 +16,21 @@ class AugmentStackWidget(width: Int, height: Int, theme: Themed, entries: List<A
         LinearLayout.Orientation.HORIZONTAL,
         0,
     ) {
-        entries.forEach { augment ->
-            +IconWidget(
-                Texture(
+        entries.forEachIndexed { i, augment ->
+            +ItemWidget(
+                Model(
                     augment.texturePath,
                     width,
                     height,
-                    augment.textureWidth,
-                    augment.textureHeight
                 ),
-                marginRight = 2
+                marginRight = if (i == entries.lastIndex) 0 else 2
             )
         }
     }
 
     override fun mouseClicked(d: Double, e: Double, i: Int): Boolean = false
+    override fun getWidth(): Int = layout.width
+    override fun getHeight(): Int = layout.height
 
     init {
         layout.arrangeElements()
