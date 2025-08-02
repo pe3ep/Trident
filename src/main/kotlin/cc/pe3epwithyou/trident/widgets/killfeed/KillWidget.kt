@@ -51,7 +51,7 @@ class KillWidget(
         }
 
         if (attacker != null) {
-            +KillBackground(firstColor, attacker, killType, killMethod)
+            +KillBackground(firstColor, attacker, killMethod)
             +IconWidget(
                 Texture(
                     killType.transitionSprite,
@@ -60,7 +60,7 @@ class KillWidget(
                 )
             )
         }
-        +KillBackground(secondColor, victim, killType)
+        +KillBackground(secondColor, victim)
     }
 
     init {
@@ -72,7 +72,6 @@ class KillWidget(
 private class KillBackground(
     private val color: Int,
     private val player: String,
-    private val killType: KillType,
     private val killMethod: KillMethod? = null,
 ) : CompoundWidget(0, 0, 0, 0) {
     private companion object {

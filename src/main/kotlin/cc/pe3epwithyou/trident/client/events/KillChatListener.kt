@@ -1,36 +1,109 @@
 package cc.pe3epwithyou.trident.client.events
 
+import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.widgets.killfeed.KillMethod
+import cc.pe3epwithyou.trident.widgets.killfeed.KillType
+import cc.pe3epwithyou.trident.widgets.killfeed.KillWidget
+import com.noxcrew.sheeplib.util.opaqueColor
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import java.util.Optional
-import java.util.UUID
+import net.minecraft.world.scores.DisplaySlot
 
 object KillChatListener {
+    private val fallbackColor = 0xFFFFFF.opaqueColor()
+    var teamColor: Int = fallbackColor
+
     private val slainRegex = Regex("^\\[.] .+ (was slain by) .+")
+    private val shotRegex = Regex("^\\[.] .+ (was shot by) .+")
+    private val explodedRegex = Regex("^\\[.] .+ (was blown up by) .+")
+
+    private fun checkScoreboard() {
+        val player = Minecraft.getInstance().player!!
+        val scoreboard = player.scoreboard
+        val objective = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return
+        val scores = scoreboard.listPlayerScores(objective)
+        scores.forEach {
+            val component = it.display ?: return@forEach
+            if (player.name.string !in component.string) return@forEach
+            val cleaned = cleanupComponent(component).first()
+            if (Config.Debug.enableLogging) {
+                ChatUtils.sendMessage(Component.literal("Cleaned Name from scoreboard: ").append(cleaned))
+            }
+            teamColor = cleaned.style.color?.value ?: fallbackColor
+            return
+        }
+    }
 
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIslandState.isOnIsland()) return@allowGame true
-            if (MCCIslandState.game !in arrayOf(MCCGame.BATTLE_BOX, MCCGame.SKY_BATTLE)) return@allowGame true
+            if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return@allowGame true
+//            handleFacingText(message)
+
             if (slainRegex.matches(message.string)) {
-//                Remove the coins
-//                message.siblings.forEach { c ->
-//                    ChatUtils.sendMessage(c, true)
-//                }
-                val players = cleanupComponent(message)
-                players.forEach {
-                    ChatUtils.sendMessage(it, true)
-                }
+                handleKill(message, KillMethod.MELEE)
+            }
+
+            if (shotRegex.matches(message.string)) {
+                handleKill(message, KillMethod.RANGE)
+            }
+
+            if (explodedRegex.matches(message.string)) {
+                handleKill(message, KillMethod.EXPLOSION)
             }
 
             return@allowGame true
         }
+    }
+
+    private fun handleKill(message: Component, method: KillMethod) {
+        checkScoreboard()
+        val players = cleanupComponent(message)
+        val victim = players[0]
+        val attacker = players[1]
+        val type = getType(message, attacker)
+
+        KillFeedDialog.addKill(
+            KillWidget(
+                victim.string,
+                method,
+                attacker.string,
+                type
+            )
+        )
+    }
+
+    private fun getType(message: Component, attacker: Component): KillType {
+        val type: KillType
+        val self = Minecraft.getInstance().player!!
+        if (Config.Debug.enableLogging) {
+            ChatUtils.sendMessage("""
+                AttackerColorInt: ${attacker.style.color?.value}
+                CapturedTeamColor: $teamColor
+            """.trimIndent())
+        }
+
+        type = if (self.name.string in message.string) {
+            if (attacker.string == self.name.string) {
+                KillType.SELF_ENEMY
+            } else {
+                KillType.ENEMY_SELF
+            }
+        } else {
+            if (attacker.style.color?.value == teamColor) {
+                KillType.TEAM_ENEMY
+            } else {
+                KillType.ENEMY_TEAM
+            }
+        }
+
+        return type
     }
 
     private fun cleanupComponent(c: Component): List<Component> {
@@ -39,6 +112,7 @@ object KillChatListener {
         val components: MutableList<Component> = mutableListOf()
         rawList.forEach {
             if (it.string.length in 1..2) return@forEach
+            if ("[" in it.string) return@forEach
             val uuid = socialManager.getDiscoveredUUID(it.string)
             if (uuid == Util.NIL_UUID) return@forEach
             components.add(it)

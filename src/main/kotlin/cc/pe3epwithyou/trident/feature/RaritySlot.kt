@@ -14,14 +14,13 @@ object RaritySlot {
 
         if (slot.item.isEmpty) return
 //        Don't show the background for common items to reduce visual clutter
-        if (slot.item.hoverName.style.color == null) return
-        if (slot.item.hoverName.style.color == TextColor.fromLegacyFormat(ChatFormatting.WHITE)) return
+        val color = slot.item.hoverName.style.color ?: return
+        if (color == TextColor.fromLegacyFormat(ChatFormatting.WHITE)) return
 
-        graphics.fill(x, y + 15, x + 16, y + 16, 10, slot.item.hoverName.style.color!!.value.opaqueColor())
-        graphics.fill(x, y, x + 16, y + 1, 10, slot.item.hoverName.style.color!!.value.opaqueColor())
-
-        graphics.fill(x, y, x + 1, y + 16, 10, slot.item.hoverName.style.color!!.value.opaqueColor())
-        graphics.fill(x + 15, y, x + 16, y + 16, 10, slot.item.hoverName.style.color!!.value.opaqueColor())
+        graphics.fill(x, y + 15, x + 16, y + 16, 10, color.value.opaqueColor())
+        graphics.fill(x, y, x + 16, y + 1, 10, color.value.opaqueColor())
+        graphics.fill(x, y, x + 1, y + 16, 10, color.value.opaqueColor())
+        graphics.fill(x + 15, y, x + 16, y + 16, 10, color.value.opaqueColor())
     }
 
 }
