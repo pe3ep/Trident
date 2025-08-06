@@ -58,7 +58,7 @@ enum class Augment(
         asociatedOverclockTexture = OverclockTexture.TREASURE_MAGNET
     ),
     SPIRIT_MAGNET(
-        "Spirit Magner",
+        "Spirit Magnet",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/spirit_magnet"),
         asociatedOverclockTexture = OverclockTexture.SPIRIT_MAGNET
     ),
