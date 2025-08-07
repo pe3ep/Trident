@@ -24,17 +24,22 @@ object DepletedDisplay {
     }
 
     class DepletedTimer : ClientTickEvents.EndTick {
-        private var ticksUntilSomething: Long = 0
+        private var ticks: Long = 0
         private var playerPosition: Vec3 = Vec3(0.0, 0.0, 0.0)
         private var title: Component = depletedTitle
         fun startLoop(component: Component, waitFor: Long) {
             this.playerPosition = Minecraft.getInstance().player?.position()!!
-            this.ticksUntilSomething = waitFor
+            this.ticks = waitFor
             this.title = component
         }
 
+        fun stopLoop() {
+            playerPosition = Vec3(0.0, 0.0, 0.0)
+            this.ticks = 0
+        }
+
         override fun onEndTick(client: Minecraft) {
-            if (--this.ticksUntilSomething == 0L) {
+            if (--this.ticks == 0L) {
                 Title.sendTitle(
                     Component.empty(),
                     this.title,
@@ -44,7 +49,7 @@ object DepletedDisplay {
                     false
                 )
                 if (Minecraft.getInstance().player?.position()!! == playerPosition) {
-                    this.ticksUntilSomething = 2
+                    this.ticks = 2
                 }
             }
         }
