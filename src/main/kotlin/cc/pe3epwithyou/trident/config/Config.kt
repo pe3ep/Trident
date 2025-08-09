@@ -33,6 +33,13 @@ class Config {
     @SerialEntry
     var gamesAutoFocus: Boolean = false
 
+
+    @SerialEntry
+    var killfeedEnabled: Boolean = true
+
+    @SerialEntry
+    var killfeedHideKills: Boolean = true
+
     object Global {
         val rarityOverlay: Boolean
             get() = handler.instance().globalRarityOverlay
@@ -60,6 +67,13 @@ class Config {
     object Games {
         val autoFocus: Boolean
             get() = handler.instance().gamesAutoFocus
+    }
+
+    object KillFeed {
+        val enabled: Boolean
+            get() = handler.instance().killfeedEnabled
+        val hideKills: Boolean
+            get() = handler.instance().killfeedHideKills
     }
 
     companion object {
@@ -116,6 +130,25 @@ class Config {
                         name(Component.translatable("config.trident.games.auto_focus.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.games.auto_focus.description")))
                         binding(handler.instance()::gamesAutoFocus, false)
+                        controller(tickBox())
+                    }
+                }
+
+                groups.register("killfeed") {
+                    name(Component.translatable("config.trident.killfeed.name"))
+                    description(OptionDescription.of(Component.translatable("config.trident.killfeed.description")))
+
+                    options.register<Boolean>("killfeed_enabled") {
+                        name(Component.translatable("config.trident.killfeed.enabled.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.enabled.description")))
+                        binding(handler.instance()::killfeedEnabled, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("killfeed_hide_kills") {
+                        name(Component.translatable("config.trident.killfeed.hide_kills.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.hide_kills.description")))
+                        binding(handler.instance()::killfeedHideKills, true)
                         controller(tickBox())
                     }
                 }

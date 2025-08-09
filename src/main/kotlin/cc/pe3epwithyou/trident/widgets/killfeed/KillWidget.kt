@@ -14,8 +14,10 @@ import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LayoutSettings
 import net.minecraft.client.gui.layouts.LinearLayout
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import net.minecraft.resources.ResourceLocation
 
 class KillWidget(
     private val victim: String,
@@ -60,7 +62,7 @@ class KillWidget(
                 )
             )
         }
-        +KillBackground(secondColor, victim)
+        +KillBackground(secondColor, victim, isLeft = false)
     }
 
     init {
@@ -73,9 +75,11 @@ private class KillBackground(
     private val color: Int,
     private val player: String,
     private val killMethod: KillMethod? = null,
+    private val isLeft: Boolean = true,
 ) : CompoundWidget(0, 0, 0, 0) {
     private companion object {
-        private const val PADDING = 3
+        private val ROUNDED_LEFT = ResourceLocation.fromNamespaceAndPath("trident", "interface/background/rounded_left")
+        private val ROUNDED_RIGHT = ResourceLocation.fromNamespaceAndPath("trident", "interface/background/rounded_right")
     }
 
     override fun getWidth(): Int = layout.width
@@ -95,10 +99,14 @@ private class KillBackground(
                 )
             )
         if (killMethod != null) {
-            c.append(Component.literal(" ${killMethod.icon}"))
+            c.append(Component.literal(" ${killMethod.icon}")
+                .withStyle(Style.EMPTY
+                    .withFont(TridentFont.getTridentFont())
+                )
+            )
         }
         StringWidget(c, mcFont).alignCenter().add(LayoutSettings.defaults().apply {
-            padding(4, 3)
+            padding(4, 3, if (isLeft) 2 else 4, 3)
         })
     }
 
@@ -108,7 +116,16 @@ private class KillBackground(
     }
 
     override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        graphics.fill(x, y, x + layout.width, y + layout.height, color)
+//        graphics.fill(x, y, x + layout.width, y + layout.height, color)
+        graphics.blitSprite(
+            RenderType::guiTextured,
+            if (isLeft) ROUNDED_LEFT else ROUNDED_RIGHT,
+            x,
+            y,
+            layout.width,
+            layout.height,
+            color
+        )
         super.renderWidget(graphics, i, j, f)
     }
 

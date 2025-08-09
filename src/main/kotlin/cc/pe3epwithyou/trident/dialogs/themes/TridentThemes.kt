@@ -8,9 +8,6 @@ enum class TridentThemes(val theme: Theme) : NameableEnum {
     DEFAULT(DefaultTheme) {
         override fun getDisplayName(): Component = Component.literal("Default theme")
     },
-    BORDERLESS(BorderlessTheme) {
-        override fun getDisplayName(): Component = Component.literal("Borderless theme")
-    },
     OPAQUE(OpaqueTheme) {
         override fun getDisplayName(): Component = Component.literal("Opaque theme")
     }

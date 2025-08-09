@@ -27,11 +27,11 @@ public class Model(
      * @param guiGraphics a [GuiGraphics] instance to render with
      * @param x the X coordinate to blit to (left edge)
      * @param y the Y coordinate to blit to (top edge)
-     * @param scale a factor to scale the icon up by. Defaults to 1.
      */
-    fun render(guiGraphics: GuiGraphics, x: Int, y: Int, scale: Int = 1) {
+    fun render(guiGraphics: GuiGraphics, x: Int, y: Int) {
         val client = Minecraft.getInstance()
         guiGraphics.pose().pushPose()
+
         guiGraphics.pose().translate(x + (width.toFloat() / 2), y + (width.toFloat() / 2), 150F)
         guiGraphics.pose().scale(width.toFloat(), -width.toFloat(), width.toFloat())
         Lighting.setupForFlatItems()
@@ -47,10 +47,5 @@ public class Model(
         )
 
         guiGraphics.pose().popPose()
-
-//        guiGraphics.renderFakeItem(item,
-//            x,
-//            y
-//        )
     }
 }

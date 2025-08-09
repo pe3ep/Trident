@@ -18,10 +18,19 @@ import net.minecraft.world.scores.DisplaySlot
 object KillChatListener {
     private val fallbackColor = 0xFFFFFF.opaqueColor()
     var teamColor: Int = fallbackColor
+    private var isEnabled = true
+//        Round 1 Over!
 
     private val slainRegex = Regex("^\\[.] .+ (was slain by) .+")
     private val shotRegex = Regex("^\\[.] .+ (was shot by) .+")
     private val explodedRegex = Regex("^\\[.] .+ (was blown up by) .+")
+    private val lavaRegex = Regex("^\\[.] .+ (tried to swim in lava to escape) .+")
+    private val potRegex = Regex("^\\[.] .+ was eliminated with magic by .+ using .+")
+    private val potRegexAlt = Regex("^\\[.] .+ was hit by .+")
+    private val loggedOut = Regex("^\\[.] .+ logged out")
+
+    private val spectatingRegex = Regex("You are now spectating another team\\.")
+    private val roundOverRegex = Regex("^\\[.] Round \\d Over!")
 
     private fun checkScoreboard() {
         val player = Minecraft.getInstance().player!!
@@ -44,25 +53,46 @@ object KillChatListener {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIslandState.isOnIsland()) return@allowGame true
             if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return@allowGame true
-//            handleFacingText(message)
+
+            if (spectatingRegex.matches(message.string) && MCCIslandState.game == MCCGame.BATTLE_BOX) {
+                isEnabled = false
+            }
+
+            if (roundOverRegex.matches(message.string) && MCCIslandState.game == MCCGame.BATTLE_BOX) {
+                isEnabled = true
+            }
+
+            if (!isEnabled) return@allowGame true
 
             if (slainRegex.matches(message.string)) {
-                handleKill(message, KillMethod.MELEE)
+                return@allowGame handleKill(message, KillMethod.MELEE)
             }
 
             if (shotRegex.matches(message.string)) {
-                handleKill(message, KillMethod.RANGE)
+                return@allowGame handleKill(message, KillMethod.RANGE)
             }
 
             if (explodedRegex.matches(message.string)) {
-                handleKill(message, KillMethod.EXPLOSION)
+                return@allowGame handleKill(message, KillMethod.EXPLOSION)
             }
+
+            if (lavaRegex.matches(message.string)) {
+                return@allowGame handleKill(message, KillMethod.LAVA)
+            }
+
+            if (potRegex.matches(message.string) || potRegexAlt.matches(message.string)) {
+                return@allowGame handleKill(message, KillMethod.POTION)
+            }
+
+//            if (loggedOut.matches(message.string)) {
+//                return@allowGame handleKill(message, KillMethod.DISCONNECT)
+//            }
 
             return@allowGame true
         }
     }
 
-    private fun handleKill(message: Component, method: KillMethod) {
+    private fun handleKill(message: Component, method: KillMethod): Boolean {
         checkScoreboard()
         val players = cleanupComponent(message)
         val victim = players[0]
@@ -77,6 +107,7 @@ object KillChatListener {
                 type
             )
         )
+        return !Config.KillFeed.hideKills
     }
 
     private fun getType(message: Component, attacker: Component): KillType {

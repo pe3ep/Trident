@@ -36,6 +36,16 @@
   "config.trident.games.auto_focus.name": "Focus game on countdown",
   "config.trident.games.auto_focus.description": "Automatically focuses Minecraft when your game is about to start.",
 
+
+  "config.trident.killfeed.name": "Kill Feed",
+  "config.trident.killfeed.description": "Options that apply to the in-game Kill Feed",
+
+  "config.trident.killfeed.enabled.name": "Enable",
+  "config.trident.killfeed.enabled.description": "Enabled the kill feed",
+
+  "config.trident.killfeed.hide_kills.name": "Hide kill messages in chat",
+  "config.trident.killfeed.hide_kills.description": "When enabled, hides kill messages in the chat.",
+
   "trident.not_island": "You are not currently playing on MCC Island",
 
   "category.trident.keys": "Trident",

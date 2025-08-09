@@ -5,11 +5,15 @@ import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.util.opacity
 
 @Suppress("MagicNumber")
-object BorderlessTheme: Theme by DefaultTheme {
+object TransparentTheme: Theme by DefaultTheme {
+    private val TRANSPARENT = 0x000000 opacity 0
+
     override val theme: Theme = this
     override val dialogBorders: Boolean = false
     override val colors = object : Theme.Colors by DefaultTheme.colors {
-        override val dialogBackgroundAlt: Int = 0x111111 opacity 191
-        override val border: Int = 0x202020 opacity 0
+        override val dialogBackgroundAlt: Int = TRANSPARENT
+        override val dialogBackground: Int = TRANSPARENT
+        override val widgetBackgroundPrimary: Int = TRANSPARENT
+        override val widgetBackgroundSecondary: Int = TRANSPARENT
     }
 }

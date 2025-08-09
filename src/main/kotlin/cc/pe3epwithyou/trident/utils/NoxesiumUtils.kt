@@ -42,6 +42,10 @@ object NoxesiumUtils {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
         }
+        if (currentGame == MCCGame.BATTLE_BOX && Config.KillFeed.enabled) {
+            val k = "killfeed"
+            DialogCollection.open(k, KillFeedDialog(10, 10, k))
+        }
     }
 
     fun registerListeners() {

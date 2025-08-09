@@ -23,6 +23,9 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
 class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
+    private companion object {
+        private val TITLE_COLOR: Int = 0xeb0e30 opacity 127
+    }
     private fun getWidgetTitle(): DialogTitleWidget {
         val icon = Component.literal("\uE10C")
             .withStyle(
@@ -47,9 +50,9 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                         ).withStyle(ChatFormatting.GRAY)
                     )
             )
-            DialogTitle(this, baseTitle.append(warn), 0x640000 opacity 127, tooltip = tooltip, isCloseable = false)
+            DialogTitle(this, baseTitle.append(warn), TITLE_COLOR, tooltip = tooltip, isCloseable = false)
         } else {
-            DialogTitle(this, baseTitle, 0x640000 opacity 127, isCloseable = false)
+            DialogTitle(this, baseTitle, TITLE_COLOR, isCloseable = false)
         }
     }
 
@@ -149,7 +152,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             mcFont
         ).atBottom(0, 2, settings = LayoutConstants.LEFT)
 
-        val augmentLine = supplies.augments
+        val augmentLine = supplies.augments.toMutableList()
         if (augmentLine.size < supplies.augmentsAvailable) {
             for (i in 1..(supplies.augmentsAvailable - augmentLine.size)) {
                 augmentLine.add(Augment.EMPTY_AUGMENT)

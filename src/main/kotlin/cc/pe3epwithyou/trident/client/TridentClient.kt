@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.dialogs.DebugDialog
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
+import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedSetup
 import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.feature.DepletedDisplay
 import cc.pe3epwithyou.trident.feature.SupplyWidgetTimer
@@ -37,7 +38,8 @@ class TridentClient : ClientModInitializer {
     private val debugDialogs = mapOf(
         "supplies" to ::SuppliesDialog,
         "questing" to ::QuestingDialog,
-//        "killfeed" to ::KillFeedDialog
+        "killfeed" to ::KillFeedDialog,
+        "killsetup" to ::KillFeedSetup
     )
 
     companion object {
@@ -76,31 +78,24 @@ class TridentClient : ClientModInitializer {
                     DialogCollection.close(ctx.getArgument("dialog", String::class.java))
                     0
                 }
-        )
-//        )).then(ClientCommandManager.literal("focusTest").executes {
-//            TimerUtil.INSTANCE.setTimer(60L) {
-//                Minecraft.getInstance().window.focusWindowIfInactive()
-//            }
-//            0
-//        }
-//        }).then(ClientCommandManager.literal("dialogTest").then(
-//            ClientCommandManager.argument("index", StringArgumentType.string())
-//                .executes { ctx ->
-//                    val prefix = ctx.getArgument("index", String::class.java)
-//                    val key = "${prefix}_testdialog"
-//                    DialogCollection.open(key, DebugDialog(10, 10, key))
-//                    0
-//                })
-//        ).then(ClientCommandManager.literal("fakeUnstableOverclock")
-//            .executes { _ ->
-//                SupplyWidgetTimer.INSTANCE.startUnstableOverclock()
-//                0
-//            }
-//        ).then(ClientCommandManager.literal("fakeSupremeOverclock")
-//            .executes { _ ->
-//                SupplyWidgetTimer.INSTANCE.startSupremeOverclock()
-//                0
-//            }
+        )).then(ClientCommandManager.literal("dialogTest").then(
+            ClientCommandManager.argument("index", StringArgumentType.string())
+                .executes { ctx ->
+                    val prefix = ctx.getArgument("index", String::class.java)
+                    val key = "${prefix}_testdialog"
+                    DialogCollection.open(key, DebugDialog(10, 10, key))
+                    0
+                })
+        ).then(ClientCommandManager.literal("fakeUnstableOverclock")
+            .executes { _ ->
+                SupplyWidgetTimer.INSTANCE.startUnstableOverclock()
+                0
+            }
+        ).then(ClientCommandManager.literal("fakeSupremeOverclock")
+            .executes { _ ->
+                SupplyWidgetTimer.INSTANCE.startSupremeOverclock()
+                0
+            }
         ).then(ClientCommandManager.literal("resetDialogPositions")
             .executes { _ ->
                 DialogCollection.resetDialogPositions()

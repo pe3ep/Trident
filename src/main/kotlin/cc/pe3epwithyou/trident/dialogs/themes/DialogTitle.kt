@@ -12,7 +12,9 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.navigation.ScreenRectangle
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
 class DialogTitle(
     override val dialog: Dialog,
@@ -26,6 +28,8 @@ class DialogTitle(
     Themed by dialog {
     private companion object {
         private const val FONT_HEIGHT = 7
+        private val ROUNDED_ALL = ResourceLocation.fromNamespaceAndPath("trident", "interface/background/rounded_all")
+        private val BORDER_TOP = ResourceLocation.fromNamespaceAndPath("trident", "interface/background/border/border_top")
     }
 
     override fun getWidth(): Int = layout.width
@@ -67,11 +71,32 @@ class DialogTitle(
 
     override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
 //        graphics.fillGradient(x, y, x + getWidth(), y + height, color, 0x111111 opacity 0)
-        graphics.fill(x, y, x + getWidth(), y + height, color)
+//        graphics.fill(x, y, x + getWidth(), y + height, color)
+        graphics.blitSprite(
+            RenderType::guiTextured,
+            ROUNDED_ALL,
+            x,
+            y,
+            getWidth(),
+            getHeight(),
+            color
+        )
 //        graphics.fill(x, y, x + getWidth(), y + height, 0x640000 opacity 63)
-        graphics.hLine(x, x + getWidth() - 1, y, theme.colors.border)
-        graphics.vLine(x, y, y + height, theme.colors.border)
-        graphics.vLine(x + getWidth() - 1, y, y + height, theme.colors.border)
+
+//        graphics.hLine(x, x + getWidth() - 1, y, theme.colors.border)
+//        graphics.vLine(x, y, y + height, theme.colors.border)
+//        graphics.vLine(x + getWidth() - 1, y, y + height, theme.colors.border)
+        if (theme.dialogBorders) {
+            graphics.blitSprite(
+                RenderType::guiTextured,
+                BORDER_TOP,
+                x,
+                y,
+                getWidth(),
+                getHeight(),
+                theme.colors.border
+            )
+        }
         super.renderWidget(graphics, i, j, f)
     }
 

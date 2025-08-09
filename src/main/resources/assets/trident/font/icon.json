@@ -1,5 +1,6 @@
 {
   "providers": [
+    { "type": "space", "advances": { " ": 4.0 } },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/line_common.png",
@@ -83,6 +84,41 @@
       "ascent": 7,
       "height": 8,
       "chars": ["\uE00C"]
+    },
+    {
+      "type": "bitmap",
+      "file": "mcc:_fonts/kills.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE00D"]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/range.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE00E"]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/pot.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE00F"]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/disconnect.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE010"]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/tnt.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE011"]
     }
   ]
 }
