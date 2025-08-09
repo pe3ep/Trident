@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.utils
 
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.resources.ResourceLocation
 
@@ -23,7 +24,7 @@ public data class Texture(
      */
     fun blit(guiGraphics: GuiGraphics, x: Int, y: Int, scale: Int = 1, isHovered: Boolean = false) {
         guiGraphics.blit(
-            RenderType::guiTextured,
+            RenderPipelines.GUI_TEXTURED,
             if (isHovered) hoverLocation else location,
             x,
             y,

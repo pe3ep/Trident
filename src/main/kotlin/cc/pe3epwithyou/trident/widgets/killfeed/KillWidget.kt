@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LayoutSettings
 import net.minecraft.client.gui.layouts.LinearLayout
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -118,7 +119,7 @@ private class KillBackground(
     override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
 //        graphics.fill(x, y, x + layout.width, y + layout.height, color)
         graphics.blitSprite(
-            RenderType::guiTextured,
+            RenderPipelines.GUI_TEXTURED,
             if (isLeft) ROUNDED_LEFT else ROUNDED_RIGHT,
             x,
             y,
