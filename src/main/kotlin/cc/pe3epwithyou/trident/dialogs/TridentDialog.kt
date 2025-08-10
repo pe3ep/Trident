@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.RenderType
 import net.minecraft.resources.ResourceLocation
 import kotlin.jvm.optionals.getOrNull
 
-abstract class TridentDialog(x: Int, y: Int, private val key: String, private val disableDragAxis: String? = null) : Dialog(x, y) {
+abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x, y) {
     private companion object {
         private val ROUNDED_BOTTOM = ResourceLocation.fromNamespaceAndPath("trident", "interface/background/rounded_bottom")
         private val ROUNDED_ALL = ResourceLocation.fromNamespaceAndPath("trident", "interface/background/rounded_all")
