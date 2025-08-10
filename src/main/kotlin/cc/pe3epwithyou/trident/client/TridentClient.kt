@@ -15,12 +15,16 @@ import cc.pe3epwithyou.trident.feature.SupplyWidgetTimer
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.TimerUtil
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.WindowExtensions.focusWindowIfInactive
+import cc.pe3epwithyou.trident.widgets.killfeed.KillMethod
+import cc.pe3epwithyou.trident.widgets.killfeed.KillWidget
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import com.noxcrew.sheeplib.util.opacity
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
@@ -107,6 +111,18 @@ class TridentClient : ClientModInitializer {
                 ChatUtils.sendMessage(c, true)
                 0
             }
+        ).then(ClientCommandManager.literal("addTestKill")
+            .executes { _ ->
+                val player = Minecraft.getInstance().player!!
+                val w = KillWidget(
+                    player.name.string,
+                    KillMethod.MELEE,
+                    killColors = Pair(0x606060 opacity 192, 0x808080 opacity 192)
+                )
+                KillFeedDialog.addKill(w)
+                ChatUtils.sendMessage(Component.literal("Added fake kill"), true)
+                0
+            }
         )
 
     override fun onInitializeClient() {
@@ -129,6 +145,7 @@ class TridentClient : ClientModInitializer {
         DepletedDisplay.DepletedTimer.register()
         SupplyWidgetTimer.register()
         KillChatListener.register()
+        DelayedAction.init()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->

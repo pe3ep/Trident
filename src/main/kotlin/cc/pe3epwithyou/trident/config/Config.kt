@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.config
 
 import cc.pe3epwithyou.trident.dialogs.themes.TridentThemes
+import cc.pe3epwithyou.trident.widgets.killfeed.Position
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry
@@ -14,6 +15,9 @@ import net.minecraft.resources.ResourceLocation
 class Config {
     @SerialEntry
     var globalRarityOverlay: Boolean = false
+
+    @SerialEntry
+    var globalBlueprintIndicators: Boolean = true
 
     @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
@@ -38,11 +42,23 @@ class Config {
     var killfeedEnabled: Boolean = true
 
     @SerialEntry
-    var killfeedHideKills: Boolean = true
+    var killfeedHideKills: Boolean = false
+
+    @SerialEntry
+    var killfeedPositionSide: Position = Position.RIGHT
+
+    @SerialEntry
+    var killfeedRemoveKillTime: Int = 10
+
+    @SerialEntry
+    var killfeedMaxKills: Int = 5
 
     object Global {
         val rarityOverlay: Boolean
             get() = handler.instance().globalRarityOverlay
+
+        val blueprintIndicators: Boolean
+            get() = handler.instance().globalBlueprintIndicators
 
         val currentTheme: TridentThemes
             get() = handler.instance().globalCurrentTheme
@@ -74,6 +90,12 @@ class Config {
             get() = handler.instance().killfeedEnabled
         val hideKills: Boolean
             get() = handler.instance().killfeedHideKills
+        val positionSide: Position
+            get() = handler.instance().killfeedPositionSide
+        val removeKillTime: Int
+            get() = handler.instance().killfeedRemoveKillTime
+        val maxKills: Int
+            get() = handler.instance().killfeedMaxKills
     }
 
     companion object {
@@ -114,6 +136,17 @@ class Config {
                         controller(tickBox())
                     }
 
+                    options.register<Boolean>("blueprint_indicators") {
+                        name(Component.translatable("config.trident.global.blueprint_indicators.name"))
+                        description(OptionDescription.createBuilder()
+                            .text(Component.translatable("config.trident.global.blueprint_indicators.description"))
+//                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/blueprint_indicators.png"), 120, 88)
+                            .build()
+                        )
+                        binding(handler.instance()::globalBlueprintIndicators, true)
+                        controller(tickBox())
+                    }
+
                     options.register<TridentThemes>("theme") {
                         name(Component.translatable("config.trident.global.theme.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.global.theme.description")))
@@ -148,8 +181,29 @@ class Config {
                     options.register<Boolean>("killfeed_hide_kills") {
                         name(Component.translatable("config.trident.killfeed.hide_kills.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.hide_kills.description")))
-                        binding(handler.instance()::killfeedHideKills, true)
+                        binding(handler.instance()::killfeedHideKills, false)
                         controller(tickBox())
+                    }
+
+                    options.register<Position>("killfeed_position_side") {
+                        name(Component.translatable("config.trident.killfeed.position_side.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.position_side.description")))
+                        binding(handler.instance()::killfeedPositionSide, Position.RIGHT)
+                        controller(enumSwitch<Position> { v -> v.displayName })
+                    }
+
+                    options.register<Int>("killfeed_remove_kill_time") {
+                        name(Component.translatable("config.trident.killfeed.remove_kill_time.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.remove_kill_time.description")))
+                        binding(handler.instance()::killfeedRemoveKillTime, 10)
+                        controller(slider(IntRange(0, 30), 1))
+                    }
+
+                    options.register<Int>("killfeed_max_kills") {
+                        name(Component.translatable("config.trident.killfeed.max_kills.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.max_kills.description")))
+                        binding(handler.instance()::killfeedMaxKills, 5)
+                        controller(slider(IntRange(1, 10), 1))
                     }
                 }
 

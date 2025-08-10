@@ -9,15 +9,11 @@ import net.minecraft.network.chat.Component
 
 public class IconWidget(
     private val texture: Texture,
-    private val hoverText: Component? = null,
     private val marginRight: Int = 0
 ) :
     AbstractWidget(0, 0, texture.width + marginRight, texture.height, Component.empty()) {
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         texture.blit(guiGraphics, x, y, isHovered = isHovered())
-        if (isHovered() && hoverText != null) {
-            guiGraphics.renderTooltip(Minecraft.getInstance().font, hoverText, x, y)
-        }
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput): Unit = Unit

@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.navigation.ScreenRectangle
+import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
@@ -49,7 +50,7 @@ class DialogTitle(
             font
         )
         if (tooltip != null) {
-            w.tooltip = tooltip
+            w.setTooltip(tooltip)
         }
         w.at(top = theme.dimensions.paddingOuter, left = theme.dimensions.paddingOuter)
         if (isCloseable) {
@@ -73,7 +74,7 @@ class DialogTitle(
 //        graphics.fillGradient(x, y, x + getWidth(), y + height, color, 0x111111 opacity 0)
 //        graphics.fill(x, y, x + getWidth(), y + height, color)
         graphics.blitSprite(
-            RenderType::guiTextured,
+            RenderPipelines.GUI_TEXTURED,
             ROUNDED_ALL,
             x,
             y,
@@ -88,7 +89,7 @@ class DialogTitle(
 //        graphics.vLine(x + getWidth() - 1, y, y + height, theme.colors.border)
         if (theme.dialogBorders) {
             graphics.blitSprite(
-                RenderType::guiTextured,
+                RenderPipelines.GUI_TEXTURED,
                 BORDER_TOP,
                 x,
                 y,
