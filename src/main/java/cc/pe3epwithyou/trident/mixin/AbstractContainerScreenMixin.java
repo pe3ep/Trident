@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.client.events.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
+import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
 import cc.pe3epwithyou.trident.feature.RaritySlot;
 import cc.pe3epwithyou.trident.state.MCCIslandState;
 import net.minecraft.client.Minecraft;
@@ -22,13 +23,20 @@ public class AbstractContainerScreenMixin extends Screen {
         super(component);
     }
 
-    @Inject(method = "renderSlot", at = @At(value = "HEAD",
-            target = "Lnet/minecraft/client/gui/GuiGraphics;renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"
-    ))
+    @Inject(method = "renderSlot", at = @At(value = "HEAD"))
     public void renderSlot(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci)
     {
-        if (Config.Global.INSTANCE.getRarityOverlay() && MCCIslandState.INSTANCE.isOnIsland()) {
+        if (!MCCIslandState.INSTANCE.isOnIsland()) return;
+        if (Config.Global.INSTANCE.getRarityOverlay()) {
             RaritySlot.INSTANCE.render(guiGraphics, slot);
+        }
+    }
+
+    @Inject(method = "renderSlot", at = @At(value = "TAIL"))
+    public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci) {
+        if (!MCCIslandState.INSTANCE.isOnIsland()) return;
+        if (Config.Global.INSTANCE.getBlueprintIndicators()) {
+            BlueprintIndicators.INSTANCE.checkLore(guiGraphics, slot);
         }
     }
 

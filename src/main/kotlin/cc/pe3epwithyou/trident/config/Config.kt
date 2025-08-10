@@ -16,6 +16,9 @@ class Config {
     var globalRarityOverlay: Boolean = false
 
     @SerialEntry
+    var globalBlueprintIndicators: Boolean = true
+
+    @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
 
     @SerialEntry
@@ -43,6 +46,9 @@ class Config {
     object Global {
         val rarityOverlay: Boolean
             get() = handler.instance().globalRarityOverlay
+
+        val blueprintIndicators: Boolean
+            get() = handler.instance().globalBlueprintIndicators
 
         val currentTheme: TridentThemes
             get() = handler.instance().globalCurrentTheme
@@ -111,6 +117,17 @@ class Config {
                             .build()
                         )
                         binding(handler.instance()::globalRarityOverlay, false)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("blueprint_indicators") {
+                        name(Component.translatable("config.trident.global.blueprint_indicators.name"))
+                        description(OptionDescription.createBuilder()
+                            .text(Component.translatable("config.trident.global.blueprint_indicators.description"))
+//                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/blueprint_indicators.png"), 120, 88)
+                            .build()
+                        )
+                        binding(handler.instance()::globalBlueprintIndicators, true)
                         controller(tickBox())
                     }
 
