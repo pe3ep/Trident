@@ -26,7 +26,7 @@ class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             val maxKills = Config.KillFeed.maxKills
             if (killWidgets.size > maxKills) {
                 // Remove elements from the start to keep only last 5
-                killWidgets.subList(0, killWidgets.size - (maxKills + 1)).clear()
+                killWidgets.subList(0, killWidgets.size - maxKills).clear()
             }
             DialogCollection.refreshDialog("killfeed")
             val delay = Config.KillFeed.removeKillTime
