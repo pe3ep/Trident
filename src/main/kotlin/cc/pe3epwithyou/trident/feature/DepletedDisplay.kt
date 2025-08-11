@@ -48,7 +48,7 @@ object DepletedDisplay {
                     5,
                     false
                 )
-                if (Minecraft.getInstance().player?.position()!! == playerPosition) {
+                if ((Minecraft.getInstance().player?.position() ?: Vec3(0.0, 0.0, 0.0)) == playerPosition) {
                     this.ticks = 2
                 }
             }
