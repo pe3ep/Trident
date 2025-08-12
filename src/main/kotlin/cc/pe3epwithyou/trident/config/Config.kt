@@ -35,6 +35,9 @@ class Config {
     var debugEnableLogging: Boolean = false
 
     @SerialEntry
+    var debugDrawSlotNumber: Boolean = false
+
+    @SerialEntry
     var gamesAutoFocus: Boolean = false
 
 
@@ -67,6 +70,8 @@ class Config {
     object Debug {
         val enableLogging: Boolean
             get() = handler.instance().debugEnableLogging
+        val drawSlotNumber: Boolean
+            get() = handler.instance().debugDrawSlotNumber
     }
 
     object Fishing {
@@ -247,6 +252,13 @@ class Config {
                         name(Component.translatable("config.trident.debug.enable_logging.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.debug.enable_logging.description")))
                         binding(handler.instance()::debugEnableLogging, false)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("draw_slot_number") {
+                        name(Component.translatable("config.trident.debug.draw_slot_number.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.debug.draw_slot_number.description")))
+                        binding(handler.instance()::debugDrawSlotNumber, false)
                         controller(tickBox())
                     }
                 }

@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.config.Config;
 import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
 import cc.pe3epwithyou.trident.feature.RaritySlot;
 import cc.pe3epwithyou.trident.state.MCCIslandState;
+import cc.pe3epwithyou.trident.utils.DebugDraw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,6 +38,9 @@ public class AbstractContainerScreenMixin extends Screen {
         if (!MCCIslandState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
             BlueprintIndicators.INSTANCE.checkLore(guiGraphics, slot);
+        }
+        if (Config.Debug.INSTANCE.getDrawSlotNumber()) {
+            DebugDraw.INSTANCE.renderSlotNumber(guiGraphics, slot);
         }
     }
 
