@@ -3,12 +3,13 @@ package cc.pe3epwithyou.trident.client.events
 import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
+import cc.pe3epwithyou.trident.feature.QuestingParser
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
-import cc.pe3epwithyou.trident.utils.TimerUtil
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
@@ -27,10 +28,18 @@ object ChestScreenListener {
     }
 
     private fun handleScreen(client: Minecraft, screen: ContainerScreen) {
-        if (screen.title.string.contains("FISHING SUPPLIES")) {
-            TimerUtil.INSTANCE.setTimer(2) {
+        if ("FISHING SUPPLIES" in screen.title.string) {
+            DelayedAction.delayTicks(2L) {
                 findAugments(screen)
             }
+        }
+        if ("ISLAND REWARDS" in screen.title.string) {
+            DelayedAction.delayTicks(2L) {
+                findQuests(screen)
+            }
+        }
+        if (Config.Debug.enableLogging) {
+            ChatUtils.info("Title: " + screen.title.string)
         }
     }
 
@@ -40,9 +49,25 @@ object ChestScreenListener {
         }
     }
 
+    fun findQuests(screen: ContainerScreen) {
+        /**
+         * 37 - daily
+         * 39 - weekly
+         * 41 - scroll
+         */
+//        if (!Config.Fishing.suppliesModule) return
+        if ("ISLAND REWARDS" !in screen.title.string) return
+        val dailySlot = screen.menu.slots[37]
+        QuestingParser.parseSlot(dailySlot)
+        val weeklySlot = screen.menu.slots[39]
+        QuestingParser.parseSlot(weeklySlot)
+        val scrollSlot = screen.menu.slots[41]
+        QuestingParser.parseSlot(scrollSlot)
+    }
+
     fun findAugments(screen: ContainerScreen) {
-        if (!screen.title.string.contains("FISHING SUPPLIES")) return
-        ChatUtils.info("Opened menu: ${screen.title.string}")
+        if (!Config.Fishing.suppliesModule) return
+        if ("FISHING SUPPLIES" !in screen.title.string) return
 
         // Process bait slot (slot 19)
         val baitSlot = screen.menu.slots[19]

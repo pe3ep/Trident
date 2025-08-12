@@ -16,9 +16,7 @@ import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
-import cc.pe3epwithyou.trident.utils.TimerUtil
 import cc.pe3epwithyou.trident.utils.TridentFont
-import cc.pe3epwithyou.trident.utils.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.widgets.killfeed.KillMethod
 import cc.pe3epwithyou.trident.widgets.killfeed.KillWidget
 import com.mojang.blaze3d.platform.InputConstants
@@ -141,7 +139,6 @@ class TridentClient : ClientModInitializer {
 
         ChatEventListener.register()
         ChestScreenListener.register()
-        TimerUtil.register()
         DepletedDisplay.DepletedTimer.register()
         SupplyWidgetTimer.register()
         KillChatListener.register()
