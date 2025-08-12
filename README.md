@@ -5,7 +5,7 @@ Trident
 ---
 A Fabric Client-side MCC Island utility mod.
 
-**Requires Minecraft 1.21.5, [Yet Another Config Lib](https://modrinth.com/mod/yacl), [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) and [Noxesium](https://modrinth.com/mod/noxesium)**
+**Requires Minecraft 1.21.8, [Yet Another Config Lib](https://modrinth.com/mod/yacl), [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) and [Noxesium](https://modrinth.com/mod/noxesium)**
 
 ---
 

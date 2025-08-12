@@ -4,7 +4,6 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.TridentDialog
 import cc.pe3epwithyou.trident.dialogs.themes.TransparentTheme
-import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.widgets.killfeed.KillWidget
 import cc.pe3epwithyou.trident.widgets.killfeed.Position
@@ -69,6 +68,9 @@ class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             Position.LEFT -> LayoutConstants.LEFT
         }
         val widgets = killWidgets.toMutableList()
+        if (Config.KillFeed.reverseOrder) {
+            widgets.reverse()
+        }
         widgets.forEach {
             it.atBottom(0, settings = side)
         }

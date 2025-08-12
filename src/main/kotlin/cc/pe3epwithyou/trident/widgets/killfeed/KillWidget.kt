@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.widgets.killfeed
 
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.NoxesiumUtils
 import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.TridentFont
@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.ARGB
 
 class KillWidget(
     private val victim: String,
@@ -120,7 +119,7 @@ private class KillBackground(
         }
         val playerUUID = client.playerSocialManager.getDiscoveredUUID(player!!)
         val c = NoxesiumUtils.skullComponent(playerUUID)
-            .append(Component.literal((if (isSelf) " (YOU) " else " ") + player.uppercase())
+            .append(Component.literal((if (isSelf && Config.KillFeed.showYouInKill) " (YOU) " else " ") + player.uppercase())
                 .withStyle(Style.EMPTY
                     .withFont(TridentFont.getMCCFont())
                     .withColor(TridentColor(0xFFFFFF).textColor)

@@ -48,6 +48,15 @@ class Config {
     var killfeedHideKills: Boolean = false
 
     @SerialEntry
+    var killfeedClearAfterRound: Boolean = true
+
+    @SerialEntry
+    var killfeedShowYouInKill: Boolean = true
+
+    @SerialEntry
+    var killfeedReverseOrder: Boolean = false
+
+    @SerialEntry
     var killfeedPositionSide: Position = Position.RIGHT
 
     @SerialEntry
@@ -95,6 +104,12 @@ class Config {
             get() = handler.instance().killfeedEnabled
         val hideKills: Boolean
             get() = handler.instance().killfeedHideKills
+        val clearAfterRound: Boolean
+            get() = handler.instance().killfeedClearAfterRound
+        val showYouInKill: Boolean
+            get() = handler.instance().killfeedShowYouInKill
+        val reverseOrder: Boolean
+            get() = handler.instance().killfeedReverseOrder
         val positionSide: Position
             get() = handler.instance().killfeedPositionSide
         val removeKillTime: Int
@@ -187,6 +202,27 @@ class Config {
                         name(Component.translatable("config.trident.killfeed.hide_kills.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.hide_kills.description")))
                         binding(handler.instance()::killfeedHideKills, false)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("killfeed_clear_after_round") {
+                        name(Component.translatable("config.trident.killfeed.clear_after_round.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.clear_after_round.description")))
+                        binding(handler.instance()::killfeedClearAfterRound, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("killfeed_show_you_in_kill") {
+                        name(Component.translatable("config.trident.killfeed.show_you_in_kill.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.show_you_in_kill.description")))
+                        binding(handler.instance()::killfeedShowYouInKill, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("killfeed_reverse_order") {
+                        name(Component.translatable("config.trident.killfeed.reverse_order.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.reverse_order.description")))
+                        binding(handler.instance()::killfeedReverseOrder, false)
                         controller(tickBox())
                     }
 

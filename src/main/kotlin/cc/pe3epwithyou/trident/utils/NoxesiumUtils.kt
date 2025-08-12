@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.utils
 
-import cc.pe3epwithyou.trident.client.events.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
@@ -11,6 +10,7 @@ import cc.pe3epwithyou.trident.state.MCCIslandState
 import com.noxcrew.noxesium.NoxesiumFabricMod
 import com.noxcrew.noxesium.feature.skull.SkullContents
 import com.noxcrew.noxesium.network.NoxesiumPackets
+import com.noxcrew.noxesium.network.clientbound.ClientboundMccGameStatePacket
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.network.chat.MutableComponent
 import java.util.*
@@ -48,6 +48,15 @@ object NoxesiumUtils {
         }
     }
 
+    private fun removeKillsIfNeeded(packet: ClientboundMccGameStatePacket) {
+        if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return
+        if (Config.KillFeed.enabled && Config.KillFeed.clearAfterRound) {
+            if (packet.phaseType == "INTERMISSION" && packet.stage == "countdownphase") {
+                KillFeedDialog.clearKills()
+            }
+        }
+    }
+
     fun registerListeners() {
         if (FabricLoader.getInstance().isModLoaded("noxesium")) {
             NoxesiumFabricMod.initialize()
@@ -80,6 +89,7 @@ object NoxesiumUtils {
         }
 
         NoxesiumPackets.CLIENT_MCC_GAME_STATE.addListener(this) { _, packet, _ ->
+            removeKillsIfNeeded(packet)
             if (Config.Debug.enableLogging) {
                 ChatUtils.sendMessage(
                     """
