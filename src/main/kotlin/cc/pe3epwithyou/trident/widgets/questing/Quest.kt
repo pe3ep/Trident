@@ -10,18 +10,30 @@ class Quest(
     val type: QuestType,
     val rarity: Rarity,
     val criteria: CompletionCriteria,
-    val initialProgress: Int,
+    var progress: Int,
     val totalProgress: Int,
 ) {
     val sprite: ResourceLocation
         get() {
             val directory = type.directoryPath
             val raritySuffix = rarity.name.lowercase()
-            val sprite = ResourceLocation.fromNamespaceAndPath("mcc", directory + raritySuffix)
-            return sprite
+            return ResourceLocation.fromNamespaceAndPath("mcc", directory + raritySuffix)
         }
 
     val display_name: String = criteria.shortName
+
+    val isCompleted: Boolean
+        get() = progress >= totalProgress
+
+    /**
+     * Increment progress by amount, clamp to totalProgress and return true if
+     * this increment caused the quest to complete.
+     */
+    fun increment(amount: Int): Boolean {
+        if (isCompleted) return false
+        progress = (progress + amount).coerceAtMost(totalProgress)
+        return isCompleted
+    }
 }
 
 enum class QuestType(
