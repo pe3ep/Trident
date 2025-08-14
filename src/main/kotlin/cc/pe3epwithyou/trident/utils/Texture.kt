@@ -22,10 +22,10 @@ public data class Texture(
      * @param y the Y coordinate to blit to (top edge)
      * @param scale a factor to scale the icon up by. Defaults to 1.
      */
-    fun blit(guiGraphics: GuiGraphics, x: Int, y: Int, scale: Int = 1, isHovered: Boolean = false) {
+    fun blit(guiGraphics: GuiGraphics, x: Int, y: Int, scale: Int = 1) {
         guiGraphics.blit(
             RenderPipelines.GUI_TEXTURED,
-            if (isHovered) hoverLocation else location,
+            location,
             x,
             y,
             0f,

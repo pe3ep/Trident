@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.client
 import cc.pe3epwithyou.trident.client.events.ChatEventListener
 import cc.pe3epwithyou.trident.client.events.ChestScreenListener
 import cc.pe3epwithyou.trident.client.events.KillChatListener
+import cc.pe3epwithyou.trident.client.events.QuestingEvents
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DebugDialog
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
@@ -16,11 +17,10 @@ import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
-import cc.pe3epwithyou.trident.utils.TimerUtil
 import cc.pe3epwithyou.trident.utils.TridentFont
-import cc.pe3epwithyou.trident.utils.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.widgets.killfeed.KillMethod
 import cc.pe3epwithyou.trident.widgets.killfeed.KillWidget
+import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
@@ -141,7 +141,6 @@ class TridentClient : ClientModInitializer {
 
         ChatEventListener.register()
         ChestScreenListener.register()
-        TimerUtil.register()
         DepletedDisplay.DepletedTimer.register()
         SupplyWidgetTimer.register()
         KillChatListener.register()
@@ -153,5 +152,10 @@ class TridentClient : ClientModInitializer {
             if (!settingsKeymapping.consumeClick() || client.player == null) return@EndTick
             client.setScreen(Config.getScreen(client.screen))
         })
+
+//        Register Questing events
+        QuestingEvents.INCREMENT_ACTIVE.register { ctx ->
+            QuestStorage.applyIncrement(ctx)
+        }
     }
 }

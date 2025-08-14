@@ -13,7 +13,7 @@ public class IconWidget(
 ) :
     AbstractWidget(0, 0, texture.width + marginRight, texture.height, Component.empty()) {
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        texture.blit(guiGraphics, x, y, isHovered = isHovered())
+        texture.blit(guiGraphics, x, y)
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput): Unit = Unit

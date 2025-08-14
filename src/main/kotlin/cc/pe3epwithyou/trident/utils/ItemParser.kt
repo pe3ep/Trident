@@ -16,6 +16,8 @@ object ItemParser {
         return item.getTooltipLines(Item.TooltipContext.EMPTY, Minecraft.getInstance().player, TooltipFlag.Default.NORMAL)
     }
 
+    fun ItemStack.getItemLore() = getLore(this)
+
     fun getActiveOverclock(item: ItemStack): Augment? {
         var beginSearch = false
         getLore(item).forEach { line ->

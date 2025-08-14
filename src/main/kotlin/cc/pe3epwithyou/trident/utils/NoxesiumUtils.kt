@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
+import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
@@ -45,6 +46,10 @@ object NoxesiumUtils {
         if ((currentGame == MCCGame.BATTLE_BOX || currentGame == MCCGame.DYNABALL) && Config.KillFeed.enabled) {
             val k = "killfeed"
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
+        }
+        if (currentGame != MCCGame.HUB && currentGame != MCCGame.FISHING) {
+            val k = "questing"
+            DialogCollection.open(k, QuestingDialog(10, 10, k))
         }
     }
 

@@ -1,6 +1,8 @@
 package cc.pe3epwithyou.trident.widgets.killfeed
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedLeft
+import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedRight
 import cc.pe3epwithyou.trident.utils.NoxesiumUtils
 import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.TridentFont
@@ -93,10 +95,6 @@ private class KillBackground(
     private val isLeft: Boolean = true,
     private val isSelf: Boolean = false
 ) : CompoundWidget(0, 0, 0, 0) {
-    private companion object {
-        private val ROUNDED_LEFT = ResourceLocation.fromNamespaceAndPath("trident", "interface/background/rounded_left")
-        private val ROUNDED_RIGHT = ResourceLocation.fromNamespaceAndPath("trident", "interface/background/rounded_right")
-    }
 
     override fun getWidth(): Int = layout.width
     override fun getHeight(): Int = layout.height
@@ -143,16 +141,24 @@ private class KillBackground(
     }
 
     override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
-//        graphics.fill(x, y, x + layout.width, y + layout.height, color)
-        graphics.blitSprite(
-            RenderPipelines.GUI_TEXTURED,
-            if (isLeft) ROUNDED_LEFT else ROUNDED_RIGHT,
-            x,
-            y,
-            layout.width,
-            layout.height,
-            color
-        )
+        if (isLeft) {
+            graphics.fillRoundedLeft(
+                x,
+                y,
+                layout.width,
+                layout.height,
+                color
+            )
+        } else {
+            graphics.fillRoundedRight(
+                x,
+                y,
+                layout.width,
+                layout.height,
+                color
+            )
+
+        }
         super.renderWidget(graphics, i, j, f)
     }
 
