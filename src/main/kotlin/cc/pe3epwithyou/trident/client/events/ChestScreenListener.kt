@@ -10,6 +10,8 @@ import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
+import cc.pe3epwithyou.trident.widgets.questing.Quest
+import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
@@ -57,12 +59,21 @@ object ChestScreenListener {
          */
 //        if (!Config.Fishing.suppliesModule) return
         if ("ISLAND REWARDS" !in screen.title.string) return
+        val quests = mutableListOf<Quest>()
+
         val dailySlot = screen.menu.slots[37]
-        QuestingParser.parseSlot(dailySlot)
+        val dailyQuests = QuestingParser.parseSlot(dailySlot) ?: return
+        quests.addAll(dailyQuests)
+
         val weeklySlot = screen.menu.slots[39]
-        QuestingParser.parseSlot(weeklySlot)
+        val weeklyQuests = QuestingParser.parseSlot(weeklySlot) ?: return
+        quests.addAll(weeklyQuests)
+
         val scrollSlot = screen.menu.slots[41]
-        QuestingParser.parseSlot(scrollSlot)
+        val scrollQuests = QuestingParser.parseSlot(scrollSlot) ?: return
+        quests.addAll(scrollQuests)
+
+        QuestStorage.loadQuests(quests)
     }
 
     fun findAugments(screen: ContainerScreen) {

@@ -23,6 +23,27 @@ object QuestStorage {
     }
 
     /**
+     * Clear all current stored quests and replace them with the provided list.
+     * Each quest will be added to the list for its `quest.game`.
+     *
+     * This is suitable for loading quests from disk / network or refreshing
+     * the active set wholesale.
+     */
+    fun loadQuests(quests: List<Quest>) {
+        // Clear each game's list (preserves map keys)
+        for (g in MCCGame.entries) {
+            store[g]?.clear() ?: store.put(g, CopyOnWriteArrayList())
+        }
+
+        // Distribute provided quests into their corresponding game lists
+        for (q in quests) {
+            val list = store.computeIfAbsent(q.game) { CopyOnWriteArrayList() }
+            list.add(q)
+        }
+        DialogCollection.refreshDialog("questing")
+    }
+
+    /**
      * Apply the increment described by ctx to all matching quests for the given game.
      * Returns true if any quest was updated.
      */

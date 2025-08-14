@@ -54,6 +54,9 @@ public class AbstractContainerScreenMixin extends Screen {
             if (s.getTitle().getString().contains("FISHING SUPPLIES")) {
                 ChestScreenListener.INSTANCE.findAugments(s);
             }
+            if (s.getTitle().getString().contains("ISLAND REWARDS")) {
+                ChestScreenListener.INSTANCE.findQuests(s);
+            }
         }
     }
 
