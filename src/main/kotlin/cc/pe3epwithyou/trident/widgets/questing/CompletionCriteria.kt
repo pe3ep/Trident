@@ -16,15 +16,15 @@ enum class CompletionCriteria(val shortName: String, val regexPattern: Regex, va
     ),
     HOLE_IN_THE_WALL_TOP_EIGHT(
         "Top 8",
-        Regex("Place top 8 in (\\d+) games of HITW")
+        Regex("Place Top 8 in (\\d+) games of HITW")
     ),
     HOLE_IN_THE_WALL_TOP_FIVE(
         "Top 5",
-        Regex("Place top 5 in (\\d+) games of HITW")
+        Regex("Place Top 5 in (\\d+) games of HITW")
     ),
     HOLE_IN_THE_WALL_TOP_THREE(
         "Top 3",
-        Regex("Place top 3 in (\\d+) games of HITW")
+        Regex("Place Top 3 in (\\d+) games of HITW")
     ),
 
     TGTTOS_CHICKENS_PUNCHED(
@@ -33,35 +33,35 @@ enum class CompletionCriteria(val shortName: String, val regexPattern: Regex, va
     ),
     TGTTOS_TOP_EIGHT(
         "Top 8",
-        Regex("Place top 8 in (\\d+) games of TGTTOS")
+        Regex("Place Top 8 in (\\d+) games of TGTTOS")
     ),
     TGTTOS_TOP_FIVE(
         "Top 5",
-        Regex("Place top 5 in (\\d+) games of TGTTOS")
+        Regex("Place Top 5 in (\\d+) games of TGTTOS")
     ),
     TGTTOS_TOP_THREE(
         "Top 3",
-        Regex("Place top 3 in (\\d+) games of TGTTOS")
+        Regex("Place Top 3 in (\\d+) games of TGTTOS")
     ),
     TGTTOS_ROUND_TOP_EIGHT(
         "Round top 8",
-        Regex("Place top 8 in (\\d+) rounds of TGTTOS")
+        Regex("Place Top 8 in (\\d+) rounds of TGTTOS")
     ),
     TGTTOS_ROUND_TOP_FIVE(
         "Round top 5",
-        Regex("Place top 5 in (\\d+) rounds of TGTTOS")
+        Regex("Place Top 5 in (\\d+) rounds of TGTTOS")
     ),
     TGTTOS_ROUND_TOP_THREE(
         "Round top 3",
-        Regex("Place top 3 in (\\d+) rounds of TGTTOS")
+        Regex("Place Top 3 in (\\d+) rounds of TGTTOS")
     ),
 
     BATTLE_BOX_QUADS_GAMES_PLAYED(
-        "Games",
+        "Play Games",
         Regex("Complete (\\d+) games of Battle Box")
     ),
     BATTLE_BOX_QUADS_TEAM_ROUNDS_WON(
-        "Rounds",
+        "Win Rounds",
         Regex("Win (\\d+) rounds of Battle Box")
     ),
     BATTLE_BOX_QUADS_TEAM_FIRST_PLACE(
@@ -116,15 +116,15 @@ enum class CompletionCriteria(val shortName: String, val regexPattern: Regex, va
     ),
     PW_SURVIVAL_LEAP_6_COMPLETION(
         "Complete leap 6",
-        Regex("Complete leap 6 in (\\d+) games of Parkour Warrior Survivor")
+        Regex("Complete Leap 6 in (\\d+) games of Parkour Warrior Survivor")
     ),
     PW_SURVIVAL_LEAP_4_COMPLETION(
         "Complete leap 4",
-        Regex("Complete leap 4 in (\\d+) games of Parkour Warrior Survivor")
+        Regex("Complete Leap 4 in (\\d+) games of Parkour Warrior Survivor")
     ),
     PW_SURVIVAL_LEAP_2_COMPLETION(
         "Complete leap 2",
-        Regex("Complete leap 2 in (\\d+) games of Parkour Warrior Survivor")
+        Regex("Complete Leap 2 in (\\d+) games of Parkour Warrior Survivor")
     ),
 
     PW_SOLO_TOTAL_MEDALS_BANKED(
@@ -136,7 +136,7 @@ enum class CompletionCriteria(val shortName: String, val regexPattern: Regex, va
         Regex("Perform (\\d+) Standard Completions each under 5m in Parkour Warrior Dojo")
     ),
     PW_SOLO_STANDARD_CMPL_BELOW_THREE_MIN(
-        "Standard <3m",
+        "Standard <4m",
         Regex("Perform (\\d+) Standard Completions each under 4m in Parkour Warrior Dojo")
     ),
     PW_SOLO_STANDARD_CMPL_BELOW_TWO_MIN(
@@ -153,11 +153,11 @@ enum class CompletionCriteria(val shortName: String, val regexPattern: Regex, va
     ),
     PW_SOLO_TOTAL_ADVANCED_CMPLS(
         "Total advanced",
-        Regex("Perform (\\d+) Advanced Completions (or higher) in Parkour Warrior Dojo")
+        Regex("Perform (\\d+) Advanced Completions \\(or higher\\) in Parkour Warrior Dojo courses")
     ),
     PW_SOLO_TOTAL_STANDARD_CMPLS(
         "Total standard",
-        Regex("Perform (\\d+) Standard Completions (or higher) in Parkour Warrior Dojo")
+        Regex("Perform (\\d+) Standard Completions \\(or higher\\) in Parkour Warrior Dojo courses")
     ),
 
     DYNABALL_SURVIVE_1M(
@@ -214,7 +214,7 @@ enum class CompletionCriteria(val shortName: String, val regexPattern: Regex, va
     ),
     ROCKET_SPLEEF_SURVIVE_60S(
         "Survive 1m",
-        Regex("Surive for at least 60s in (\\d+) games of Rocket Spleef Rush")
+        Regex("Survive for at least 60 seconds in (\\d+) games of Rocket Spleef Rush")
     ),
     ROCKET_SPLEEF_DIRECT_HITS(
         "Direct hits",

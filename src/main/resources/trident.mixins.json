@@ -9,6 +9,8 @@
   ],
   "client": [
     "AbstractContainerScreenMixin",
+    "BossHealthOverlayAccessor",
+    "GuiAccessor",
     "JoinIslandMixin",
     "PacketListenerMixin"
   ],

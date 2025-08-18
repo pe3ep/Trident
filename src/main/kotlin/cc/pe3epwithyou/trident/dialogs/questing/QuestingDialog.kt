@@ -5,15 +5,20 @@ import cc.pe3epwithyou.trident.dialogs.themes.DialogTitle
 import cc.pe3epwithyou.trident.dialogs.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
+import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import cc.pe3epwithyou.trident.widgets.questing.QuestWidget
+import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
+import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.MultiLineTextWidget
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
@@ -46,10 +51,10 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val quests = QuestStorage.getActiveQuests(currentGame)
 
         if (currentGame == MCCGame.HUB || currentGame == MCCGame.FISHING) {
-            StringWidget(
-                Component.literal("Join a game to see quests".uppercase()).withHudMCC().withColor(ChatFormatting.GRAY.color!!),
+            MultiLineTextWidget(
+                Component.literal("Join a game to\nview quests".uppercase()).withHudMCC().withColor(ChatFormatting.GRAY.color!!),
                 mcFont
-            ).atBottom(0)
+            ).atBottom(0, settings = LayoutConstants.LEFT)
             return@grid
         }
 
@@ -64,7 +69,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             return@grid
         }
         quests.forEach { q ->
-            QuestWidget(q, this@QuestingDialog).atBottom(0)
+            QuestWidget(q, this@QuestingDialog).atBottom(0, settings = LayoutConstants.LEFT)
         }
     }
 

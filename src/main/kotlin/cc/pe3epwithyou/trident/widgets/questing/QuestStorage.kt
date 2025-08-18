@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.widgets.questing
 import cc.pe3epwithyou.trident.client.events.QuestIncrementContext
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.utils.ChatUtils
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 

@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.config
 
+import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.themes.TridentThemes
 import cc.pe3epwithyou.trident.widgets.killfeed.Position
 import dev.isxander.yacl3.api.OptionDescription
@@ -38,6 +39,9 @@ class Config {
     var debugDrawSlotNumber: Boolean = false
 
     @SerialEntry
+    var debugLogForScrapers: Boolean = false
+
+    @SerialEntry
     var gamesAutoFocus: Boolean = false
 
 
@@ -65,6 +69,9 @@ class Config {
     @SerialEntry
     var killfeedMaxKills: Int = 5
 
+    @SerialEntry
+    var questingEnabled: Boolean = true
+
     object Global {
         val rarityOverlay: Boolean
             get() = handler.instance().globalRarityOverlay
@@ -81,6 +88,8 @@ class Config {
             get() = handler.instance().debugEnableLogging
         val drawSlotNumber: Boolean
             get() = handler.instance().debugDrawSlotNumber
+        val logForScrapers: Boolean
+            get() = handler.instance().debugLogForScrapers
     }
 
     object Fishing {
@@ -118,6 +127,11 @@ class Config {
             get() = handler.instance().killfeedMaxKills
     }
 
+    object Questing {
+        val enabled: Boolean
+            get() = handler.instance().questingEnabled
+    }
+
     companion object {
         val handler: ConfigClassHandler<Config> by lazy {
             ConfigClassHandler.createBuilder(Config::class.java)
@@ -136,7 +150,10 @@ class Config {
 
         fun getScreen(parentScreen: Screen?): Screen = YetAnotherConfigLib("trident") {
             title(Component.translatable("config.trident"))
-            save(handler::save)
+            save {
+                handler.save()
+                DialogCollection.refreshDialog("killfeed")
+            }
 
             categories.register("trident") {
                 name(Component.translatable("config.trident"))
@@ -248,6 +265,18 @@ class Config {
                     }
                 }
 
+                groups.register("questing") {
+                    name(Component.translatable("config.trident.questing.name"))
+                    description(OptionDescription.of(Component.translatable("config.trident.questing.description")))
+
+                    options.register<Boolean>("enabled") {
+                        name(Component.translatable("config.trident.questing.enabled.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.questing.enabled.description")))
+                        binding(handler.instance()::questingEnabled, true)
+                        controller(tickBox())
+                    }
+                }
+
                 groups.register("fishing") {
                     name(Component.translatable("config.trident.fishing.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.fishing.description")))
@@ -295,6 +324,13 @@ class Config {
                         name(Component.translatable("config.trident.debug.draw_slot_number.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.debug.draw_slot_number.description")))
                         binding(handler.instance()::debugDrawSlotNumber, false)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("log_for_scrapers") {
+                        name(Component.translatable("config.trident.debug.log_for_scrapers.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.debug.log_for_scrapers.description")))
+                        binding(handler.instance()::debugLogForScrapers, false)
                         controller(tickBox())
                     }
                 }

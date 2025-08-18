@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation
 class Quest(
     val game: MCCGame,
     val type: QuestType,
+    val subtype: QuestSubtype,
     val rarity: Rarity,
     val criteria: CompletionCriteria,
     var progress: Int,
@@ -36,6 +37,19 @@ class Quest(
     }
 }
 
+enum class QuestSubtype(
+    val suffix: String
+) {
+    DAILY("(D)"),
+    WEEKLY("(W)"),
+
+    /*
+        Scrolls don't have the suffix as it's unnecessary
+        due to the scroll icon being visually distinct
+     */
+    SCROLL("")
+}
+
 enum class QuestType(
     val directoryPath: String
 ) {
@@ -43,7 +57,7 @@ enum class QuestType(
         "island_interface/quest_log/daily/"
     ),
     SCROLL(
-        "island_interface/quest_log/scrolls/"
+        "island_items/infinibag/quest_scroll/"
     ),
     BOOSTED(
         "island_interface/quest_log/boosted/"

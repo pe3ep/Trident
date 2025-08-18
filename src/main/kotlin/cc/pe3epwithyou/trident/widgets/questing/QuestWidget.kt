@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.widgets.questing
 
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.ComponentExtensions.withDefault
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.TridentFont
@@ -15,8 +15,10 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
 import kotlin.math.max
@@ -39,6 +41,9 @@ class QuestWidget(
         private val COMP_HALF: Component = Component.literal(PROGRESS_HALF.toString()).withStyle(segmentStyle)
         private val COMP_FULL: Component = Component.literal(PROGRESS_FULL.toString()).withStyle(segmentStyle)
         private val COMP_SPACE: Component = Component.literal("\uE001").withStyle(spaceStyle)
+
+        private val COMPLETED_QUEST_SPRITE: ResourceLocation = ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/quest_log/quest_complete.png")
+        private const val COMPLETED_QUEST_COLOR: Int = 0x1EFC00
     }
 
     override fun getWidth(): Int = layout.width
@@ -47,21 +52,50 @@ class QuestWidget(
     override val layout = GridLayout(themed.theme.dimensions.paddingInner) {
         val mcFont = Minecraft.getInstance().font
 
-//        StringWidget(Component.literal("yi"), mcFont).atBottom(0, 2, LayoutConstants.LEFT)
-        val c = Component.literal(quest.display_name.uppercase()).withHudMCC()
+        val c = Component.literal(quest.display_name.uppercase())
+            .withHudMCC()
+        if (quest.isCompleted) {
+            c.withColor(COMPLETED_QUEST_COLOR)
+        }
+        val suffix = Component.literal(" " + quest.subtype.suffix)
+            .withStyle(ChatFormatting.GRAY)
         QuestNameWidget(
-            quest.sprite,
-            c,
+            if (!quest.isCompleted) quest.sprite else COMPLETED_QUEST_SPRITE,
+            c.append(suffix),
             mcFont
-        ).at(0, 0, colSpan = 2, settings = LayoutConstants.LEFT)
+        ).atBottom(0, settings = LayoutConstants.LEFT)
 
         val progressComponent = progressComponent(
             quest.progress.toFloat() / quest.totalProgress.toFloat(),
             25,
             5
         )
-        StringWidget(progressComponent, mcFont).at(1, 0)
-        StringWidget(Component.literal("${quest.progress}/${quest.totalProgress}"), mcFont).alignLeft().at(1, 1, settings = LayoutConstants.LEFT)
+
+        if (!quest.criteria.isTracked) {
+            val progress = Component.literal(" ${quest.progress}/${quest.totalProgress} ⚠")
+                .withDefault()
+                .withStyle(ChatFormatting.GRAY)
+            val w = StringWidget(progressComponent.append(progress), mcFont)
+            w.setTooltip(Tooltip.create(Component.literal("""
+                 Due to this quest's objective, Trident is unable to live-update the progress.
+                 You can open the Journal to update it
+            """.trimIndent())
+                .withStyle(ChatFormatting.RESET)
+                .withStyle(ChatFormatting.GRAY)
+            ))
+            w.atBottom(0)
+            return@GridLayout
+        }
+        val progress = Component.literal(" ${quest.progress}/${quest.totalProgress}")
+            .withDefault()
+        if (quest.isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
+        val w = StringWidget(progressComponent.append(progress), mcFont)
+        w.atBottom(0)
+    }
+
+    init {
+        layout.arrangeElements()
+        layout.visitWidgets(this::addChild)
     }
 
     /**
@@ -73,11 +107,11 @@ class QuestWidget(
      *   space is inserted after each group (e.g. width=20, divisions=4 ->
      *   space every 5 chars). If <= 0 no spaces.
      */
-    private fun progressComponent(
+    fun progressComponent(
         progress: Float,
         width: Int,
         groups: Int = 0
-    ): Component {
+    ): MutableComponent {
         if (width <= 0) return Component.empty()
 
         val subPerChar = 2 // so we have empty/half/full
@@ -108,10 +142,6 @@ class QuestWidget(
         return component
     }
 
-    init {
-        layout.arrangeElements()
-        layout.visitWidgets(this::addChild)
-    }
 
     class QuestNameWidget(
         private val sprite: ResourceLocation,
@@ -127,15 +157,15 @@ class QuestWidget(
             private const val ICON_WIDTH = 8
             private const val SPACE_ADVANCE = 4
         }
-        init {
-            ChatUtils.sendMessage("""
-                font.width(text.visualOrderText): ${font.width(text.visualOrderText)}
-                font.width(text.visualOrderText) + ICON_WIDTH + SPACE_ADVANCE: ${font.width(text.visualOrderText) + ICON_WIDTH + SPACE_ADVANCE}
-                text: ${text.string}
-                sprite: ${sprite.path}
-            """.trimIndent())
-        }
+
         override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+//            guiGraphics.fill(
+//                x,
+//                y,
+//                x + this.getWidth(),
+//                y + this.getHeight(),
+//                0xFF0000.opaqueColor()
+//            )
             Texture(
                 sprite,
                 ICON_WIDTH,

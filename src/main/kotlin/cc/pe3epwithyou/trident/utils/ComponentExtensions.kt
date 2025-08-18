@@ -8,4 +8,7 @@ object ComponentExtensions {
     fun MutableComponent.withHudMCC(offset: Int = 0): MutableComponent = this.withStyle(Style.EMPTY
         .withFont(TridentFont.getMCCFont(offset = offset))
     )
+    fun MutableComponent.withDefault(): MutableComponent = this.withStyle(Style.EMPTY
+        .withFont(Style.DEFAULT_FONT)
+    )
 }

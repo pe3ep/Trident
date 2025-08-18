@@ -4,17 +4,16 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
-import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.widgets.killfeed.KillMethod
-import cc.pe3epwithyou.trident.widgets.killfeed.KillType
 import cc.pe3epwithyou.trident.widgets.killfeed.KillWidget
+import cc.pe3epwithyou.trident.widgets.questing.CompletionCriteria
+import cc.pe3epwithyou.trident.widgets.questing.GenericCompletionCriteria
+import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import com.noxcrew.sheeplib.util.opacity
-import com.noxcrew.sheeplib.util.opaqueColor
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import net.minecraft.world.scores.DisplaySlot
 
 object KillChatListener {
     private val fallbackColor = 0xFFFFFF opacity 128
@@ -65,7 +64,26 @@ object KillChatListener {
         if (players.isEmpty()) return true
         val victim = players[0]
         val attacker = players.getOrNull(1)
+
+
         if (attacker != null) {
+    //        Questing
+            val self = Minecraft.getInstance().player ?: return true
+            if (attacker.string == self.name.string) {
+                val game = MCCIslandState.game
+                val ctx = GenericCompletionCriteria.playerEliminated(game, sourceTag = "kill") ?: return true
+                QuestStorage.applyIncrement(ctx)
+
+                if (method == KillMethod.RANGE && game == MCCGame.BATTLE_BOX) {
+                    QuestStorage.applyIncrement(QuestIncrementContext(
+                        MCCGame.BATTLE_BOX,
+                        CompletionCriteria.BATTLE_BOX_QUADS_RANGED_KILLS,
+                        1,
+                        "bb_ranged_kill"
+                    ))
+                }
+            }
+
             KillFeedDialog.addKill(
                 KillWidget(
                     victim.string,

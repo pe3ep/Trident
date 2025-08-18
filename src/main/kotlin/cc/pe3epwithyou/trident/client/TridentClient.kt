@@ -1,9 +1,7 @@
 package cc.pe3epwithyou.trident.client
 
-import cc.pe3epwithyou.trident.client.events.ChatEventListener
-import cc.pe3epwithyou.trident.client.events.ChestScreenListener
-import cc.pe3epwithyou.trident.client.events.KillChatListener
-import cc.pe3epwithyou.trident.client.events.QuestingEvents
+import cc.pe3epwithyou.trident.client.events.*
+import cc.pe3epwithyou.trident.client.events.questing.QuestListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DebugDialog
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
@@ -50,7 +48,7 @@ class TridentClient : ClientModInitializer {
         val playerState = PlayerState()
         lateinit var settingsKeymapping: KeyMapping
     }
-    private val DEBUG_COMMANDS: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")
+    private val debugCommands: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")
         .then(ClientCommandManager.literal("open").then(
             ClientCommandManager.argument("dialog", StringArgumentType.string())
                 .suggests { _, builder ->
@@ -127,7 +125,7 @@ class TridentClient : ClientModInitializer {
 
     override fun onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            dispatcher.register(DEBUG_COMMANDS)
+            dispatcher.register(debugCommands)
         }
 
         settingsKeymapping = KeyBindingHelper.registerKeyBinding(
@@ -145,6 +143,7 @@ class TridentClient : ClientModInitializer {
         SupplyWidgetTimer.register()
         KillChatListener.register()
         DelayedAction.init()
+        QuestListener.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->

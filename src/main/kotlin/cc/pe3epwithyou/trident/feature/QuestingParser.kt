@@ -4,10 +4,7 @@ import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.ItemParser.getItemLore
-import cc.pe3epwithyou.trident.widgets.questing.CompletionCriteria
-import cc.pe3epwithyou.trident.widgets.questing.GameQuests
-import cc.pe3epwithyou.trident.widgets.questing.Quest
-import cc.pe3epwithyou.trident.widgets.questing.QuestType
+import cc.pe3epwithyou.trident.widgets.questing.*
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
@@ -21,10 +18,9 @@ object QuestingParser {
         val item = slot.item
         val model = item.get(DataComponents.ITEM_MODEL)
         if (model == null) {
-            ChatUtils.error("Failed to parse questing item: Missing model")
+            ChatUtils.error("Failed to parse questing item in slot ${slot.index}: Missing model")
             return null
         }
-        ChatUtils.info("Quest found: Slot ${slot.index}")
         ChatUtils.debugLog("Quest found: Slot ${slot.index}")
         ChatUtils.debugLog("Model: ${model.path}")
         if (model.path == FINISHED_MAPS ||
@@ -70,6 +66,7 @@ object QuestingParser {
                 Quest(
                     parsedQuest.game,
                     type,
+                    subtype,
                     rarity,
                     parsedQuest.criteria,
                     parsedQuest.progress.first,
@@ -91,6 +88,7 @@ object QuestingParser {
         var tempQuestString = ""
         lines.forEachIndexed { index, l ->
             if (index <= 4) return@forEachIndexed
+            if (parsedQuests.size >= 3) return@forEachIndexed
 
             if ("Progress: " in l.string) {
                 val t = l.string.split(": ")[1]
