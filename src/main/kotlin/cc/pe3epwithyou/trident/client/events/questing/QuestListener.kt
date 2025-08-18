@@ -17,25 +17,7 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 object QuestListener {
-    private var titlePacketOnCooldown: Boolean = false
-
-    /**
-     * Minecraft fires the `setSubtitleText()` method twice in
-     * the tick it received the packet. Because quests work on
-     * increments, that would cause them to be doubled.
-     *
-     * To combat this, a 1 tick cooldown for quest-related
-     * subtitles has been implemented
-     */
     fun handleSubtitle(m: Component) {
-        if (!Config.Questing.enabled) return
-        if (titlePacketOnCooldown) return
-        /** Set the subtitle on cooldown for 1 tick */
-        titlePacketOnCooldown = true
-        DelayedAction.delayTicks(1L) {
-            titlePacketOnCooldown = false
-        }
-
         if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) handlePKWD(m)
     }
 
@@ -46,7 +28,6 @@ object QuestListener {
             if (initialID != currentID) return@delay
             action.invoke()
         }
-
     }
 
     fun register() {
