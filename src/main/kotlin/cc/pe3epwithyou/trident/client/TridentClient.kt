@@ -1,12 +1,13 @@
 package cc.pe3epwithyou.trident.client
 
-import cc.pe3epwithyou.trident.client.events.*
+import cc.pe3epwithyou.trident.client.events.ChatEventListener
+import cc.pe3epwithyou.trident.client.events.ChestScreenListener
+import cc.pe3epwithyou.trident.client.events.KillChatListener
+import cc.pe3epwithyou.trident.client.events.QuestingEvents
 import cc.pe3epwithyou.trident.client.events.questing.QuestListener
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.dialogs.DebugDialog
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
-import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.feature.DepletedDisplay
 import cc.pe3epwithyou.trident.feature.SupplyWidgetTimer
@@ -15,13 +16,10 @@ import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.TridentFont
-import cc.pe3epwithyou.trident.widgets.killfeed.KillMethod
-import cc.pe3epwithyou.trident.widgets.killfeed.KillWidget
 import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
-import com.noxcrew.sheeplib.util.opacity
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
