@@ -119,6 +119,12 @@
       "ascent": 7,
       "height": 8,
       "chars": ["\uE011"]
+    },{
+      "type": "bitmap",
+      "file": "mcc:_fonts/skull.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE012"]
     }
   ]
 }

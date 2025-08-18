@@ -6,9 +6,9 @@ enum class KillMethod(
     MELEE('\uE00D'),
     RANGE('\uE00E'),
     POTION('\uE00F'),
-    VOID('\uE00D'),
+    VOID(''),
     DISCONNECT('\uE010'),
-    GENERIC('\uE00D'),
+    GENERIC(''),
     EXPLOSION('\uE011'),
-    LAVA('\uE00D'),
+    LAVA(''),
 }

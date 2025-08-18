@@ -38,6 +38,8 @@ object KillChatListener {
     private val burnedSelfRegex = Regex("^\\[.] .+ burned to death\\. .+")
     private val hasNotRejoined = Regex("^\\[.] .+ hasn't rejoined the game and is automatically eliminated\\. .+")
     private val disconnected = Regex("^\\[.] .+ disconnected\\. .+")
+    private val void = Regex("^\\[.] .+ didn't want to live in the same world as\\. .+")
+    private val selfVoid = Regex("^\\[.] .+ fell out of the world\\. .+")
 
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
@@ -81,6 +83,10 @@ object KillChatListener {
 
             if (prickedRegex.matches(message.string) || prickedSelfRegex.matches(message.string)) {
                 return@allowGame handleKill(message, KillMethod.GENERIC)
+            }
+
+            if (void.matches(message.string) || selfVoid.matches(message.string)) {
+                return@allowGame handleKill(message, KillMethod.VOID)
             }
 
             if (walkedFire.matches(message.string) ||
