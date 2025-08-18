@@ -22,7 +22,7 @@ object QuestListener {
         if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) handlePKWD(m)
     }
 
-    fun handleTimedQuest(minutes: Long, shouldInterrupt: Boolean = true, action: () -> Unit) {
+    fun handleTimedQuest(minutes: Long, shouldInterrupt: Boolean = false, action: () -> Unit) {
         val initialID = getGameID()
         val task = DelayedAction.delay(TimeUnit.MINUTES.toMillis(minutes)) {
             val currentID = getGameID()
@@ -35,7 +35,7 @@ object QuestListener {
     }
 
     fun interruptTasks() {
-        interruptibleTasks.forEach { (id, task) ->
+        interruptibleTasks.forEach { (_, task) ->
             task.cancel()
         }
         interruptibleTasks.clear()

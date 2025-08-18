@@ -7,7 +7,7 @@ import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 
 object HITWQuestEvents {
     fun scheduleSurvivedMinute() {
-        QuestListener.handleTimedQuest(1L) {
+        QuestListener.handleTimedQuest(1L, true) {
             QuestStorage.applyIncrement(QuestIncrementContext(
                 MCCGame.HITW,
                 CompletionCriteria.HOLE_IN_THE_WALL_SURVIVED_MINUTE,
@@ -18,7 +18,7 @@ object HITWQuestEvents {
     }
 
     fun scheduleSurvivedTwoMinutes() {
-        QuestListener.handleTimedQuest(2L) {
+        QuestListener.handleTimedQuest(2L, true) {
             QuestStorage.applyIncrement(QuestIncrementContext(
                 MCCGame.HITW,
                 CompletionCriteria.HOLE_IN_THE_WALL_SURVIVED_TWO_MINUTE,
