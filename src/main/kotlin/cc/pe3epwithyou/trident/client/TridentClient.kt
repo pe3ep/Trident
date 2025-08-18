@@ -7,7 +7,6 @@ import cc.pe3epwithyou.trident.dialogs.DebugDialog
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
-import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedSetup
 import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.feature.DepletedDisplay
 import cc.pe3epwithyou.trident.feature.SupplyWidgetTimer
@@ -29,6 +28,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+import net.minecraft.ChatFormatting
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
@@ -40,13 +40,12 @@ class TridentClient : ClientModInitializer {
     private val debugDialogs = mapOf(
         "supplies" to ::SuppliesDialog,
         "questing" to ::QuestingDialog,
-        "killfeed" to ::KillFeedDialog,
-        "killsetup" to ::KillFeedSetup
     )
 
     companion object {
         val playerState = PlayerState()
         lateinit var settingsKeymapping: KeyMapping
+        var jokeCooldown: Boolean = false
     }
     private val debugCommands: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")
         .then(ClientCommandManager.literal("open").then(
@@ -80,25 +79,7 @@ class TridentClient : ClientModInitializer {
                     DialogCollection.close(ctx.getArgument("dialog", String::class.java))
                     0
                 }
-        )).then(ClientCommandManager.literal("dialogTest").then(
-            ClientCommandManager.argument("index", StringArgumentType.string())
-                .executes { ctx ->
-                    val prefix = ctx.getArgument("index", String::class.java)
-                    val key = "${prefix}_testdialog"
-                    DialogCollection.open(key, DebugDialog(10, 10, key))
-                    0
-                })
-        ).then(ClientCommandManager.literal("fakeUnstableOverclock")
-            .executes { _ ->
-                SupplyWidgetTimer.INSTANCE.startUnstableOverclock()
-                0
-            }
-        ).then(ClientCommandManager.literal("fakeSupremeOverclock")
-            .executes { _ ->
-                SupplyWidgetTimer.INSTANCE.startSupremeOverclock()
-                0
-            }
-        ).then(ClientCommandManager.literal("resetDialogPositions")
+        )).then(ClientCommandManager.literal("resetDialogPositions")
             .executes { _ ->
                 DialogCollection.resetDialogPositions()
                 val c = Component.literal("Saved dialog positions have been ")
@@ -109,16 +90,37 @@ class TridentClient : ClientModInitializer {
                 ChatUtils.sendMessage(c, true)
                 0
             }
-        ).then(ClientCommandManager.literal("addTestKill")
+        ).then(ClientCommandManager.literal("autofish")
             .executes { _ ->
-                val player = Minecraft.getInstance().player!!
-                val w = KillWidget(
-                    player.name.string,
-                    KillMethod.MELEE,
-                    killColors = Pair(0x606060 opacity 192, 0x808080 opacity 192)
-                )
-                KillFeedDialog.addKill(w)
-                ChatUtils.sendMessage(Component.literal("Added fake kill"), true)
+                if (jokeCooldown) return@executes 0
+                jokeCooldown = true
+                ChatUtils.sendMessage("Requesting autofish.jar...")
+                DelayedAction.delayTicks(60L) {
+                    ChatUtils.sendMessage("Received a response from the server")
+                }
+                DelayedAction.delayTicks(100L) {
+                    ChatUtils.sendMessage("It states the following:")
+                }
+                DelayedAction.delayTicks(120L) {
+                    ChatUtils.sendMessage(
+                        Component.literal("Did you really just try to enable autofishing?")
+                            .withStyle(ChatFormatting.AQUA)
+                    )
+                }
+                DelayedAction.delayTicks(180L) {
+                    ChatUtils.sendMessage(
+                        Component.literal("Are we serious right meow bro?")
+                            .withStyle(ChatFormatting.AQUA)
+                    )
+                }
+                DelayedAction.delayTicks(240L) {
+                    ChatUtils.sendMessage(
+                        Component.literal("This incident will be reported.")
+                            .withStyle(ChatFormatting.DARK_RED)
+                            .withStyle(ChatFormatting.BOLD)
+                    )
+                    jokeCooldown = false
+                }
                 0
             }
         )
