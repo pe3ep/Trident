@@ -42,7 +42,7 @@ object TGTTOSQuestEvents {
         }
     }
 
-    fun handleRoundPlacement(m: Component) {
+    private fun handleRoundPlacement(m: Component) {
         val match =
             Regex("^\\[.] .+, you finished the round and came in (\\d+)(st|nd|rd|th) place!")
                 .find(m.string) ?: return
@@ -51,13 +51,13 @@ object TGTTOSQuestEvents {
         inc(CompletionCriteria.TGTTOS_CHICKENS_PUNCHED, "tgttos_chickens_punched")
 
         if (placement <= 8) {
-            inc(CompletionCriteria.TGTTOS_TOP_EIGHT, "tgttos_top8")
+            inc(CompletionCriteria.TGTTOS_ROUND_TOP_EIGHT, "tgttos_round_top8")
         }
         if (placement <= 5) {
-            inc(CompletionCriteria.TGTTOS_TOP_FIVE, "tgttos_top5")
+            inc(CompletionCriteria.TGTTOS_ROUND_TOP_FIVE, "tgttos_round_top5")
         }
         if (placement <= 3) {
-            inc(CompletionCriteria.TGTTOS_TOP_THREE, "tgttos_top3")
+            inc(CompletionCriteria.TGTTOS_ROUND_TOP_THREE, "tgttos_round_top3")
         }
     }
 }
