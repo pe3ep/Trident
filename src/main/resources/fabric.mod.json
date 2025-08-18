@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Trident",
-  "description": "The #1 client-side utility mod for MCC Island, providing a huge range of utility and quality of life features.",
+  "description": "Client-side utility mod for MCC Island, providing a huge range of utility and quality of life features.",
   "authors": ["Pe3ep", "SirArchibald97"],
   "contact": {
     "issues": "https://github.com/pe3ep/Trident/issues",

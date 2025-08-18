@@ -177,7 +177,7 @@ class Config {
                         name(Component.translatable("config.trident.global.blueprint_indicators.name"))
                         description(OptionDescription.createBuilder()
                             .text(Component.translatable("config.trident.global.blueprint_indicators.description"))
-//                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/blueprint_indicators.png"), 120, 88)
+                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/blueprint_indicators.png"), 405, 316)
                             .build()
                         )
                         binding(handler.instance()::globalBlueprintIndicators, true)
@@ -186,7 +186,11 @@ class Config {
 
                     options.register<TridentThemes>("theme") {
                         name(Component.translatable("config.trident.global.theme.name"))
-                        description(OptionDescription.of(Component.translatable("config.trident.global.theme.description")))
+                        description(OptionDescription.createBuilder()
+                            .text(Component.translatable("config.trident.global.theme.description"))
+                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/theme.png"), 497, 329)
+                            .build()
+                        )
                         binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
                         controller(enumSwitch<TridentThemes> { v -> v.displayName })
                     }
@@ -210,7 +214,11 @@ class Config {
 
                     options.register<Boolean>("killfeed_enabled") {
                         name(Component.translatable("config.trident.killfeed.enabled.name"))
-                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.enabled.description")))
+                        description(OptionDescription.createBuilder()
+                            .text(Component.translatable("config.trident.killfeed.enabled.description"))
+                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/killfeed.png"), 618, 332)
+                            .build()
+                        )
                         binding(handler.instance()::killfeedEnabled, true)
                         controller(tickBox())
                     }
@@ -271,7 +279,11 @@ class Config {
 
                     options.register<Boolean>("enabled") {
                         name(Component.translatable("config.trident.questing.enabled.name"))
-                        description(OptionDescription.of(Component.translatable("config.trident.questing.enabled.description")))
+                        description(OptionDescription.createBuilder()
+                            .text(Component.translatable("config.trident.questing.enabled.description"))
+                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/questing.png"), 414, 338)
+                            .build()
+                        )
                         binding(handler.instance()::questingEnabled, true)
                         controller(tickBox())
                     }
@@ -281,9 +293,13 @@ class Config {
                     name(Component.translatable("config.trident.fishing.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.fishing.description")))
 
-                    options.register<Boolean>("rarity_overlay") {
+                    options.register<Boolean>("supplies_module") {
                         name(Component.translatable("config.trident.fishing.supplies_module.name"))
-                        description(OptionDescription.of(Component.translatable("config.trident.fishing.supplies_module.description")))
+                        description(OptionDescription.createBuilder()
+                            .text(Component.translatable("config.trident.fishing.supplies_module.description"))
+                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/supplies.png"), 507, 333)
+                            .build()
+                        )
                         binding(handler.instance()::fishingSuppliesModule, true)
                         controller(tickBox())
                     }
