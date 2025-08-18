@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.utils
 
 import cc.pe3epwithyou.trident.client.events.questing.HITWQuestEvents
+import cc.pe3epwithyou.trident.client.events.questing.RocketSpleefRushQuestEvents
 import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
@@ -73,6 +74,10 @@ object NoxesiumUtils {
         if (MCCIslandState.game == MCCGame.SKY_BATTLE) {
             SkyBattleQuestEvents.scheduleSurvivedMinute()
             SkyBattleQuestEvents.scheduleSurvivedTwoMinutes()
+        }
+
+        if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) {
+            RocketSpleefRushQuestEvents.scheduleSurvivedMinute()
         }
     }
 
