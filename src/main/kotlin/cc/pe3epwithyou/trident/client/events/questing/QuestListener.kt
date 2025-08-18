@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.client.events.questing
 
 import cc.pe3epwithyou.trident.client.events.questing.BattleBoxQuestEvents.handleBattleBox
+import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents.handleSkyBattle
 import cc.pe3epwithyou.trident.client.events.questing.SurvivorQuestEvents.handlePKWS
 import cc.pe3epwithyou.trident.client.events.questing.TGTTOSQuestEvents.handleTGTTOS
 import cc.pe3epwithyou.trident.config.Config
@@ -50,7 +51,8 @@ object QuestListener {
 
             if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) handlePKWS(message)
             if (MCCIslandState.game == MCCGame.BATTLE_BOX) handleBattleBox(message)
-            if(MCCIslandState.game == MCCGame.TGTTOS) handleTGTTOS(message)
+            if (MCCIslandState.game == MCCGame.TGTTOS) handleTGTTOS(message)
+            if (MCCIslandState.game == MCCGame.SKY_BATTLE) handleSkyBattle(message)
         }
     }
 }
