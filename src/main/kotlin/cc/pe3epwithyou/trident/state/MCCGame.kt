@@ -14,5 +14,5 @@ enum class MCCGame(
     TGTTOS("TGTTOS", "tgttos"),
     ROCKET_SPLEEF_RUSH("Rocket Spleef Rush", "rocket_spleef"),
     DYNABALL("Dynaball", "dynaball"),
-    HITW("Hole in the Wall", "hole_in_the_wall"),
+    HITW("HITW", "hole_in_the_wall"),
 }

@@ -6,6 +6,8 @@ import cc.pe3epwithyou.trident.dialogs.themes.DialogTitle
 import cc.pe3epwithyou.trident.dialogs.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
+import cc.pe3epwithyou.trident.utils.ComponentExtensions.withDefault
+import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.widgets.fishing.AugmentStackWidget
 import cc.pe3epwithyou.trident.widgets.fishing.OverclockStackWidget
@@ -16,6 +18,7 @@ import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.components.MultiLineTextWidget
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.layouts.GridLayout
@@ -38,7 +41,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
         val baseTitle = icon.append(text)
 
-        return if (TridentClient.playerState.supplies.updateRequired) {
+        return if (TridentClient.playerState.supplies.baitDesynced) {
             val warn = Component.literal(" ⚠")
                 .withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.GOLD))
             val tooltip = Tooltip.create(
@@ -63,18 +66,39 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val mccIconStyle = Style.EMPTY.withFont(TridentFont.getTridentFont())
         val mccFontStyle = Style.EMPTY.withFont(TridentFont.getMCCFont())
         val supplies = TridentClient.playerState.supplies
-        val isDesynced = supplies.updateRequired
+        val isBaitDesynced = supplies.baitDesynced
+
+        if (supplies.needsUpdating) {
+            StringWidget(
+                Component.literal("Fishing data missing".uppercase())
+                    .withHudMCC()
+                    .withStyle(ChatFormatting.GOLD),
+                mcFont
+            ).atBottom(0, settings = LayoutConstants.CENTRE)
+            MultiLineTextWidget(
+                Component.literal("""
+                    In order to update 
+                    the Supplies Module, 
+                    please open the following 
+                    menu: A.N.G.L.R. Panel -> 
+                    Fishing Supplies
+                """.trimIndent())
+                    .withDefault()
+                    .withStyle(ChatFormatting.GRAY),
+                mcFont
+            ).atBottom(0, settings = LayoutConstants.LEFT)
+            return@grid
+        }
 
         // Bait component
         val baitAmount = supplies.bait.amount ?: "0"
-        val baitIcon: String = when {
-            supplies.bait.type == Rarity.COMMON    -> "\uE007"
-            supplies.bait.type == Rarity.UNCOMMON  -> "\uE008"
-            supplies.bait.type == Rarity.RARE      -> "\uE009"
-            supplies.bait.type == Rarity.EPIC      -> "\uE00A"
-            supplies.bait.type == Rarity.LEGENDARY -> "\uE00B"
-            supplies.bait.type == Rarity.MYTHIC    -> "\uE00C"
-            else -> "\uE007"
+        val baitIcon: String = when (supplies.bait.type) {
+            Rarity.COMMON -> "\uE007"
+            Rarity.UNCOMMON -> "\uE008"
+            Rarity.RARE -> "\uE009"
+            Rarity.EPIC -> "\uE00A"
+            Rarity.LEGENDARY -> "\uE00B"
+            Rarity.MYTHIC -> "\uE00C"
         }
 
         val baitComponent = Component.literal(baitIcon)
@@ -83,7 +107,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             .append(
                 Component.literal(" $baitAmount")
                     .withStyle(mccFontStyle)
-                    .withColor(if (isDesynced) ChatFormatting.GOLD.color!! else ChatFormatting.WHITE.color!!)
+                    .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else ChatFormatting.WHITE.color!!)
             )
         StringWidget(baitComponent, mcFont)
             .at(0, 0, settings = LayoutConstants.LEFT)
@@ -94,14 +118,13 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
         // Line component
         val lineDurability = supplies.line.uses ?: "0"
-        val lineIcon: String = when {
-            supplies.line.type == Rarity.COMMON    -> "\uE001"
-            supplies.line.type == Rarity.UNCOMMON  -> "\uE002"
-            supplies.line.type == Rarity.RARE      -> "\uE003"
-            supplies.line.type == Rarity.EPIC      -> "\uE004"
-            supplies.line.type == Rarity.LEGENDARY -> "\uE005"
-            supplies.line.type == Rarity.MYTHIC    -> "\uE006"
-            else -> "\uE007"
+        val lineIcon: String = when (supplies.line.type) {
+            Rarity.COMMON -> "\uE001"
+            Rarity.UNCOMMON -> "\uE002"
+            Rarity.RARE -> "\uE003"
+            Rarity.EPIC -> "\uE004"
+            Rarity.LEGENDARY -> "\uE005"
+            Rarity.MYTHIC -> "\uE006"
         }
 
         val lineComponent = Component.literal(lineIcon)

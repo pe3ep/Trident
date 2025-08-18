@@ -65,8 +65,8 @@ object ChatEventListener {
 
             // Check if player received bait and mark supplies as desynced
             if (message.isReceivedItem() && "Bait" in message.string) {
-                if (!TridentClient.playerState.supplies.updateRequired) {
-                    TridentClient.playerState.supplies.updateRequired = true
+                if (!TridentClient.playerState.supplies.baitDesynced) {
+                    TridentClient.playerState.supplies.baitDesynced = true
                     DialogCollection.refreshDialog("supplies")
                 }
             }

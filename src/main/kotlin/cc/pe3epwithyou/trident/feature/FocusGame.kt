@@ -16,17 +16,16 @@ object FocusGame {
         if (!Config.Games.autoFocus) return
         if (isOnIsland() && (game != MCCGame.HUB || game != MCCGame.FISHING)) {
             if (subtitle.contains("►5◄") || subtitle.contains("►3◄")) {
-                if (Config.Debug.enableLogging) {
-                    ChatUtils.sendMessage(
-                        """
-                            isActive: ${WindowExtensions.isActive}
-                            isMaximized: ${Minecraft.getInstance().window.isMaximized}
-                            
-                            IconifiedValue: ${GLFW.glfwGetWindowAttrib(Minecraft.getInstance().window.window, GLFW.GLFW_ICONIFIED)}
-                            MaximizedValue: ${GLFW.glfwGetWindowAttrib(Minecraft.getInstance().window.window, GLFW.GLFW_MAXIMIZED)}
-                        """.trimIndent()
-                    )
-                }
+                ChatUtils.debugLog(
+                    """
+                        isActive: ${WindowExtensions.isActive}
+                        isMaximized: ${Minecraft.getInstance().window.isMaximized}
+                        
+                        IconifiedValue: ${GLFW.glfwGetWindowAttrib(Minecraft.getInstance().window.window, GLFW.GLFW_ICONIFIED)}
+                        MaximizedValue: ${GLFW.glfwGetWindowAttrib(Minecraft.getInstance().window.window, GLFW.GLFW_MAXIMIZED)}
+                    """.trimIndent()
+                )
+
                 Minecraft.getInstance().window.focusWindowIfInactive()
             }
         }

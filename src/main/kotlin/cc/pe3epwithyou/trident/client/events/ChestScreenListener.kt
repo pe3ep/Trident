@@ -3,14 +3,16 @@ package cc.pe3epwithyou.trident.client.events
 import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
+import cc.pe3epwithyou.trident.feature.QuestingParser
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
-import cc.pe3epwithyou.trident.utils.TimerUtil
+import cc.pe3epwithyou.trident.widgets.questing.Quest
+import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 
@@ -26,23 +28,55 @@ object ChestScreenListener {
         else -> Rarity.COMMON
     }
 
-    private fun handleScreen(client: Minecraft, screen: ContainerScreen) {
-        if (screen.title.string.contains("FISHING SUPPLIES")) {
-            TimerUtil.INSTANCE.setTimer(2) {
+    private fun handleScreen(screen: ContainerScreen) {
+        if ("FISHING SUPPLIES" in screen.title.string) {
+            DelayedAction.delayTicks(2L) {
                 findAugments(screen)
             }
         }
+        if ("ISLAND REWARDS" in screen.title.string) {
+            DelayedAction.delayTicks(2L) {
+                findQuests(screen)
+            }
+        }
+
+        ChatUtils.debugLog("Screen title: " + screen.title.string)
     }
 
     fun register() {
-        ScreenEvents.AFTER_INIT.register { client, screen: Screen, _, _ ->
-            if (screen is ContainerScreen) handleScreen(client, screen)
+        ScreenEvents.AFTER_INIT.register { _, screen: Screen, _, _ ->
+            if (screen is ContainerScreen) handleScreen(screen)
         }
     }
 
+    fun findQuests(screen: ContainerScreen) {
+        /**
+         * 37 - daily
+         * 39 - weekly
+         * 41 - scroll
+         */
+//        if (!Config.Fishing.suppliesModule) return
+        if ("ISLAND REWARDS" !in screen.title.string) return
+        val quests = mutableListOf<Quest>()
+
+        val dailySlot = screen.menu.slots[37]
+        val dailyQuests = QuestingParser.parseSlot(dailySlot)
+        quests.addAll(dailyQuests ?: emptyList())
+
+        val weeklySlot = screen.menu.slots[39]
+        val weeklyQuests = QuestingParser.parseSlot(weeklySlot)
+        quests.addAll(weeklyQuests ?: emptyList())
+
+        val scrollSlot = screen.menu.slots[41]
+        val scrollQuests = QuestingParser.parseSlot(scrollSlot)
+        quests.addAll(scrollQuests ?: emptyList())
+
+        QuestStorage.loadQuests(quests)
+    }
+
     fun findAugments(screen: ContainerScreen) {
-        if (!screen.title.string.contains("FISHING SUPPLIES")) return
-        ChatUtils.info("Opened menu: ${screen.title.string}")
+        if (!Config.Fishing.suppliesModule) return
+        if ("FISHING SUPPLIES" !in screen.title.string) return
 
         // Process bait slot (slot 19)
         val baitSlot = screen.menu.slots[19]
@@ -57,7 +91,7 @@ object ChestScreenListener {
                 ?.toIntOrNull()
 
             playerState.supplies.bait.amount = baitCount
-            ChatUtils.info("Bait found - ${playerState.supplies.bait.amount}")
+            ChatUtils.debugLog("Bait found - ${playerState.supplies.bait.amount}")
 
             val baitRarityName = baitItemName.split(" ").firstOrNull()
             playerState.supplies.bait.type = parseRarity(baitRarityName ?: "")
@@ -111,15 +145,13 @@ object ChestScreenListener {
                 }
             }
         } as MutableList<Augment>
-        if (Config.Debug.enableLogging) {
-            ChatUtils.sendMessage("""
-                Augments: ${playerState.supplies.augments}
-            """.trimIndent())
-        }
+        ChatUtils.debugLog("""
+            Augments: ${playerState.supplies.augments}
+        """.trimIndent())
         playerState.supplies.augmentsAvailable = availableSlots
-        playerState.supplies.updateRequired = false
+        playerState.supplies.baitDesynced = false
+        playerState.supplies.needsUpdating = false
 
-        // TODO: Process overclocks
         // Overclocks (slots 12-15)
         val hookOverclock = screen.menu.slots[12]
         playerState.supplies.overclocks.hook = ItemParser.getActiveOverclock(hookOverclock.item)

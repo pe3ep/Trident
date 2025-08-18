@@ -1,9 +1,14 @@
 package cc.pe3epwithyou.trident.utils
 
+import cc.pe3epwithyou.trident.client.events.questing.DynaballQuestEvents
+import cc.pe3epwithyou.trident.client.events.questing.HITWQuestEvents
+import cc.pe3epwithyou.trident.client.events.questing.RocketSpleefRushQuestEvents
+import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
+import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
@@ -46,6 +51,10 @@ object NoxesiumUtils {
             val k = "killfeed"
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
         }
+        if (currentGame != MCCGame.HUB && currentGame != MCCGame.FISHING) {
+            val k = "questing"
+            DialogCollection.open(k, QuestingDialog(10, 10, k))
+        }
     }
 
     private fun removeKillsIfNeeded(packet: ClientboundMccGameStatePacket) {
@@ -54,6 +63,26 @@ object NoxesiumUtils {
             if (packet.phaseType == "INTERMISSION" && packet.stage == "countdownphase") {
                 KillFeedDialog.clearKills()
             }
+        }
+    }
+
+    private fun handleTimedQuests() {
+        if (MCCIslandState.game == MCCGame.HITW) {
+            HITWQuestEvents.scheduleSurvivedMinute()
+            HITWQuestEvents.scheduleSurvivedTwoMinutes()
+        }
+
+        if (MCCIslandState.game == MCCGame.SKY_BATTLE) {
+            SkyBattleQuestEvents.scheduleSurvivedMinute()
+            SkyBattleQuestEvents.scheduleSurvivedTwoMinutes()
+        }
+
+        if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) {
+            RocketSpleefRushQuestEvents.scheduleSurvivedMinute()
+        }
+
+        if (MCCIslandState.game == MCCGame.DYNABALL) {
+            DynaballQuestEvents.scheduleDynaball()
         }
     }
 
@@ -67,11 +96,16 @@ object NoxesiumUtils {
             val type = packet.subType
             val game = packet.associatedGame
 
-            if (Config.Debug.enableLogging) {
-                ChatUtils.sendMessage(
-                    "NOX Packet received:\nserver: $server\ntype: $type\ngame: $game"
+            ChatUtils.debugLog(
+                "NOX Packet received:\nserver: $server\ntype: $type\ngame: $game"
+            )
+
+
+            if (Config.Debug.logForScrapers) (
+                ChatUtils.info(
+                    "Got Nox packet CLIENT_MCC_SERVER: serverType:$server subType:$type associatedGame:$game"
                 )
-            }
+            )
 
             updateFishingState(type)
 
@@ -82,27 +116,39 @@ object NoxesiumUtils {
             if (currentGame != MCCIslandState.game) {
                 MCCIslandState.game = currentGame
                 updateGameDialogs(currentGame)
-                if (Config.Debug.enableLogging) {
-                    ChatUtils.sendMessage("Current game: ${MCCIslandState.game.title}")
-                }
+                ChatUtils.debugLog("Current game: ${MCCIslandState.game.title}")
             }
         }
 
         NoxesiumPackets.CLIENT_MCC_GAME_STATE.addListener(this) { _, packet, _ ->
             removeKillsIfNeeded(packet)
-            if (Config.Debug.enableLogging) {
-                ChatUtils.sendMessage(
+            if (packet.phaseType == "PLAY" || packet.stage == "inround") {
+                handleTimedQuests()
+            }
+            ChatUtils.debugLog(
+                """
+                NOX GAME_STATE Packet Received:
+                mapID: ${packet.mapId}
+                mapName: ${packet.mapName}
+                round: ${packet.round}
+                stage: ${packet.stage}
+                phaseType: ${packet.phaseType}
+                totalRounds: ${packet.totalRounds}
+                """.trimIndent()
+            )
+            if (Config.Debug.logForScrapers) (
+                ChatUtils.info(
                     """
-                    NOX GAME_STATE Packet Received:
-                    mapID: ${packet.mapId}
-                    mapName: ${packet.mapName}
-                    round: ${packet.round}
-                    stage: ${packet.stage}
-                    phaseType: ${packet.phaseType}
-                    totalRounds: ${packet.totalRounds}
+                        Got Nox packet CLIENT_MCC_GAME_STATE:
+                        mapID:${packet.mapId}
+                        mapName:${packet.mapName}
+                        round:${packet.round}
+                        stage:${packet.stage}
+                        phaseType:${packet.phaseType}
+                        totalRounds:${packet.totalRounds}
                     """.trimIndent()
                 )
-            }
+            )
         }
     }
 

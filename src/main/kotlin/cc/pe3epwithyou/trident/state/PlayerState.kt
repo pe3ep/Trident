@@ -51,7 +51,8 @@ data class Supplies(
     var augments: MutableList<Augment> = mutableListOf(),
     var augmentsAvailable: Int = 0,
     var overclocks: Overclocks = Overclocks(),
-    var updateRequired: Boolean = true,
+    var baitDesynced: Boolean = true,
+    var needsUpdating: Boolean = true,
 )
 data class PlayerState(
     var supplies: Supplies = Supplies(),

@@ -1,8 +1,7 @@
 package cc.pe3epwithyou.trident.client
 
-import cc.pe3epwithyou.trident.client.events.ChatEventListener
-import cc.pe3epwithyou.trident.client.events.ChestScreenListener
-import cc.pe3epwithyou.trident.client.events.KillChatListener
+import cc.pe3epwithyou.trident.client.events.*
+import cc.pe3epwithyou.trident.client.events.questing.QuestListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DebugDialog
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
@@ -16,11 +15,10 @@ import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
-import cc.pe3epwithyou.trident.utils.TimerUtil
 import cc.pe3epwithyou.trident.utils.TridentFont
-import cc.pe3epwithyou.trident.utils.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.widgets.killfeed.KillMethod
 import cc.pe3epwithyou.trident.widgets.killfeed.KillWidget
+import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
@@ -50,7 +48,7 @@ class TridentClient : ClientModInitializer {
         val playerState = PlayerState()
         lateinit var settingsKeymapping: KeyMapping
     }
-    private val DEBUG_COMMANDS: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")
+    private val debugCommands: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")
         .then(ClientCommandManager.literal("open").then(
             ClientCommandManager.argument("dialog", StringArgumentType.string())
                 .suggests { _, builder ->
@@ -127,7 +125,7 @@ class TridentClient : ClientModInitializer {
 
     override fun onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            dispatcher.register(DEBUG_COMMANDS)
+            dispatcher.register(debugCommands)
         }
 
         settingsKeymapping = KeyBindingHelper.registerKeyBinding(
@@ -141,11 +139,11 @@ class TridentClient : ClientModInitializer {
 
         ChatEventListener.register()
         ChestScreenListener.register()
-        TimerUtil.register()
         DepletedDisplay.DepletedTimer.register()
         SupplyWidgetTimer.register()
         KillChatListener.register()
         DelayedAction.init()
+        QuestListener.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->
@@ -153,5 +151,10 @@ class TridentClient : ClientModInitializer {
             if (!settingsKeymapping.consumeClick() || client.player == null) return@EndTick
             client.setScreen(Config.getScreen(client.screen))
         })
+
+//        Register Questing events
+        QuestingEvents.INCREMENT_ACTIVE.register { ctx ->
+            QuestStorage.applyIncrement(ctx)
+        }
     }
 }
