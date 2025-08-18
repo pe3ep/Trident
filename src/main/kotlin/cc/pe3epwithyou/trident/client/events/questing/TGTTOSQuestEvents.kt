@@ -14,7 +14,7 @@ object TGTTOSQuestEvents {
         val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
         QuestStorage.applyIncrement(
             QuestIncrementContext(
-                MCCGame.PARKOUR_WARRIOR_DOJO,
+                MCCGame.TGTTOS,
                 criteria,
                 1,
                 tag
