@@ -37,7 +37,8 @@ object DojoQuestEvents {
                     criteria,
                     amount,
                     tag
-                )
+                ),
+                true
             )
         }
 
@@ -48,7 +49,8 @@ object DojoQuestEvents {
                 CompletionCriteria.PW_SOLO_TOTAL_MEDALS_BANKED,
                 medals,
                 "medals_banked"
-            )
+            ),
+            true
         )
 
         val runType = when (medals) {
@@ -64,7 +66,8 @@ object DojoQuestEvents {
                 CompletionCriteria.PW_SOLO_TOTAL_STANDARD_CMPLS,
                 1,
                 "standard_completion_total"
-            )
+            ),
+            true
         )
 
         if (runType >= ADVANCED_CMPL) {
@@ -74,7 +77,8 @@ object DojoQuestEvents {
                     CompletionCriteria.PW_SOLO_TOTAL_ADVANCED_CMPLS,
                     1,
                     "advanced_completion_total"
-                )
+                ),
+                true
             )
         }
 

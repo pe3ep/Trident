@@ -24,7 +24,7 @@ object SurvivorQuestEvents {
                 1,
                 "leap_finished"
             )
-            QuestStorage.applyIncrement(ctx)
+            QuestStorage.applyIncrement(ctx, true)
         }
 
         val obstacleComplete = Regex("^\\[.] Leap \\d - \\d: .+ complete!").find(m.string)
@@ -35,7 +35,7 @@ object SurvivorQuestEvents {
                 1,
                 "obstacle_complete"
             )
-            QuestStorage.applyIncrement(ctx)
+            QuestStorage.applyIncrement(ctx, true)
         }
 
         val playerOutlived = Regex("^\\[.] .+ was eliminated\\. \\[.+]").find(m.string)
@@ -46,7 +46,7 @@ object SurvivorQuestEvents {
                 1,
                 "player_outlived"
             )
-            QuestStorage.applyIncrement(ctx)
+            QuestStorage.applyIncrement(ctx, true)
         }
     }
 

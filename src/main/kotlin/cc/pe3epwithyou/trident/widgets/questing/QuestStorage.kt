@@ -52,10 +52,10 @@ object QuestStorage {
      * Apply the increment described by ctx to all matching quests for the given game.
      * Returns true if any quest was updated.
      */
-    fun applyIncrement(ctx: QuestIncrementContext): Boolean {
+    fun applyIncrement(ctx: QuestIncrementContext, canBeDuplicated: Boolean = false): Boolean {
         ChatUtils.debugLog("Received increment from context ${ctx.sourceTag}: amount: ${ctx.amount}")
         val id = WorldUtils.getGameID()
-        if (lastOperation[ctx.criteria] == id) {
+        if (!canBeDuplicated && lastOperation[ctx.criteria] == id) {
             ChatUtils.warn("Got duplicate context increment by ${ctx.amount} from ${ctx.sourceTag}")
             return false
         }
@@ -65,7 +65,7 @@ object QuestStorage {
             if (q.criteria == ctx.criteria && !q.isCompleted) {
                 q.increment(ctx.amount)
                 /** Save the last operation to avoid duplicates */
-                lastOperation[ctx.criteria] = id
+                if (!canBeDuplicated) lastOperation[ctx.criteria] = id
                 updated = true
             }
         }

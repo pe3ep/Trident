@@ -19,7 +19,7 @@ object BattleBoxQuestEvents {
                 1,
                 "bb_rounds_won"
             )
-            QuestStorage.applyIncrement(ctx)
+            QuestStorage.applyIncrement(ctx, true)
         }
 
         val round3started = Regex("^\\[.] Round 3 started!").find(m.string)

@@ -72,7 +72,7 @@ object KillChatListener {
             if (attacker.string == self.name.string) {
                 val game = MCCIslandState.game
                 val ctx = GenericCompletionCriteria.playerEliminated(game, sourceTag = "kill") ?: return true
-                QuestStorage.applyIncrement(ctx)
+                QuestStorage.applyIncrement(ctx, true)
 
                 if (method == KillMethod.RANGE && game == MCCGame.BATTLE_BOX) {
                     QuestStorage.applyIncrement(QuestIncrementContext(
@@ -80,7 +80,7 @@ object KillChatListener {
                         CompletionCriteria.BATTLE_BOX_QUADS_RANGED_KILLS,
                         1,
                         "bb_ranged_kill"
-                    ))
+                    ), true)
                 }
             }
 

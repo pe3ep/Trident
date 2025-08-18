@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component
 
 object TGTTOSQuestEvents {
     // helper to apply increments
-    private fun inc(criteria: CompletionCriteria, tagSuffix: String? = null) {
+    private fun inc(criteria: CompletionCriteria, tagSuffix: String? = null, canBeDuplicated: Boolean = false) {
         val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
         QuestStorage.applyIncrement(
             QuestIncrementContext(
@@ -18,7 +18,8 @@ object TGTTOSQuestEvents {
                 criteria,
                 1,
                 tag
-            )
+            ),
+            canBeDuplicated
         )
     }
 
@@ -48,16 +49,16 @@ object TGTTOSQuestEvents {
                 .find(m.string) ?: return
         val placement = match.groups[1]?.value?.toInt() ?: return
 
-        inc(CompletionCriteria.TGTTOS_CHICKENS_PUNCHED, "tgttos_chickens_punched")
+        inc(CompletionCriteria.TGTTOS_CHICKENS_PUNCHED, "tgttos_chickens_punched", true)
 
         if (placement <= 8) {
-            inc(CompletionCriteria.TGTTOS_ROUND_TOP_EIGHT, "tgttos_round_top8")
+            inc(CompletionCriteria.TGTTOS_ROUND_TOP_EIGHT, "tgttos_round_top8", true)
         }
         if (placement <= 5) {
-            inc(CompletionCriteria.TGTTOS_ROUND_TOP_FIVE, "tgttos_round_top5")
+            inc(CompletionCriteria.TGTTOS_ROUND_TOP_FIVE, "tgttos_round_top5", true)
         }
         if (placement <= 3) {
-            inc(CompletionCriteria.TGTTOS_ROUND_TOP_THREE, "tgttos_round_top3")
+            inc(CompletionCriteria.TGTTOS_ROUND_TOP_THREE, "tgttos_round_top3", true)
         }
     }
 }
