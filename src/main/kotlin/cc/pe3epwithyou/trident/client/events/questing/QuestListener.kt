@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.client.events.questing
 
 import cc.pe3epwithyou.trident.client.events.questing.BattleBoxQuestEvents.handleBattleBox
+import cc.pe3epwithyou.trident.client.events.questing.DynaballQuestEvents.handleDynaball
 import cc.pe3epwithyou.trident.client.events.questing.RocketSpleefRushQuestEvents.handleRocketSpleefRush
 import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents.handleSkyBattle
 import cc.pe3epwithyou.trident.client.events.questing.SurvivorQuestEvents.handlePKWS
@@ -55,6 +56,7 @@ object QuestListener {
             if (MCCIslandState.game == MCCGame.TGTTOS) handleTGTTOS(message)
             if (MCCIslandState.game == MCCGame.SKY_BATTLE) handleSkyBattle(message)
             if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) handleRocketSpleefRush(message)
+            if (MCCIslandState.game == MCCGame.DYNABALL) handleDynaball(message)
         }
     }
 }

@@ -11,4 +11,8 @@ public interface GuiAccessor {
     @Accessor
     @Nullable
     Component getSubtitle();
+
+    @Accessor
+    @Nullable
+    Component getTitle();
 }
