@@ -21,10 +21,23 @@ object KillChatListener {
     private val slainRegex = Regex("^\\[.] .+ (was slain by) .+")
     private val shotRegex = Regex("^\\[.] .+ (was shot by) .+")
     private val explodedRegex = Regex("^\\[.] .+ (was blown up by) .+")
+    private val explodedSelfRegex = Regex("^\\[.] .+ blew up\\. .+")
     private val lavaRegex = Regex("^\\[.] .+ (tried to swim in lava to escape) .+")
+    private val lavaSelfRegex = Regex("^\\[.] .+ tried to swim in lava\\. .+")
     private val potRegex = Regex("^\\[.] .+ was eliminated with magic by .+ using .+")
     private val potRegexAlt = Regex("^\\[.] .+ was hit by .+")
-    private val loggedOut = Regex("^\\[.] .+ logged out\\.")
+    private val loggedOut = Regex("^\\[.] .+ logged out\\. .+")
+    private val loggedOutToGetAway = Regex("^\\[.] .+ logged out to get away from .+")
+    private val genericDiedRegex = Regex("^\\[.] .+ died\\. .+")
+    private val spleefedRegex = Regex("^\\[.] .+ was spleefed by .+")
+    private val prickedRegex = Regex("^\\[.] .+ was pricked to death whilst trying to escape .+")
+    private val prickedSelfRegex = Regex("^\\[.] .+ was pricked to death\\. .+")
+    private val walkedFire = Regex("^\\[.] .+ walked into fire whilist fighting .+")
+    private val fireSelf = Regex("^\\[.] .+ went up in flames\\. .+")
+    private val burnedRegex = Regex("^\\[.] .+ was burned to a crisp while fighting .+")
+    private val burnedSelfRegex = Regex("^\\[.] .+ burned to death\\. .+")
+    private val hasNotRejoined = Regex("^\\[.] .+ hasn't rejoined the game and is automatically eliminated\\. .+")
+    private val disconnected = Regex("^\\[.] .+ disconnected\\. .+")
 
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
@@ -39,11 +52,11 @@ object KillChatListener {
                 return@allowGame handleKill(message, KillMethod.RANGE)
             }
 
-            if (explodedRegex.matches(message.string)) {
+            if (explodedRegex.matches(message.string) || explodedSelfRegex.matches(message.string)) {
                 return@allowGame handleKill(message, KillMethod.EXPLOSION)
             }
 
-            if (lavaRegex.matches(message.string)) {
+            if (lavaRegex.matches(message.string) || lavaSelfRegex.matches(message.string)) {
                 return@allowGame handleKill(message, KillMethod.LAVA)
             }
 
@@ -51,8 +64,30 @@ object KillChatListener {
                 return@allowGame handleKill(message, KillMethod.POTION)
             }
 
-            if (loggedOut.matches(message.string)) {
+            if (loggedOut.matches(message.string) ||
+                loggedOutToGetAway.matches(message.string) ||
+                disconnected.matches(message.string) ||
+                hasNotRejoined.matches(message.string)) {
                 return@allowGame handleKill(message, KillMethod.DISCONNECT)
+            }
+
+            if (genericDiedRegex.matches(message.string)) {
+                return@allowGame handleKill(message, KillMethod.GENERIC)
+            }
+
+            if (spleefedRegex.matches(message.string)) {
+                return@allowGame handleKill(message, KillMethod.MELEE)
+            }
+
+            if (prickedRegex.matches(message.string) || prickedSelfRegex.matches(message.string)) {
+                return@allowGame handleKill(message, KillMethod.GENERIC)
+            }
+
+            if (walkedFire.matches(message.string) ||
+                fireSelf.matches(message.string) ||
+                burnedRegex.matches(message.string) ||
+                burnedSelfRegex.matches(message.string)) {
+                return@allowGame handleKill(message, KillMethod.GENERIC)
             }
 
             return@allowGame true
