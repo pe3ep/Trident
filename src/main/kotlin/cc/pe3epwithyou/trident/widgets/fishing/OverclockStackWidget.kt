@@ -54,8 +54,8 @@ class OverclockStackWidget(
             !overclockState.supreme.isActive && !overclockState.supreme.isCooldown -> supremeTexture = OverclockTexture.ACTIVATED
         }
 
-        +UnstableOverclockWidget(width, height, unstableTexture, 3, getOverclockComponent(overclockState.unstable))
-        +UnstableOverclockWidget(height, height, supremeTexture, 0, getOverclockComponent(overclockState.supreme))
+        if (overclockState.unstable.isAvailable) +UnstableOverclockWidget(width, height, unstableTexture, 3, getOverclockComponent(overclockState.unstable))
+        if (overclockState.supreme.isAvailable) +UnstableOverclockWidget(height, height, supremeTexture, 0, getOverclockComponent(overclockState.supreme))
     }
 
     private fun getOverclockComponent(state: Overclock): Component {

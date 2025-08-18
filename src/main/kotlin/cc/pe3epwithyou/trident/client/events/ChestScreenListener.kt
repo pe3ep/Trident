@@ -15,6 +15,7 @@ import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
+import net.minecraft.core.component.DataComponents
 
 object ChestScreenListener {
 
@@ -163,8 +164,17 @@ object ChestScreenListener {
         playerState.supplies.overclocks.rod = ItemParser.getActiveOverclock(rodOverclock.item)
 
         val unstableOverclock = screen.menu.slots[15]
+        val unstableModel = unstableOverclock.item.components[DataComponents.ITEM_MODEL]
+        if (unstableModel != null) {
+            playerState.supplies.overclocks.unstable.isAvailable = !unstableModel.path.startsWith("island_interface/locked")
+        }
         playerState.supplies.overclocks.unstable.texture = ItemParser.getUnstableOverclock(unstableOverclock.item)
 
+        val supremeOverclock = screen.menu.slots[16]
+        val supremeModel = supremeOverclock.item.components[DataComponents.ITEM_MODEL]
+        if (supremeModel != null) {
+            playerState.supplies.overclocks.supreme.isAvailable = !supremeModel.path.startsWith("island_interface/locked")
+        }
         // Refresh supplies dialog if open
         DialogCollection.refreshDialog("supplies")
     }

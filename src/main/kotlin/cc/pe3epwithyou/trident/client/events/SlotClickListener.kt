@@ -19,11 +19,11 @@ object SlotClickListener {
             if ("FISHING SUPPLIES" !in screen.title.string) return
             val item = slot.item
             if (clickType == ClickType.QUICK_MOVE && isLeftClick && "Unstable Overclock" in item.hoverName.string) {
-                startUnstableOverclock()
+                if (TridentClient.playerState.supplies.overclocks.unstable.isAvailable) startUnstableOverclock()
             }
             if ((clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE)
                 && isLeftClick && "Supreme Overclock" in item.hoverName.string) {
-                startSupremeOverclock()
+                if (TridentClient.playerState.supplies.overclocks.supreme.isAvailable) startSupremeOverclock()
             }
         }
     }

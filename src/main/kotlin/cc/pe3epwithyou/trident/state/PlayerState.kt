@@ -15,7 +15,7 @@ data class UnstableOverclock(
 //    override var cooldownDuration: Long = 15 * 20,
     override var isActive: Boolean = false,
     override var isCooldown: Boolean = false
-) : Overclock(duration, timeLeft, cooldownLeft, cooldownDuration, isActive, isCooldown)
+) : Overclock(false, duration, timeLeft, cooldownLeft, cooldownDuration, isActive, isCooldown)
 
 data class SupremeOverclock(
     override var duration: Long = 60 * 10 * 20,
@@ -26,9 +26,10 @@ data class SupremeOverclock(
 //    override var cooldownDuration: Long = 15 * 20,
     override var isActive: Boolean = false,
     override var isCooldown: Boolean = false
-) : Overclock(duration, timeLeft, cooldownLeft, cooldownDuration, isActive, isCooldown)
+) : Overclock(false, duration, timeLeft, cooldownLeft, cooldownDuration, isActive, isCooldown)
 
 abstract class Overclock(
+    open var isAvailable: Boolean,
     open var duration: Long,
     open var timeLeft: Long,
     open var cooldownLeft: Long,
