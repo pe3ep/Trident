@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.client.events.questing
 
 import cc.pe3epwithyou.trident.client.events.questing.BattleBoxQuestEvents.handleBattleBox
 import cc.pe3epwithyou.trident.client.events.questing.SurvivorQuestEvents.handlePKWS
+import cc.pe3epwithyou.trident.client.events.questing.TGTTOSQuestEvents.handleTGTTOS
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
@@ -18,11 +19,13 @@ object QuestListener {
     val interruptibleTasks: ConcurrentHashMap<UUID, DelayedAction.DelayedTask> = ConcurrentHashMap()
 
     fun handleSubtitle(m: Component) {
+        if (!Config.Questing.enabled) return
         if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) DojoQuestEvents.handlePKWD(m)
         if (MCCIslandState.game == MCCGame.HITW) HITWQuestEvents.handlePlacement(m)
     }
 
     fun handleTimedQuest(minutes: Long, shouldInterrupt: Boolean = false, action: () -> Unit) {
+        if (!Config.Questing.enabled) return
         val initialID = getGameID()
         val task = DelayedAction.delay(TimeUnit.MINUTES.toMillis(minutes)) {
             val currentID = getGameID()
@@ -47,6 +50,7 @@ object QuestListener {
 
             if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) handlePKWS(message)
             if (MCCIslandState.game == MCCGame.BATTLE_BOX) handleBattleBox(message)
+            if(MCCIslandState.game == MCCGame.TGTTOS) handleTGTTOS(message)
         }
     }
 }
