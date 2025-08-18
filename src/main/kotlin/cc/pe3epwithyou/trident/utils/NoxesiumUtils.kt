@@ -72,11 +72,16 @@ object NoxesiumUtils {
             val type = packet.subType
             val game = packet.associatedGame
 
-            if (Config.Debug.enableLogging) {
-                ChatUtils.sendMessage(
-                    "NOX Packet received:\nserver: $server\ntype: $type\ngame: $game"
+            ChatUtils.debugLog(
+                "NOX Packet received:\nserver: $server\ntype: $type\ngame: $game"
+            )
+
+
+            if (Config.Debug.logForScrapers) (
+                ChatUtils.info(
+                    "Got Nox packet CLIENT_MCC_SERVER: serverType:$server subType:$type associatedGame:$game"
                 )
-            }
+            )
 
             updateFishingState(type)
 
@@ -108,6 +113,17 @@ object NoxesiumUtils {
                     """.trimIndent()
                 )
             }
+            ChatUtils.debugLog(
+                """
+                NOX GAME_STATE Packet Received:
+                mapID: ${packet.mapId}
+                mapName: ${packet.mapName}
+                round: ${packet.round}
+                stage: ${packet.stage}
+                phaseType: ${packet.phaseType}
+                totalRounds: ${packet.totalRounds}
+                """.trimIndent()
+            )
         }
     }
 

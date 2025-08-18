@@ -101,7 +101,7 @@ object DialogCollection {
     fun clear() {
         val keys = openedDialogs.keys.toList()
         keys.forEach { key ->
-            ChatUtils.info("Attempting to clear $key")
+            ChatUtils.debugLog("Attempting to clear $key")
             openedDialogs[key]?.close()
         }
     }

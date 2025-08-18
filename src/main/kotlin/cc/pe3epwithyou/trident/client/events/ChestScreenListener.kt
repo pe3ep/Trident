@@ -40,9 +40,8 @@ object ChestScreenListener {
                 findQuests(screen)
             }
         }
-        if (Config.Debug.enableLogging) {
-            ChatUtils.info("Title: " + screen.title.string)
-        }
+
+        ChatUtils.debugLog("Screen title: " + screen.title.string)
     }
 
     fun register() {
@@ -93,7 +92,7 @@ object ChestScreenListener {
                 ?.toIntOrNull()
 
             playerState.supplies.bait.amount = baitCount
-            ChatUtils.info("Bait found - ${playerState.supplies.bait.amount}")
+            ChatUtils.debugLog("Bait found - ${playerState.supplies.bait.amount}")
 
             val baitRarityName = baitItemName.split(" ").firstOrNull()
             playerState.supplies.bait.type = parseRarity(baitRarityName ?: "")
@@ -147,11 +146,9 @@ object ChestScreenListener {
                 }
             }
         } as MutableList<Augment>
-        if (Config.Debug.enableLogging) {
-            ChatUtils.sendMessage("""
-                Augments: ${playerState.supplies.augments}
-            """.trimIndent())
-        }
+        ChatUtils.debugLog("""
+            Augments: ${playerState.supplies.augments}
+        """.trimIndent())
         playerState.supplies.augmentsAvailable = availableSlots
         playerState.supplies.updateRequired = false
 

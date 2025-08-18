@@ -48,6 +48,7 @@ object QuestStorage {
      * Returns true if any quest was updated.
      */
     fun applyIncrement(ctx: QuestIncrementContext): Boolean {
+        ChatUtils.debugLog("Received increment from context ${ctx.sourceTag}: amount: ${ctx.amount}")
         val quests = store[ctx.game] ?: return false
         var updated = false
         for (q in quests) {

@@ -22,8 +22,8 @@ abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x
     }
 
     override fun onClose() {
-        ChatUtils.info("onClose dialog $key has been triggered.")
-        ChatUtils.info("$key position: ${this.x} ${this.y}")
+        ChatUtils.debugLog("onClose dialog $key has been triggered.")
+        ChatUtils.debugLog("$key position: ${this.x} ${this.y}")
         DialogCollection.remove(key)
         DialogCollection.saveDialogPosition(key, Pair(this.x, this.y))
         super.onClose()

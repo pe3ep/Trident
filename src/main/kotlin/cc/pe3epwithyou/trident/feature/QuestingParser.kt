@@ -25,6 +25,8 @@ object QuestingParser {
             return null
         }
         ChatUtils.info("Quest found: Slot ${slot.index}")
+        ChatUtils.debugLog("Quest found: Slot ${slot.index}")
+        ChatUtils.debugLog("Model: ${model.path}")
         if (model.path == FINISHED_MAPS ||
             model.path == ADD_SCROLL ||
             model.path == COMPLETED_QUEST) {
@@ -40,7 +42,7 @@ object QuestingParser {
             "mythic"    -> Rarity.MYTHIC
             else -> Rarity.COMMON
         }
-        ChatUtils.info("Got rarity - $rarity")
+        ChatUtils.debugLog("Got rarity - $rarity")
 
         var type = QuestType.DEFAULT
         for (t in QuestType.entries) {
@@ -49,11 +51,19 @@ object QuestingParser {
                 break
             }
         }
-        ChatUtils.info("Got type - $type")
+        ChatUtils.debugLog("Got type - $type")
+
+        val subtype = when {
+            "Daily" in item.hoverName.string -> QuestSubtype.DAILY
+            "Weekly" in item.hoverName.string -> QuestSubtype.WEEKLY
+            "Scroll" in item.hoverName.string -> QuestSubtype.SCROLL
+            else -> return null
+        }
+        ChatUtils.debugLog("Got subtype - $subtype")
 
         val quests = mutableListOf<Quest>()
         val loreResult = parseLore(slot.item)
-        ChatUtils.info("Got parsed quests - $loreResult")
+        ChatUtils.debugLog("Got parsed quests - $loreResult")
         if (loreResult.isEmpty()) return null
         loreResult.forEach { parsedQuest ->
             quests.add(
@@ -87,7 +97,7 @@ object QuestingParser {
                 val current = t.split("/")[0].replace(",", "").toInt()
                 val total = t.split("/")[1].replace(",", "").toInt()
                 tempProgress = Pair(current, total)
-                ChatUtils.info("Got progress -> $tempProgress")
+                ChatUtils.debugLog("Got progress -> $tempProgress")
                 val q = ParsedQuest(
                     tempGame ?: return@forEachIndexed,
                     tempCriteria ?: return@forEachIndexed,
@@ -97,23 +107,26 @@ object QuestingParser {
 
                 tempGame = null
                 tempCriteria = null
-                ChatUtils.info("Cleared temp data")
-                ChatUtils.info("--------------------")
+                ChatUtils.debugLog("Cleared temp data")
+                ChatUtils.debugLog("--------------------")
                 return@forEachIndexed
             } else if ("%" in l.string) {
-                ChatUtils.info("Hit the %, trying to detect game quest")
+                ChatUtils.debugLog("Hit the %, trying to detect game quest")
                 tempGame = getQuestGame(tempQuestString) ?: return@forEachIndexed
-                ChatUtils.info("Detected game quest -> ${tempGame!!.title}: $tempQuestString")
+                ChatUtils.debugLog("Detected game quest -> ${tempGame!!.title}: $tempQuestString")
                 val criteriaList = GameQuests.valueOf(tempGame!!.name).list
-                ChatUtils.info("Criteria list -> $criteriaList")
+                ChatUtils.debugLog("Criteria list -> $criteriaList")
                 for (crit in criteriaList) {
                     if (!tempQuestString.contains(crit.regexPattern)) continue
-                    ChatUtils.info("Detected game criteria -> $crit")
+                    ChatUtils.debugLog("Detected game criteria -> $crit")
                     tempCriteria = crit
                 }
                 tempQuestString = ""
             } else {
-                tempQuestString += (l.string + " ")
+                val suffix = if (l.string.endsWith(" ")) "" else " "
+                tempQuestString += (l.string + suffix)
+                tempQuestString.replace(",", "")
+                ChatUtils.debugLog("New tempQuestString: $tempQuestString")
             }
         }
 

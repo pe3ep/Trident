@@ -13,7 +13,7 @@ object SlotClickListener {
         val client = Minecraft.getInstance()
         if (client.screen !is ContainerScreen) return
         val screen = client.screen as ContainerScreen
-
+        ChatUtils.debugLog("ct: ${clickType.name} isleftclick: $isLeftClick slotname: ${slot.item.hoverName.string}")
         if (Config.Fishing.suppliesModule) {
             if ("FISHING SUPPLIES" !in screen.title.string) return
             val item = slot.item
