@@ -4,11 +4,15 @@ import cc.pe3epwithyou.trident.client.events.QuestIncrementContext
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.WorldUtils
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 object QuestStorage {
     private val store: MutableMap<MCCGame, MutableList<Quest>> = ConcurrentHashMap()
+
+    private val lastOperation: MutableMap<CompletionCriteria, UUID> = ConcurrentHashMap()
 
     init {
         for (g in MCCGame.entries) store[g] = CopyOnWriteArrayList()
@@ -50,11 +54,18 @@ object QuestStorage {
      */
     fun applyIncrement(ctx: QuestIncrementContext): Boolean {
         ChatUtils.debugLog("Received increment from context ${ctx.sourceTag}: amount: ${ctx.amount}")
+        val id = WorldUtils.getGameID()
+        if (lastOperation[ctx.criteria] == id) {
+            ChatUtils.warn("Got duplicate context increment by ${ctx.amount} from ${ctx.sourceTag}")
+            return false
+        }
         val quests = store[ctx.game] ?: return false
         var updated = false
         for (q in quests) {
             if (q.criteria == ctx.criteria && !q.isCompleted) {
                 q.increment(ctx.amount)
+                /** Save the last operation to avoid duplicates */
+                lastOperation[ctx.criteria] = id
                 updated = true
             }
         }
