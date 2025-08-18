@@ -1,7 +1,6 @@
 package cc.pe3epwithyou.trident.client.events.questing
 
 import cc.pe3epwithyou.trident.client.events.questing.BattleBoxQuestEvents.handleBattleBox
-import cc.pe3epwithyou.trident.client.events.questing.DojoQuestEvents.handlePKWD
 import cc.pe3epwithyou.trident.client.events.questing.SurvivorQuestEvents.handlePKWS
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.state.MCCGame
@@ -19,7 +18,8 @@ object QuestListener {
     val interruptibleTasks: ConcurrentHashMap<UUID, DelayedAction.DelayedTask> = ConcurrentHashMap()
 
     fun handleSubtitle(m: Component) {
-        if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) handlePKWD(m)
+        if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) DojoQuestEvents.handlePKWD(m)
+        if (MCCIslandState.game == MCCGame.HITW) HITWQuestEvents.handlePlacement(m)
     }
 
     fun handleTimedQuest(minutes: Long, shouldInterrupt: Boolean = false, action: () -> Unit) {
