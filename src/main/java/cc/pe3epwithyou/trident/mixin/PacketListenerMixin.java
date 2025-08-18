@@ -22,5 +22,6 @@ public class PacketListenerMixin {
     @Inject(method = "handlePlayerCombatKill", at = @At("TAIL"))
     private void playerCombatKill(ClientboundPlayerCombatKillPacket clientboundPlayerCombatKillPacket, CallbackInfo ci) {
         ChatUtils.INSTANCE.debugLog("Received death event for id: " + clientboundPlayerCombatKillPacket.playerId());
+        QuestListener.INSTANCE.interruptTasks();
     }
 }

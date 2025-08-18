@@ -65,8 +65,8 @@ object NoxesiumUtils {
 
     private fun handleTimedQuests() {
         if (MCCIslandState.game == MCCGame.HITW) {
-            HITWQuestEvents.scheduleSurvivedMinuteHandler()
-            HITWQuestEvents.scheduleSurvivedTwoMinutesHandler()
+            HITWQuestEvents.scheduleSurvivedMinute()
+            HITWQuestEvents.scheduleSurvivedTwoMinutes()
         }
     }
 
