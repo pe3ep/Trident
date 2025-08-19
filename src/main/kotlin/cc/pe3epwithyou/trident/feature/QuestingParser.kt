@@ -122,8 +122,7 @@ object QuestingParser {
                 tempQuestString = ""
             } else {
                 val suffix = if (l.string.endsWith(" ")) "" else " "
-                tempQuestString += (l.string + suffix)
-                tempQuestString.replace(",", "")
+                tempQuestString += (l.string + suffix).replace(",", "")
                 ChatUtils.debugLog("New tempQuestString: $tempQuestString")
             }
         }

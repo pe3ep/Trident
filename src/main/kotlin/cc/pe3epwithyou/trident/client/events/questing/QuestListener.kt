@@ -13,7 +13,9 @@ import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.WorldUtils.getGameID
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
+import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import net.minecraft.world.scores.DisplaySlot
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
@@ -50,6 +52,7 @@ object QuestListener {
     fun register() {
         ClientReceiveMessageEvents.GAME.register eventHandler@{ message, _ ->
             if (!Config.Questing.enabled) return@eventHandler
+            if (checkIfPlobby()) return@eventHandler
 
             if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) handlePKWS(message)
             if (MCCIslandState.game == MCCGame.BATTLE_BOX) handleBattleBox(message)
@@ -58,5 +61,11 @@ object QuestListener {
             if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) handleRocketSpleefRush(message)
             if (MCCIslandState.game == MCCGame.DYNABALL) handleDynaball(message)
         }
+    }
+
+    fun checkIfPlobby(): Boolean {
+        val scoreboard = Minecraft.getInstance().player?.scoreboard ?: return false
+        val obj = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return false
+        return obj.displayName.string.contains("Plobby", true)
     }
 }
