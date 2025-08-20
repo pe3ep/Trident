@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.widgets.questing
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withDefault
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
 import cc.pe3epwithyou.trident.utils.Texture
@@ -54,8 +55,12 @@ class QuestWidget(
 
         val c = Component.literal(quest.display_name.uppercase())
             .withHudMCC()
+        if (Config.Questing.rarityColorName) {
+            c.withColor(quest.rarity.color)
+        }
         if (quest.isCompleted) {
             c.withColor(COMPLETED_QUEST_COLOR)
+            c.withStyle(ChatFormatting.ITALIC)
         }
         val suffix = Component.literal(" " + quest.subtype.suffix)
             .withStyle(ChatFormatting.GRAY)

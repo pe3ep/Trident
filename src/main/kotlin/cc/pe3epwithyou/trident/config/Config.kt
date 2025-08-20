@@ -72,6 +72,9 @@ class Config {
     @SerialEntry
     var questingEnabled: Boolean = true
 
+    @SerialEntry
+    var questingRarityColorName: Boolean = false
+
     object Global {
         val rarityOverlay: Boolean
             get() = handler.instance().globalRarityOverlay
@@ -130,6 +133,8 @@ class Config {
     object Questing {
         val enabled: Boolean
             get() = handler.instance().questingEnabled
+        val rarityColorName: Boolean
+            get() = handler.instance().questingRarityColorName
     }
 
     companion object {
@@ -152,7 +157,7 @@ class Config {
             title(Component.translatable("config.trident"))
             save {
                 handler.save()
-                DialogCollection.refreshDialog("killfeed")
+                DialogCollection.refreshOpenedDialogs()
             }
 
             categories.register("trident") {
@@ -277,7 +282,7 @@ class Config {
                     name(Component.translatable("config.trident.questing.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.questing.description")))
 
-                    options.register<Boolean>("enabled") {
+                    options.register<Boolean>("questing_enabled") {
                         name(Component.translatable("config.trident.questing.enabled.name"))
                         description(OptionDescription.createBuilder()
                             .text(Component.translatable("config.trident.questing.enabled.description"))
@@ -285,6 +290,13 @@ class Config {
                             .build()
                         )
                         binding(handler.instance()::questingEnabled, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("questing_rarity_color_name") {
+                        name(Component.translatable("config.trident.questing.rarity_color_name.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.questing.rarity_color_name.description")))
+                        binding(handler.instance()::questingRarityColorName, false)
                         controller(tickBox())
                     }
                 }
