@@ -66,7 +66,7 @@ class KillWidget(
 private class KillStreak(
     private val color: Int,
     private val streak: Int
-) : AbstractWidget(0, 0, 15, 8, Component.empty()) {
+) : AbstractWidget(0, 0, 15, 9, Component.empty()) {
     private fun getStreakTexture(): Texture {
         val coercedStreak = streak.coerceIn(1, 6)
         return Texture(
@@ -75,19 +75,19 @@ private class KillStreak(
                 "textures/interface/killfeed/streaks/streak$coercedStreak.png"
             ),
             13,
-            8
+            9
         )
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         guiGraphics.fillRoundedAll(
             x,
-            y + 7,
+            y + 6,
             13,
-            8,
+            9,
             color
         )
-        getStreakTexture().blit(guiGraphics, x, y + 7)
+        getStreakTexture().blit(guiGraphics, x, y + 6)
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
