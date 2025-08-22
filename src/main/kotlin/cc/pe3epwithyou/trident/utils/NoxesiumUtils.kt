@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.utils
 
+import cc.pe3epwithyou.trident.client.events.KillChatListener
 import cc.pe3epwithyou.trident.client.events.questing.DynaballQuestEvents
 import cc.pe3epwithyou.trident.client.events.questing.HITWQuestEvents
 import cc.pe3epwithyou.trident.client.events.questing.QuestListener
@@ -67,6 +68,7 @@ object NoxesiumUtils {
 
     private fun removeKillsIfNeeded(packet: ClientboundMccGameStatePacket) {
         if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return
+        KillChatListener.resetStreaks()
         if (Config.KillFeed.enabled && Config.KillFeed.clearAfterRound) {
             if (packet.phaseType == "INTERMISSION" && packet.stage == "countdownphase") {
                 KillFeedDialog.clearKills()

@@ -41,6 +41,12 @@ object KillChatListener {
     private val void = Regex("^\\[.] .+ didn't want to live in the same world as\\. .+")
     private val selfVoid = Regex("^\\[.] .+ fell out of the world\\. .+")
 
+    val streaks = hashMapOf<String, Int>()
+
+    fun resetStreaks() {
+        streaks.clear()
+    }
+
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIslandState.isOnIsland()) return@allowGame true
@@ -135,12 +141,16 @@ object KillChatListener {
                 }
             }
 
+            // Streaks
+            streaks[attacker.string] = (streaks[attacker.string] ?: 0) + 1
+
             KillFeedDialog.addKill(
                 KillWidget(
                     victim.string,
                     method,
                     attacker.string,
-                    getColors(victim, attacker)
+                    getColors(victim, attacker),
+                    streak = streaks[attacker.string]!! // This should never fail
                 )
             )
         } else {
