@@ -44,7 +44,6 @@ object KillChatListener {
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIslandState.isOnIsland()) return@allowGame true
-            if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return@allowGame true
 
             if (slainRegex.matches(message.string)) {
                 return@allowGame handleKill(message, KillMethod.MELEE)
@@ -106,6 +105,17 @@ object KillChatListener {
         val victim = players[0]
         val attacker = players.getOrNull(1)
 
+        /* Call the event for external use */
+        KillEvents.KILL.invoker().onKill(KillEvents.KillEventPlayer(
+            victim.string,
+            victim.style.color?.value ?: fallbackColor
+        ), if (attacker == null) null else KillEvents.KillEventPlayer(
+            attacker.string,
+            attacker.style.color?.value ?: fallbackColor
+        ),
+            method)
+
+        if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return true
 
         if (attacker != null) {
     //        Questing

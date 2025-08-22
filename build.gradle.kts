@@ -114,7 +114,9 @@ tasks.jar {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
+            groupId = project.property("maven_group") as String
             artifactId = project.property("archives_base_name") as String
+            version = version
             from(components["java"])
         }
     }
