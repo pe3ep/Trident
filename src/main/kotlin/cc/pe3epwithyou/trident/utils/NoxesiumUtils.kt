@@ -42,7 +42,7 @@ object NoxesiumUtils {
         )
     }
 
-    private fun updateGameDialogs(currentGame: MCCGame) {
+    private fun updateGameDialogs(currentGame: MCCGame, game: String) {
         DialogCollection.clear()
         if (currentGame == MCCGame.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
@@ -55,6 +55,12 @@ object NoxesiumUtils {
         if (currentGame != MCCGame.HUB && currentGame != MCCGame.FISHING) {
             val k = "questing"
             if (QuestListener.checkIfPlobby()) return
+            QuestingDialog.currentGame = currentGame
+            DialogCollection.open(k, QuestingDialog(10, 10, k))
+        }
+        if (currentGame == MCCGame.HUB && game != "" && Config.Questing.showInLobby) {
+            val k = "questing"
+            QuestingDialog.currentGame = MCCGame.entries.filter { g -> g.server == game }.getOrNull(0) ?: return
             DialogCollection.open(k, QuestingDialog(10, 10, k))
         }
     }
@@ -112,12 +118,12 @@ object NoxesiumUtils {
             updateFishingState(type)
 
             val currentGame = getCurrentGame(server, type, game)
+            updateGameDialogs(currentGame, game)
             if (currentGame in listOf(MCCGame.DYNABALL, MCCGame.BATTLE_BOX)) {
                 KillFeedDialog.clearKills()
             }
             if (currentGame != MCCIslandState.game) {
                 MCCIslandState.game = currentGame
-                updateGameDialogs(currentGame)
                 ChatUtils.debugLog("Current game: ${MCCIslandState.game.title}")
             }
         }

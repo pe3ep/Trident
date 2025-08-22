@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.client.events.QuestingEvents
 import cc.pe3epwithyou.trident.client.events.questing.QuestListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
+import cc.pe3epwithyou.trident.dialogs.TridentDialog
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.feature.DepletedDisplay
@@ -31,6 +32,7 @@ import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import org.lwjgl.glfw.GLFW
+import kotlin.reflect.KFunction
 
 
 class TridentClient : ClientModInitializer {

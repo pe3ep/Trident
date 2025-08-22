@@ -1,11 +1,9 @@
 package cc.pe3epwithyou.trident.dialogs.questing
 
 import cc.pe3epwithyou.trident.dialogs.TridentDialog
-import cc.pe3epwithyou.trident.dialogs.themes.DialogTitle
 import cc.pe3epwithyou.trident.dialogs.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
-import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
@@ -14,10 +12,8 @@ import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
-import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.MultiLineTextWidget
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.GridLayout
@@ -25,7 +21,10 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
 class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
-    private fun getTitleWidget(): DialogTitle {
+    companion object {
+        var currentGame = MCCIslandState.game
+    }
+    private fun getTitleWidget(): QuestDialogTitle {
         val icon = Component.literal("\uE279")
             .withStyle(
                 Style.EMPTY
@@ -39,15 +38,27 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             )
 
         val backgroundColor = 0x38AFF opacity 127
+        val gameIcon = Component.literal(currentGame.icon.toString())
+            .withStyle(
+                Style.EMPTY
+                    .withFont(TridentFont.getMCCFont("icon"))
+                    .withShadowColor(0x0 opacity 0)
+            )
 
-        return DialogTitle(this, icon.append(title), backgroundColor, true)
+        return QuestDialogTitle(
+            this,
+            icon.append(title),
+            backgroundColor,
+            true,
+            game = gameIcon,
+            gameColor = currentGame.primaryColor opacity 127
+        )
     }
     override var title = getTitleWidget()
 
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
 
-        val currentGame = MCCIslandState.game
         val quests = QuestStorage.getActiveQuests(currentGame)
 
         if (currentGame == MCCGame.HUB || currentGame == MCCGame.FISHING) {

@@ -88,14 +88,15 @@ class QuestWidget(
                 .withStyle(ChatFormatting.RESET)
                 .withStyle(ChatFormatting.GRAY)
             ))
-            w.atBottom(0)
+            w.atBottom(0, settings = LayoutConstants.LEFT)
             return@GridLayout
         }
         val progress = Component.literal(" ${quest.progress}/${quest.totalProgress}")
             .withDefault()
         if (quest.isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
         val w = StringWidget(progressComponent.append(progress), mcFont)
-        w.atBottom(0)
+        w.alignLeft()
+        w.atBottom(0, settings = LayoutConstants.LEFT)
     }
 
     init {

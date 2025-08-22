@@ -50,6 +50,12 @@
   "config.trident.questing.enabled.name": "Enabled",
   "config.trident.questing.enabled.description": "Turns on the Questing Module to be shown in games with live-updating progress.",
 
+  "config.trident.questing.rarity_color_name.name": "Quest title in Rarity color",
+  "config.trident.questing.rarity_color_name.description": "When turned on, changes each quest's name color to match it's rarity.",
+
+  "config.trident.questing.show_in_lobby.name": "Show in game lobby",
+  "config.trident.questing.show_in_lobby.description": "When enabled, Questing module will show quests in game lobbies.",
+
 
   "config.trident.killfeed.name": "Kill Feed",
   "config.trident.killfeed.description": "Options that apply to the in-game Kill Feed",
