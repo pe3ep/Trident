@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.client.events.questing
 
+import cc.pe3epwithyou.trident.client.events.ChestScreenListener
 import cc.pe3epwithyou.trident.client.events.questing.BattleBoxQuestEvents.handleBattleBox
 import cc.pe3epwithyou.trident.client.events.questing.DynaballQuestEvents.handleDynaball
 import cc.pe3epwithyou.trident.client.events.questing.RocketSpleefRushQuestEvents.handleRocketSpleefRush
@@ -14,7 +15,9 @@ import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.WorldUtils.getGameID
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.scores.DisplaySlot
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -22,6 +25,19 @@ import java.util.concurrent.TimeUnit
 
 object QuestListener {
     val interruptibleTasks: ConcurrentHashMap<UUID, DelayedAction.DelayedTask> = ConcurrentHashMap()
+    var isWaitingRefresh: Boolean = false
+
+    fun handleRefreshTasksChat(m: Component) {
+        if (!Regex("^\\(.\\) Quest Tasks Rerolled!").matches(m.string)) return
+        isWaitingRefresh = true
+    }
+
+    fun handleRefreshTasksItem(item: ItemStack) {
+        if (!isWaitingRefresh) return
+        if ("Quest" !in item.hoverName.string) return
+        val screen = (Minecraft.getInstance().screen ?: return) as ContainerScreen
+        ChestScreenListener.findQuests(screen)
+    }
 
     fun handleSubtitle(m: Component) {
         if (!Config.Questing.enabled) return
@@ -53,6 +69,7 @@ object QuestListener {
         ClientReceiveMessageEvents.GAME.register eventHandler@{ message, _ ->
             if (!Config.Questing.enabled) return@eventHandler
             if (checkIfPlobby()) return@eventHandler
+            handleRefreshTasksChat(message)
 
             if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) handlePKWS(message)
             if (MCCIslandState.game == MCCGame.BATTLE_BOX) handleBattleBox(message)
