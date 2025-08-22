@@ -66,6 +66,9 @@
   "config.trident.killfeed.hide_kills.name": "Hide kill messages in chat",
   "config.trident.killfeed.hide_kills.description": "When enabled, hides kill messages in the chat.",
 
+  "config.trident.killfeed.show_kill_streaks.name": "Show Kill Streaks",
+  "config.trident.killfeed.show_kill_streaks.description": "When enabled, will show Kill Streaks (how many consecutive kills a person got). \n\nStreaks reset at the start of each round.",
+
   "config.trident.killfeed.position_side.name": "Position",
   "config.trident.killfeed.position_side.description": "Changes the side where the kill feed is located.",
 

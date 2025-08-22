@@ -70,6 +70,9 @@ class Config {
     var killfeedMaxKills: Int = 5
 
     @SerialEntry
+    var killfeedShowKillStreaks: Boolean = true
+
+    @SerialEntry
     var questingEnabled: Boolean = true
 
     @SerialEntry
@@ -131,6 +134,8 @@ class Config {
             get() = handler.instance().killfeedRemoveKillTime
         val maxKills: Int
             get() = handler.instance().killfeedMaxKills
+        val showKillstreaks: Boolean
+            get() = handler.instance().killfeedShowKillStreaks
     }
 
     object Questing {
@@ -237,6 +242,13 @@ class Config {
                         name(Component.translatable("config.trident.killfeed.hide_kills.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.hide_kills.description")))
                         binding(handler.instance()::killfeedHideKills, false)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("killfeed_show_kill_streaks") {
+                        name(Component.translatable("config.trident.killfeed.show_kill_streaks.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.show_kill_streaks.description")))
+                        binding(handler.instance()::killfeedShowKillStreaks, true)
                         controller(tickBox())
                     }
 

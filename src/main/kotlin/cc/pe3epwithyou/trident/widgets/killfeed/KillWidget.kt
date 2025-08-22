@@ -44,7 +44,7 @@ class KillWidget(
         val victimColor = if (self == victim) secondSelfColor else killColors.second
 
         if (attacker != null) {
-            if (streak >= 2) {
+            if (Config.KillFeed.showKillstreaks && streak >= 2) {
                 +KillStreak(attackerColor, streak)
             }
             +KillBackground(attackerColor, attacker, killMethod, isSelf = (self == attacker))
