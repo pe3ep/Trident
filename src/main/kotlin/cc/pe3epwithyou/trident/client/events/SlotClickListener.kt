@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.client.events
 
 import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.client.events.questing.QuestListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.SupplyWidgetTimer
 import cc.pe3epwithyou.trident.utils.ChatUtils
@@ -24,6 +25,15 @@ object SlotClickListener {
             if ((clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE)
                 && isLeftClick && "Supreme Overclock" in item.hoverName.string) {
                 if (TridentClient.playerState.supplies.overclocks.supreme.isAvailable) startSupremeOverclock()
+            }
+        }
+
+        if (Config.Questing.enabled) {
+            if ("ISLAND REWARDS" !in screen.title.string) return
+            val item = slot.item
+            if (clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE) {
+                if ("Quest" !in item.hoverName.string) return
+                QuestListener.isWaitingRefresh = true
             }
         }
     }

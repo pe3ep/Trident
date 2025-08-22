@@ -62,7 +62,15 @@ class QuestWidget(
             c.withColor(COMPLETED_QUEST_COLOR)
             c.withStyle(ChatFormatting.ITALIC)
         }
-        val suffix = Component.literal(" " + quest.subtype.suffix)
+        var suffixString = " "
+        val dailyRemaining = QuestStorage.dailyRemaining
+        val weeklyRemaining = QuestStorage.weeklyRemaining
+
+        if (quest.subtype == QuestSubtype.DAILY) suffixString += "(D: $dailyRemaining LEFT)"
+        if (quest.subtype == QuestSubtype.WEEKLY) suffixString += "(W: $weeklyRemaining LEFT)"
+
+        val suffix = Component.literal(suffixString)
+            .withStyle(Style.EMPTY.withItalic(false))
             .withStyle(ChatFormatting.GRAY)
         QuestNameWidget(
             if (!quest.isCompleted) quest.sprite else COMPLETED_QUEST_SPRITE,
