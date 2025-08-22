@@ -111,8 +111,8 @@ object QuestingParser {
             } else if ("%" in l.string) {
                 ChatUtils.debugLog("Hit the %, trying to detect game quest")
                 tempGame = getQuestGame(tempQuestString) ?: return@forEachIndexed
-                ChatUtils.debugLog("Detected game quest -> ${tempGame!!.title}: $tempQuestString")
-                val criteriaList = GameQuests.valueOf(tempGame!!.name).list
+                ChatUtils.debugLog("Detected game quest -> ${tempGame.title}: $tempQuestString")
+                val criteriaList = GameQuests.valueOf(tempGame.name).list
                 ChatUtils.debugLog("Criteria list -> $criteriaList")
                 for (crit in criteriaList) {
                     if (!tempQuestString.contains(crit.regexPattern)) continue

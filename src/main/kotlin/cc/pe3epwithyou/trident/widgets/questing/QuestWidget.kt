@@ -77,7 +77,7 @@ class QuestWidget(
         )
 
         if (!quest.criteria.isTracked) {
-            val progress = Component.literal(" ${quest.progress}/${quest.totalProgress} ⚠")
+            val progress = Component.literal(" ${quest.progress}/${quest.totalProgress} ℹ")
                 .withDefault()
                 .withStyle(ChatFormatting.GRAY)
             val w = StringWidget(progressComponent.append(progress), mcFont)

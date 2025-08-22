@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.utils
 
 import cc.pe3epwithyou.trident.client.events.questing.DynaballQuestEvents
 import cc.pe3epwithyou.trident.client.events.questing.HITWQuestEvents
+import cc.pe3epwithyou.trident.client.events.questing.QuestListener
 import cc.pe3epwithyou.trident.client.events.questing.RocketSpleefRushQuestEvents
 import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents
 import cc.pe3epwithyou.trident.config.Config
@@ -53,6 +54,7 @@ object NoxesiumUtils {
         }
         if (currentGame != MCCGame.HUB && currentGame != MCCGame.FISHING) {
             val k = "questing"
+            if (QuestListener.checkIfPlobby()) return
             DialogCollection.open(k, QuestingDialog(10, 10, k))
         }
     }
