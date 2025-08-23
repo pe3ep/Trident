@@ -88,7 +88,10 @@ object KillChatListener {
                 return@allowGame handleKill(message, KillMethod.MELEE)
             }
 
-            if (prickedRegex.matches(message.string) || prickedSelfRegex.matches(message.string)) {
+            if (prickedRegex.matches(message.string) ||
+                prickedSelfRegex.matches(message.string) ||
+                suffocate.matches(message.string) ||
+                suffocateSelf.matches(message.string)) {
                 return@allowGame handleKill(message, KillMethod.GENERIC)
             }
 
