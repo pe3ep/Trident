@@ -96,6 +96,15 @@ object DialogCollection {
     }
 
     /**
+     * Refreshes the layout of all opened dialogs
+     */
+    fun refreshOpenedDialogs() {
+        openedDialogs.values.forEach { d ->
+            d.refresh()
+        }
+    }
+
+    /**
      * Closes all opened dialogs and clears the internal collection.
      */
     fun clear() {

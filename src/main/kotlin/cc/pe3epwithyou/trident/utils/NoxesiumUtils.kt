@@ -1,7 +1,9 @@
 package cc.pe3epwithyou.trident.utils
 
+import cc.pe3epwithyou.trident.client.events.KillChatListener
 import cc.pe3epwithyou.trident.client.events.questing.DynaballQuestEvents
 import cc.pe3epwithyou.trident.client.events.questing.HITWQuestEvents
+import cc.pe3epwithyou.trident.client.events.questing.QuestListener
 import cc.pe3epwithyou.trident.client.events.questing.RocketSpleefRushQuestEvents
 import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents
 import cc.pe3epwithyou.trident.config.Config
@@ -41,7 +43,7 @@ object NoxesiumUtils {
         )
     }
 
-    private fun updateGameDialogs(currentGame: MCCGame) {
+    private fun updateGameDialogs(currentGame: MCCGame, game: String) {
         DialogCollection.clear()
         if (currentGame == MCCGame.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
@@ -53,12 +55,20 @@ object NoxesiumUtils {
         }
         if (currentGame != MCCGame.HUB && currentGame != MCCGame.FISHING) {
             val k = "questing"
+            if (QuestListener.checkIfPlobby()) return
+            QuestingDialog.currentGame = currentGame
+            DialogCollection.open(k, QuestingDialog(10, 10, k))
+        }
+        if (currentGame == MCCGame.HUB && game != "" && Config.Questing.showInLobby) {
+            val k = "questing"
+            QuestingDialog.currentGame = MCCGame.entries.filter { g -> g.server == game }.getOrNull(0) ?: return
             DialogCollection.open(k, QuestingDialog(10, 10, k))
         }
     }
 
     private fun removeKillsIfNeeded(packet: ClientboundMccGameStatePacket) {
         if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return
+        KillChatListener.resetStreaks()
         if (Config.KillFeed.enabled && Config.KillFeed.clearAfterRound) {
             if (packet.phaseType == "INTERMISSION" && packet.stage == "countdownphase") {
                 KillFeedDialog.clearKills()
@@ -110,12 +120,12 @@ object NoxesiumUtils {
             updateFishingState(type)
 
             val currentGame = getCurrentGame(server, type, game)
+            updateGameDialogs(currentGame, game)
             if (currentGame in listOf(MCCGame.DYNABALL, MCCGame.BATTLE_BOX)) {
                 KillFeedDialog.clearKills()
             }
             if (currentGame != MCCIslandState.game) {
                 MCCIslandState.game = currentGame
-                updateGameDialogs(currentGame)
                 ChatUtils.debugLog("Current game: ${MCCIslandState.game.title}")
             }
         }

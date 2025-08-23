@@ -37,17 +37,10 @@ class Quest(
     }
 }
 
-enum class QuestSubtype(
-    val suffix: String
-) {
-    DAILY("(D)"),
-    WEEKLY("(W)"),
-
-    /*
-        Scrolls don't have the suffix as it's unnecessary
-        due to the scroll icon being visually distinct
-     */
-    SCROLL("")
+enum class QuestSubtype {
+    DAILY,
+    WEEKLY,
+    SCROLL;
 }
 
 enum class QuestType(

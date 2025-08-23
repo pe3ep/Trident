@@ -11,21 +11,15 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 object QuestStorage {
     private val store: MutableMap<MCCGame, MutableList<Quest>> = ConcurrentHashMap()
-
     private val lastOperation: MutableMap<CompletionCriteria, UUID> = ConcurrentHashMap()
+    var dailyRemaining: Int = 0
+    var weeklyRemaining: Int = 0
 
     init {
         for (g in MCCGame.entries) store[g] = CopyOnWriteArrayList()
     }
 
     fun getActiveQuests(game: MCCGame): List<Quest> = store[game]?.toList() ?: emptyList()
-
-    fun setActiveQuests(game: MCCGame, quests: List<Quest>) {
-        store[game]?.apply {
-            clear()
-            addAll(quests)
-        } ?: store.put(game, CopyOnWriteArrayList(quests))
-    }
 
     /**
      * Clear all current stored quests and replace them with the provided list.

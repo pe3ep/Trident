@@ -1,9 +1,11 @@
 package cc.pe3epwithyou.trident.widgets.killfeed
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedLeft
 import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedRight
 import cc.pe3epwithyou.trident.utils.NoxesiumUtils
+import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.TridentFont
 import com.noxcrew.sheeplib.CompoundWidget
@@ -25,7 +27,8 @@ class KillWidget(
     private val victim: String,
     private val killMethod: KillMethod,
     private val attacker: String? = null,
-    private val killColors: Pair<Int, Int>
+    private val killColors: Pair<Int, Int>,
+    private val streak: Int = 0
 ) : CompoundWidget(0, 0, 0, 0) {
     override fun getWidth(): Int = layout.width
     override fun getHeight(): Int = layout.height
@@ -41,6 +44,9 @@ class KillWidget(
         val victimColor = if (self == victim) secondSelfColor else killColors.second
 
         if (attacker != null) {
+            if (Config.KillFeed.showKillstreaks && streak >= 2) {
+                +KillStreak(attackerColor, streak)
+            }
             +KillBackground(attackerColor, attacker, killMethod, isSelf = (self == attacker))
             +KillTransition(attackerColor, victimColor)
             +KillBackground(victimColor, victim, isLeft = false, isSelf = (self == victim))
@@ -55,6 +61,37 @@ class KillWidget(
         layout.arrangeElements()
         layout.visitWidgets(this::addChild)
     }
+}
+
+private class KillStreak(
+    private val color: Int,
+    private val streak: Int
+) : AbstractWidget(0, 0, 15, 9, Component.empty()) {
+    private fun getStreakTexture(): Texture {
+        val coercedStreak = streak.coerceIn(1, 6)
+        return Texture(
+            ResourceLocation.fromNamespaceAndPath(
+                "trident",
+                "textures/interface/killfeed/streaks/streak$coercedStreak.png"
+            ),
+            13,
+            9
+        )
+    }
+
+    override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+        guiGraphics.fillRoundedAll(
+            x,
+            y + 6,
+            13,
+            9,
+            color
+        )
+        getStreakTexture().blit(guiGraphics, x, y + 6)
+    }
+
+    override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
+
 }
 
 private class KillTransition(

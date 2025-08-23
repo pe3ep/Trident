@@ -61,15 +61,19 @@ object ChestScreenListener {
         val quests = mutableListOf<Quest>()
 
         val dailySlot = screen.menu.slots[37]
-        val dailyQuests = QuestingParser.parseSlot(dailySlot)
+        val dailyQuests = QuestingParser.parseQuestSlot(dailySlot)
         quests.addAll(dailyQuests ?: emptyList())
+        QuestStorage.dailyRemaining =
+            QuestingParser.parseRemainingSlot(screen.menu.slots[28])
 
         val weeklySlot = screen.menu.slots[39]
-        val weeklyQuests = QuestingParser.parseSlot(weeklySlot)
+        val weeklyQuests = QuestingParser.parseQuestSlot(weeklySlot)
         quests.addAll(weeklyQuests ?: emptyList())
+        QuestStorage.weeklyRemaining =
+            QuestingParser.parseRemainingSlot(screen.menu.slots[30])
 
         val scrollSlot = screen.menu.slots[41]
-        val scrollQuests = QuestingParser.parseSlot(scrollSlot)
+        val scrollQuests = QuestingParser.parseQuestSlot(scrollSlot)
         quests.addAll(scrollQuests ?: emptyList())
 
         QuestStorage.loadQuests(quests)

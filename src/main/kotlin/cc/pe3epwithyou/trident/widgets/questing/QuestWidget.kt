@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.widgets.questing
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withDefault
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
 import cc.pe3epwithyou.trident.utils.Texture
@@ -54,10 +55,22 @@ class QuestWidget(
 
         val c = Component.literal(quest.display_name.uppercase())
             .withHudMCC()
+        if (Config.Questing.rarityColorName) {
+            c.withColor(quest.rarity.color)
+        }
         if (quest.isCompleted) {
             c.withColor(COMPLETED_QUEST_COLOR)
+            c.withStyle(ChatFormatting.ITALIC)
         }
-        val suffix = Component.literal(" " + quest.subtype.suffix)
+        var suffixString = " "
+        val dailyRemaining = QuestStorage.dailyRemaining
+        val weeklyRemaining = QuestStorage.weeklyRemaining
+
+        if (quest.subtype == QuestSubtype.DAILY) suffixString += "(D: $dailyRemaining LEFT)"
+        if (quest.subtype == QuestSubtype.WEEKLY) suffixString += "(W: $weeklyRemaining LEFT)"
+
+        val suffix = Component.literal(suffixString)
+            .withStyle(Style.EMPTY.withItalic(false))
             .withStyle(ChatFormatting.GRAY)
         QuestNameWidget(
             if (!quest.isCompleted) quest.sprite else COMPLETED_QUEST_SPRITE,
@@ -72,7 +85,7 @@ class QuestWidget(
         )
 
         if (!quest.criteria.isTracked) {
-            val progress = Component.literal(" ${quest.progress}/${quest.totalProgress} ⚠")
+            val progress = Component.literal(" ${quest.progress}/${quest.totalProgress} ℹ")
                 .withDefault()
                 .withStyle(ChatFormatting.GRAY)
             val w = StringWidget(progressComponent.append(progress), mcFont)
@@ -83,14 +96,15 @@ class QuestWidget(
                 .withStyle(ChatFormatting.RESET)
                 .withStyle(ChatFormatting.GRAY)
             ))
-            w.atBottom(0)
+            w.atBottom(0, settings = LayoutConstants.LEFT)
             return@GridLayout
         }
         val progress = Component.literal(" ${quest.progress}/${quest.totalProgress}")
             .withDefault()
         if (quest.isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
         val w = StringWidget(progressComponent.append(progress), mcFont)
-        w.atBottom(0)
+        w.alignLeft()
+        w.atBottom(0, settings = LayoutConstants.LEFT)
     }
 
     init {

@@ -50,6 +50,12 @@
   "config.trident.questing.enabled.name": "Enabled",
   "config.trident.questing.enabled.description": "Turns on the Questing Module to be shown in games with live-updating progress.",
 
+  "config.trident.questing.rarity_color_name.name": "Quest title in Rarity color",
+  "config.trident.questing.rarity_color_name.description": "When turned on, changes each quest's name color to match it's rarity.",
+
+  "config.trident.questing.show_in_lobby.name": "Show in game lobby",
+  "config.trident.questing.show_in_lobby.description": "When enabled, Questing module will show quests in game lobbies.",
+
 
   "config.trident.killfeed.name": "Kill Feed",
   "config.trident.killfeed.description": "Options that apply to the in-game Kill Feed",
@@ -59,6 +65,9 @@
 
   "config.trident.killfeed.hide_kills.name": "Hide kill messages in chat",
   "config.trident.killfeed.hide_kills.description": "When enabled, hides kill messages in the chat.",
+
+  "config.trident.killfeed.show_kill_streaks.name": "Show Kill Streaks",
+  "config.trident.killfeed.show_kill_streaks.description": "When enabled, will show Kill Streaks (how many consecutive kills a person got). \n\nStreaks reset at the start of each round.",
 
   "config.trident.killfeed.position_side.name": "Position",
   "config.trident.killfeed.position_side.description": "Changes the side where the kill feed is located.",

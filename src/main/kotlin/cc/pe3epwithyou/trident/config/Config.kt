@@ -70,7 +70,16 @@ class Config {
     var killfeedMaxKills: Int = 5
 
     @SerialEntry
+    var killfeedShowKillStreaks: Boolean = true
+
+    @SerialEntry
     var questingEnabled: Boolean = true
+
+    @SerialEntry
+    var questingRarityColorName: Boolean = false
+
+    @SerialEntry
+    var questingShowInLobby: Boolean = true
 
     object Global {
         val rarityOverlay: Boolean
@@ -125,11 +134,17 @@ class Config {
             get() = handler.instance().killfeedRemoveKillTime
         val maxKills: Int
             get() = handler.instance().killfeedMaxKills
+        val showKillstreaks: Boolean
+            get() = handler.instance().killfeedShowKillStreaks
     }
 
     object Questing {
         val enabled: Boolean
             get() = handler.instance().questingEnabled
+        val rarityColorName: Boolean
+            get() = handler.instance().questingRarityColorName
+        val showInLobby: Boolean
+            get() = handler.instance().questingShowInLobby
     }
 
     companion object {
@@ -152,7 +167,7 @@ class Config {
             title(Component.translatable("config.trident"))
             save {
                 handler.save()
-                DialogCollection.refreshDialog("killfeed")
+                DialogCollection.refreshOpenedDialogs()
             }
 
             categories.register("trident") {
@@ -230,6 +245,13 @@ class Config {
                         controller(tickBox())
                     }
 
+                    options.register<Boolean>("killfeed_show_kill_streaks") {
+                        name(Component.translatable("config.trident.killfeed.show_kill_streaks.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.show_kill_streaks.description")))
+                        binding(handler.instance()::killfeedShowKillStreaks, true)
+                        controller(tickBox())
+                    }
+
                     options.register<Boolean>("killfeed_clear_after_round") {
                         name(Component.translatable("config.trident.killfeed.clear_after_round.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.clear_after_round.description")))
@@ -277,7 +299,7 @@ class Config {
                     name(Component.translatable("config.trident.questing.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.questing.description")))
 
-                    options.register<Boolean>("enabled") {
+                    options.register<Boolean>("questing_enabled") {
                         name(Component.translatable("config.trident.questing.enabled.name"))
                         description(OptionDescription.createBuilder()
                             .text(Component.translatable("config.trident.questing.enabled.description"))
@@ -285,6 +307,20 @@ class Config {
                             .build()
                         )
                         binding(handler.instance()::questingEnabled, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("questing_rarity_color_name") {
+                        name(Component.translatable("config.trident.questing.rarity_color_name.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.questing.rarity_color_name.description")))
+                        binding(handler.instance()::questingRarityColorName, false)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("questing_show_in_lobby") {
+                        name(Component.translatable("config.trident.questing.show_in_lobby.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.questing.show_in_lobby.description")))
+                        binding(handler.instance()::questingShowInLobby, true)
                         controller(tickBox())
                     }
                 }

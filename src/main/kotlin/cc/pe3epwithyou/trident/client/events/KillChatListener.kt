@@ -41,10 +41,15 @@ object KillChatListener {
     private val void = Regex("^\\[.] .+ didn't want to live in the same world as\\. .+")
     private val selfVoid = Regex("^\\[.] .+ fell out of the world\\. .+")
 
+    val streaks = hashMapOf<String, Int>()
+
+    fun resetStreaks() {
+        streaks.clear()
+    }
+
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIslandState.isOnIsland()) return@allowGame true
-            if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return@allowGame true
 
             if (slainRegex.matches(message.string)) {
                 return@allowGame handleKill(message, KillMethod.MELEE)
@@ -106,6 +111,17 @@ object KillChatListener {
         val victim = players[0]
         val attacker = players.getOrNull(1)
 
+        /* Call the event for external use */
+        KillEvents.KILL.invoker().onKill(KillEvents.KillEventPlayer(
+            victim.string,
+            victim.style.color?.value ?: fallbackColor
+        ), if (attacker == null) null else KillEvents.KillEventPlayer(
+            attacker.string,
+            attacker.style.color?.value ?: fallbackColor
+        ),
+            method)
+
+        if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return true
 
         if (attacker != null) {
     //        Questing
@@ -125,12 +141,16 @@ object KillChatListener {
                 }
             }
 
+            // Streaks
+            streaks[attacker.string] = (streaks[attacker.string] ?: 0) + 1
+
             KillFeedDialog.addKill(
                 KillWidget(
                     victim.string,
                     method,
                     attacker.string,
-                    getColors(victim, attacker)
+                    getColors(victim, attacker),
+                    streak = streaks[attacker.string]!! // This should never fail
                 )
             )
         } else {

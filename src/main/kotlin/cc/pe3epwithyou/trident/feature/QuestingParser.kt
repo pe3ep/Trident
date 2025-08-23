@@ -14,7 +14,19 @@ object QuestingParser {
     private const val ADD_SCROLL = "island_interface/generic/add"
     private const val COMPLETED_QUEST = "island_interface/quest_log/quest_glow"
 
-    fun parseSlot(slot: Slot): List<Quest>? {
+    fun parseRemainingSlot(slot: Slot): Int {
+        val item = slot.item
+        item.getItemLore().forEach { l ->
+            val match = Regex("Remaining (Daily|Weekly) Quests: (\\d+)").find(l.string)
+            if (match != null) {
+                val remaining = match.groups[2]?.value?.toIntOrNull() ?: 0
+                return remaining
+            }
+        }
+        return 0
+    }
+
+    fun parseQuestSlot(slot: Slot): List<Quest>? {
         val item = slot.item
         val model = item.get(DataComponents.ITEM_MODEL)
         if (model == null) {
@@ -111,8 +123,8 @@ object QuestingParser {
             } else if ("%" in l.string) {
                 ChatUtils.debugLog("Hit the %, trying to detect game quest")
                 tempGame = getQuestGame(tempQuestString) ?: return@forEachIndexed
-                ChatUtils.debugLog("Detected game quest -> ${tempGame!!.title}: $tempQuestString")
-                val criteriaList = GameQuests.valueOf(tempGame!!.name).list
+                ChatUtils.debugLog("Detected game quest -> ${tempGame.title}: $tempQuestString")
+                val criteriaList = GameQuests.valueOf(tempGame.name).list
                 ChatUtils.debugLog("Criteria list -> $criteriaList")
                 for (crit in criteriaList) {
                     if (!tempQuestString.contains(crit.regexPattern)) continue

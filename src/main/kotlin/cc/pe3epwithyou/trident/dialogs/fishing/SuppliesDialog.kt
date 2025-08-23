@@ -53,9 +53,9 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                         ).withStyle(ChatFormatting.GRAY)
                     )
             )
-            DialogTitle(this, baseTitle.append(warn), TITLE_COLOR, tooltip = tooltip, isCloseable = false)
+            DialogTitle(this, baseTitle.append(warn), TITLE_COLOR, tooltip = tooltip)
         } else {
-            DialogTitle(this, baseTitle, TITLE_COLOR, isCloseable = false)
+            DialogTitle(this, baseTitle, TITLE_COLOR)
         }
     }
 
