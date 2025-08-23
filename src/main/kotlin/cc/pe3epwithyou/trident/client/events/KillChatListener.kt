@@ -38,8 +38,10 @@ object KillChatListener {
     private val burnedSelfRegex = Regex("^\\[.] .+ burned to death\\. .+")
     private val hasNotRejoined = Regex("^\\[.] .+ hasn't rejoined the game and is automatically eliminated\\. .+")
     private val disconnected = Regex("^\\[.] .+ disconnected\\. .+")
-    private val void = Regex("^\\[.] .+ didn't want to live in the same world as\\. .+")
+    private val void = Regex("^\\[.] .+ didn't want to live in the same world as .+")
     private val selfVoid = Regex("^\\[.] .+ fell out of the world\\. .+")
+    private val suffocate = Regex("^\\[.] .+ suffocated in a wall while fighting .+")
+    private val suffocateSelf = Regex("^\\[.] .+ suffocated in a wall\\. .+")
 
     val streaks = hashMapOf<String, Int>()
 
@@ -121,7 +123,7 @@ object KillChatListener {
         ),
             method)
 
-        if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return true
+        if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL, MCCGame.SKY_BATTLE)) return true
 
         if (attacker != null) {
     //        Questing

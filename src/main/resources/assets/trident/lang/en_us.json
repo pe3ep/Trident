@@ -61,7 +61,7 @@
   "config.trident.killfeed.description": "Options that apply to the in-game Kill Feed",
 
   "config.trident.killfeed.enabled.name": "Enable",
-  "config.trident.killfeed.enabled.description": "Turns on the Kill Feed to be shown in games.\n\nCurrently shown in Battle Box and Dynaball.",
+  "config.trident.killfeed.enabled.description": "Turns on the Kill Feed to be shown in games.\n\nCurrently shown in Battle Box, Sky Battle and Dynaball.",
 
   "config.trident.killfeed.hide_kills.name": "Hide kill messages in chat",
   "config.trident.killfeed.hide_kills.description": "When enabled, hides kill messages in the chat.",

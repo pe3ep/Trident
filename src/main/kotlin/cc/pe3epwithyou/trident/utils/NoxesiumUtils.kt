@@ -49,7 +49,7 @@ object NoxesiumUtils {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
         }
-        if ((currentGame == MCCGame.BATTLE_BOX || currentGame == MCCGame.DYNABALL) && Config.KillFeed.enabled) {
+        if ((currentGame == MCCGame.BATTLE_BOX || currentGame == MCCGame.DYNABALL || currentGame == MCCGame.SKY_BATTLE) && Config.KillFeed.enabled) {
             val k = "killfeed"
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
         }
@@ -67,7 +67,7 @@ object NoxesiumUtils {
     }
 
     private fun removeKillsIfNeeded(packet: ClientboundMccGameStatePacket) {
-        if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return
+        if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL, MCCGame.SKY_BATTLE)) return
         KillChatListener.resetStreaks()
         if (Config.KillFeed.enabled && Config.KillFeed.clearAfterRound) {
             if (packet.phaseType == "INTERMISSION" && packet.stage == "countdownphase") {
