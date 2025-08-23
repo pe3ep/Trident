@@ -81,6 +81,9 @@ class Config {
     @SerialEntry
     var questingShowInLobby: Boolean = true
 
+    @SerialEntry
+    var questingShowLeft: Boolean = true
+
     object Global {
         val rarityOverlay: Boolean
             get() = handler.instance().globalRarityOverlay
@@ -145,6 +148,8 @@ class Config {
             get() = handler.instance().questingRarityColorName
         val showInLobby: Boolean
             get() = handler.instance().questingShowInLobby
+        val showLeft: Boolean
+            get() = handler.instance().questingShowLeft
     }
 
     companion object {
@@ -321,6 +326,13 @@ class Config {
                         name(Component.translatable("config.trident.questing.show_in_lobby.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.show_in_lobby.description")))
                         binding(handler.instance()::questingShowInLobby, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("questing_show_left") {
+                        name(Component.translatable("config.trident.questing.show_left.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.questing.show_left.description")))
+                        binding(handler.instance()::questingShowLeft, true)
                         controller(tickBox())
                     }
                 }

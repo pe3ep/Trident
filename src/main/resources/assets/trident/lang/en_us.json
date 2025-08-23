@@ -56,6 +56,9 @@
   "config.trident.questing.show_in_lobby.name": "Show in game lobby",
   "config.trident.questing.show_in_lobby.description": "When enabled, Questing module will show quests in game lobbies.",
 
+  "config.trident.questing.show_left.name": "Show the remaining quest amount",
+  "config.trident.questing.show_left.description": "When enabled, shows how much daily/weekly quests you have remaining.",
+
 
   "config.trident.killfeed.name": "Kill Feed",
   "config.trident.killfeed.description": "Options that apply to the in-game Kill Feed",

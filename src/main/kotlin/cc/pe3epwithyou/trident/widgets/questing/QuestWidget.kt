@@ -66,8 +66,14 @@ class QuestWidget(
         val dailyRemaining = QuestStorage.dailyRemaining
         val weeklyRemaining = QuestStorage.weeklyRemaining
 
-        if (quest.subtype == QuestSubtype.DAILY) suffixString += "(D: $dailyRemaining LEFT)"
-        if (quest.subtype == QuestSubtype.WEEKLY) suffixString += "(W: $weeklyRemaining LEFT)"
+        if (quest.subtype == QuestSubtype.DAILY) {
+            val s = if (Config.Questing.showLeft) "(D: $dailyRemaining LEFT)" else "(D)"
+            suffixString += s
+        }
+        if (quest.subtype == QuestSubtype.WEEKLY) {
+            val s = if (Config.Questing.showLeft) "(W: $weeklyRemaining LEFT)" else "(W)"
+            suffixString += s
+        }
 
         val suffix = Component.literal(suffixString)
             .withStyle(Style.EMPTY.withItalic(false))
