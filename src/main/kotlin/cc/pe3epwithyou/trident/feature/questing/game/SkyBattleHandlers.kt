@@ -1,18 +1,19 @@
-package cc.pe3epwithyou.trident.client.events.questing
+package cc.pe3epwithyou.trident.feature.questing.game
 
-import cc.pe3epwithyou.trident.client.events.QuestIncrementContext
+import cc.pe3epwithyou.trident.feature.questing.IncrementContext
+import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
+import cc.pe3epwithyou.trident.feature.questing.QuestListener
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.mixin.GuiAccessor
 import cc.pe3epwithyou.trident.state.MCCGame
-import cc.pe3epwithyou.trident.widgets.questing.CompletionCriteria
-import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
-object SkyBattleQuestEvents {
-    private fun inc(criteria: CompletionCriteria, tagSuffix: String? = null, canBeDuplicated: Boolean = false) {
+object SkyBattleHandlers {
+    private fun inc(criteria: QuestCriteria, tagSuffix: String? = null, canBeDuplicated: Boolean = false) {
         val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
         QuestStorage.applyIncrement(
-            QuestIncrementContext(
+            IncrementContext(
                 MCCGame.SKY_BATTLE,
                 criteria,
                 1,
@@ -24,9 +25,9 @@ object SkyBattleQuestEvents {
 
     fun scheduleSurvivedMinute() {
         QuestListener.handleTimedQuest(1L, true) {
-            QuestStorage.applyIncrement(QuestIncrementContext(
+            QuestStorage.applyIncrement(IncrementContext(
                 MCCGame.SKY_BATTLE,
-                CompletionCriteria.SKY_BATTLE_QUADS_SURVIVED_MINUTE,
+                QuestCriteria.SKY_BATTLE_QUADS_SURVIVED_MINUTE,
                 1,
                 "skb_survived_60s"
             ))
@@ -35,9 +36,9 @@ object SkyBattleQuestEvents {
 
     fun scheduleSurvivedTwoMinutes() {
         QuestListener.handleTimedQuest(2L, true) {
-            QuestStorage.applyIncrement(QuestIncrementContext(
+            QuestStorage.applyIncrement(IncrementContext(
                 MCCGame.SKY_BATTLE,
-                CompletionCriteria.SKY_BATTLE_QUADS_SURVIVED_TWO_MINUTE,
+                QuestCriteria.SKY_BATTLE_QUADS_SURVIVED_TWO_MINUTE,
                 1,
                 "skb_survived_2m"
             ))
@@ -52,13 +53,13 @@ object SkyBattleQuestEvents {
             val placement = match.groups[1]?.value?.toIntOrNull() ?: return
 
             if (placement <= 10) {
-                inc(CompletionCriteria.SKY_BATTLE_QUADS_SURVIVAL_TOP_TEN, "skb_top10")
+                inc(QuestCriteria.SKY_BATTLE_QUADS_SURVIVAL_TOP_TEN, "skb_top10")
             }
             if (placement <= 5) {
-                inc(CompletionCriteria.SKY_BATTLE_QUADS_SURVIVAL_TOP_FIVE, "skb_top5")
+                inc(QuestCriteria.SKY_BATTLE_QUADS_SURVIVAL_TOP_FIVE, "skb_top5")
             }
             if (placement <= 3) {
-                inc(CompletionCriteria.SKY_BATTLE_QUADS_SURVIVAL_TOP_THREE, "skb_top3")
+                inc(QuestCriteria.SKY_BATTLE_QUADS_SURVIVAL_TOP_THREE, "skb_top3")
             }
         }
     }

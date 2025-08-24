@@ -1,6 +1,6 @@
-package cc.pe3epwithyou.trident.widgets.questing
+package cc.pe3epwithyou.trident.feature.questing
 
-enum class CompletionCriteria(val shortName: String, val regexPattern: Regex, val isTracked: Boolean = true) {
+enum class QuestCriteria(val shortName: String, val regexPattern: Regex, val isTracked: Boolean = true) {
     HOLE_IN_THE_WALL_SURVIVED_TWO_MINUTE(
         "Survive 2m",
         Regex("Survive at least 2m in (\\d+) games of HITW")

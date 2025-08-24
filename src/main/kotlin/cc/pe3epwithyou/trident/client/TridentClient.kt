@@ -4,20 +4,19 @@ import cc.pe3epwithyou.trident.client.events.ChatEventListener
 import cc.pe3epwithyou.trident.client.events.ChestScreenListener
 import cc.pe3epwithyou.trident.client.events.KillChatListener
 import cc.pe3epwithyou.trident.client.events.QuestingEvents
-import cc.pe3epwithyou.trident.client.events.questing.QuestListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
-import cc.pe3epwithyou.trident.dialogs.TridentDialog
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.feature.DepletedDisplay
 import cc.pe3epwithyou.trident.feature.SupplyWidgetTimer
+import cc.pe3epwithyou.trident.feature.questing.QuestListener
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.TridentFont
-import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
@@ -32,7 +31,6 @@ import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import org.lwjgl.glfw.GLFW
-import kotlin.reflect.KFunction
 
 
 class TridentClient : ClientModInitializer {

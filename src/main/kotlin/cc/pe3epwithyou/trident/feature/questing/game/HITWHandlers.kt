@@ -1,17 +1,18 @@
-package cc.pe3epwithyou.trident.client.events.questing
+package cc.pe3epwithyou.trident.feature.questing.game
 
-import cc.pe3epwithyou.trident.client.events.QuestIncrementContext
+import cc.pe3epwithyou.trident.feature.questing.IncrementContext
+import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
+import cc.pe3epwithyou.trident.feature.questing.QuestListener
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.state.MCCGame
-import cc.pe3epwithyou.trident.widgets.questing.CompletionCriteria
-import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import net.minecraft.network.chat.Component
 
-object HITWQuestEvents {
+object HITWHandlers {
     fun scheduleSurvivedMinute() {
         QuestListener.handleTimedQuest(1L, true) {
-            QuestStorage.applyIncrement(QuestIncrementContext(
+            QuestStorage.applyIncrement(IncrementContext(
                 MCCGame.HITW,
-                CompletionCriteria.HOLE_IN_THE_WALL_SURVIVED_MINUTE,
+                QuestCriteria.HOLE_IN_THE_WALL_SURVIVED_MINUTE,
                 1,
                 "hitw_survived_60s"
             ))
@@ -20,9 +21,9 @@ object HITWQuestEvents {
 
     fun scheduleSurvivedTwoMinutes() {
         QuestListener.handleTimedQuest(2L, true) {
-            QuestStorage.applyIncrement(QuestIncrementContext(
+            QuestStorage.applyIncrement(IncrementContext(
                 MCCGame.HITW,
-                CompletionCriteria.HOLE_IN_THE_WALL_SURVIVED_TWO_MINUTE,
+                QuestCriteria.HOLE_IN_THE_WALL_SURVIVED_TWO_MINUTE,
                 1,
                 "hitw_survived_2m"
             ))
@@ -33,10 +34,10 @@ object HITWQuestEvents {
         val match = Regex("(\\d+)(st|nd|rd|th) Place!").find(m.string) ?: return
         val placement = match.groups[1]?.value?.toInt() ?: return
         // helper to apply increments
-        fun inc(criteria: CompletionCriteria, amount: Int = 1, tagSuffix: String? = null) {
+        fun inc(criteria: QuestCriteria, amount: Int = 1, tagSuffix: String? = null) {
             val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
             QuestStorage.applyIncrement(
-                QuestIncrementContext(
+                IncrementContext(
                     MCCGame.HITW,
                     criteria,
                     amount,
@@ -46,13 +47,13 @@ object HITWQuestEvents {
         }
 
         if (placement <= 8) {
-            inc(CompletionCriteria.HOLE_IN_THE_WALL_TOP_EIGHT, 1, "hitw_top8")
+            inc(QuestCriteria.HOLE_IN_THE_WALL_TOP_EIGHT, 1, "hitw_top8")
         }
         if (placement <= 5) {
-            inc(CompletionCriteria.HOLE_IN_THE_WALL_TOP_FIVE, 1, "hitw_top5")
+            inc(QuestCriteria.HOLE_IN_THE_WALL_TOP_FIVE, 1, "hitw_top5")
         }
         if (placement <= 3) {
-            inc(CompletionCriteria.HOLE_IN_THE_WALL_TOP_THREE, 1, "hitw_top3")
+            inc(QuestCriteria.HOLE_IN_THE_WALL_TOP_THREE, 1, "hitw_top3")
         }
     }
 }

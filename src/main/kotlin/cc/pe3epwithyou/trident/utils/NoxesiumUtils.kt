@@ -1,16 +1,16 @@
 package cc.pe3epwithyou.trident.utils
 
 import cc.pe3epwithyou.trident.client.events.KillChatListener
-import cc.pe3epwithyou.trident.client.events.questing.DynaballQuestEvents
-import cc.pe3epwithyou.trident.client.events.questing.HITWQuestEvents
-import cc.pe3epwithyou.trident.client.events.questing.QuestListener
-import cc.pe3epwithyou.trident.client.events.questing.RocketSpleefRushQuestEvents
-import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
+import cc.pe3epwithyou.trident.feature.questing.QuestListener
+import cc.pe3epwithyou.trident.feature.questing.game.DynaballHandlers
+import cc.pe3epwithyou.trident.feature.questing.game.HITWHandlers
+import cc.pe3epwithyou.trident.feature.questing.game.RSRHandlers
+import cc.pe3epwithyou.trident.feature.questing.game.SkyBattleHandlers
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
@@ -80,21 +80,21 @@ object NoxesiumUtils {
 
     private fun handleTimedQuests() {
         if (MCCIslandState.game == MCCGame.HITW) {
-            HITWQuestEvents.scheduleSurvivedMinute()
-            HITWQuestEvents.scheduleSurvivedTwoMinutes()
+            HITWHandlers.scheduleSurvivedMinute()
+            HITWHandlers.scheduleSurvivedTwoMinutes()
         }
 
         if (MCCIslandState.game == MCCGame.SKY_BATTLE) {
-            SkyBattleQuestEvents.scheduleSurvivedMinute()
-            SkyBattleQuestEvents.scheduleSurvivedTwoMinutes()
+            SkyBattleHandlers.scheduleSurvivedMinute()
+            SkyBattleHandlers.scheduleSurvivedTwoMinutes()
         }
 
         if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) {
-            RocketSpleefRushQuestEvents.scheduleSurvivedMinute()
+            RSRHandlers.scheduleSurvivedMinute()
         }
 
         if (MCCIslandState.game == MCCGame.DYNABALL) {
-            DynaballQuestEvents.scheduleDynaball()
+            DynaballHandlers.scheduleDynaball()
         }
     }
 

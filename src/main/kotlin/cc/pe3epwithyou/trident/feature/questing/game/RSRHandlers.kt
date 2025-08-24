@@ -1,16 +1,17 @@
-package cc.pe3epwithyou.trident.client.events.questing
+package cc.pe3epwithyou.trident.feature.questing.game
 
-import cc.pe3epwithyou.trident.client.events.QuestIncrementContext
+import cc.pe3epwithyou.trident.feature.questing.IncrementContext
+import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
+import cc.pe3epwithyou.trident.feature.questing.QuestListener
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.state.MCCGame
-import cc.pe3epwithyou.trident.widgets.questing.CompletionCriteria
-import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import net.minecraft.network.chat.Component
 
-object RocketSpleefRushQuestEvents {
-    private fun inc(criteria: CompletionCriteria, tagSuffix: String? = null, canBeDuplicated: Boolean = false) {
+object RSRHandlers {
+    private fun inc(criteria: QuestCriteria, tagSuffix: String? = null, canBeDuplicated: Boolean = false) {
         val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
         QuestStorage.applyIncrement(
-            QuestIncrementContext(
+            IncrementContext(
                 MCCGame.ROCKET_SPLEEF_RUSH,
                 criteria,
                 1,
@@ -22,9 +23,9 @@ object RocketSpleefRushQuestEvents {
 
     fun scheduleSurvivedMinute() {
         QuestListener.handleTimedQuest(1L, true) {
-            QuestStorage.applyIncrement(QuestIncrementContext(
+            QuestStorage.applyIncrement(IncrementContext(
                 MCCGame.ROCKET_SPLEEF_RUSH,
-                CompletionCriteria.ROCKET_SPLEEF_SURVIVE_60S,
+                QuestCriteria.ROCKET_SPLEEF_SURVIVE_60S,
                 1,
                 "rsr_survived_60s"
             ))
@@ -34,7 +35,7 @@ object RocketSpleefRushQuestEvents {
     fun handleRocketSpleefRush(m: Component) {
         val elimination = Regex("^\\[.] ((.+) was (eliminated|spleefed) by (.+)|(.+) died) \\[.+]").find(m.string)
         if (elimination != null) {
-            inc(CompletionCriteria.ROCKET_SPLEEF_PLAYERS_OUTLIVED, "rsr_players_outlived", true)
+            inc(QuestCriteria.ROCKET_SPLEEF_PLAYERS_OUTLIVED, "rsr_players_outlived", true)
         }
 
         val death = Regex("^\\[.] .+, you were eliminated in (\\d+)(st|nd|rd|th)").find(m.string)
@@ -42,13 +43,13 @@ object RocketSpleefRushQuestEvents {
             val placement = death.groups[1]?.value?.toInt() ?: return
 
             if (placement <= 8) {
-                inc(CompletionCriteria.ROCKET_SPLEEF_TOP_EIGHT, "rsr_top8")
+                inc(QuestCriteria.ROCKET_SPLEEF_TOP_EIGHT, "rsr_top8")
             }
             if (placement <= 5) {
-                inc(CompletionCriteria.ROCKET_SPLEEF_TOP_FIVE, "rsr_top5")
+                inc(QuestCriteria.ROCKET_SPLEEF_TOP_FIVE, "rsr_top5")
             }
             if (placement <= 3) {
-                inc(CompletionCriteria.ROCKET_SPLEEF_TOP_THREE, "rsr_top3")
+                inc(QuestCriteria.ROCKET_SPLEEF_TOP_THREE, "rsr_top3")
             }
         }
     }

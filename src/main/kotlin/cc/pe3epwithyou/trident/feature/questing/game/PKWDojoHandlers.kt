@@ -1,15 +1,14 @@
-package cc.pe3epwithyou.trident.client.events.questing
+package cc.pe3epwithyou.trident.feature.questing.game
 
-import cc.pe3epwithyou.trident.client.events.QuestIncrementContext
+import cc.pe3epwithyou.trident.feature.questing.IncrementContext
+import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.utils.TimeUtil
-import cc.pe3epwithyou.trident.widgets.questing.CompletionCriteria
-import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import java.util.concurrent.TimeUnit
 
-object DojoQuestEvents {
+object PKWDojoHandlers {
     private const val STANDARD_CMPL = 0
     private const val ADVANCED_CMPL = 1
     private const val EXPERT_CMPL = 2
@@ -29,10 +28,10 @@ object DojoQuestEvents {
         val five   = TimeUnit.MINUTES.toMillis(5)
 
         // helper to apply increments
-        fun inc(criteria: CompletionCriteria, amount: Int = 1, tagSuffix: String? = null) {
+        fun inc(criteria: QuestCriteria, amount: Int = 1, tagSuffix: String? = null) {
             val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
             QuestStorage.applyIncrement(
-                QuestIncrementContext(
+                IncrementContext(
                     MCCGame.PARKOUR_WARRIOR_DOJO,
                     criteria,
                     amount,
@@ -44,9 +43,9 @@ object DojoQuestEvents {
 
         // Increment total medals banked
         QuestStorage.applyIncrement(
-            QuestIncrementContext(
+            IncrementContext(
                 MCCGame.PARKOUR_WARRIOR_DOJO,
-                CompletionCriteria.PW_SOLO_TOTAL_MEDALS_BANKED,
+                QuestCriteria.PW_SOLO_TOTAL_MEDALS_BANKED,
                 medals,
                 "medals_banked"
             ),
@@ -61,9 +60,9 @@ object DojoQuestEvents {
 
         // Increment standard run total (all runs are at least standard)
         QuestStorage.applyIncrement(
-            QuestIncrementContext(
+            IncrementContext(
                 MCCGame.PARKOUR_WARRIOR_DOJO,
-                CompletionCriteria.PW_SOLO_TOTAL_STANDARD_CMPLS,
+                QuestCriteria.PW_SOLO_TOTAL_STANDARD_CMPLS,
                 1,
                 "standard_completion_total"
             ),
@@ -72,9 +71,9 @@ object DojoQuestEvents {
 
         if (runType >= ADVANCED_CMPL) {
             QuestStorage.applyIncrement(
-                QuestIncrementContext(
+                IncrementContext(
                     MCCGame.PARKOUR_WARRIOR_DOJO,
-                    CompletionCriteria.PW_SOLO_TOTAL_ADVANCED_CMPLS,
+                    QuestCriteria.PW_SOLO_TOTAL_ADVANCED_CMPLS,
                     1,
                     "advanced_completion_total"
                 ),
@@ -83,20 +82,20 @@ object DojoQuestEvents {
         }
 
         if (timeMillis <= twoMin) {
-            inc(CompletionCriteria.PW_SOLO_STANDARD_CMPL_BELOW_TWO_MIN, 1, "timed_criteria_TWO_MIN")
+            inc(QuestCriteria.PW_SOLO_STANDARD_CMPL_BELOW_TWO_MIN, 1, "timed_criteria_TWO_MIN")
         }
         if (timeMillis <= three) {
-            inc(CompletionCriteria.PW_SOLO_STANDARD_CMPL_BELOW_THREE_MIN, 1, "timed_criteria_THREE_MIN")
+            inc(QuestCriteria.PW_SOLO_STANDARD_CMPL_BELOW_THREE_MIN, 1, "timed_criteria_THREE_MIN")
         }
         if (runType >= ADVANCED_CMPL && timeMillis <= four) {
-            inc(CompletionCriteria.PW_SOLO_ADVANCED_CMPL_BELOW_FOUR_MIN, 1, "timed_criteria_FOUR_MIN")
+            inc(QuestCriteria.PW_SOLO_ADVANCED_CMPL_BELOW_FOUR_MIN, 1, "timed_criteria_FOUR_MIN")
         }
 
         if (timeMillis <= five) {
             val criteria = if (runType == STANDARD_CMPL)
-                CompletionCriteria.PW_SOLO_STANDARD_CMPL_BELOW_FIVE_MIN
+                QuestCriteria.PW_SOLO_STANDARD_CMPL_BELOW_FIVE_MIN
             else
-                CompletionCriteria.PW_SOLO_ADVANCED_CMPL_BELOW_FIVE_MIN
+                QuestCriteria.PW_SOLO_ADVANCED_CMPL_BELOW_FIVE_MIN
 
             inc(criteria, 1, "timed_criteria_FIVE_MIN")
         }

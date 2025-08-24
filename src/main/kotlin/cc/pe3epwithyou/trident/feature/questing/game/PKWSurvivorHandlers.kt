@@ -1,24 +1,24 @@
-package cc.pe3epwithyou.trident.client.events.questing
+package cc.pe3epwithyou.trident.feature.questing.game
 
-import cc.pe3epwithyou.trident.client.events.QuestIncrementContext
+import cc.pe3epwithyou.trident.feature.questing.IncrementContext
+import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.state.MCCGame
-import cc.pe3epwithyou.trident.widgets.questing.CompletionCriteria
-import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import net.minecraft.network.chat.Component
 
-object SurvivorQuestEvents {
+object PKWSurvivorHandlers {
     fun handlePKWS(m: Component) {
         val leapFinished = Regex("^\\[.] Leap (\\d) complete in: .+").find(m.string)
         if (leapFinished != null) {
             val group = leapFinished.groups[1]   ?: return
             val leap = group.value.toIntOrNull() ?: return
             val criteria = when (leap) {
-                2 -> CompletionCriteria.PW_SURVIVAL_LEAP_2_COMPLETION
-                4 -> CompletionCriteria.PW_SURVIVAL_LEAP_4_COMPLETION
-                6 -> CompletionCriteria.PW_SURVIVAL_LEAP_6_COMPLETION
+                2 -> QuestCriteria.PW_SURVIVAL_LEAP_2_COMPLETION
+                4 -> QuestCriteria.PW_SURVIVAL_LEAP_4_COMPLETION
+                6 -> QuestCriteria.PW_SURVIVAL_LEAP_6_COMPLETION
                 else -> return
             }
-            val ctx = QuestIncrementContext(
+            val ctx = IncrementContext(
                 MCCGame.PARKOUR_WARRIOR_SURVIVOR,
                 criteria,
                 1,
@@ -29,9 +29,9 @@ object SurvivorQuestEvents {
 
         val obstacleComplete = Regex("^\\[.] Leap \\d - \\d: .+ complete!").find(m.string)
         if (obstacleComplete != null) {
-            val ctx = QuestIncrementContext(
+            val ctx = IncrementContext(
                 MCCGame.PARKOUR_WARRIOR_SURVIVOR,
-                CompletionCriteria.PW_SURVIVAL_OBSTACLES_COMPLETED,
+                QuestCriteria.PW_SURVIVAL_OBSTACLES_COMPLETED,
                 1,
                 "obstacle_complete"
             )
@@ -40,9 +40,9 @@ object SurvivorQuestEvents {
 
         val playerOutlived = Regex("^\\[.] .+ was eliminated\\. \\[.+]").find(m.string)
         if (playerOutlived != null) {
-            val ctx = QuestIncrementContext(
+            val ctx = IncrementContext(
                 MCCGame.PARKOUR_WARRIOR_SURVIVOR,
-                CompletionCriteria.PW_SURVIVAL_PLAYERS_ELIMINATED,
+                QuestCriteria.PW_SURVIVAL_PLAYERS_ELIMINATED,
                 1,
                 "player_outlived"
             )

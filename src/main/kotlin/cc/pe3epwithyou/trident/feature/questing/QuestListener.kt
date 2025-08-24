@@ -1,20 +1,14 @@
-package cc.pe3epwithyou.trident.client.events.questing
+package cc.pe3epwithyou.trident.feature.questing
 
 import cc.pe3epwithyou.trident.client.events.ChestScreenListener
-import cc.pe3epwithyou.trident.client.events.questing.BattleBoxQuestEvents.handleBattleBox
-import cc.pe3epwithyou.trident.client.events.questing.DynaballQuestEvents.handleDynaball
-import cc.pe3epwithyou.trident.client.events.questing.RocketSpleefRushQuestEvents.handleRocketSpleefRush
-import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents.handleSkyBattle
-import cc.pe3epwithyou.trident.client.events.questing.SurvivorQuestEvents.handlePKWS
-import cc.pe3epwithyou.trident.client.events.questing.TGTTOSQuestEvents.handleTGTTOS
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
+import cc.pe3epwithyou.trident.feature.questing.game.*
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
-import cc.pe3epwithyou.trident.utils.WorldUtils.getGameID
-import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
+import cc.pe3epwithyou.trident.utils.WorldUtils
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -43,15 +37,15 @@ object QuestListener {
 
     fun handleSubtitle(m: Component) {
         if (!Config.Questing.enabled) return
-        if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) DojoQuestEvents.handlePKWD(m)
-        if (MCCIslandState.game == MCCGame.HITW) HITWQuestEvents.handlePlacement(m)
+        if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) PKWDojoHandlers.handlePKWD(m)
+        if (MCCIslandState.game == MCCGame.HITW) HITWHandlers.handlePlacement(m)
     }
 
     fun handleTimedQuest(minutes: Long, shouldInterrupt: Boolean = false, action: () -> Unit) {
         if (!Config.Questing.enabled) return
-        val initialID = getGameID()
+        val initialID = WorldUtils.getGameID()
         val task = DelayedAction.delay(TimeUnit.MINUTES.toMillis(minutes)) {
-            val currentID = getGameID()
+            val currentID = WorldUtils.getGameID()
             if (initialID != currentID) return@delay
             action.invoke()
         }
@@ -73,12 +67,14 @@ object QuestListener {
             if (checkIfPlobby()) return@eventHandler
             handleRefreshTasksChat(message)
             checkDesynced(message)
-            if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) handlePKWS(message)
-            if (MCCIslandState.game == MCCGame.BATTLE_BOX) handleBattleBox(message)
-            if (MCCIslandState.game == MCCGame.TGTTOS) handleTGTTOS(message)
-            if (MCCIslandState.game == MCCGame.SKY_BATTLE) handleSkyBattle(message)
-            if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) handleRocketSpleefRush(message)
-            if (MCCIslandState.game == MCCGame.DYNABALL) handleDynaball(message)
+            if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) PKWSurvivorHandlers.handlePKWS(message)
+            if (MCCIslandState.game == MCCGame.BATTLE_BOX) BattleBoxHandlers.handleBattleBox(message)
+            if (MCCIslandState.game == MCCGame.TGTTOS) TGTTOSHandlers.handleTGTTOS(message)
+            if (MCCIslandState.game == MCCGame.SKY_BATTLE) SkyBattleHandlers.handleSkyBattle(message)
+            if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) RSRHandlers.handleRocketSpleefRush(
+                message
+            )
+            if (MCCIslandState.game == MCCGame.DYNABALL) DynaballHandlers.handleDynaball(message)
         }
     }
 

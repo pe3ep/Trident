@@ -1,10 +1,9 @@
-package cc.pe3epwithyou.trident.feature
+package cc.pe3epwithyou.trident.feature.questing
 
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.ItemParser.getItemLore
-import cc.pe3epwithyou.trident.widgets.questing.*
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
@@ -95,7 +94,7 @@ object QuestingParser {
         val parsedQuests = mutableListOf<ParsedQuest>()
 
         var tempGame: MCCGame? = null
-        var tempCriteria: CompletionCriteria? = null
+        var tempCriteria: QuestCriteria? = null
         var tempProgress: Pair<Int, Int>
         var tempQuestString = ""
         lines.forEachIndexed { index, l ->
@@ -142,7 +141,7 @@ object QuestingParser {
         return parsedQuests
     }
 
-    private data class ParsedQuest(val game: MCCGame, val criteria: CompletionCriteria, val progress: Pair<Int, Int>)
+    private data class ParsedQuest(val game: MCCGame, val criteria: QuestCriteria, val progress: Pair<Int, Int>)
 
     private fun getQuestGame(text: String): MCCGame? {
         MCCGame.entries.forEach { g ->

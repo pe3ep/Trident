@@ -2,13 +2,14 @@ package cc.pe3epwithyou.trident.client.events
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
+import cc.pe3epwithyou.trident.feature.questing.EliminatedCriteria
+import cc.pe3epwithyou.trident.feature.questing.IncrementContext
+import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.widgets.killfeed.KillMethod
 import cc.pe3epwithyou.trident.widgets.killfeed.KillWidget
-import cc.pe3epwithyou.trident.widgets.questing.CompletionCriteria
-import cc.pe3epwithyou.trident.widgets.questing.GenericCompletionCriteria
-import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import com.noxcrew.sheeplib.util.opacity
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.Util
@@ -133,16 +134,17 @@ object KillChatListener {
             val self = Minecraft.getInstance().player ?: return true
             if (attacker.string == self.name.string) {
                 val game = MCCIslandState.game
-                val ctx = GenericCompletionCriteria.playerEliminated(game, sourceTag = "kill") ?: return true
+                val ctx = EliminatedCriteria.get(game, sourceTag = "kill") ?: return true
                 QuestStorage.applyIncrement(ctx, true)
 
                 if (method == KillMethod.RANGE && game == MCCGame.BATTLE_BOX) {
-                    QuestStorage.applyIncrement(QuestIncrementContext(
-                        MCCGame.BATTLE_BOX,
-                        CompletionCriteria.BATTLE_BOX_QUADS_RANGED_KILLS,
-                        1,
-                        "bb_ranged_kill"
-                    ), true)
+                    QuestStorage.applyIncrement(
+                        IncrementContext(
+                            MCCGame.BATTLE_BOX,
+                            QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS,
+                            1,
+                            "bb_ranged_kill"
+                        ), true)
                 }
             }
 

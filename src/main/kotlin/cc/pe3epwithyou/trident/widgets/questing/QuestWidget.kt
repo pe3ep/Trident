@@ -1,6 +1,9 @@
 package cc.pe3epwithyou.trident.widgets.questing
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.questing.Quest
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
+import cc.pe3epwithyou.trident.feature.questing.QuestSubtype
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withDefault
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
 import cc.pe3epwithyou.trident.utils.Texture

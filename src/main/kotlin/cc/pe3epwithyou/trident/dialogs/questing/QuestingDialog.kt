@@ -2,11 +2,11 @@ package cc.pe3epwithyou.trident.dialogs.questing
 
 import cc.pe3epwithyou.trident.dialogs.TridentDialog
 import cc.pe3epwithyou.trident.dialogs.themes.TridentThemed
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
 import cc.pe3epwithyou.trident.utils.TridentFont
-import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import cc.pe3epwithyou.trident.widgets.questing.QuestWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.grid

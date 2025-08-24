@@ -1,13 +1,12 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.client.events.questing.QuestListener;
 import cc.pe3epwithyou.trident.feature.FocusGame;
+import cc.pe3epwithyou.trident.feature.questing.QuestListener;
 import cc.pe3epwithyou.trident.utils.ChatUtils;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerCombatKillPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

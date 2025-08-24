@@ -1,8 +1,8 @@
-package cc.pe3epwithyou.trident.widgets.questing
+package cc.pe3epwithyou.trident.feature.questing
 
+import cc.pe3epwithyou.trident.feature.questing.QuestCriteria.*
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.Rarity
-import cc.pe3epwithyou.trident.widgets.questing.CompletionCriteria.*
 import net.minecraft.resources.ResourceLocation
 
 class Quest(
@@ -10,7 +10,7 @@ class Quest(
     val type: QuestType,
     val subtype: QuestSubtype,
     val rarity: Rarity,
-    val criteria: CompletionCriteria,
+    val criteria: QuestCriteria,
     var progress: Int,
     val totalProgress: Int,
 ) {
@@ -61,7 +61,7 @@ enum class QuestType(
 }
 
 enum class GameQuests(
-    val list: List<CompletionCriteria>
+    val list: List<QuestCriteria>
 ) {
     HITW(
         listOf(

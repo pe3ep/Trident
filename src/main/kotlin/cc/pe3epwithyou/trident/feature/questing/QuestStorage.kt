@@ -1,17 +1,16 @@
-package cc.pe3epwithyou.trident.widgets.questing
+package cc.pe3epwithyou.trident.feature.questing
 
-import cc.pe3epwithyou.trident.client.events.QuestIncrementContext
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.WorldUtils
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 object QuestStorage {
     private val store: MutableMap<MCCGame, MutableList<Quest>> = ConcurrentHashMap()
-    private val lastOperation: MutableMap<CompletionCriteria, UUID> = ConcurrentHashMap()
+    private val lastOperation: MutableMap<QuestCriteria, UUID> = ConcurrentHashMap()
     var dailyRemaining: Int = 0
     var weeklyRemaining: Int = 0
 
@@ -46,7 +45,7 @@ object QuestStorage {
      * Apply the increment described by ctx to all matching quests for the given game.
      * Returns true if any quest was updated.
      */
-    fun applyIncrement(ctx: QuestIncrementContext, canBeDuplicated: Boolean = false): Boolean {
+    fun applyIncrement(ctx: IncrementContext, canBeDuplicated: Boolean = false): Boolean {
         ChatUtils.debugLog("Received increment from context ${ctx.sourceTag}: amount: ${ctx.amount}")
         val id = WorldUtils.getGameID()
         if (!canBeDuplicated && lastOperation[ctx.criteria] == id) {
