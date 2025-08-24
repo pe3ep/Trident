@@ -37,7 +37,7 @@ object QuestListener {
 
     fun handleSubtitle(m: Component) {
         if (!Config.Questing.enabled) return
-        if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) PKWDojoHandlers.handlePKWD(m)
+        if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) PKWDojoHandlers.handle(m)
         if (MCCIslandState.game == MCCGame.HITW) HITWHandlers.handlePlacement(m)
     }
 
@@ -67,19 +67,21 @@ object QuestListener {
             if (checkIfPlobby()) return@eventHandler
             handleRefreshTasksChat(message)
             checkDesynced(message)
-            if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) PKWSurvivorHandlers.handlePKWS(message)
-            if (MCCIslandState.game == MCCGame.BATTLE_BOX) BattleBoxHandlers.handleBattleBox(message)
-            if (MCCIslandState.game == MCCGame.TGTTOS) TGTTOSHandlers.handleTGTTOS(message)
-            if (MCCIslandState.game == MCCGame.SKY_BATTLE) SkyBattleHandlers.handleSkyBattle(message)
-            if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) RSRHandlers.handleRocketSpleefRush(
+            if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) PKWSurvivorHandlers.handle(message)
+            if (MCCIslandState.game == MCCGame.BATTLE_BOX) BattleBoxHandlers.handle(message)
+            if (MCCIslandState.game == MCCGame.TGTTOS) TGTTOSHandlers.handle(message)
+            if (MCCIslandState.game == MCCGame.SKY_BATTLE) SkyBattleHandlers.handle(message)
+            if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) RSRHandlers.handle(
                 message
             )
-            if (MCCIslandState.game == MCCGame.DYNABALL) DynaballHandlers.handleDynaball(message)
+            if (MCCIslandState.game == MCCGame.DYNABALL) DynaballHandlers.handle(message)
+            if (MCCIslandState.game == MCCGame.HITW) HITWHandlers.handle(message)
         }
     }
 
     fun checkDesynced(m: Component) {
-        val match = Regex("\\(.\\) (Quest Scroll|Quest) Completed! Check your Quest Log for rewards\\.").matches(m.string)
+        val match =
+            Regex("\\(.\\) (Quest Scroll|Quest) Completed! Check your Quest Log for rewards\\.").matches(m.string)
         if (!match) return
         if (isAQuestCompleted()) return
         QuestingDialog.isDesynced = true

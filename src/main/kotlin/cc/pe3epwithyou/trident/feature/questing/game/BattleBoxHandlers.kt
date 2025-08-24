@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object BattleBoxHandlers {
-    fun handleBattleBox(m: Component) {
+    fun handle(m: Component) {
         val roundWon = Regex("\\[.] . .+ Team, you won Round \\d! \\[.+]").find(m.string)
         if (roundWon != null) {
             val ctx = IncrementContext(

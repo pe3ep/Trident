@@ -23,7 +23,7 @@ object TGTTOSHandlers {
         )
     }
 
-    fun handleTGTTOS(m: Component) {
+    fun handle(m: Component) {
         handleRoundPlacement(m)
         val gameOver = Regex("^\\[.] Game Over!").find(m.string)
         if (gameOver != null) {

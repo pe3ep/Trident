@@ -12,43 +12,51 @@ import net.minecraft.network.chat.Component
 object DynaballHandlers {
     fun scheduleDynaball() {
         QuestListener.handleTimedQuest(1L, true) {
-            QuestStorage.applyIncrement(IncrementContext(
-                MCCGame.DYNABALL,
-                QuestCriteria.DYNABALL_SURVIVE_1M,
-                1,
-                "dynaball_survived_60s"
-            ))
+            QuestStorage.applyIncrement(
+                IncrementContext(
+                    MCCGame.DYNABALL,
+                    QuestCriteria.DYNABALL_SURVIVE_1M,
+                    1,
+                    "dynaball_survived_60s"
+                )
+            )
         }
         QuestListener.handleTimedQuest(2L, true) {
-            QuestStorage.applyIncrement(IncrementContext(
-                MCCGame.DYNABALL,
-                QuestCriteria.DYNABALL_SURVIVE_2M,
-                1,
-                "dynaball_survived_2m"
-            ))
+            QuestStorage.applyIncrement(
+                IncrementContext(
+                    MCCGame.DYNABALL,
+                    QuestCriteria.DYNABALL_SURVIVE_2M,
+                    1,
+                    "dynaball_survived_2m"
+                )
+            )
         }
         QuestListener.handleTimedQuest(4L, true) {
-            QuestStorage.applyIncrement(IncrementContext(
-                MCCGame.DYNABALL,
-                QuestCriteria.DYNABALL_SURVIVE_4M,
-                1,
-                "dynaball_survived_4m"
-            ))
+            QuestStorage.applyIncrement(
+                IncrementContext(
+                    MCCGame.DYNABALL,
+                    QuestCriteria.DYNABALL_SURVIVE_4M,
+                    1,
+                    "dynaball_survived_4m"
+                )
+            )
         }
     }
 
-    fun handleDynaball(m: Component) {
+    fun handle(m: Component) {
         val eliminated = Regex("^\\[.] Game Over!").find(m.string)
         if (eliminated != null) {
             val title = (Minecraft.getInstance().gui as GuiAccessor).title ?: return
             if (title.string != "Victory!") return
 
-            QuestStorage.applyIncrement(IncrementContext(
-                MCCGame.DYNABALL,
-                QuestCriteria.DYNABALL_WINS,
-                1,
-                "dynaball_wins"
-            ))
+            QuestStorage.applyIncrement(
+                IncrementContext(
+                    MCCGame.DYNABALL,
+                    QuestCriteria.DYNABALL_WINS,
+                    1,
+                    "dynaball_wins"
+                )
+            )
         }
     }
 }

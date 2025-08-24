@@ -23,16 +23,18 @@ object RSRHandlers {
 
     fun scheduleSurvivedMinute() {
         QuestListener.handleTimedQuest(1L, true) {
-            QuestStorage.applyIncrement(IncrementContext(
-                MCCGame.ROCKET_SPLEEF_RUSH,
-                QuestCriteria.ROCKET_SPLEEF_SURVIVE_60S,
-                1,
-                "rsr_survived_60s"
-            ))
+            QuestStorage.applyIncrement(
+                IncrementContext(
+                    MCCGame.ROCKET_SPLEEF_RUSH,
+                    QuestCriteria.ROCKET_SPLEEF_SURVIVE_60S,
+                    1,
+                    "rsr_survived_60s"
+                )
+            )
         }
     }
 
-    fun handleRocketSpleefRush(m: Component) {
+    fun handle(m: Component) {
         val elimination = Regex("^\\[.] ((.+) was (eliminated|spleefed) by (.+)|(.+) died) \\[.+]").find(m.string)
         if (elimination != null) {
             inc(QuestCriteria.ROCKET_SPLEEF_PLAYERS_OUTLIVED, "rsr_players_outlived", true)

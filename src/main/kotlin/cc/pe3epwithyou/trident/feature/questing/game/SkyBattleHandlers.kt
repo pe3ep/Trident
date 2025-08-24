@@ -25,27 +25,31 @@ object SkyBattleHandlers {
 
     fun scheduleSurvivedMinute() {
         QuestListener.handleTimedQuest(1L, true) {
-            QuestStorage.applyIncrement(IncrementContext(
-                MCCGame.SKY_BATTLE,
-                QuestCriteria.SKY_BATTLE_QUADS_SURVIVED_MINUTE,
-                1,
-                "skb_survived_60s"
-            ))
+            QuestStorage.applyIncrement(
+                IncrementContext(
+                    MCCGame.SKY_BATTLE,
+                    QuestCriteria.SKY_BATTLE_QUADS_SURVIVED_MINUTE,
+                    1,
+                    "skb_survived_60s"
+                )
+            )
         }
     }
 
     fun scheduleSurvivedTwoMinutes() {
         QuestListener.handleTimedQuest(2L, true) {
-            QuestStorage.applyIncrement(IncrementContext(
-                MCCGame.SKY_BATTLE,
-                QuestCriteria.SKY_BATTLE_QUADS_SURVIVED_TWO_MINUTE,
-                1,
-                "skb_survived_2m"
-            ))
+            QuestStorage.applyIncrement(
+                IncrementContext(
+                    MCCGame.SKY_BATTLE,
+                    QuestCriteria.SKY_BATTLE_QUADS_SURVIVED_TWO_MINUTE,
+                    1,
+                    "skb_survived_2m"
+                )
+            )
         }
     }
 
-    fun handleSkyBattle(m: Component) {
+    fun handle(m: Component) {
         val eliminated = Regex("^\\[.] Game Over!").find(m.string)
         if (eliminated != null) {
             val subtitle = (Minecraft.getInstance().gui as GuiAccessor).subtitle ?: return

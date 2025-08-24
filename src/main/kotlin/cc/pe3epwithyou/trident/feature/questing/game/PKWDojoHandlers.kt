@@ -13,19 +13,19 @@ object PKWDojoHandlers {
     private const val ADVANCED_CMPL = 1
     private const val EXPERT_CMPL = 2
 
-    fun handlePKWD(m: Component) {
+    fun handle(m: Component) {
         val match = Regex(""".(\d+) .(\d+:\d+\.\d+) .(.+)""").find(m.string) ?: return
 
         val medals = match.groups[1]?.value?.toIntOrNull() ?: return
-        val timeElapsedString = match.groups[2]?.value     ?: return
+        val timeElapsedString = match.groups[2]?.value ?: return
         val timeMillis =
             TimeUtil.parseMmSsMmmToTimeUnit(timeElapsedString, TimeUnit.MILLISECONDS)
 
         // thresholds in milliseconds
         val twoMin = TimeUnit.MINUTES.toMillis(2)
-        val three  = TimeUnit.MINUTES.toMillis(3)
-        val four   = TimeUnit.MINUTES.toMillis(4)
-        val five   = TimeUnit.MINUTES.toMillis(5)
+        val three = TimeUnit.MINUTES.toMillis(3)
+        val four = TimeUnit.MINUTES.toMillis(4)
+        val five = TimeUnit.MINUTES.toMillis(5)
 
         // helper to apply increments
         fun inc(criteria: QuestCriteria, amount: Int = 1, tagSuffix: String? = null) {
@@ -53,9 +53,9 @@ object PKWDojoHandlers {
         )
 
         val runType = when (medals) {
-            21             -> EXPERT_CMPL
+            21 -> EXPERT_CMPL
             in 16..20 -> ADVANCED_CMPL
-            else           -> STANDARD_CMPL
+            else -> STANDARD_CMPL
         }
 
         // Increment standard run total (all runs are at least standard)
