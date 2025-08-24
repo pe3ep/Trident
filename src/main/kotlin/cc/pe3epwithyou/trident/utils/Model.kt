@@ -11,19 +11,19 @@ import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import org.joml.Matrix3x2f
-import org.joml.Vector2f
 
 
-public class Model(
+data class Model(
     val modelPath: ResourceLocation,
     val width: Int,
     val height: Int,
-
-    ) {
+) {
     private val item = ItemStack(Items.ECHO_SHARD)
+
     init {
         item.set(DataComponents.ITEM_MODEL, modelPath)
     }
+
     /**
      * Blits the item model onto the screen.
      *
@@ -36,7 +36,14 @@ public class Model(
         guiGraphics.pose().pushMatrix()
 
         val trackingItemStackRenderState = TrackingItemStackRenderState()
-        client.itemModelResolver.updateForTopItem(trackingItemStackRenderState, item, ItemDisplayContext.GUI, client.level, null, 0)
+        client.itemModelResolver.updateForTopItem(
+            trackingItemStackRenderState,
+            item,
+            ItemDisplayContext.GUI,
+            client.level,
+            null,
+            0
+        )
 
         val itemMatrix = guiGraphics.pose()
         val scaleFactorX = width / 16F

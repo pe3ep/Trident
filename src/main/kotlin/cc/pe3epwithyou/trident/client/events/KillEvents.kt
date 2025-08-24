@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.client.events
 
-import cc.pe3epwithyou.trident.widgets.killfeed.KillMethod
+import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.EventFactory
 

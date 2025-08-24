@@ -1,14 +1,11 @@
 package cc.pe3epwithyou.trident.utils
 
-import cc.pe3epwithyou.trident.client.events.questing.QuestListener
+import cc.pe3epwithyou.trident.feature.questing.QuestListener
+import cc.pe3epwithyou.trident.utils.DelayedAction.delay
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.minecraft.client.Minecraft
-import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
+import java.util.*
+import java.util.concurrent.*
 
 object DelayedAction {
     private val executorService: ScheduledExecutorService =
@@ -16,7 +13,7 @@ object DelayedAction {
             Thread(r, "trident-delay-thread").apply { isDaemon = true }
         }
 
-    private val tasks: ConcurrentHashMap<UUID, ScheduledFuture<*>?> = ConcurrentHashMap()
+    private val tasks: ConcurrentHashMap<UUID, ScheduledFuture<*>> = ConcurrentHashMap()
 
     data class DelayedTask(val id: UUID) {
         /**
@@ -71,7 +68,7 @@ object DelayedAction {
 
     fun closeAllPendingTasks() {
         for ((_, future) in tasks) {
-            future?.cancel(false)
+            future.cancel(false)
         }
         tasks.clear()
     }

@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.client.events.questing.QuestListener;
+import cc.pe3epwithyou.trident.feature.questing.QuestListener;
 import cc.pe3epwithyou.trident.utils.ChatUtils;
 import cc.pe3epwithyou.trident.utils.DelayedAction;
 import net.minecraft.network.Connection;

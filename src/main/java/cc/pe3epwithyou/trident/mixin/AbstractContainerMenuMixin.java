@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.client.events.SlotClickListener;
-import cc.pe3epwithyou.trident.state.MCCIslandState;
+import cc.pe3epwithyou.trident.client.listeners.SlotClickListener;
+import cc.pe3epwithyou.trident.state.MCCIState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ public class AbstractContainerMenuMixin {
 
     @Inject(method = "clicked", at = @At("HEAD"))
     public void clicked(int i, int j, ClickType clickType, Player player, CallbackInfo ci) {
-        if (!MCCIslandState.INSTANCE.isOnIsland()) return;
+        if (!MCCIState.INSTANCE.isOnIsland()) return;
 //        When user clicks off-screen, the slot is negative. If we don't return here, the game will crash
         if (i < 0) return;
         Minecraft client = Minecraft.getInstance();
