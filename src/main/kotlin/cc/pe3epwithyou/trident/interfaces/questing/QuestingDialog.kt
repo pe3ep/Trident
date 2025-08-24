@@ -1,13 +1,13 @@
 package cc.pe3epwithyou.trident.interfaces.questing
 
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
+import cc.pe3epwithyou.trident.interfaces.questing.widgets.QuestWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
-import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
-import cc.pe3epwithyou.trident.utils.TridentFont
-import cc.pe3epwithyou.trident.widgets.questing.QuestWidget
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
@@ -24,31 +24,30 @@ import net.minecraft.network.chat.Style
 class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
     companion object {
         var currentGame = MCCIslandState.game
+
         /** If true, the UI will display a warning sign in the title indicating that the progress might be inaccurate */
         var isDesynced = false
     }
+
     private fun getTitleWidget(): QuestDialogTitle {
         val icon = Component.literal("\uE279")
+            .mccFont("icon")
             .withStyle(
                 Style.EMPTY
-                    .withFont(TridentFont.getMCCFont("icon"))
                     .withShadowColor(0x0 opacity 0)
             )
         val titleText = if (isDesynced) " DESYNCED ⚠" else " QUESTS"
         val title = Component.literal(titleText)
-            .withStyle(
-                Style.EMPTY
-                    .withFont(TridentFont.getTridentFont("hud_title"))
-            )
+            .withTridentFont("hud_title")
         if (isDesynced) {
             title.withStyle(ChatFormatting.GOLD)
         }
 
         val backgroundColor = 0x38AFF opacity 127
         val gameIcon = Component.literal(currentGame.icon.toString())
+            .mccFont("icon")
             .withStyle(
                 Style.EMPTY
-                    .withFont(TridentFont.getMCCFont("icon"))
                     .withShadowColor(0x0 opacity 0)
                     .withColor(ChatFormatting.WHITE)
             )
@@ -71,30 +70,29 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             )
         )
     }
+
     override var title = getTitleWidget()
 
     override fun layout(): GridLayout = grid {
-        val mcFont = Minecraft.getInstance().font
+        val font = Minecraft.getInstance().font
 
         val quests = QuestStorage.getActiveQuests(currentGame)
 
         if (currentGame == MCCGame.HUB || currentGame == MCCGame.FISHING) {
             MultiLineTextWidget(
-                Component.literal("Join a game to\nview quests".uppercase()).withHudMCC()
+                Component.literal("Join a game to\nview quests".uppercase()).mccFont()
                     .withColor(ChatFormatting.GRAY.color!!),
-                mcFont
+                font
             ).atBottom(0, settings = LayoutConstants.LEFT)
             return@grid
         }
 
         if (quests.isEmpty()) {
             StringWidget(
-                Component.literal("No quests detected".uppercase()).withStyle(
-                    Style.EMPTY
-                        .withColor(ChatFormatting.GRAY)
-                        .withFont(TridentFont.getMCCFont())
-                ),
-                mcFont
+                Component.literal("No quests detected".uppercase())
+                    .mccFont()
+                    .withStyle(ChatFormatting.GRAY),
+                font
             ).atBottom(0)
             return@grid
         }

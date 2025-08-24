@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.state.Overclock
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.TridentColor
-import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.widgets.ItemWidget
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
@@ -41,18 +41,34 @@ class OverclockStackWidget(
         var unstableTexture = OverclockTexture.COOLDOWN
         when {
             overclockState.unstable.isCooldown -> unstableTexture = OverclockTexture.COOLDOWN
-            overclockState.unstable.isActive -> unstableTexture = overclockState.unstable.texture ?: OverclockTexture.COOLDOWN
-            !overclockState.unstable.isActive && !overclockState.unstable.isCooldown -> unstableTexture = OverclockTexture.ACTIVATED
+            overclockState.unstable.isActive -> unstableTexture =
+                overclockState.unstable.texture ?: OverclockTexture.COOLDOWN
+
+            !overclockState.unstable.isActive && !overclockState.unstable.isCooldown -> unstableTexture =
+                OverclockTexture.ACTIVATED
         }
         var supremeTexture = OverclockTexture.SUPREME
         when {
             overclockState.supreme.isCooldown -> supremeTexture = OverclockTexture.COOLDOWN
             overclockState.supreme.isActive -> supremeTexture = OverclockTexture.SUPREME
-            !overclockState.supreme.isActive && !overclockState.supreme.isCooldown -> supremeTexture = OverclockTexture.ACTIVATED
+            !overclockState.supreme.isActive && !overclockState.supreme.isCooldown -> supremeTexture =
+                OverclockTexture.ACTIVATED
         }
 
-        if (overclockState.unstable.isAvailable) +UnstableOverclockWidget(width, height, unstableTexture, 3, getOverclockComponent(overclockState.unstable))
-        if (overclockState.supreme.isAvailable) +UnstableOverclockWidget(height, height, supremeTexture, 0, getOverclockComponent(overclockState.supreme))
+        if (overclockState.unstable.isAvailable) +UnstableOverclockWidget(
+            width,
+            height,
+            unstableTexture,
+            3,
+            getOverclockComponent(overclockState.unstable)
+        )
+        if (overclockState.supreme.isAvailable) +UnstableOverclockWidget(
+            height,
+            height,
+            supremeTexture,
+            0,
+            getOverclockComponent(overclockState.supreme)
+        )
     }
 
     private fun getOverclockComponent(state: Overclock): Component {
@@ -84,18 +100,21 @@ class OverclockStackWidget(
         }
 
         val lerpedColor = TridentColor.lerpList(colors, 1F - ratio)
-        var component = Component.literal(time).withStyle(
-            Style.EMPTY
-                .withColor(lerpedColor.textColor)
-                .withFont(TridentFont.getMCCFont(offset = 3))
-        )
+        var component = Component.literal(time)
+            .mccFont(offset = 3)
+            .withStyle(
+                Style.EMPTY
+                    .withColor(lerpedColor.textColor)
+
+            )
 
         if (!state.isActive && !state.isCooldown) {
-            component = Component.literal("READY").withStyle(
-                Style.EMPTY
-                    .withColor(TridentColor(0x1EFC00).textColor)
-                    .withFont(TridentFont.getMCCFont(offset = 3))
-            )
+            component = Component.literal("READY")
+                .mccFont(offset = 3)
+                .withStyle(
+                    Style.EMPTY
+                        .withColor(TridentColor(0x1EFC00).textColor)
+                )
         }
         return component
     }
@@ -121,6 +140,7 @@ class OverclockStackWidget(
                 val secondsStr = if (seconds < 10) "0${seconds}s" else "${seconds}s"
                 if (seconds == 0L) "${minutes}m" else "${minutes}m $secondsStr"
             }
+
             seconds < 10 -> "0${seconds}s"
             else -> "${seconds}s"
         }

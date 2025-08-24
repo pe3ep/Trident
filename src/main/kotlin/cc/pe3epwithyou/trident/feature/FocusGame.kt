@@ -5,9 +5,9 @@ import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState.game
 import cc.pe3epwithyou.trident.state.MCCIslandState.isOnIsland
 import cc.pe3epwithyou.trident.utils.ChatUtils
-import cc.pe3epwithyou.trident.utils.WindowExtensions
-import cc.pe3epwithyou.trident.utils.WindowExtensions.focusWindowIfInactive
-import cc.pe3epwithyou.trident.utils.WindowExtensions.isMaximized
+import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions
+import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
+import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.isMaximized
 import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
 

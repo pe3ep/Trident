@@ -2,11 +2,12 @@ package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
-import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedLeft
-import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedRight
 import cc.pe3epwithyou.trident.utils.NoxesiumUtils
 import cc.pe3epwithyou.trident.utils.TridentColor
-import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
+import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedLeft
+import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedRight
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import net.minecraft.client.Minecraft
@@ -37,9 +38,7 @@ class KillBackground(
         val mcFont = client.font
         if (player == null && killMethod != null) {
             val c = Component.literal("${killMethod.icon}")
-                .withStyle(Style.EMPTY
-                    .withFont(TridentFont.getTridentFont())
-                )
+                .withTridentFont()
             StringWidget(c, mcFont).alignCenter().add(LayoutSettings.defaults().apply {
                 padding(4, 3, if (isLeft) 2 else 4, 3)
             })
@@ -47,17 +46,18 @@ class KillBackground(
         }
         val playerUUID = client.playerSocialManager.getDiscoveredUUID(player!!)
         val c = NoxesiumUtils.skullComponent(playerUUID)
-            .append(Component.literal((if (isSelf && Config.KillFeed.showYouInKill) " (YOU) " else " ") + player.uppercase())
-                .withStyle(Style.EMPTY
-                    .withFont(TridentFont.getMCCFont())
-                    .withColor(TridentColor(0xFFFFFF).textColor)
-                )
+            .append(
+                Component.literal((if (isSelf && Config.KillFeed.showYouInKill) " (YOU) " else " ") + player.uppercase())
+                    .mccFont()
+                    .withStyle(
+                        Style.EMPTY
+                            .withColor(TridentColor(0xFFFFFF).textColor)
+                    )
             )
         if (killMethod != null) {
-            c.append(Component.literal(" ${killMethod.icon}")
-                .withStyle(Style.EMPTY
-                    .withFont(TridentFont.getTridentFont())
-                )
+            c.append(
+                Component.literal(" ${killMethod.icon}")
+                    .withTridentFont()
             )
         }
         StringWidget(c, mcFont).alignCenter().add(LayoutSettings.defaults().apply {

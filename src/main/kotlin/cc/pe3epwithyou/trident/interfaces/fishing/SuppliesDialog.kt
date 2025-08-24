@@ -8,9 +8,9 @@ import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
-import cc.pe3epwithyou.trident.utils.ComponentExtensions.withDefault
-import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
-import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
@@ -29,21 +29,23 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     private companion object {
         private val TITLE_COLOR: Int = 0xeb0e30 opacity 127
     }
+
     private fun getWidgetTitle(): DialogTitleWidget {
         val icon = Component.literal("\uE10C")
+            .mccFont("icon")
             .withStyle(
                 Style.EMPTY
-                    .withFont(TridentFont.getMCCFont("icon"))
                     .withShadowColor(0x0 opacity 0)
             )
         val text = Component.literal(" SUPPLIES".uppercase())
-            .withStyle(Style.EMPTY.withFont(TridentFont.getTridentFont("hud_title")))
+            .withTridentFont("hud_title")
 
         val baseTitle = icon.append(text)
 
         return if (TridentClient.playerState.supplies.baitDesynced) {
             val warn = Component.literal(" ⚠")
-                .withStyle(Style.EMPTY.withFont(Style.DEFAULT_FONT).withColor(ChatFormatting.GOLD))
+                .defaultFont()
+                .withStyle(ChatFormatting.GOLD)
             val tooltip = Tooltip.create(
                 Component.literal("Module is not synced").withStyle(ChatFormatting.GOLD)
                     .append(
@@ -63,27 +65,27 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
-        val mccIconStyle = Style.EMPTY.withFont(TridentFont.getTridentFont())
-        val mccFontStyle = Style.EMPTY.withFont(TridentFont.getMCCFont())
         val supplies = TridentClient.playerState.supplies
         val isBaitDesynced = supplies.baitDesynced
 
         if (supplies.needsUpdating) {
             StringWidget(
                 Component.literal("Fishing data missing".uppercase())
-                    .withHudMCC()
+                    .mccFont()
                     .withStyle(ChatFormatting.GOLD),
                 mcFont
             ).atBottom(0, settings = LayoutConstants.CENTRE)
             MultiLineTextWidget(
-                Component.literal("""
+                Component.literal(
+                    """
                     In order to update 
                     the Supplies Module, 
                     please open the following 
                     menu: A.N.G.L.R. Panel -> 
                     Fishing Supplies
-                """.trimIndent())
-                    .withDefault()
+                """.trimIndent()
+                )
+                    .defaultFont()
                     .withStyle(ChatFormatting.GRAY),
                 mcFont
             ).atBottom(0, settings = LayoutConstants.LEFT)
@@ -102,11 +104,11 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         }
 
         val baitComponent = Component.literal(baitIcon)
-            .withStyle(mccIconStyle)
+            .withTridentFont()
             .append(Component.empty().withStyle(ChatFormatting.RESET))
             .append(
                 Component.literal(" $baitAmount")
-                    .withStyle(mccFontStyle)
+                    .mccFont()
                     .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else ChatFormatting.WHITE.color!!)
             )
         StringWidget(baitComponent, mcFont)
@@ -128,9 +130,9 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         }
 
         val lineComponent = Component.literal(lineIcon)
-            .withStyle(mccIconStyle)
+            .withTridentFont()
             .append(Component.empty().withStyle(ChatFormatting.RESET))
-            .append(Component.literal(" $lineDurability/50").withStyle(mccFontStyle))
+            .append(Component.literal(" $lineDurability/50").mccFont())
         StringWidget(lineComponent, mcFont)
             .at(0, 1, settings = LayoutConstants.LEFT)
             .apply {
@@ -139,7 +141,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             }
 
         // Overclocks
-        StringWidget(Component.literal("Overclocks".uppercase()).withStyle(mccFontStyle), mcFont)
+        StringWidget(Component.literal("Overclocks".uppercase()).mccFont(), mcFont)
             .atBottom(0, 2, LayoutConstants.LEFT)
 
         val stableOverclocks = listOfNotNull(
@@ -150,7 +152,8 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         if (stableOverclocks.isEmpty()) {
             StringWidget(
                 Component.literal("OVERCLOCKS UNAVAILABLE")
-                    .withStyle(mccFontStyle.withColor(ChatFormatting.GOLD)),
+                    .mccFont()
+                    .withStyle(ChatFormatting.GOLD),
                 mcFont
             ).atBottom(0, 2, LayoutConstants.LEFT)
         } else {
@@ -166,10 +169,11 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val augmentsTotal = supplies.augmentsAvailable
         StringWidget(
             Component.literal("AUGMENTS ")
-                .withStyle(mccFontStyle)
+                .mccFont()
                 .append(
                     Component.literal("($augmentsEquipped/$augmentsTotal)")
-                        .withStyle(mccFontStyle.withColor(ChatFormatting.GRAY))
+                        .mccFont()
+                        .withStyle(ChatFormatting.GRAY)
                 ),
             mcFont
         ).atBottom(0, 2, settings = LayoutConstants.LEFT)
@@ -183,7 +187,8 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         if (augmentLine.isEmpty()) {
             StringWidget(
                 Component.literal("AUGMENTS UNAVAILABLE")
-                    .withStyle(mccFontStyle.withColor(ChatFormatting.GOLD)),
+                    .mccFont()
+                    .withStyle(ChatFormatting.GOLD),
                 mcFont
             ).atBottom(0, 2, LayoutConstants.LEFT)
         } else {

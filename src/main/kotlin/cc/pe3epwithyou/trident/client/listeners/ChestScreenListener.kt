@@ -13,6 +13,7 @@ import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
+import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -88,7 +89,7 @@ object ChestScreenListener {
         // Process bait slot (slot 19)
         val baitSlot = screen.menu.slots[19]
         val baitItemName = baitSlot.item.displayName.string
-        val baitLore = ItemParser.getLore(baitSlot.item)
+        val baitLore = baitSlot.item.getLore()
 
         if (!baitItemName.contains("Empty Bait Slot")) {
             val baitCount = baitLore.getOrNull(15)?.string
@@ -115,7 +116,7 @@ object ChestScreenListener {
             TridentClient.playerState.supplies.line.uses = null
             TridentClient.playerState.supplies.line.type = Rarity.COMMON
         } else {
-            val lineLore = ItemParser.getLore(lineSlot.item)
+            val lineLore = lineSlot.item.getLore()
             val lineUses = lineLore.getOrNull(15)?.string
                 ?.split(" ")
                 ?.getOrNull(2)

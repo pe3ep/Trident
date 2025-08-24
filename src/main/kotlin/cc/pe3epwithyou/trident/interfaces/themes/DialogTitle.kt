@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.themes
 
-import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedAll
+import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.dialog.Dialog
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget

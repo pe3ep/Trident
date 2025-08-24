@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 
-import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedAll
+import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.Texture
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget

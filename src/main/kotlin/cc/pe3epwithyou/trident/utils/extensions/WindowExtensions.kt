@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.utils
+package cc.pe3epwithyou.trident.utils.extensions
 
 import com.mojang.blaze3d.platform.Window
 import net.minecraft.client.Minecraft

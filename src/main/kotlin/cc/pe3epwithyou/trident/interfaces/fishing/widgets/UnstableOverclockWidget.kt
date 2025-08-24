@@ -10,12 +10,18 @@ import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LinearLayout
 import net.minecraft.network.chat.Component
 
-class UnstableOverclockWidget(width: Int, height: Int, overclockTexture: OverclockTexture, private val marginRight: Int = 0, timeComponent: Component) : CompoundWidget(0, 0, width, height) {
+class UnstableOverclockWidget(
+    width: Int,
+    height: Int,
+    overclockTexture: OverclockTexture,
+    private val marginRight: Int = 0,
+    timeComponent: Component
+) : CompoundWidget(0, 0, width, height) {
     override val layout = LinearLayout(
         LinearLayout.Orientation.HORIZONTAL,
         0,
     ) {
-        val mcfont = Minecraft.getInstance().font
+        val font = Minecraft.getInstance().font
         +ItemWidget(
             Model(
                 overclockTexture.texturePath,
@@ -24,7 +30,7 @@ class UnstableOverclockWidget(width: Int, height: Int, overclockTexture: Overclo
             ),
             marginRight = 2
         )
-        +StringWidget(timeComponent, mcfont).alignLeft()
+        +StringWidget(timeComponent, font).alignLeft()
     }
 
     override fun getHeight(): Int = layout.height

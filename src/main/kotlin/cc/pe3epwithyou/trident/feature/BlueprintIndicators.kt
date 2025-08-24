@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.feature
 
-import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.inventory.Slot
@@ -11,7 +11,7 @@ object BlueprintIndicators {
         if (slot.item.isEmpty) return
         val slotName = slot.item.hoverName.string
         if ("Blueprint: " !in slotName) return
-        val lore = ItemParser.getLore(slot.item)
+        val lore = slot.item.getLore()
         var isNew = true
         lore.forEach { line ->
             if ("Royal Donations" !in line.string) return@forEach

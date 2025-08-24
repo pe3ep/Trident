@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.utils
+package cc.pe3epwithyou.trident.utils.extensions
 
 import net.minecraft.client.gui.GuiGraphics
 

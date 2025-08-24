@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.feature.questing
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.utils.ChatUtils
-import cc.pe3epwithyou.trident.utils.ItemParser.getItemLore
+import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
@@ -15,7 +15,7 @@ object QuestingParser {
 
     fun parseRemainingSlot(slot: Slot): Int {
         val item = slot.item
-        item.getItemLore().forEach { l ->
+        item.getLore().forEach { l ->
             val match = Regex("Remaining (Daily|Weekly) Quests: (\\d+)").find(l.string)
             if (match != null) {
                 val remaining = match.groups[2]?.value?.toIntOrNull() ?: 0
@@ -89,7 +89,7 @@ object QuestingParser {
     }
 
     private fun parseLore(item: ItemStack): List<ParsedQuest> {
-        val lines = item.getItemLore()
+        val lines = item.getLore()
 
         val parsedQuests = mutableListOf<ParsedQuest>()
 

@@ -12,7 +12,7 @@ object ChatUtils {
 
     fun debugLog(s: String) {
         if (Config.Debug.enableLogging) {
-          Trident.LOGGER.info("[Trident] [DEBUG] $s")
+            Trident.LOGGER.info("[Trident] [DEBUG] $s")
         }
     }
 

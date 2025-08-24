@@ -1,13 +1,13 @@
-package cc.pe3epwithyou.trident.widgets.questing
+package cc.pe3epwithyou.trident.interfaces.questing.widgets
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestSubtype
-import cc.pe3epwithyou.trident.utils.ComponentExtensions.withDefault
-import cc.pe3epwithyou.trident.utils.ComponentExtensions.withHudMCC
 import cc.pe3epwithyou.trident.utils.Texture
-import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withFont
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.GridLayout
@@ -38,15 +38,14 @@ class QuestWidget(
         private const val PROGRESS_HALF = ''
         private const val PROGRESS_FULL = ''
 
-        private val segmentStyle = Style.EMPTY.withFont(TridentFont.getMCCFont("icon"))
-        private val spaceStyle = Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("padding"))
-        // Prebuilt Component literals to avoid per-character allocation
-        private val COMP_BLANK: Component = Component.literal(PROGRESS_BLANK.toString()).withStyle(segmentStyle)
-        private val COMP_HALF: Component = Component.literal(PROGRESS_HALF.toString()).withStyle(segmentStyle)
-        private val COMP_FULL: Component = Component.literal(PROGRESS_FULL.toString()).withStyle(segmentStyle)
-        private val COMP_SPACE: Component = Component.literal("\uE001").withStyle(spaceStyle)
+        private val COMP_BLANK: Component = Component.literal(PROGRESS_BLANK.toString()).mccFont("icon")
+        private val COMP_HALF: Component = Component.literal(PROGRESS_HALF.toString()).mccFont("icon")
+        private val COMP_FULL: Component = Component.literal(PROGRESS_FULL.toString()).mccFont("icon")
+        private val COMP_SPACE: Component =
+            Component.literal("\uE001").withFont(ResourceLocation.withDefaultNamespace("padding"))
 
-        private val COMPLETED_QUEST_SPRITE: ResourceLocation = ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/quest_log/quest_complete.png")
+        private val COMPLETED_QUEST_SPRITE: ResourceLocation =
+            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/quest_log/quest_complete.png")
         private const val COMPLETED_QUEST_COLOR: Int = 0x1EFC00
     }
 
@@ -57,7 +56,7 @@ class QuestWidget(
         val mcFont = Minecraft.getInstance().font
 
         val c = Component.literal(quest.display_name.uppercase())
-            .withHudMCC()
+            .mccFont()
         if (Config.Questing.rarityColorName) {
             c.withColor(quest.rarity.color)
         }
@@ -95,21 +94,26 @@ class QuestWidget(
 
         if (!quest.criteria.isTracked) {
             val progress = Component.literal(" ${quest.progress}/${quest.totalProgress} ℹ")
-                .withDefault()
+                .defaultFont()
                 .withStyle(ChatFormatting.GRAY)
             val w = StringWidget(progressComponent.append(progress), mcFont)
-            w.setTooltip(Tooltip.create(Component.literal("""
+            w.setTooltip(
+                Tooltip.create(
+                    Component.literal(
+                        """
                  Due to this quest's objective, Trident is unable to live-update the progress.
                  You can open the Journal to update it
-            """.trimIndent())
-                .withStyle(ChatFormatting.RESET)
-                .withStyle(ChatFormatting.GRAY)
-            ))
+            """.trimIndent()
+                    )
+                        .withStyle(ChatFormatting.RESET)
+                        .withStyle(ChatFormatting.GRAY)
+                )
+            )
             w.atBottom(0, settings = LayoutConstants.LEFT)
             return@GridLayout
         }
         val progress = Component.literal(" ${quest.progress}/${quest.totalProgress}")
-            .withDefault()
+            .defaultFont()
         if (quest.isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
         val w = StringWidget(progressComponent.append(progress), mcFont)
         w.alignLeft()
@@ -182,13 +186,6 @@ class QuestWidget(
         }
 
         override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-//            guiGraphics.fill(
-//                x,
-//                y,
-//                x + this.getWidth(),
-//                y + this.getHeight(),
-//                0xFF0000.opaqueColor()
-//            )
             Texture(
                 sprite,
                 ICON_WIDTH,

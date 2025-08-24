@@ -5,8 +5,8 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIslandState
-import cc.pe3epwithyou.trident.utils.WindowExtensions.focusWindowIfInactive
-import cc.pe3epwithyou.trident.utils.WindowExtensions.requestAttentionIfInactive
+import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
+import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentionIfInactive
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component

@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.interfaces.shared
 
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.utils.ChatUtils
-import cc.pe3epwithyou.trident.utils.GraphicsExtensions.fillRoundedAll
+import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.dialog.Dialog
 import net.minecraft.client.gui.GuiGraphics
 

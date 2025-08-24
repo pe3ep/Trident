@@ -2,10 +2,9 @@ package cc.pe3epwithyou.trident.utils
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.RenderPipelines
-import net.minecraft.client.renderer.RenderType
 import net.minecraft.resources.ResourceLocation
 
-public data class Texture(
+data class Texture(
     val location: ResourceLocation,
     val width: Int,
     val height: Int,
