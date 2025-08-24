@@ -34,13 +34,9 @@ object HITWHandlers {
         }
     }
 
-    fun handle(m: Component) {
-
-    }
-
     fun handlePlacement(m: Component) {
         val match = Regex("(\\d+)(st|nd|rd|th) Place!").find(m.string) ?: return
-        val placement = match.groups[1]?.value?.toInt() ?: return
+        val placement = match.groups[1]?.value?.toIntOrNull() ?: return
 
         // helper to apply increments
         fun inc(criteria: QuestCriteria, amount: Int = 1, tagSuffix: String? = null) {

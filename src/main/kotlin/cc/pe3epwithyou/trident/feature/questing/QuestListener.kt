@@ -75,7 +75,6 @@ object QuestListener {
                 message
             )
             if (MCCIslandState.game == MCCGame.DYNABALL) DynaballHandlers.handle(message)
-            if (MCCIslandState.game == MCCGame.HITW) HITWHandlers.handle(message)
         }
     }
 
