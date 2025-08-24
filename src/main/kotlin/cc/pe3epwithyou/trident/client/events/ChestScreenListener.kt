@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.client.events
 import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.dialogs.DialogCollection
+import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.feature.QuestingParser
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
@@ -76,6 +77,7 @@ object ChestScreenListener {
         val scrollQuests = QuestingParser.parseQuestSlot(scrollSlot)
         quests.addAll(scrollQuests ?: emptyList())
 
+        QuestingDialog.isDesynced = false
         QuestStorage.loadQuests(quests)
     }
 

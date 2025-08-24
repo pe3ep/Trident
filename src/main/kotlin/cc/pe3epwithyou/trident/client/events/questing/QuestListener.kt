@@ -8,11 +8,13 @@ import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents.handl
 import cc.pe3epwithyou.trident.client.events.questing.SurvivorQuestEvents.handlePKWS
 import cc.pe3epwithyou.trident.client.events.questing.TGTTOSQuestEvents.handleTGTTOS
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.WorldUtils.getGameID
+import cc.pe3epwithyou.trident.widgets.questing.QuestStorage
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -70,7 +72,7 @@ object QuestListener {
             if (!Config.Questing.enabled) return@eventHandler
             if (checkIfPlobby()) return@eventHandler
             handleRefreshTasksChat(message)
-
+            checkDesynced(message)
             if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) handlePKWS(message)
             if (MCCIslandState.game == MCCGame.BATTLE_BOX) handleBattleBox(message)
             if (MCCIslandState.game == MCCGame.TGTTOS) handleTGTTOS(message)
@@ -78,6 +80,20 @@ object QuestListener {
             if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) handleRocketSpleefRush(message)
             if (MCCIslandState.game == MCCGame.DYNABALL) handleDynaball(message)
         }
+    }
+
+    fun checkDesynced(m: Component) {
+        val match = Regex("\\(.\\) (Quest Scroll|Quest) Completed! Check your Quest Log for rewards\\.").matches(m.string)
+        if (!match) return
+        if (isAQuestCompleted()) return
+        QuestingDialog.isDesynced = true
+    }
+
+    fun isAQuestCompleted(): Boolean {
+        QuestStorage.getActiveQuests(MCCIslandState.game).forEach { q ->
+            if (q.isCompleted) return true
+        }
+        return false
     }
 
     fun checkIfPlobby(): Boolean {

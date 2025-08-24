@@ -16,6 +16,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.MultiLineTextWidget
 import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -23,6 +24,8 @@ import net.minecraft.network.chat.Style
 class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
     companion object {
         var currentGame = MCCIslandState.game
+        /** If true, the UI will display a warning sign in the title indicating that the progress might be inaccurate */
+        var isDesynced = false
     }
     private fun getTitleWidget(): QuestDialogTitle {
         val icon = Component.literal("\uE279")
@@ -31,11 +34,15 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                     .withFont(TridentFont.getMCCFont("icon"))
                     .withShadowColor(0x0 opacity 0)
             )
-        val title = Component.literal(" Quests".uppercase())
+        val titleText = if (isDesynced) " DESYNCED ⚠" else " QUESTS"
+        val title = Component.literal(titleText)
             .withStyle(
                 Style.EMPTY
                     .withFont(TridentFont.getTridentFont("hud_title"))
             )
+        if (isDesynced) {
+            title.withStyle(ChatFormatting.GOLD)
+        }
 
         val backgroundColor = 0x38AFF opacity 127
         val gameIcon = Component.literal(currentGame.icon.toString())
@@ -43,6 +50,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 Style.EMPTY
                     .withFont(TridentFont.getMCCFont("icon"))
                     .withShadowColor(0x0 opacity 0)
+                    .withColor(ChatFormatting.WHITE)
             )
 
         return QuestDialogTitle(
@@ -51,7 +59,14 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             backgroundColor,
             true,
             game = gameIcon,
-            gameColor = currentGame.primaryColor opacity 127
+            gameColor = currentGame.primaryColor opacity 127,
+            tooltip = if (!isDesynced) null else Tooltip.create(
+                Component.literal("""
+                    Module is not synced.
+                    Trident has detected that quest progress is not up to date. Please open your Quest Log to update it.
+                """.trimIndent())
+                    .withStyle(ChatFormatting.GRAY)
+            )
         )
     }
     override var title = getTitleWidget()
