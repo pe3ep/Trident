@@ -54,10 +54,12 @@ object NoxesiumUtils {
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
         }
         if (currentGame != MCCGame.HUB && currentGame != MCCGame.FISHING) {
-            val k = "questing"
-            if (QuestListener.checkIfPlobby()) return
-            QuestingDialog.currentGame = currentGame
-            DialogCollection.open(k, QuestingDialog(10, 10, k))
+            DelayedAction.delayTicks(20L) {
+                val k = "questing"
+                if (QuestListener.checkIfPlobby()) return@delayTicks
+                QuestingDialog.currentGame = currentGame
+                DialogCollection.open(k, QuestingDialog(10, 10, k))
+            }
         }
         if (currentGame == MCCGame.HUB && game != "" && Config.Questing.showInLobby) {
             val k = "questing"
