@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.mixin.GuiAccessor
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
@@ -14,7 +14,7 @@ object SkyBattleHandlers {
         val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
         QuestStorage.applyIncrement(
             IncrementContext(
-                MCCGame.SKY_BATTLE,
+                Game.SKY_BATTLE,
                 criteria,
                 1,
                 tag
@@ -27,7 +27,7 @@ object SkyBattleHandlers {
         QuestListener.handleTimedQuest(1L, true) {
             QuestStorage.applyIncrement(
                 IncrementContext(
-                    MCCGame.SKY_BATTLE,
+                    Game.SKY_BATTLE,
                     QuestCriteria.SKY_BATTLE_QUADS_SURVIVED_MINUTE,
                     1,
                     "skb_survived_60s"
@@ -40,7 +40,7 @@ object SkyBattleHandlers {
         QuestListener.handleTimedQuest(2L, true) {
             QuestStorage.applyIncrement(
                 IncrementContext(
-                    MCCGame.SKY_BATTLE,
+                    Game.SKY_BATTLE,
                     QuestCriteria.SKY_BATTLE_QUADS_SURVIVED_TWO_MINUTE,
                     1,
                     "skb_survived_2m"

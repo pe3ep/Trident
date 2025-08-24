@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import net.minecraft.network.chat.Component
 
 object HITWHandlers {
@@ -12,7 +12,7 @@ object HITWHandlers {
         QuestListener.handleTimedQuest(1L, true) {
             QuestStorage.applyIncrement(
                 IncrementContext(
-                    MCCGame.HITW,
+                    Game.HITW,
                     QuestCriteria.HOLE_IN_THE_WALL_SURVIVED_MINUTE,
                     1,
                     "hitw_survived_60s"
@@ -25,7 +25,7 @@ object HITWHandlers {
         QuestListener.handleTimedQuest(2L, true) {
             QuestStorage.applyIncrement(
                 IncrementContext(
-                    MCCGame.HITW,
+                    Game.HITW,
                     QuestCriteria.HOLE_IN_THE_WALL_SURVIVED_TWO_MINUTE,
                     1,
                     "hitw_survived_2m"
@@ -43,7 +43,7 @@ object HITWHandlers {
             val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
             QuestStorage.applyIncrement(
                 IncrementContext(
-                    MCCGame.HITW,
+                    Game.HITW,
                     criteria,
                     amount,
                     tag

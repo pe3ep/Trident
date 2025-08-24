@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.state
 
-enum class MCCGame(
+enum class Game(
     val title: String,
     val server: String,
     val subtype: String? = null,

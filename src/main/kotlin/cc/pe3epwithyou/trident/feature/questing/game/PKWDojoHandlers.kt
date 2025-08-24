@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.feature.questing.game
 import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.utils.TimeUtil
 import net.minecraft.network.chat.Component
 import java.util.concurrent.TimeUnit
@@ -32,7 +32,7 @@ object PKWDojoHandlers {
             val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
             QuestStorage.applyIncrement(
                 IncrementContext(
-                    MCCGame.PARKOUR_WARRIOR_DOJO,
+                    Game.PARKOUR_WARRIOR_DOJO,
                     criteria,
                     amount,
                     tag
@@ -44,7 +44,7 @@ object PKWDojoHandlers {
         // Increment total medals banked
         QuestStorage.applyIncrement(
             IncrementContext(
-                MCCGame.PARKOUR_WARRIOR_DOJO,
+                Game.PARKOUR_WARRIOR_DOJO,
                 QuestCriteria.PW_SOLO_TOTAL_MEDALS_BANKED,
                 medals,
                 "medals_banked"
@@ -61,7 +61,7 @@ object PKWDojoHandlers {
         // Increment standard run total (all runs are at least standard)
         QuestStorage.applyIncrement(
             IncrementContext(
-                MCCGame.PARKOUR_WARRIOR_DOJO,
+                Game.PARKOUR_WARRIOR_DOJO,
                 QuestCriteria.PW_SOLO_TOTAL_STANDARD_CMPLS,
                 1,
                 "standard_completion_total"
@@ -72,7 +72,7 @@ object PKWDojoHandlers {
         if (runType >= ADVANCED_CMPL) {
             QuestStorage.applyIncrement(
                 IncrementContext(
-                    MCCGame.PARKOUR_WARRIOR_DOJO,
+                    Game.PARKOUR_WARRIOR_DOJO,
                     QuestCriteria.PW_SOLO_TOTAL_ADVANCED_CMPLS,
                     1,
                     "advanced_completion_total"

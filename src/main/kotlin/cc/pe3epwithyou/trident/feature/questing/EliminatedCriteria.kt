@@ -1,16 +1,16 @@
 package cc.pe3epwithyou.trident.feature.questing
 
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.utils.ChatUtils
 
 object EliminatedCriteria {
-    fun get(game: MCCGame, amount: Int = 1, sourceTag: String? = null): IncrementContext? {
+    fun get(game: Game, amount: Int = 1, sourceTag: String? = null): IncrementContext? {
         val keywords = listOf("PLAYERS_KILLED", "PLAYERS_ELIMINATED", "KILLED", "ELIMINATE")
         val criteria = findForGame(game, keywords)
         return criteria?.let { IncrementContext(game = game, criteria = it, amount = amount, sourceTag = sourceTag) }
     }
 
-    private fun findForGame(game: MCCGame, keywords: List<String>): QuestCriteria? {
+    private fun findForGame(game: Game, keywords: List<String>): QuestCriteria? {
         val gameQuestList = mapGameToGameQuests(game)?.list ?: emptyList()
 
         val upperKeywords = keywords.map { it.uppercase() }
@@ -26,7 +26,7 @@ object EliminatedCriteria {
         return null
     }
 
-    private fun mapGameToGameQuests(game: MCCGame): GameQuests? {
+    private fun mapGameToGameQuests(game: Game): GameQuests? {
         if (game.name in GameQuests.entries.map { v -> v.name }) {
             return GameQuests.valueOf(game.name)
         }

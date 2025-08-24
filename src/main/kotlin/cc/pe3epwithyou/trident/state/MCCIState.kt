@@ -12,8 +12,8 @@ object FishingState {
     var isGrotto: Boolean = false
 }
 
-object MCCIslandState {
-    var game: MCCGame = MCCGame.HUB
+object MCCIState {
+    var game: Game = Game.HUB
     var fishingState: FishingState = FishingState
     fun isOnIsland(): Boolean {
         val server = Minecraft.getInstance().currentServer ?: return false

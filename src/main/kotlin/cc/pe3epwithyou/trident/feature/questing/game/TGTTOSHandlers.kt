@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.mixin.GuiAccessor
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
@@ -14,7 +14,7 @@ object TGTTOSHandlers {
         val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
         QuestStorage.applyIncrement(
             IncrementContext(
-                MCCGame.TGTTOS,
+                Game.TGTTOS,
                 criteria,
                 1,
                 tag

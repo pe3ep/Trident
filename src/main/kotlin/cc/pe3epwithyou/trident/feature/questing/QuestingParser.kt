@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.feature.questing
 
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
@@ -36,17 +36,18 @@ object QuestingParser {
         ChatUtils.debugLog("Model: ${model.path}")
         if (model.path == FINISHED_MAPS ||
             model.path == ADD_SCROLL ||
-            model.path == COMPLETED_QUEST) {
+            model.path == COMPLETED_QUEST
+        ) {
             return null
         }
 
         val rarity = when (model.path.split("/").last()) {
-            "common"    -> Rarity.COMMON
-            "uncommon"  -> Rarity.UNCOMMON
-            "rare"      -> Rarity.RARE
-            "epic"      -> Rarity.EPIC
+            "common" -> Rarity.COMMON
+            "uncommon" -> Rarity.UNCOMMON
+            "rare" -> Rarity.RARE
+            "epic" -> Rarity.EPIC
             "legendary" -> Rarity.LEGENDARY
-            "mythic"    -> Rarity.MYTHIC
+            "mythic" -> Rarity.MYTHIC
             else -> Rarity.COMMON
         }
         ChatUtils.debugLog("Got rarity - $rarity")
@@ -93,7 +94,7 @@ object QuestingParser {
 
         val parsedQuests = mutableListOf<ParsedQuest>()
 
-        var tempGame: MCCGame? = null
+        var tempGame: Game? = null
         var tempCriteria: QuestCriteria? = null
         var tempProgress: Pair<Int, Int>
         var tempQuestString = ""
@@ -141,10 +142,10 @@ object QuestingParser {
         return parsedQuests
     }
 
-    private data class ParsedQuest(val game: MCCGame, val criteria: QuestCriteria, val progress: Pair<Int, Int>)
+    private data class ParsedQuest(val game: Game, val criteria: QuestCriteria, val progress: Pair<Int, Int>)
 
-    private fun getQuestGame(text: String): MCCGame? {
-        MCCGame.entries.forEach { g ->
+    private fun getQuestGame(text: String): Game? {
+        Game.entries.forEach { g ->
             if (g.title in text) return g
         }
         return null

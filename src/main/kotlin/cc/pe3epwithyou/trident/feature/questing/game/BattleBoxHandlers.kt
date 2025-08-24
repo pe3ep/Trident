@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.mixin.GuiAccessor
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
@@ -14,7 +14,7 @@ object BattleBoxHandlers {
         val roundWon = Regex("\\[.] . .+ Team, you won Round \\d! \\[.+]").find(m.string)
         if (roundWon != null) {
             val ctx = IncrementContext(
-                MCCGame.BATTLE_BOX,
+                Game.BATTLE_BOX,
                 QuestCriteria.BATTLE_BOX_QUADS_TEAM_ROUNDS_WON,
                 1,
                 "bb_rounds_won"
@@ -25,7 +25,7 @@ object BattleBoxHandlers {
         val round3started = Regex("^\\[.] Round 3 started!").find(m.string)
         if (round3started != null) {
             val ctx = IncrementContext(
-                MCCGame.BATTLE_BOX,
+                Game.BATTLE_BOX,
                 QuestCriteria.BATTLE_BOX_QUADS_GAMES_PLAYED,
                 1,
                 "bb_games_played"
@@ -47,7 +47,7 @@ object BattleBoxHandlers {
             if (placement > 2) return
 
             val secondPlaceContext = IncrementContext(
-                MCCGame.BATTLE_BOX,
+                Game.BATTLE_BOX,
                 QuestCriteria.BATTLE_BOX_QUADS_TEAM_SECOND_PLACE,
                 1,
                 "bb_second_place"
@@ -56,7 +56,7 @@ object BattleBoxHandlers {
 
             if (placement != 1) return
             val firstPlaceContext = IncrementContext(
-                MCCGame.BATTLE_BOX,
+                Game.BATTLE_BOX,
                 QuestCriteria.BATTLE_BOX_QUADS_TEAM_FIRST_PLACE,
                 1,
                 "bb_first_place"

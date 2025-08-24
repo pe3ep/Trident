@@ -4,8 +4,8 @@ import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.game.*
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
-import cc.pe3epwithyou.trident.state.MCCGame
-import cc.pe3epwithyou.trident.state.MCCIslandState
+import cc.pe3epwithyou.trident.state.Game
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.WorldUtils
@@ -37,8 +37,8 @@ object QuestListener {
 
     fun handleSubtitle(m: Component) {
         if (!Config.Questing.enabled) return
-        if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_DOJO) PKWDojoHandlers.handle(m)
-        if (MCCIslandState.game == MCCGame.HITW) HITWHandlers.handlePlacement(m)
+        if (MCCIState.game == Game.PARKOUR_WARRIOR_DOJO) PKWDojoHandlers.handle(m)
+        if (MCCIState.game == Game.HITW) HITWHandlers.handlePlacement(m)
     }
 
     fun handleTimedQuest(minutes: Long, shouldInterrupt: Boolean = false, action: () -> Unit) {
@@ -67,14 +67,14 @@ object QuestListener {
             if (checkIfPlobby()) return@eventHandler
             handleRefreshTasksChat(message)
             checkDesynced(message)
-            if (MCCIslandState.game == MCCGame.PARKOUR_WARRIOR_SURVIVOR) PKWSurvivorHandlers.handle(message)
-            if (MCCIslandState.game == MCCGame.BATTLE_BOX) BattleBoxHandlers.handle(message)
-            if (MCCIslandState.game == MCCGame.TGTTOS) TGTTOSHandlers.handle(message)
-            if (MCCIslandState.game == MCCGame.SKY_BATTLE) SkyBattleHandlers.handle(message)
-            if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) RSRHandlers.handle(
+            if (MCCIState.game == Game.PARKOUR_WARRIOR_SURVIVOR) PKWSurvivorHandlers.handle(message)
+            if (MCCIState.game == Game.BATTLE_BOX) BattleBoxHandlers.handle(message)
+            if (MCCIState.game == Game.TGTTOS) TGTTOSHandlers.handle(message)
+            if (MCCIState.game == Game.SKY_BATTLE) SkyBattleHandlers.handle(message)
+            if (MCCIState.game == Game.ROCKET_SPLEEF_RUSH) RSRHandlers.handle(
                 message
             )
-            if (MCCIslandState.game == MCCGame.DYNABALL) DynaballHandlers.handle(message)
+            if (MCCIState.game == Game.DYNABALL) DynaballHandlers.handle(message)
         }
     }
 
@@ -87,7 +87,7 @@ object QuestListener {
     }
 
     fun isAQuestCompleted(): Boolean {
-        QuestStorage.getActiveQuests(MCCIslandState.game).forEach { q ->
+        QuestStorage.getActiveQuests(MCCIState.game).forEach { q ->
             if (q.isCompleted) return true
         }
         return false

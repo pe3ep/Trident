@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.feature.questing
 
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.WorldUtils
 import java.util.*
@@ -9,16 +9,16 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 object QuestStorage {
-    private val store: MutableMap<MCCGame, MutableList<Quest>> = ConcurrentHashMap()
+    private val store: MutableMap<Game, MutableList<Quest>> = ConcurrentHashMap()
     private val lastOperation: MutableMap<QuestCriteria, UUID> = ConcurrentHashMap()
     var dailyRemaining: Int = 0
     var weeklyRemaining: Int = 0
 
     init {
-        for (g in MCCGame.entries) store[g] = CopyOnWriteArrayList()
+        for (g in Game.entries) store[g] = CopyOnWriteArrayList()
     }
 
-    fun getActiveQuests(game: MCCGame): List<Quest> = store[game]?.toList() ?: emptyList()
+    fun getActiveQuests(game: Game): List<Quest> = store[game]?.toList() ?: emptyList()
 
     /**
      * Clear all current stored quests and replace them with the provided list.
@@ -29,7 +29,7 @@ object QuestStorage {
      */
     fun loadQuests(quests: List<Quest>) {
         // Clear each game's list (preserves map keys)
-        for (g in MCCGame.entries) {
+        for (g in Game.entries) {
             store[g]?.clear() ?: store.put(g, CopyOnWriteArrayList())
         }
 

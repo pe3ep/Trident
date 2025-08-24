@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
 import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
 import cc.pe3epwithyou.trident.feature.RaritySlot;
-import cc.pe3epwithyou.trident.state.MCCIslandState;
+import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.DebugDraw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,9 +25,8 @@ public class AbstractContainerScreenMixin extends Screen {
     }
 
     @Inject(method = "renderSlot", at = @At(value = "HEAD"))
-    public void renderSlot(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci)
-    {
-        if (!MCCIslandState.INSTANCE.isOnIsland()) return;
+    public void renderSlot(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci) {
+        if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getRarityOverlay()) {
             RaritySlot.INSTANCE.render(guiGraphics, slot);
         }
@@ -35,7 +34,7 @@ public class AbstractContainerScreenMixin extends Screen {
 
     @Inject(method = "renderSlot", at = @At(value = "TAIL"))
     public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci) {
-        if (!MCCIslandState.INSTANCE.isOnIsland()) return;
+        if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
             BlueprintIndicators.INSTANCE.checkLore(guiGraphics, slot);
         }
@@ -45,9 +44,8 @@ public class AbstractContainerScreenMixin extends Screen {
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))
-    public void onClose(CallbackInfo ci)
-    {
-        if (!MCCIslandState.INSTANCE.isOnIsland()) return;
+    public void onClose(CallbackInfo ci) {
+        if (!MCCIState.INSTANCE.isOnIsland()) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.screen instanceof ContainerScreen s) {

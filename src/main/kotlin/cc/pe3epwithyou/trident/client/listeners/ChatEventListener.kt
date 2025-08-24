@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
-import cc.pe3epwithyou.trident.state.MCCIslandState
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentionIfInactive
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
@@ -36,15 +36,19 @@ object ChatEventListener {
     private fun Component.isIconMessage() = Regex("^\\s*. (Triggered|Special): .+").matches(this.string)
     private fun Component.isXPMessage() = Regex("^\\s*. You earned: .+").matches(this.string)
     private fun Component.isReceivedItem() = Regex("^\\(.\\) You receive: .+").matches(this.string)
-    private fun Component.isDepletedSpot() = Regex("^\\[.] This spot is Depleted, so you can no longer fish here\\.").matches(this.string)
-    private fun Component.isOutOfGrotto() = Regex("^\\[.] Your Grotto has become unstable, teleporting you back to safety\\.\\.\\.").matches(this.string)
+    private fun Component.isDepletedSpot() =
+        Regex("^\\[.] This spot is Depleted, so you can no longer fish here\\.").matches(this.string)
+
+    private fun Component.isOutOfGrotto() =
+        Regex("^\\[.] Your Grotto has become unstable, teleporting you back to safety\\.\\.\\.").matches(this.string)
+
     private fun Component.isStockReplenished() = Regex("^\\[.] Fishing Spot Stock replenished!").matches(this.string)
 
     private fun Component.isPKWLeapFinished() = Regex("^\\[.] Leap \\d ended! .+").matches(this.string)
 
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowMessage@{ message, _ ->
-            if (!MCCIslandState.isOnIsland()) return@allowMessage true
+            if (!MCCIState.isOnIsland()) return@allowMessage true
 //            PKW messages
             if (message.isPKWLeapFinished() && Config.Games.autoFocus) {
                 Minecraft.getInstance().window.focusWindowIfInactive()

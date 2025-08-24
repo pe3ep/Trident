@@ -12,7 +12,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
-import cc.pe3epwithyou.trident.state.MCCIslandState
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
@@ -45,83 +45,94 @@ class TridentClient : ClientModInitializer {
         lateinit var settingsKeymapping: KeyMapping
         var jokeCooldown: Boolean = false
     }
-    private val debugCommands: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal("trident")
-        .then(ClientCommandManager.literal("open").then(
-            ClientCommandManager.argument("dialog", StringArgumentType.string())
-                .suggests { _, builder ->
-                    debugDialogs.keys.forEach(builder::suggest)
-                    builder.buildFuture()
-                }
-                .executes { ctx ->
-                    if (!Config.Debug.enableLogging && !MCCIslandState.isOnIsland()) {
-                        ChatUtils.sendMessage(Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR))
-                        return@executes 0
+
+    private val debugCommands: LiteralArgumentBuilder<FabricClientCommandSource> =
+        ClientCommandManager.literal("trident")
+            .then(
+                ClientCommandManager.literal("open").then(
+                    ClientCommandManager.argument("dialog", StringArgumentType.string())
+                    .suggests { _, builder ->
+                        debugDialogs.keys.forEach(builder::suggest)
+                        builder.buildFuture()
                     }
-                    debugDialogs[ctx.getArgument("dialog", String::class.java)]?.let {
-                        val key = ctx.getArgument("dialog", String::class.java)
-                        DialogCollection.open(key, it(10, 10, key))
+                    .executes { ctx ->
+                        if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
+                            ChatUtils.sendMessage(
+                                Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
+                            )
+                            return@executes 0
+                        }
+                        debugDialogs[ctx.getArgument("dialog", String::class.java)]?.let {
+                            val key = ctx.getArgument("dialog", String::class.java)
+                            DialogCollection.open(key, it(10, 10, key))
+                        }
+                        0
                     }
-                    0
-                }
-        )).then(ClientCommandManager.literal("close").then(
-            ClientCommandManager.argument("dialog", StringArgumentType.string())
-                .suggests { _, builder ->
-                    debugDialogs.keys.forEach(builder::suggest)
-                    builder.buildFuture()
-                }
-                .executes { ctx ->
-                    if (!Config.Debug.enableLogging && !MCCIslandState.isOnIsland()) {
-                        ChatUtils.sendMessage(Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR))
-                        return@executes 0
+            )).then(
+                ClientCommandManager.literal("close").then(
+                    ClientCommandManager.argument("dialog", StringArgumentType.string())
+                    .suggests { _, builder ->
+                        debugDialogs.keys.forEach(builder::suggest)
+                        builder.buildFuture()
                     }
-                    DialogCollection.close(ctx.getArgument("dialog", String::class.java))
-                    0
-                }
-        )).then(ClientCommandManager.literal("resetDialogPositions")
-            .executes { _ ->
-                DialogCollection.resetDialogPositions()
-                val c = Component.literal("Saved dialog positions have been ")
-                    .withColor(TridentFont.TRIDENT_COLOR)
-                    .append(Component.literal("successfully reset")
-                        .withColor(TridentFont.TRIDENT_ACCENT)
-                    )
-                ChatUtils.sendMessage(c, true)
-                0
-            }
-        ).then(ClientCommandManager.literal("autofish")
-            .executes { _ ->
-                if (jokeCooldown) return@executes 0
-                jokeCooldown = true
-                ChatUtils.sendMessage("Requesting autofish.jar...")
-                DelayedAction.delayTicks(60L) {
-                    ChatUtils.sendMessage("Received a response from the server")
-                }
-                DelayedAction.delayTicks(100L) {
-                    ChatUtils.sendMessage("It states the following:")
-                }
-                DelayedAction.delayTicks(120L) {
-                    ChatUtils.sendMessage(
-                        Component.literal("Did you really just try to enable autofishing?")
-                            .withStyle(ChatFormatting.AQUA)
-                    )
-                }
-                DelayedAction.delayTicks(180L) {
-                    ChatUtils.sendMessage(
-                        Component.literal("Are we serious right meow bro?")
-                            .withStyle(ChatFormatting.AQUA)
-                    )
-                }
-                DelayedAction.delayTicks(240L) {
-                    ChatUtils.sendMessage(
-                        Component.literal("This incident will be reported.")
-                            .withStyle(ChatFormatting.DARK_RED)
-                            .withStyle(ChatFormatting.BOLD)
-                    )
-                    jokeCooldown = false
-                }
-                0
-            }
-        )
+                    .executes { ctx ->
+                        if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
+                            ChatUtils.sendMessage(
+                                Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
+                            )
+                            return@executes 0
+                        }
+                        DialogCollection.close(ctx.getArgument("dialog", String::class.java))
+                        0
+                    }
+            )).then(
+                ClientCommandManager.literal("resetDialogPositions")
+                    .executes { _ ->
+                        DialogCollection.resetDialogPositions()
+                        val c = Component.literal("Saved dialog positions have been ")
+                            .withColor(TridentFont.TRIDENT_COLOR)
+                            .append(
+                                Component.literal("successfully reset")
+                                    .withColor(TridentFont.TRIDENT_ACCENT)
+                            )
+                        ChatUtils.sendMessage(c, true)
+                        0
+                    }
+            ).then(
+                ClientCommandManager.literal("autofish")
+                    .executes { _ ->
+                        if (jokeCooldown) return@executes 0
+                        jokeCooldown = true
+                        ChatUtils.sendMessage("Requesting autofish.jar...")
+                        DelayedAction.delayTicks(60L) {
+                            ChatUtils.sendMessage("Received a response from the server")
+                        }
+                        DelayedAction.delayTicks(100L) {
+                            ChatUtils.sendMessage("It states the following:")
+                        }
+                        DelayedAction.delayTicks(120L) {
+                            ChatUtils.sendMessage(
+                                Component.literal("Did you really just try to enable autofishing?")
+                                    .withStyle(ChatFormatting.AQUA)
+                            )
+                        }
+                        DelayedAction.delayTicks(180L) {
+                            ChatUtils.sendMessage(
+                                Component.literal("Are we serious right meow bro?")
+                                    .withStyle(ChatFormatting.AQUA)
+                            )
+                        }
+                        DelayedAction.delayTicks(240L) {
+                            ChatUtils.sendMessage(
+                                Component.literal("This incident will be reported.")
+                                    .withStyle(ChatFormatting.DARK_RED)
+                                    .withStyle(ChatFormatting.BOLD)
+                            )
+                            jokeCooldown = false
+                        }
+                        0
+                    }
+            )
 
     override fun onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
@@ -147,7 +158,7 @@ class TridentClient : ClientModInitializer {
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->
-            if (!MCCIslandState.isOnIsland()) return@EndTick
+            if (!MCCIState.isOnIsland()) return@EndTick
             if (!settingsKeymapping.consumeClick() || client.player == null) return@EndTick
             client.setScreen(Config.getScreen(client.screen))
         })

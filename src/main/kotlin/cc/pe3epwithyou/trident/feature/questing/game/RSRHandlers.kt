@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import net.minecraft.network.chat.Component
 
 object RSRHandlers {
@@ -12,7 +12,7 @@ object RSRHandlers {
         val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
         QuestStorage.applyIncrement(
             IncrementContext(
-                MCCGame.ROCKET_SPLEEF_RUSH,
+                Game.ROCKET_SPLEEF_RUSH,
                 criteria,
                 1,
                 tag
@@ -25,7 +25,7 @@ object RSRHandlers {
         QuestListener.handleTimedQuest(1L, true) {
             QuestStorage.applyIncrement(
                 IncrementContext(
-                    MCCGame.ROCKET_SPLEEF_RUSH,
+                    Game.ROCKET_SPLEEF_RUSH,
                     QuestCriteria.ROCKET_SPLEEF_SURVIVE_60S,
                     1,
                     "rsr_survived_60s"

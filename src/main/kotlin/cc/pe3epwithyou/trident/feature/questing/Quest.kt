@@ -1,12 +1,12 @@
 package cc.pe3epwithyou.trident.feature.questing
 
 import cc.pe3epwithyou.trident.feature.questing.QuestCriteria.*
-import cc.pe3epwithyou.trident.state.MCCGame
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.Rarity
 import net.minecraft.resources.ResourceLocation
 
 class Quest(
-    val game: MCCGame,
+    val game: Game,
     val type: QuestType,
     val subtype: QuestSubtype,
     val rarity: Rarity,

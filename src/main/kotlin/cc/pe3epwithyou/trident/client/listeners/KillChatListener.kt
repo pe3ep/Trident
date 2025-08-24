@@ -9,8 +9,8 @@ import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
-import cc.pe3epwithyou.trident.state.MCCGame
-import cc.pe3epwithyou.trident.state.MCCIslandState
+import cc.pe3epwithyou.trident.state.Game
+import cc.pe3epwithyou.trident.state.MCCIState
 import com.noxcrew.sheeplib.util.opacity
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.Util
@@ -53,7 +53,7 @@ object KillChatListener {
 
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
-            if (!MCCIslandState.isOnIsland()) return@allowGame true
+            if (!MCCIState.isOnIsland()) return@allowGame true
 
             if (slainRegex.matches(message.string)) {
                 return@allowGame handleKill(message, KillMethod.MELEE)
@@ -78,7 +78,8 @@ object KillChatListener {
             if (loggedOut.matches(message.string) ||
                 loggedOutToGetAway.matches(message.string) ||
                 disconnected.matches(message.string) ||
-                hasNotRejoined.matches(message.string)) {
+                hasNotRejoined.matches(message.string)
+            ) {
                 return@allowGame handleKill(message, KillMethod.DISCONNECT)
             }
 
@@ -93,7 +94,8 @@ object KillChatListener {
             if (prickedRegex.matches(message.string) ||
                 prickedSelfRegex.matches(message.string) ||
                 suffocate.matches(message.string) ||
-                suffocateSelf.matches(message.string)) {
+                suffocateSelf.matches(message.string)
+            ) {
                 return@allowGame handleKill(message, KillMethod.GENERIC)
             }
 
@@ -104,7 +106,8 @@ object KillChatListener {
             if (walkedFire.matches(message.string) ||
                 fireSelf.matches(message.string) ||
                 burnedRegex.matches(message.string) ||
-                burnedSelfRegex.matches(message.string)) {
+                burnedSelfRegex.matches(message.string)
+            ) {
                 return@allowGame handleKill(message, KillMethod.GENERIC)
             }
 
@@ -121,32 +124,34 @@ object KillChatListener {
         /* Call the event for external use */
         KillEvents.KILL.invoker().onKill(
             KillEvents.KillEventPlayer(
-            victim.string,
-            victim.style.color?.value ?: fallbackColor
-        ), if (attacker == null) null else KillEvents.KillEventPlayer(
-            attacker.string,
-            attacker.style.color?.value ?: fallbackColor
-        ),
-            method)
+                victim.string,
+                victim.style.color?.value ?: fallbackColor
+            ), if (attacker == null) null else KillEvents.KillEventPlayer(
+                attacker.string,
+                attacker.style.color?.value ?: fallbackColor
+            ),
+            method
+        )
 
-        if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL, MCCGame.SKY_BATTLE)) return true
+        if (MCCIState.game !in listOf(Game.BATTLE_BOX, Game.DYNABALL, Game.SKY_BATTLE)) return true
 
         if (attacker != null) {
-    //        Questing
+            //        Questing
             val self = Minecraft.getInstance().player ?: return true
             if (attacker.string == self.name.string) {
-                val game = MCCIslandState.game
+                val game = MCCIState.game
                 val ctx = EliminatedCriteria.get(game, sourceTag = "kill") ?: return true
                 QuestStorage.applyIncrement(ctx, true)
 
-                if (method == KillMethod.RANGE && game == MCCGame.BATTLE_BOX) {
+                if (method == KillMethod.RANGE && game == Game.BATTLE_BOX) {
                     QuestStorage.applyIncrement(
                         IncrementContext(
-                            MCCGame.BATTLE_BOX,
+                            Game.BATTLE_BOX,
                             QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS,
                             1,
                             "bb_ranged_kill"
-                        ), true)
+                        ), true
+                    )
                 }
             }
 

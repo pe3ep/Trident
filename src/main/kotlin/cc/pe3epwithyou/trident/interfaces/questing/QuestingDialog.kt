@@ -4,8 +4,8 @@ import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.questing.widgets.QuestWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
-import cc.pe3epwithyou.trident.state.MCCGame
-import cc.pe3epwithyou.trident.state.MCCIslandState
+import cc.pe3epwithyou.trident.state.Game
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import com.noxcrew.sheeplib.LayoutConstants
@@ -23,7 +23,7 @@ import net.minecraft.network.chat.Style
 
 class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
     companion object {
-        var currentGame = MCCIslandState.game
+        var currentGame = MCCIState.game
 
         /** If true, the UI will display a warning sign in the title indicating that the progress might be inaccurate */
         var isDesynced = false
@@ -78,7 +78,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
         val quests = QuestStorage.getActiveQuests(currentGame)
 
-        if (currentGame == MCCGame.HUB || currentGame == MCCGame.FISHING) {
+        if (currentGame == Game.HUB || currentGame == Game.FISHING) {
             MultiLineTextWidget(
                 Component.literal("Join a game to\nview quests".uppercase()).mccFont()
                     .withColor(ChatFormatting.GRAY.color!!),
