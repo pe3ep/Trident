@@ -1,8 +1,8 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
+import cc.pe3epwithyou.trident.interfaces.shared.widgets.ItemWidget
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.Model
-import cc.pe3epwithyou.trident.widgets.ItemWidget
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import net.minecraft.client.gui.layouts.LinearLayout

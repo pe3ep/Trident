@@ -23,22 +23,12 @@ import net.minecraft.network.chat.MutableComponent
 import java.util.*
 
 object NoxesiumUtils {
-
     fun skullComponent(
-        uuid: UUID,
-        grayscale: Boolean = false,
-        advance: Int = 0,
-        ascent: Int = 0,
-        scale: Float = 1.0F
+        uuid: UUID, grayscale: Boolean = false, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F
     ): MutableComponent {
         return MutableComponent.create(
             SkullContents(
-                Optional.of(uuid),
-                Optional.empty(),
-                grayscale,
-                advance,
-                ascent,
-                scale
+                Optional.of(uuid), Optional.empty(), grayscale, advance, ascent, scale
             )
         )
     }
@@ -113,11 +103,9 @@ object NoxesiumUtils {
             )
 
 
-            if (Config.Debug.logForScrapers) (
-                ChatUtils.info(
-                    "Got Nox packet CLIENT_MCC_SERVER: serverType:$server subType:$type associatedGame:$game"
-                )
-            )
+            if (Config.Debug.logForScrapers) (ChatUtils.info(
+                "Got Nox packet CLIENT_MCC_SERVER: serverType:$server subType:$type associatedGame:$game"
+            ))
 
             updateFishingState(type)
 
@@ -148,9 +136,8 @@ object NoxesiumUtils {
                 totalRounds: ${packet.totalRounds}
                 """.trimIndent()
             )
-            if (Config.Debug.logForScrapers) (
-                ChatUtils.info(
-                    """
+            if (Config.Debug.logForScrapers) (ChatUtils.info(
+                """
                         Got Nox packet CLIENT_MCC_GAME_STATE:
                         mapID:${packet.mapId}
                         mapName:${packet.mapName}
@@ -158,9 +145,8 @@ object NoxesiumUtils {
                         stage:${packet.stage}
                         phaseType:${packet.phaseType}
                         totalRounds:${packet.totalRounds}
-                    """.trimIndent()
-                )
-            )
+                """.trimIndent()
+            ))
         }
     }
 
@@ -195,10 +181,7 @@ object NoxesiumUtils {
 
         MCCGame.entries.forEach { mccGame ->
             if (mccGame in listOf(
-                    MCCGame.HUB,
-                    MCCGame.FISHING,
-                    MCCGame.PARKOUR_WARRIOR_DOJO,
-                    MCCGame.PARKOUR_WARRIOR_SURVIVOR
+                    MCCGame.HUB, MCCGame.FISHING, MCCGame.PARKOUR_WARRIOR_DOJO, MCCGame.PARKOUR_WARRIOR_SURVIVOR
                 )
             ) return@forEach
 

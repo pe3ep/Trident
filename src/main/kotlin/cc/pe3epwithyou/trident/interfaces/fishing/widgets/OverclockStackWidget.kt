@@ -1,12 +1,12 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
 import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.interfaces.shared.widgets.ItemWidget
 import cc.pe3epwithyou.trident.state.Overclock
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
-import cc.pe3epwithyou.trident.widgets.ItemWidget
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import net.minecraft.client.gui.layouts.LinearLayout

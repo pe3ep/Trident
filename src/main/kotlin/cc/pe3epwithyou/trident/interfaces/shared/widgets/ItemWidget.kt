@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.widgets
+package cc.pe3epwithyou.trident.interfaces.shared.widgets
 
 import cc.pe3epwithyou.trident.utils.Model
 import net.minecraft.client.gui.GuiGraphics
