@@ -1,9 +1,9 @@
 package cc.pe3epwithyou.trident.feature.questing
 
-import cc.pe3epwithyou.trident.client.events.ChestScreenListener
+import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.feature.questing.game.*
+import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.utils.ChatUtils

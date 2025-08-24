@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.dialogs.DialogCollection;
+import cc.pe3epwithyou.trident.interfaces.DialogCollection;
 import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.protocol.login.ClientboundLoginFinishedPacket;
@@ -20,7 +20,7 @@ public class JoinIslandMixin {
     private void loginFinished(ClientboundLoginFinishedPacket clientboundLoginFinishedPacket, CallbackInfo ci) {
 //        Close all dialogs before joining the server
         DialogCollection.INSTANCE.clear();
-        if (this.serverData == null) return;
-        if (!this.serverData.ip.toLowerCase().contains("mccisland.net")) return;
+//        if (this.serverData == null) return;
+//        if (!this.serverData.ip.toLowerCase().contains("mccisland.net")) return;
     }
 }

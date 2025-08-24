@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.client.events.ChestScreenListener;
+import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
 import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
 import cc.pe3epwithyou.trident.feature.RaritySlot;

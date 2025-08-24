@@ -1,17 +1,17 @@
 package cc.pe3epwithyou.trident.client
 
-import cc.pe3epwithyou.trident.client.events.ChatEventListener
-import cc.pe3epwithyou.trident.client.events.ChestScreenListener
-import cc.pe3epwithyou.trident.client.events.KillChatListener
 import cc.pe3epwithyou.trident.client.events.QuestingEvents
+import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
+import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
+import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.dialogs.DialogCollection
-import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
-import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
-import cc.pe3epwithyou.trident.feature.DepletedDisplay
-import cc.pe3epwithyou.trident.feature.SupplyWidgetTimer
+import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
+import cc.pe3epwithyou.trident.feature.fishing.SuppliesModuleTimer
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
+import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
+import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.MCCIslandState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
@@ -140,7 +140,7 @@ class TridentClient : ClientModInitializer {
         ChatEventListener.register()
         ChestScreenListener.register()
         DepletedDisplay.DepletedTimer.register()
-        SupplyWidgetTimer.register()
+        SuppliesModuleTimer.register()
         KillChatListener.register()
         DelayedAction.init()
         QuestListener.register()

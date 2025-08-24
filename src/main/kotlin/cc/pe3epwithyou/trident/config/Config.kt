@@ -1,8 +1,8 @@
 package cc.pe3epwithyou.trident.config
 
-import cc.pe3epwithyou.trident.dialogs.DialogCollection
-import cc.pe3epwithyou.trident.dialogs.themes.TridentThemes
-import cc.pe3epwithyou.trident.widgets.killfeed.Position
+import cc.pe3epwithyou.trident.feature.killfeed.Position
+import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry

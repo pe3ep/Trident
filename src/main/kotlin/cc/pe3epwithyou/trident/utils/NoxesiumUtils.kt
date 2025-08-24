@@ -1,16 +1,16 @@
 package cc.pe3epwithyou.trident.utils
 
-import cc.pe3epwithyou.trident.client.events.KillChatListener
+import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.dialogs.DialogCollection
-import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
-import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
-import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.game.DynaballHandlers
 import cc.pe3epwithyou.trident.feature.questing.game.HITWHandlers
 import cc.pe3epwithyou.trident.feature.questing.game.RSRHandlers
 import cc.pe3epwithyou.trident.feature.questing.game.SkyBattleHandlers
+import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
+import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
+import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.MCCGame
 import cc.pe3epwithyou.trident.state.MCCIslandState

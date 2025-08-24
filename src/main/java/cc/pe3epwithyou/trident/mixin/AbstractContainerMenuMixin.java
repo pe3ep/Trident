@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.client.events.SlotClickListener;
+import cc.pe3epwithyou.trident.client.listeners.SlotClickListener;
 import cc.pe3epwithyou.trident.state.MCCIslandState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
