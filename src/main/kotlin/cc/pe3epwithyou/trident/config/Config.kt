@@ -84,6 +84,9 @@ class Config {
     @SerialEntry
     var questingShowLeft: Boolean = true
 
+    @SerialEntry
+    var questingHideIfNoQuests: Boolean = false
+
     object Global {
         val rarityOverlay: Boolean
             get() = handler.instance().globalRarityOverlay
@@ -150,6 +153,8 @@ class Config {
             get() = handler.instance().questingShowInLobby
         val showLeft: Boolean
             get() = handler.instance().questingShowLeft
+        val hideIfNoQuests: Boolean
+            get() = handler.instance().questingHideIfNoQuests
     }
 
     companion object {
@@ -184,10 +189,16 @@ class Config {
 
                     options.register<Boolean>("rarity_overlay") {
                         name(Component.translatable("config.trident.global.rarity_overlay.name"))
-                        description(OptionDescription.createBuilder()
-                            .text(Component.translatable("config.trident.global.rarity_overlay.description"))
-                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/rarity_overlay.png"), 120, 88)
-                            .build()
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.global.rarity_overlay.description"))
+                                .image(
+                                    ResourceLocation.fromNamespaceAndPath(
+                                        "trident",
+                                        "textures/config/rarity_overlay.png"
+                                    ), 120, 88
+                                )
+                                .build()
                         )
                         binding(handler.instance()::globalRarityOverlay, false)
                         controller(tickBox())
@@ -195,10 +206,16 @@ class Config {
 
                     options.register<Boolean>("blueprint_indicators") {
                         name(Component.translatable("config.trident.global.blueprint_indicators.name"))
-                        description(OptionDescription.createBuilder()
-                            .text(Component.translatable("config.trident.global.blueprint_indicators.description"))
-                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/blueprint_indicators.png"), 405, 316)
-                            .build()
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.global.blueprint_indicators.description"))
+                                .image(
+                                    ResourceLocation.fromNamespaceAndPath(
+                                        "trident",
+                                        "textures/config/blueprint_indicators.png"
+                                    ), 405, 316
+                                )
+                                .build()
                         )
                         binding(handler.instance()::globalBlueprintIndicators, true)
                         controller(tickBox())
@@ -206,10 +223,15 @@ class Config {
 
                     options.register<TridentThemes>("theme") {
                         name(Component.translatable("config.trident.global.theme.name"))
-                        description(OptionDescription.createBuilder()
-                            .text(Component.translatable("config.trident.global.theme.description"))
-                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/theme.png"), 497, 329)
-                            .build()
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.global.theme.description"))
+                                .image(
+                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/theme.png"),
+                                    497,
+                                    329
+                                )
+                                .build()
                         )
                         binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
                         controller(enumSwitch<TridentThemes> { v -> v.displayName })
@@ -234,10 +256,15 @@ class Config {
 
                     options.register<Boolean>("killfeed_enabled") {
                         name(Component.translatable("config.trident.killfeed.enabled.name"))
-                        description(OptionDescription.createBuilder()
-                            .text(Component.translatable("config.trident.killfeed.enabled.description"))
-                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/killfeed.png"), 618, 332)
-                            .build()
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.killfeed.enabled.description"))
+                                .image(
+                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/killfeed.png"),
+                                    618,
+                                    332
+                                )
+                                .build()
                         )
                         binding(handler.instance()::killfeedEnabled, true)
                         controller(tickBox())
@@ -306,10 +333,15 @@ class Config {
 
                     options.register<Boolean>("questing_enabled") {
                         name(Component.translatable("config.trident.questing.enabled.name"))
-                        description(OptionDescription.createBuilder()
-                            .text(Component.translatable("config.trident.questing.enabled.description"))
-                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/questing.png"), 414, 338)
-                            .build()
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.questing.enabled.description"))
+                                .image(
+                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/questing.png"),
+                                    414,
+                                    338
+                                )
+                                .build()
                         )
                         binding(handler.instance()::questingEnabled, true)
                         controller(tickBox())
@@ -335,6 +367,13 @@ class Config {
                         binding(handler.instance()::questingShowLeft, true)
                         controller(tickBox())
                     }
+
+                    options.register<Boolean>("questing_hide_if_no_quests") {
+                        name(Component.translatable("config.trident.questing.hide_if_no_quests.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.questing.hide_if_no_quests.description")))
+                        binding(handler.instance()::questingHideIfNoQuests, false)
+                        controller(tickBox())
+                    }
                 }
 
                 groups.register("fishing") {
@@ -343,10 +382,15 @@ class Config {
 
                     options.register<Boolean>("supplies_module") {
                         name(Component.translatable("config.trident.fishing.supplies_module.name"))
-                        description(OptionDescription.createBuilder()
-                            .text(Component.translatable("config.trident.fishing.supplies_module.description"))
-                            .image(ResourceLocation.fromNamespaceAndPath("trident", "textures/config/supplies.png"), 507, 333)
-                            .build()
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.fishing.supplies_module.description"))
+                                .image(
+                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/supplies.png"),
+                                    507,
+                                    333
+                                )
+                                .build()
                         )
                         binding(handler.instance()::fishingSuppliesModule, true)
                         controller(tickBox())

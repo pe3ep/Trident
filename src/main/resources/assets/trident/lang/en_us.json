@@ -1,6 +1,5 @@
 {
   "config.trident": "Trident",
-
   "config.trident.debug": "Debug",
   "config.trident.debug.description": "Options dedicated for the development of Trident.",
   "config.trident.debug.enable_logging.name": "Enable logging",
@@ -9,89 +8,59 @@
   "config.trident.debug.draw_slot_number.description": "Draws slot's index in it's top left corner",
   "config.trident.debug.log_for_scrapers.name": "Logs for Scraping",
   "config.trident.debug.log_for_scrapers.description": "Dumps Noxesium packets into logs for people to later read from.\n\nAvoid enabling this option with logging, as it can cause the logs to be spammed quite a lot.",
-
-
   "config.trident.global.name": "Global Settings",
   "config.trident.global.description": "Universal non-game specific settings that apply across MCC Island.",
-
   "config.trident.global.rarity_overlay.name": "Rarity Overlay",
   "config.trident.global.rarity_overlay.description": "Displays an outline around the item in its slot, matching the item's rarity color.",
-
   "config.trident.global.blueprint_indicators.name": "Blueprint Indicators",
   "config.trident.global.blueprint_indicators.description": "Displays icons based on blueprint's ownership status.\n\nTick Icon - Blueprint has maxed royal donations\nDiamond icon - Blueprint is not owned by player",
-
   "config.trident.global.theme.name": "Module theme",
   "config.trident.global.theme.description": "Changes the current theme that Modules are using.",
-
-
   "config.trident.fishing.name": "Fishing Modules",
   "config.trident.fishing.description": "Modules that apply to the Fishing game",
-
   "config.trident.fishing.supplies_module.name": "Supplies Module",
   "config.trident.fishing.supplies_module.description": "Shows a window that displays your current Bait, Line durability, your equipped Augments and your active Overclocks.",
-
   "config.trident.fishing.flash_if_depleted.name": "Flash if Depleted",
   "config.trident.fishing.flash_if_depleted.description": "Makes Minecraft's taskbar/dock icon flash when your current spot depletes.",
-
   "config.trident.fishing.wayfinder_module.name": "Wayfinder Module",
   "config.trident.fishing.wayfinder_module.description": "Shows a window that displays your progress towards a Grotto in your current climate.",
-
-
   "config.trident.games.name": "All Games",
   "config.trident.games.description": "Settings that apply to all games on MCC Island, except fishing",
-
   "config.trident.games.auto_focus.name": "Focus game on countdown",
   "config.trident.games.auto_focus.description": "Automatically focuses Minecraft when your game is about to start.",
-
-
   "config.trident.questing.name": "Questing Module",
   "config.trident.questing.description": "Settings that apply to the Questing Module",
-
   "config.trident.questing.enabled.name": "Enabled",
   "config.trident.questing.enabled.description": "Turns on the Questing Module to be shown in games with live-updating progress.",
-
   "config.trident.questing.rarity_color_name.name": "Quest title in Rarity color",
   "config.trident.questing.rarity_color_name.description": "When turned on, changes each quest's name color to match it's rarity.",
-
   "config.trident.questing.show_in_lobby.name": "Show in game lobby",
   "config.trident.questing.show_in_lobby.description": "When enabled, Questing module will show quests in game lobbies.",
-
   "config.trident.questing.show_left.name": "Show the remaining quest amount",
   "config.trident.questing.show_left.description": "When enabled, shows how much daily/weekly quests you have remaining.",
-
-
+  "config.trident.questing.hide_if_no_quests.name": "Hide if no quests",
+  "config.trident.questing.hide_if_no_quests.description": "When enabled, hides the Questing Module in games if there are no quests.",
   "config.trident.killfeed.name": "Kill Feed",
   "config.trident.killfeed.description": "Options that apply to the in-game Kill Feed",
-
   "config.trident.killfeed.enabled.name": "Enable",
   "config.trident.killfeed.enabled.description": "Turns on the Kill Feed to be shown in games.\n\nCurrently shown in Battle Box, Sky Battle and Dynaball.",
-
   "config.trident.killfeed.hide_kills.name": "Hide kill messages in chat",
   "config.trident.killfeed.hide_kills.description": "When enabled, hides kill messages in the chat.",
-
   "config.trident.killfeed.show_kill_streaks.name": "Show Kill Streaks",
   "config.trident.killfeed.show_kill_streaks.description": "When enabled, will show Kill Streaks (how many consecutive kills a person got). \n\nStreaks reset at the start of each round.",
-
   "config.trident.killfeed.position_side.name": "Position",
   "config.trident.killfeed.position_side.description": "Changes the side where the kill feed is located.",
-
   "config.trident.killfeed.remove_kill_time.name": "Stay time",
   "config.trident.killfeed.remove_kill_time.description": "Amount of time in seconds that needs to pass before the kill is removed.\n\nSetting this to 0 will make the kills stay permanently.",
-
   "config.trident.killfeed.max_kills.name": "Max Kills",
   "config.trident.killfeed.max_kills.description": "The amount of kills that can be shown at once.",
-
   "config.trident.killfeed.clear_after_round.name": "Clear after round",
   "config.trident.killfeed.clear_after_round.description": "Clears the kill feed at the end of a round.",
-
   "config.trident.killfeed.show_you_in_kill.name": "Show (YOU) in kills",
   "config.trident.killfeed.show_you_in_kill.description": "When enabled, adds a (YOU) prefix to your kills.",
-
   "config.trident.killfeed.reverse_order.name": "Reverse kill order",
   "config.trident.killfeed.reverse_order.description": "Reverses the order kills in the kill feed.\n\n(When enabled, kills come from the top instead of the bottom)",
-
   "trident.not_island": "You are not currently playing on MCC Island",
-
   "category.trident.keys": "Trident",
   "key.trident.config": "Open Trident settings"
 }

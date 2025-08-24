@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.utils
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.game.DynaballHandlers
 import cc.pe3epwithyou.trident.feature.questing.game.HITWHandlers
 import cc.pe3epwithyou.trident.feature.questing.game.RSRHandlers
@@ -48,6 +49,9 @@ object NoxesiumUtils {
                 val k = "questing"
                 if (QuestListener.checkIfPlobby()) return@delayTicks
                 QuestingDialog.currentGame = currentGame
+                if (QuestStorage.getActiveQuests(currentGame)
+                        .isEmpty() && Config.Questing.hideIfNoQuests
+                ) return@delayTicks
                 DialogCollection.open(k, QuestingDialog(10, 10, k))
             }
         }
