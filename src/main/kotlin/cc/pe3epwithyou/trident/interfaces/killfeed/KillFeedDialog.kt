@@ -16,6 +16,7 @@ import net.minecraft.client.gui.layouts.GridLayout
 class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TransparentTheme {
     override fun getX(): Int = positionKillFeed()
     override fun getY(): Int = TOP_OFFSET
+
     companion object {
         private const val TOP_OFFSET = 20
         private val killWidgets = mutableListOf<KillWidget>()
@@ -61,6 +62,7 @@ class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         return pos
 
     }
+
 
     override fun layout(): GridLayout = grid {
         val side = when (Config.KillFeed.positionSide) {

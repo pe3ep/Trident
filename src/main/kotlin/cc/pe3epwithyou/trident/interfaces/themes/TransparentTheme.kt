@@ -5,7 +5,7 @@ import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.util.opacity
 
 @Suppress("MagicNumber")
-object TransparentTheme: Theme by DefaultTheme {
+object TransparentTheme : Theme by DefaultTheme {
     private val TRANSPARENT = 0x000000 opacity 0
 
     override val theme: Theme = this
@@ -16,4 +16,11 @@ object TransparentTheme: Theme by DefaultTheme {
         override val widgetBackgroundPrimary: Int = TRANSPARENT
         override val widgetBackgroundSecondary: Int = TRANSPARENT
     }
+
+    override val dimensions = Theme.Dimensions(
+        buttonWidth = 70,
+        buttonHeight = 14,
+        paddingInner = 2,
+        paddingOuter = 2,
+    )
 }

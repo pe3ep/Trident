@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 
-import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
 import cc.pe3epwithyou.trident.utils.TridentColor
 import com.noxcrew.sheeplib.CompoundWidget
@@ -30,9 +29,7 @@ class KillWidget(
         val victimColor = if (self == victim) secondSelfColor else killColors.second
 
         if (attacker != null) {
-            if (Config.KillFeed.showKillstreaks && streak >= 2) {
-                +KillStreak(attackerColor, streak)
-            }
+            +KillStreak(attackerColor, streak)
             +KillBackground(attackerColor, attacker, killMethod, isSelf = (self == attacker))
             +KillTransition(attackerColor, victimColor)
             +KillBackground(victimColor, victim, isLeft = false, isSelf = (self == victim))

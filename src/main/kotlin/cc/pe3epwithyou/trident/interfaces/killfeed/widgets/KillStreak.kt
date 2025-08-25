@@ -1,7 +1,8 @@
 package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 
-import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -25,6 +26,9 @@ class KillStreak(
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+        if (!Config.KillFeed.showKillstreaks || streak < 2) {
+            return
+        }
         guiGraphics.fillRoundedAll(
             x,
             y + 6,
