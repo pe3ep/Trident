@@ -36,6 +36,8 @@ object NoxesiumUtils {
 
     private fun updateGameDialogs(currentGame: Game, game: String) {
         DialogCollection.clear()
+        KillFeedDialog.clearKills()
+
         if (currentGame == Game.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
