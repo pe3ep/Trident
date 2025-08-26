@@ -1,19 +1,20 @@
 package cc.pe3epwithyou.trident.utils
 
-import cc.pe3epwithyou.trident.client.events.KillChatListener
-import cc.pe3epwithyou.trident.client.events.questing.DynaballQuestEvents
-import cc.pe3epwithyou.trident.client.events.questing.HITWQuestEvents
-import cc.pe3epwithyou.trident.client.events.questing.QuestListener
-import cc.pe3epwithyou.trident.client.events.questing.RocketSpleefRushQuestEvents
-import cc.pe3epwithyou.trident.client.events.questing.SkyBattleQuestEvents
+import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.dialogs.DialogCollection
-import cc.pe3epwithyou.trident.dialogs.fishing.SuppliesDialog
-import cc.pe3epwithyou.trident.dialogs.killfeed.KillFeedDialog
-import cc.pe3epwithyou.trident.dialogs.questing.QuestingDialog
+import cc.pe3epwithyou.trident.feature.questing.QuestListener
+import cc.pe3epwithyou.trident.feature.questing.QuestStorage
+import cc.pe3epwithyou.trident.feature.questing.game.DynaballHandlers
+import cc.pe3epwithyou.trident.feature.questing.game.HITWHandlers
+import cc.pe3epwithyou.trident.feature.questing.game.RSRHandlers
+import cc.pe3epwithyou.trident.feature.questing.game.SkyBattleHandlers
+import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
+import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
+import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.ClimateType
-import cc.pe3epwithyou.trident.state.MCCGame
-import cc.pe3epwithyou.trident.state.MCCIslandState
+import cc.pe3epwithyou.trident.state.Game
+import cc.pe3epwithyou.trident.state.MCCIState
 import com.noxcrew.noxesium.NoxesiumFabricMod
 import com.noxcrew.noxesium.feature.skull.SkullContents
 import com.noxcrew.noxesium.network.NoxesiumPackets
@@ -23,51 +24,48 @@ import net.minecraft.network.chat.MutableComponent
 import java.util.*
 
 object NoxesiumUtils {
-
     fun skullComponent(
-        uuid: UUID,
-        grayscale: Boolean = false,
-        advance: Int = 0,
-        ascent: Int = 0,
-        scale: Float = 1.0F
+        uuid: UUID, grayscale: Boolean = false, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F
     ): MutableComponent {
         return MutableComponent.create(
             SkullContents(
-                Optional.of(uuid),
-                Optional.empty(),
-                grayscale,
-                advance,
-                ascent,
-                scale
+                Optional.of(uuid), Optional.empty(), grayscale, advance, ascent, scale
             )
         )
     }
 
-    private fun updateGameDialogs(currentGame: MCCGame, game: String) {
+    private fun updateGameDialogs(currentGame: Game, game: String) {
         DialogCollection.clear()
-        if (currentGame == MCCGame.FISHING && Config.Fishing.suppliesModule) {
+        if (currentGame == Game.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
         }
-        if ((currentGame == MCCGame.BATTLE_BOX || currentGame == MCCGame.DYNABALL) && Config.KillFeed.enabled) {
+        if ((currentGame == Game.BATTLE_BOX || currentGame == Game.DYNABALL || currentGame == Game.SKY_BATTLE) && Config.KillFeed.enabled) {
             val k = "killfeed"
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
         }
-        if (currentGame != MCCGame.HUB && currentGame != MCCGame.FISHING) {
-            val k = "questing"
-            if (QuestListener.checkIfPlobby()) return
-            QuestingDialog.currentGame = currentGame
-            DialogCollection.open(k, QuestingDialog(10, 10, k))
+        if (currentGame != Game.HUB && currentGame != Game.FISHING) {
+            DelayedAction.delayTicks(20L) {
+                val k = "questing"
+                if (QuestListener.checkIfPlobby()) return@delayTicks
+                if (!Config.Questing.enabled) return@delayTicks
+                QuestingDialog.currentGame = currentGame
+                if (QuestStorage.getActiveQuests(currentGame)
+                        .isEmpty() && Config.Questing.hideIfNoQuests
+                ) return@delayTicks
+                DialogCollection.open(k, QuestingDialog(10, 10, k))
+            }
         }
-        if (currentGame == MCCGame.HUB && game != "" && Config.Questing.showInLobby) {
+        if (currentGame == Game.HUB && game != "" && Config.Questing.showInLobby) {
             val k = "questing"
-            QuestingDialog.currentGame = MCCGame.entries.filter { g -> g.server == game }.getOrNull(0) ?: return
+            if (!Config.Questing.enabled) return
+            QuestingDialog.currentGame = Game.entries.filter { g -> g.server == game }.getOrNull(0) ?: return
             DialogCollection.open(k, QuestingDialog(10, 10, k))
         }
     }
 
     private fun removeKillsIfNeeded(packet: ClientboundMccGameStatePacket) {
-        if (MCCIslandState.game !in listOf(MCCGame.BATTLE_BOX, MCCGame.DYNABALL)) return
+        if (MCCIState.game !in listOf(Game.BATTLE_BOX, Game.DYNABALL, Game.SKY_BATTLE)) return
         KillChatListener.resetStreaks()
         if (Config.KillFeed.enabled && Config.KillFeed.clearAfterRound) {
             if (packet.phaseType == "INTERMISSION" && packet.stage == "countdownphase") {
@@ -77,22 +75,22 @@ object NoxesiumUtils {
     }
 
     private fun handleTimedQuests() {
-        if (MCCIslandState.game == MCCGame.HITW) {
-            HITWQuestEvents.scheduleSurvivedMinute()
-            HITWQuestEvents.scheduleSurvivedTwoMinutes()
+        if (MCCIState.game == Game.HITW) {
+            HITWHandlers.scheduleSurvivedMinute()
+            HITWHandlers.scheduleSurvivedTwoMinutes()
         }
 
-        if (MCCIslandState.game == MCCGame.SKY_BATTLE) {
-            SkyBattleQuestEvents.scheduleSurvivedMinute()
-            SkyBattleQuestEvents.scheduleSurvivedTwoMinutes()
+        if (MCCIState.game == Game.SKY_BATTLE) {
+            SkyBattleHandlers.scheduleSurvivedMinute()
+            SkyBattleHandlers.scheduleSurvivedTwoMinutes()
         }
 
-        if (MCCIslandState.game == MCCGame.ROCKET_SPLEEF_RUSH) {
-            RocketSpleefRushQuestEvents.scheduleSurvivedMinute()
+        if (MCCIState.game == Game.ROCKET_SPLEEF_RUSH) {
+            RSRHandlers.scheduleSurvivedMinute()
         }
 
-        if (MCCIslandState.game == MCCGame.DYNABALL) {
-            DynaballQuestEvents.scheduleDynaball()
+        if (MCCIState.game == Game.DYNABALL) {
+            DynaballHandlers.scheduleDynaball()
         }
     }
 
@@ -111,22 +109,20 @@ object NoxesiumUtils {
             )
 
 
-            if (Config.Debug.logForScrapers) (
-                ChatUtils.info(
-                    "Got Nox packet CLIENT_MCC_SERVER: serverType:$server subType:$type associatedGame:$game"
-                )
-            )
+            if (Config.Debug.logForScrapers) (ChatUtils.info(
+                "Got Nox packet CLIENT_MCC_SERVER: serverType:$server subType:$type associatedGame:$game"
+            ))
 
             updateFishingState(type)
 
             val currentGame = getCurrentGame(server, type, game)
             updateGameDialogs(currentGame, game)
-            if (currentGame in listOf(MCCGame.DYNABALL, MCCGame.BATTLE_BOX)) {
+            if (currentGame in listOf(Game.DYNABALL, Game.BATTLE_BOX)) {
                 KillFeedDialog.clearKills()
             }
-            if (currentGame != MCCIslandState.game) {
-                MCCIslandState.game = currentGame
-                ChatUtils.debugLog("Current game: ${MCCIslandState.game.title}")
+            if (currentGame != MCCIState.game) {
+                MCCIState.game = currentGame
+                ChatUtils.debugLog("Current game: ${MCCIState.game.title}")
             }
         }
 
@@ -146,9 +142,8 @@ object NoxesiumUtils {
                 totalRounds: ${packet.totalRounds}
                 """.trimIndent()
             )
-            if (Config.Debug.logForScrapers) (
-                ChatUtils.info(
-                    """
+            if (Config.Debug.logForScrapers) (ChatUtils.info(
+                """
                         Got Nox packet CLIENT_MCC_GAME_STATE:
                         mapID:${packet.mapId}
                         mapName:${packet.mapName}
@@ -156,47 +151,43 @@ object NoxesiumUtils {
                         stage:${packet.stage}
                         phaseType:${packet.phaseType}
                         totalRounds:${packet.totalRounds}
-                    """.trimIndent()
-                )
-            )
+                """.trimIndent()
+            ))
         }
     }
 
     private fun updateFishingState(island: String) {
-        MCCIslandState.fishingState.isGrotto = island.contains("grotto", ignoreCase = true)
+        MCCIState.fishingState.isGrotto = island.contains("grotto", ignoreCase = true)
 
         ClimateType.entries.forEach { climate ->
             if (island.contains(climate.prefix, ignoreCase = true)) {
-                MCCIslandState.fishingState.climate.climateType = climate
+                MCCIState.fishingState.climate.climateType = climate
                 return
             }
         }
     }
 
-    private fun getCurrentGame(server: String, type: String, game: String): MCCGame {
-        if (server == MCCGame.HUB.server) {
+    private fun getCurrentGame(server: String, type: String, game: String): Game {
+        if (server == Game.HUB.server) {
             return when {
-                type.contains("temperate", ignoreCase = true) -> MCCGame.FISHING
-                type.contains("tropical", ignoreCase = true) -> MCCGame.FISHING
-                type.contains("barren", ignoreCase = true) -> MCCGame.FISHING
-                else -> MCCGame.HUB
+                type.contains("temperate", ignoreCase = true) -> Game.FISHING
+                type.contains("tropical", ignoreCase = true) -> Game.FISHING
+                type.contains("barren", ignoreCase = true) -> Game.FISHING
+                else -> Game.HUB
             }
         }
 
         if (game == "parkour_warrior") {
-            return if (type == MCCGame.PARKOUR_WARRIOR_SURVIVOR.subtype) {
-                MCCGame.PARKOUR_WARRIOR_SURVIVOR
+            return if (type == Game.PARKOUR_WARRIOR_SURVIVOR.subtype) {
+                Game.PARKOUR_WARRIOR_SURVIVOR
             } else {
-                MCCGame.PARKOUR_WARRIOR_DOJO
+                Game.PARKOUR_WARRIOR_DOJO
             }
         }
 
-        MCCGame.entries.forEach { mccGame ->
+        Game.entries.forEach { mccGame ->
             if (mccGame in listOf(
-                    MCCGame.HUB,
-                    MCCGame.FISHING,
-                    MCCGame.PARKOUR_WARRIOR_DOJO,
-                    MCCGame.PARKOUR_WARRIOR_SURVIVOR
+                    Game.HUB, Game.FISHING, Game.PARKOUR_WARRIOR_DOJO, Game.PARKOUR_WARRIOR_SURVIVOR
                 )
             ) return@forEach
 
@@ -205,6 +196,6 @@ object NoxesiumUtils {
             }
         }
 
-        return MCCGame.HUB
+        return Game.HUB
     }
 }

@@ -4,23 +4,13 @@ import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.world.item.ItemStack
-import net.minecraft.network.chat.Component
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.TooltipFlag
 
 object ItemParser {
-    fun getLore(item: ItemStack): List<Component> {
-        if (Minecraft.getInstance().player == null) return listOf(Component.empty())
-        return item.getTooltipLines(Item.TooltipContext.EMPTY, Minecraft.getInstance().player, TooltipFlag.Default.NORMAL)
-    }
-
-    fun ItemStack.getItemLore() = getLore(this)
-
     fun getActiveOverclock(item: ItemStack): Augment? {
         var beginSearch = false
-        getLore(item).forEach { line ->
+        item.getLore().forEach { line ->
 //            Due to people having different upgrade costs, it's easier to simply go over each line and start
 //            searching overclocks once we reach this text
             if ("Overclocked Perk:" in line.string) {
@@ -40,7 +30,7 @@ object ItemParser {
 
     fun getUnstableOverclock(item: ItemStack): OverclockTexture? {
         var beginSearch = false
-        getLore(item).forEach { line ->
+        item.getLore().forEach { line ->
 //            Get overclock duration, as it can be different depending on the upgrade
             if ("Duration: " in line.string) {
                 val minutes = line.string.split(": ")[1]

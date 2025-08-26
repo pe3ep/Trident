@@ -6,22 +6,24 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object ChatUtils {
+    private const val PREFIX = "[Trident]"
+
     fun info(s: String) {
-        Trident.LOGGER.info("[Trident] $s")
+        Trident.LOGGER.info("$PREFIX $s")
     }
 
     fun debugLog(s: String) {
         if (Config.Debug.enableLogging) {
-          Trident.LOGGER.info("[Trident] [DEBUG] $s")
+            Trident.LOGGER.info("$PREFIX [DEBUG] $s")
         }
     }
 
     fun error(s: String) {
-        Trident.LOGGER.error("[Trident] $s")
+        Trident.LOGGER.error("$PREFIX $s")
     }
 
     fun warn(s: String) {
-        Trident.LOGGER.warn("[Trident] $s")
+        Trident.LOGGER.warn("$PREFIX $s")
     }
 
     fun sendMessage(s: String, prefix: Boolean = true) {

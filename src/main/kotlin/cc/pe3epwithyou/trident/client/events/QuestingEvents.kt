@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.client.events
 
+import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.EventFactory
 
@@ -20,6 +21,6 @@ object QuestingEvents {
          * Return true to consume/cancel further handling.
          * Returning false allows other listeners to also process the increment.
          */
-        fun onIncrement(ctx: QuestIncrementContext): Boolean
+        fun onIncrement(ctx: IncrementContext): Boolean
     }
 }
