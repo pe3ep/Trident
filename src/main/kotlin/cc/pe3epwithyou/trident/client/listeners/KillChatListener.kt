@@ -46,6 +46,11 @@ object KillChatListener {
         if (players.isEmpty()) return true
         val victim = players[0]
         val attacker = players.getOrNull(1)
+        var killMethod = method
+        if (method == KillMethod.MAGIC) {
+            if ("Splash Potion" in message.string) killMethod = KillMethod.POTION
+            if ("Orb" in message.string) killMethod = KillMethod.ORB
+        }
 
         /* Call the event for external use */
         KillEvents.KILL.invoker().onKill(
@@ -53,9 +58,8 @@ object KillChatListener {
                 victim.string, victim.style.color?.value ?: fallbackColor
             ), if (attacker == null) null else KillEvents.KillEventPlayer(
                 attacker.string, attacker.style.color?.value ?: fallbackColor
-            ), method
+            ), killMethod
         )
-
         if (MCCIState.game !in listOf(Game.BATTLE_BOX, Game.DYNABALL, Game.SKY_BATTLE)) return true
 
         if (attacker != null) {
@@ -66,7 +70,7 @@ object KillChatListener {
                 val ctx = EliminatedCriteria.get(game, sourceTag = "kill") ?: return true
                 QuestStorage.applyIncrement(ctx, true)
 
-                if (method == KillMethod.RANGE && game == Game.BATTLE_BOX) {
+                if (killMethod == KillMethod.RANGE && game == Game.BATTLE_BOX) {
                     QuestStorage.applyIncrement(
                         IncrementContext(
                             Game.BATTLE_BOX, QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS, 1, "bb_ranged_kill"
@@ -81,7 +85,7 @@ object KillChatListener {
             KillFeedDialog.addKill(
                 KillWidget(
                     victim.string,
-                    method,
+                    killMethod,
                     attacker.string,
                     getColors(victim, attacker),
                     streak = streaks[attacker.string]!! // This should never fail
@@ -91,7 +95,7 @@ object KillChatListener {
             val victimColor = victim.style.color?.value?.opacity(128) ?: fallbackColor
             KillFeedDialog.addKill(
                 KillWidget(
-                    victim.string, method, killColors = Pair(0x606060 opacity 128, victimColor)
+                    victim.string, killMethod, killColors = Pair(0x606060 opacity 128, victimColor)
                 )
             )
         }

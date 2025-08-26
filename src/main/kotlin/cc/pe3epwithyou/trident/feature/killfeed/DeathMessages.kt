@@ -16,16 +16,16 @@ enum class DeathMessages(
         Regex("^\\[.] .+ blew up.+"), KillMethod.EXPLOSION
     ),
     LAVA_KILL(
-        Regex("^\\[.] .+ (tried to swim in lava to escape) .+"), KillMethod.MELEE
+        Regex("^\\[.] .+ (tried to swim in lava to escape) .+"), KillMethod.LAVA
     ),
     LAVA_SELF(
         Regex("^\\[.] .+ tried to swim in lava.+"), KillMethod.LAVA
     ),
     MAGIC_KILL(
-        Regex("^\\[.] .+ was eliminated with magic by .+ using .+"), KillMethod.POTION
+        Regex("^\\[.] .+ was eliminated with magic by .+ using .+"), KillMethod.MAGIC
     ),
     MAGIC_KILL_CONTACT(
-        Regex("^\\[.] .+ was hit by .+"), KillMethod.POTION
+        Regex("^\\[.] .+ was hit by .+"), KillMethod.MAGIC
     ),
     LOGGED_OUT_KILL(
         Regex("^\\[.] .+ logged out to get away from .+"), KillMethod.MELEE
@@ -52,13 +52,13 @@ enum class DeathMessages(
         Regex("^\\[.] .+ walked into fire whilist fighting .+"), KillMethod.MELEE
     ),
     FIRE_SELF(
-        Regex("^\\[.] .+ went up in flames.+"), KillMethod.GENERIC
+        Regex("^\\[.] .+ went up in flames.+"), KillMethod.FIRE
     ),
     BURNED_KILL(
-        Regex("^\\[.] .+ was burned to a crisp while fighting .+"), KillMethod.MELEE
+        Regex("^\\[.] .+ was burned to a crisp while fighting .+"), KillMethod.FIRE
     ),
     BURNED_SELF(
-        Regex("^\\[.] .+ burned to death.+"), KillMethod.GENERIC
+        Regex("^\\[.] .+ burned to death.+"), KillMethod.FIRE
     ),
     NOT_REJOINED(
         Regex("^\\[.] .+ hasn't rejoined the game and is automatically eliminated.+"), KillMethod.DISCONNECT
