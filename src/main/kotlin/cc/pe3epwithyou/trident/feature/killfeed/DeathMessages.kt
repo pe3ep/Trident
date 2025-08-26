@@ -33,7 +33,10 @@ enum class DeathMessages(
     LOGGED_OUT(
         Regex("^\\[.] .+ logged out.+"), KillMethod.DISCONNECT
     ),
-    GENERIC(
+    GENERIC_KILL(
+        Regex("^\\[.] .+ was eliminated by .+"), KillMethod.MELEE
+    ),
+    GENERIC_SELF(
         Regex("^\\[.] .+ died.+"), KillMethod.GENERIC
     ),
     SPLEEFED_KILL(
