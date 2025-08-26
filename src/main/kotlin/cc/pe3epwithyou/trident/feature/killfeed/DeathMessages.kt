@@ -24,7 +24,7 @@ enum class DeathMessages(
     MAGIC_KILL(
         Regex("^\\[.] .+ was eliminated with magic by .+ using .+"), KillMethod.POTION
     ),
-    MAGIC_SELF(
+    MAGIC_KILL_CONTACT(
         Regex("^\\[.] .+ was hit by .+"), KillMethod.POTION
     ),
     LOGGED_OUT_KILL(
