@@ -48,6 +48,7 @@ object NoxesiumUtils {
             DelayedAction.delayTicks(20L) {
                 val k = "questing"
                 if (QuestListener.checkIfPlobby()) return@delayTicks
+                if (!Config.Questing.enabled) return@delayTicks
                 QuestingDialog.currentGame = currentGame
                 if (QuestStorage.getActiveQuests(currentGame)
                         .isEmpty() && Config.Questing.hideIfNoQuests
@@ -57,6 +58,7 @@ object NoxesiumUtils {
         }
         if (currentGame == Game.HUB && game != "" && Config.Questing.showInLobby) {
             val k = "questing"
+            if (!Config.Questing.enabled) return
             QuestingDialog.currentGame = Game.entries.filter { g -> g.server == game }.getOrNull(0) ?: return
             DialogCollection.open(k, QuestingDialog(10, 10, k))
         }
