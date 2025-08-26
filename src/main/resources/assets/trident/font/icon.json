@@ -170,7 +170,7 @@
     },
     {
       "type": "bitmap",
-      "file": "mcc:_fonts/fire.png",
+      "file": "trident:_font/fire.png",
       "ascent": 7,
       "height": 8,
       "chars": [
@@ -179,7 +179,7 @@
     },
     {
       "type": "bitmap",
-      "file": "mcc:_fonts/lava.png",
+      "file": "trident:_font/lava.png",
       "ascent": 7,
       "height": 8,
       "chars": [
@@ -188,7 +188,7 @@
     },
     {
       "type": "bitmap",
-      "file": "mcc:_fonts/potion.png",
+      "file": "trident:_font/potion.png",
       "ascent": 7,
       "height": 8,
       "chars": [
