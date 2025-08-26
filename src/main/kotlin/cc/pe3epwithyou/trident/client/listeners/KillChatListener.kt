@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.client.events.KillEvents
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.killfeed.DeathMessages
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
 import cc.pe3epwithyou.trident.feature.questing.EliminatedCriteria
 import cc.pe3epwithyou.trident.feature.questing.IncrementContext
@@ -20,31 +21,6 @@ import net.minecraft.network.chat.Component
 object KillChatListener {
     private val fallbackColor = 0xFFFFFF opacity 128
 
-    private val slainRegex = Regex("^\\[.] .+ (was slain by) .+")
-    private val shotRegex = Regex("^\\[.] .+ (was shot by) .+")
-    private val explodedRegex = Regex("^\\[.] .+ (was blown up by) .+")
-    private val explodedSelfRegex = Regex("^\\[.] .+ blew up\\. .+")
-    private val lavaRegex = Regex("^\\[.] .+ (tried to swim in lava to escape) .+")
-    private val lavaSelfRegex = Regex("^\\[.] .+ tried to swim in lava\\. .+")
-    private val potRegex = Regex("^\\[.] .+ was eliminated with magic by .+ using .+")
-    private val potRegexAlt = Regex("^\\[.] .+ was hit by .+")
-    private val loggedOut = Regex("^\\[.] .+ logged out\\. .+")
-    private val loggedOutToGetAway = Regex("^\\[.] .+ logged out to get away from .+")
-    private val genericDiedRegex = Regex("^\\[.] .+ died\\. .+")
-    private val spleefedRegex = Regex("^\\[.] .+ was spleefed by .+")
-    private val prickedRegex = Regex("^\\[.] .+ was pricked to death whilst trying to escape .+")
-    private val prickedSelfRegex = Regex("^\\[.] .+ was pricked to death\\. .+")
-    private val walkedFire = Regex("^\\[.] .+ walked into fire whilist fighting .+")
-    private val fireSelf = Regex("^\\[.] .+ went up in flames\\. .+")
-    private val burnedRegex = Regex("^\\[.] .+ was burned to a crisp while fighting .+")
-    private val burnedSelfRegex = Regex("^\\[.] .+ burned to death\\. .+")
-    private val hasNotRejoined = Regex("^\\[.] .+ hasn't rejoined the game and is automatically eliminated\\. .+")
-    private val disconnected = Regex("^\\[.] .+ disconnected\\. .+")
-    private val void = Regex("^\\[.] .+ didn't want to live in the same world as .+")
-    private val selfVoid = Regex("^\\[.] .+ fell out of the world\\. .+")
-    private val suffocate = Regex("^\\[.] .+ suffocated in a wall while fighting .+")
-    private val suffocateSelf = Regex("^\\[.] .+ suffocated in a wall\\. .+")
-
     val streaks = hashMapOf<String, Int>()
 
     fun resetStreaks() {
@@ -55,60 +31,10 @@ object KillChatListener {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowGame true
 
-            if (slainRegex.matches(message.string)) {
-                return@allowGame handleKill(message, KillMethod.MELEE)
-            }
-
-            if (shotRegex.matches(message.string)) {
-                return@allowGame handleKill(message, KillMethod.RANGE)
-            }
-
-            if (explodedRegex.matches(message.string) || explodedSelfRegex.matches(message.string)) {
-                return@allowGame handleKill(message, KillMethod.EXPLOSION)
-            }
-
-            if (lavaRegex.matches(message.string) || lavaSelfRegex.matches(message.string)) {
-                return@allowGame handleKill(message, KillMethod.LAVA)
-            }
-
-            if (potRegex.matches(message.string) || potRegexAlt.matches(message.string)) {
-                return@allowGame handleKill(message, KillMethod.POTION)
-            }
-
-            if (loggedOut.matches(message.string) ||
-                loggedOutToGetAway.matches(message.string) ||
-                disconnected.matches(message.string) ||
-                hasNotRejoined.matches(message.string)
-            ) {
-                return@allowGame handleKill(message, KillMethod.DISCONNECT)
-            }
-
-            if (genericDiedRegex.matches(message.string)) {
-                return@allowGame handleKill(message, KillMethod.GENERIC)
-            }
-
-            if (spleefedRegex.matches(message.string)) {
-                return@allowGame handleKill(message, KillMethod.MELEE)
-            }
-
-            if (prickedRegex.matches(message.string) ||
-                prickedSelfRegex.matches(message.string) ||
-                suffocate.matches(message.string) ||
-                suffocateSelf.matches(message.string)
-            ) {
-                return@allowGame handleKill(message, KillMethod.GENERIC)
-            }
-
-            if (void.matches(message.string) || selfVoid.matches(message.string)) {
-                return@allowGame handleKill(message, KillMethod.VOID)
-            }
-
-            if (walkedFire.matches(message.string) ||
-                fireSelf.matches(message.string) ||
-                burnedRegex.matches(message.string) ||
-                burnedSelfRegex.matches(message.string)
-            ) {
-                return@allowGame handleKill(message, KillMethod.GENERIC)
+            DeathMessages.entries.forEach { deathMessage ->
+                if (deathMessage.regex.matches(message.string)) {
+                    return@allowGame handleKill(message, deathMessage.method)
+                }
             }
 
             return@allowGame true
@@ -124,13 +50,10 @@ object KillChatListener {
         /* Call the event for external use */
         KillEvents.KILL.invoker().onKill(
             KillEvents.KillEventPlayer(
-                victim.string,
-                victim.style.color?.value ?: fallbackColor
+                victim.string, victim.style.color?.value ?: fallbackColor
             ), if (attacker == null) null else KillEvents.KillEventPlayer(
-                attacker.string,
-                attacker.style.color?.value ?: fallbackColor
-            ),
-            method
+                attacker.string, attacker.style.color?.value ?: fallbackColor
+            ), method
         )
 
         if (MCCIState.game !in listOf(Game.BATTLE_BOX, Game.DYNABALL, Game.SKY_BATTLE)) return true
@@ -146,10 +69,7 @@ object KillChatListener {
                 if (method == KillMethod.RANGE && game == Game.BATTLE_BOX) {
                     QuestStorage.applyIncrement(
                         IncrementContext(
-                            Game.BATTLE_BOX,
-                            QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS,
-                            1,
-                            "bb_ranged_kill"
+                            Game.BATTLE_BOX, QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS, 1, "bb_ranged_kill"
                         ), true
                     )
                 }
@@ -171,9 +91,7 @@ object KillChatListener {
             val victimColor = victim.style.color?.value?.opacity(128) ?: fallbackColor
             KillFeedDialog.addKill(
                 KillWidget(
-                    victim.string,
-                    method,
-                    killColors = Pair(0x606060 opacity 128, victimColor)
+                    victim.string, method, killColors = Pair(0x606060 opacity 128, victimColor)
                 )
             )
         }
