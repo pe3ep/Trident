@@ -9,5 +9,8 @@ enum class DisplayType : NameableEnum {
     },
     U_SHAPED {
         override fun getDisplayName(): Component = Component.literal("U-Shaped")
+    },
+    FILL {
+        override fun getDisplayName(): Component = Component.literal("Filled background")
     }
 }
