@@ -27,6 +27,7 @@ abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x
         ChatUtils.debugLog("$key position: ${this.x} ${this.y}")
         DialogCollection.remove(key)
         DialogCollection.saveDialogPosition(key, Pair(this.x, this.y))
+        DialogCollection.saveAllDialogs()
         super.onClose()
     }
 }
