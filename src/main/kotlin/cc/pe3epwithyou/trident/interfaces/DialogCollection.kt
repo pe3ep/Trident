@@ -134,6 +134,7 @@ object DialogCollection {
      */
     fun resetDialogPositions() {
         dialogPositions.clear()
+        saveAllDialogs()
         openedDialogs.entries.forEach { (_, dialog) ->
             val position = findPositionForNewDialog(dialog.width, dialog.height)
             positionDialog(dialog, position)
