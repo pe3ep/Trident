@@ -252,10 +252,10 @@ class Config {
                     )
 
                     options.register<Boolean>("rarity_slot_enabled") {
-                        name(Component.translatable("config.trident.global.rarity_overlay.name"))
+                        name(Component.translatable("config.trident.global.rarity_slot.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.global.rarity_overlay.description")).image(
+                                .text(Component.translatable("config.trident.global.rarity_slot.description")).image(
                                     ResourceLocation.fromNamespaceAndPath(
                                         "trident", "textures/config/rarity_overlay.png"
                                     ), 120, 88
@@ -266,10 +266,10 @@ class Config {
                     }
 
                     options.register<DisplayType>("rarity_slot_display_type") {
-                        name(Component.translatable("config.trident.global.rarity_overlay.display_type.name"))
+                        name(Component.translatable("config.trident.global.rarity_slot.display_type.name"))
                         description(
                             OptionDescription.of(
-                                Component.translatable("config.trident.global.rarity_overlay.display_type.description")
+                                Component.translatable("config.trident.global.rarity_slot.display_type.description")
                             )
                         )
                         binding(handler.instance()::raritySlotDisplayType, DisplayType.OUTLINE)
