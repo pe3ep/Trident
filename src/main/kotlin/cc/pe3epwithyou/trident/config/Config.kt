@@ -42,6 +42,9 @@ class Config {
     var debugLogForScrapers: Boolean = false
 
     @SerialEntry
+    var debugBypassOnIsland: Boolean = false
+
+    @SerialEntry
     var gamesAutoFocus: Boolean = false
 
 
@@ -105,6 +108,8 @@ class Config {
             get() = handler.instance().debugDrawSlotNumber
         val logForScrapers: Boolean
             get() = handler.instance().debugLogForScrapers
+        val bypassOnIsland: Boolean
+            get() = handler.instance().debugBypassOnIsland
     }
 
     object Fishing {
@@ -439,6 +444,13 @@ class Config {
                         name(Component.translatable("config.trident.debug.log_for_scrapers.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.debug.log_for_scrapers.description")))
                         binding(handler.instance()::debugLogForScrapers, false)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("bypass_on_island") {
+                        name(Component.translatable("config.trident.debug.bypass_on_island.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.debug.bypass_on_island.description")))
+                        binding(handler.instance()::debugBypassOnIsland, false)
                         controller(tickBox())
                     }
                 }
