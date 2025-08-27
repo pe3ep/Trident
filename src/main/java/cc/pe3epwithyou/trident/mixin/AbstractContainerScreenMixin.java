@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.mixin;
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
 import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
-import cc.pe3epwithyou.trident.feature.RaritySlot;
+import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.DebugDraw;
 import net.minecraft.client.Minecraft;
@@ -27,9 +27,7 @@ public class AbstractContainerScreenMixin extends Screen {
     @Inject(method = "renderSlot", at = @At(value = "HEAD"))
     public void renderSlot(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-        if (Config.Global.INSTANCE.getRarityOverlay()) {
-            RaritySlot.INSTANCE.render(guiGraphics, slot);
-        }
+        RaritySlot.INSTANCE.render(guiGraphics, slot);
     }
 
     @Inject(method = "renderSlot", at = @At(value = "TAIL"))

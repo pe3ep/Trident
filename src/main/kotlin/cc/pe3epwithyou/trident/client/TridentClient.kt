@@ -51,41 +51,41 @@ class TridentClient : ClientModInitializer {
             .then(
                 ClientCommandManager.literal("open").then(
                     ClientCommandManager.argument("dialog", StringArgumentType.string())
-                    .suggests { _, builder ->
-                        debugDialogs.keys.forEach(builder::suggest)
-                        builder.buildFuture()
-                    }
-                    .executes { ctx ->
-                        if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
-                            ChatUtils.sendMessage(
-                                Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
-                            )
-                            return@executes 0
+                        .suggests { _, builder ->
+                            debugDialogs.keys.forEach(builder::suggest)
+                            builder.buildFuture()
                         }
-                        debugDialogs[ctx.getArgument("dialog", String::class.java)]?.let {
-                            val key = ctx.getArgument("dialog", String::class.java)
-                            DialogCollection.open(key, it(10, 10, key))
+                        .executes { ctx ->
+                            if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
+                                ChatUtils.sendMessage(
+                                    Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
+                                )
+                                return@executes 0
+                            }
+                            debugDialogs[ctx.getArgument("dialog", String::class.java)]?.let {
+                                val key = ctx.getArgument("dialog", String::class.java)
+                                DialogCollection.open(key, it(10, 10, key))
+                            }
+                            0
                         }
-                        0
-                    }
-            )).then(
+                )).then(
                 ClientCommandManager.literal("close").then(
                     ClientCommandManager.argument("dialog", StringArgumentType.string())
-                    .suggests { _, builder ->
-                        debugDialogs.keys.forEach(builder::suggest)
-                        builder.buildFuture()
-                    }
-                    .executes { ctx ->
-                        if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
-                            ChatUtils.sendMessage(
-                                Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
-                            )
-                            return@executes 0
+                        .suggests { _, builder ->
+                            debugDialogs.keys.forEach(builder::suggest)
+                            builder.buildFuture()
                         }
-                        DialogCollection.close(ctx.getArgument("dialog", String::class.java))
-                        0
-                    }
-            )).then(
+                        .executes { ctx ->
+                            if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
+                                ChatUtils.sendMessage(
+                                    Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
+                                )
+                                return@executes 0
+                            }
+                            DialogCollection.close(ctx.getArgument("dialog", String::class.java))
+                            0
+                        }
+                )).then(
                 ClientCommandManager.literal("resetDialogPositions")
                     .executes { _ ->
                         DialogCollection.resetDialogPositions()
@@ -147,6 +147,9 @@ class TridentClient : ClientModInitializer {
                 "category.trident.keys"
             )
         )
+
+        /* Convert deprecated config entries to their new counterpart */
+        Config.convertDeprecated()
 
         ChatEventListener.register()
         ChestScreenListener.register()

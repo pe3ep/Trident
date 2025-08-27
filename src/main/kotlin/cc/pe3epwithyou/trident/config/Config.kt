@@ -1,8 +1,10 @@
 package cc.pe3epwithyou.trident.config
 
 import cc.pe3epwithyou.trident.feature.killfeed.Position
+import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
+import cc.pe3epwithyou.trident.utils.ChatUtils
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry
@@ -14,14 +16,21 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
 class Config {
+    @Deprecated("This option has been moved to a separate group")
     @SerialEntry
-    var globalRarityOverlay: Boolean = false
+    var globalRarityOverlay: Boolean? = null
 
     @SerialEntry
     var globalBlueprintIndicators: Boolean = true
 
     @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
+
+    @SerialEntry
+    var raritySlotEnabled: Boolean = false
+
+    @SerialEntry
+    var raritySlotDisplayType: DisplayType = DisplayType.OUTLINE
 
     @SerialEntry
     var fishingSuppliesModule: Boolean = true
@@ -91,14 +100,17 @@ class Config {
     var questingHideIfNoQuests: Boolean = false
 
     object Global {
-        val rarityOverlay: Boolean
-            get() = handler.instance().globalRarityOverlay
-
         val blueprintIndicators: Boolean
             get() = handler.instance().globalBlueprintIndicators
-
         val currentTheme: TridentThemes
             get() = handler.instance().globalCurrentTheme
+    }
+
+    object RaritySlot {
+        val enabled: Boolean
+            get() = handler.instance().raritySlotEnabled
+        val displayType: DisplayType
+            get() = handler.instance().raritySlotDisplayType
     }
 
     object Debug {
@@ -115,10 +127,8 @@ class Config {
     object Fishing {
         val suppliesModule: Boolean
             get() = handler.instance().fishingSuppliesModule
-
         val wayfinderModule: Boolean
             get() = handler.instance().fishingWayfinderModule
-
         val flashIfDepleted: Boolean
             get() = handler.instance().fishingFlashIfDepleted
     }
@@ -165,13 +175,24 @@ class Config {
     companion object {
         val handler: ConfigClassHandler<Config> by lazy {
             ConfigClassHandler.createBuilder(Config::class.java)
-                .id(ResourceLocation.fromNamespaceAndPath("trident", "config"))
-                .serializer { config ->
+                .id(ResourceLocation.fromNamespaceAndPath("trident", "config")).serializer { config ->
                     GsonConfigSerializerBuilder.create(config)
-                        .setPath(FabricLoader.getInstance().configDir.resolve("trident.json"))
-                        .build()
-                }
-                .build()
+                        .setPath(FabricLoader.getInstance().configDir.resolve("trident.json")).build()
+                }.build()
+        }
+
+        @Suppress("DEPRECATION")
+        fun convertDeprecated() {
+            val rarityOverlayPrev = handler.instance().globalRarityOverlay
+            if (rarityOverlayPrev != null) {
+                ChatUtils.warn("Detected a deprecated config value for rarity overlay, converting it")
+
+                handler.instance().raritySlotEnabled = rarityOverlayPrev
+                /* Reset the old value to null */
+                handler.instance().globalRarityOverlay = null
+            }
+
+            handler.save()
         }
 
         fun init() {
@@ -192,23 +213,6 @@ class Config {
                     name(Component.translatable("config.trident.global.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.global.description")))
 
-                    options.register<Boolean>("rarity_overlay") {
-                        name(Component.translatable("config.trident.global.rarity_overlay.name"))
-                        description(
-                            OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.global.rarity_overlay.description"))
-                                .image(
-                                    ResourceLocation.fromNamespaceAndPath(
-                                        "trident",
-                                        "textures/config/rarity_overlay.png"
-                                    ), 120, 88
-                                )
-                                .build()
-                        )
-                        binding(handler.instance()::globalRarityOverlay, false)
-                        controller(tickBox())
-                    }
-
                     options.register<Boolean>("blueprint_indicators") {
                         name(Component.translatable("config.trident.global.blueprint_indicators.name"))
                         description(
@@ -216,11 +220,9 @@ class Config {
                                 .text(Component.translatable("config.trident.global.blueprint_indicators.description"))
                                 .image(
                                     ResourceLocation.fromNamespaceAndPath(
-                                        "trident",
-                                        "textures/config/blueprint_indicators.png"
+                                        "trident", "textures/config/blueprint_indicators.png"
                                     ), 405, 316
-                                )
-                                .build()
+                                ).build()
                         )
                         binding(handler.instance()::globalBlueprintIndicators, true)
                         controller(tickBox())
@@ -230,16 +232,48 @@ class Config {
                         name(Component.translatable("config.trident.global.theme.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.global.theme.description"))
-                                .image(
+                                .text(Component.translatable("config.trident.global.theme.description")).image(
                                     ResourceLocation.fromNamespaceAndPath("trident", "textures/config/theme.png"),
                                     497,
                                     329
-                                )
-                                .build()
+                                ).build()
                         )
                         binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
                         controller(enumSwitch<TridentThemes> { v -> v.displayName })
+                    }
+                }
+
+                groups.register("rarity_slot") {
+                    name(Component.translatable("config.trident.rarity_slot.name"))
+                    description(
+                        OptionDescription.of(
+                            Component.translatable("config.trident.rarity_slot.description")
+                        )
+                    )
+
+                    options.register<Boolean>("rarity_slot_enabled") {
+                        name(Component.translatable("config.trident.global.rarity_overlay.name"))
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.global.rarity_overlay.description")).image(
+                                    ResourceLocation.fromNamespaceAndPath(
+                                        "trident", "textures/config/rarity_overlay.png"
+                                    ), 120, 88
+                                ).build()
+                        )
+                        binding(handler.instance()::raritySlotEnabled, false)
+                        controller(tickBox())
+                    }
+
+                    options.register<DisplayType>("rarity_slot_display_type") {
+                        name(Component.translatable("config.trident.global.rarity_overlay.display_type.name"))
+                        description(
+                            OptionDescription.of(
+                                Component.translatable("config.trident.global.rarity_overlay.display_type.description")
+                            )
+                        )
+                        binding(handler.instance()::raritySlotDisplayType, DisplayType.OUTLINE)
+                        controller(enumSwitch<DisplayType> { v -> v.displayName })
                     }
                 }
 
@@ -263,13 +297,11 @@ class Config {
                         name(Component.translatable("config.trident.killfeed.enabled.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.killfeed.enabled.description"))
-                                .image(
+                                .text(Component.translatable("config.trident.killfeed.enabled.description")).image(
                                     ResourceLocation.fromNamespaceAndPath("trident", "textures/config/killfeed.png"),
                                     618,
                                     332
-                                )
-                                .build()
+                                ).build()
                         )
                         binding(handler.instance()::killfeedEnabled, true)
                         controller(tickBox())
@@ -340,13 +372,11 @@ class Config {
                         name(Component.translatable("config.trident.questing.enabled.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.questing.enabled.description"))
-                                .image(
+                                .text(Component.translatable("config.trident.questing.enabled.description")).image(
                                     ResourceLocation.fromNamespaceAndPath("trident", "textures/config/questing.png"),
                                     414,
                                     338
-                                )
-                                .build()
+                                ).build()
                         )
                         binding(handler.instance()::questingEnabled, true)
                         controller(tickBox())
@@ -394,8 +424,7 @@ class Config {
                                     ResourceLocation.fromNamespaceAndPath("trident", "textures/config/supplies.png"),
                                     507,
                                     333
-                                )
-                                .build()
+                                ).build()
                         )
                         binding(handler.instance()::fishingSuppliesModule, true)
                         controller(tickBox())
