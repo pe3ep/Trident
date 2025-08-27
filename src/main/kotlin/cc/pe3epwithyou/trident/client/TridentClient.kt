@@ -170,5 +170,7 @@ class TridentClient : ClientModInitializer {
         QuestingEvents.INCREMENT_ACTIVE.register { ctx ->
             QuestStorage.applyIncrement(ctx)
         }
+
+        DialogCollection.loadAllDialogs()
     }
 }

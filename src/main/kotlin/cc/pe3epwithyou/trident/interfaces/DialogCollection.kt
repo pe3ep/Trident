@@ -86,6 +86,17 @@ object DialogCollection {
         dialogPositions[key] = position
     }
 
+    fun saveAllDialogs() {
+        DialogIO.saveDialogPositions(dialogPositions)
+    }
+
+    fun loadAllDialogs() {
+        val pos = DialogIO.loadAllDialogPositions()
+        pos.forEach { (key, position) ->
+            dialogPositions[key] = position
+        }
+    }
+
     /**
      * Refreshes the dialog layout associated with the specified [key] if it is currently opened.
      *
@@ -155,9 +166,24 @@ object DialogCollection {
             candidates.add(Pair(maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP), dialog.y)) // Left
             candidates.add(Pair(dialog.x, dialog.y + dialog.height + DIALOG_GAP)) // Below
             candidates.add(Pair(dialog.x, maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP))) // Above
-            candidates.add(Pair(dialog.x + dialog.width + DIALOG_GAP, dialog.y + dialog.height + DIALOG_GAP)) // Bottom-right
-            candidates.add(Pair(maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP), dialog.y + dialog.height + DIALOG_GAP)) // Bottom-left
-            candidates.add(Pair(dialog.x + dialog.width + DIALOG_GAP, maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP))) // Top-right
+            candidates.add(
+                Pair(
+                    dialog.x + dialog.width + DIALOG_GAP,
+                    dialog.y + dialog.height + DIALOG_GAP
+                )
+            ) // Bottom-right
+            candidates.add(
+                Pair(
+                    maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP),
+                    dialog.y + dialog.height + DIALOG_GAP
+                )
+            ) // Bottom-left
+            candidates.add(
+                Pair(
+                    dialog.x + dialog.width + DIALOG_GAP,
+                    maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP)
+                )
+            ) // Top-right
         }
 
         // Filter out negative positions (should be none after clamping)
