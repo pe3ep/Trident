@@ -66,7 +66,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
-    include(modImplementation("com.noxcrew.sheeplib:api:1.4.1+1.21.8")!!)
+    include(modImplementation("com.noxcrew.sheeplib:api:1.4.2+1.21.8")!!)
     modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
     modImplementation("com.noxcrew.noxesium:fabric:2.7.7")
