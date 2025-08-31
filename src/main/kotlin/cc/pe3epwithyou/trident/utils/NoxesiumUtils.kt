@@ -10,6 +10,13 @@ import cc.pe3epwithyou.trident.feature.questing.game.RSRHandlers
 import cc.pe3epwithyou.trident.feature.questing.game.SkyBattleHandlers
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.UpgradesDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.ChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.HookChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.MagnetChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.RodChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.PotChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.ChancePerksDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.ClimateType
@@ -41,6 +48,30 @@ object NoxesiumUtils {
         if (currentGame == Game.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
+        }
+        if (currentGame == Game.FISHING) {
+            val k = "upgrades"
+            DialogCollection.open(k, UpgradesDialog(10, 20, k))
+        }
+        if (currentGame == Game.FISHING) {
+            val k = "hookchances"
+            DialogCollection.open(k, HookChanceDialog(10, 30, k))
+        }
+        if (currentGame == Game.FISHING) {
+            val k = "magnetchances"
+            DialogCollection.open(k, MagnetChanceDialog(10, 30, k))
+        }
+        if (currentGame == Game.FISHING) {
+            val k = "rodchances"
+            DialogCollection.open(k, RodChanceDialog(10, 30, k))
+        }
+        if (currentGame == Game.FISHING) {
+            val k = "potchances"
+            DialogCollection.open(k, PotChanceDialog(10, 30, k))
+        }
+        if (currentGame == Game.FISHING) {
+            val k = "chanceperks"
+            DialogCollection.open(k, ChancePerksDialog(10, 30, k))
         }
         if ((currentGame == Game.BATTLE_BOX || currentGame == Game.DYNABALL || currentGame == Game.SKY_BATTLE) && Config.KillFeed.enabled) {
             val k = "killfeed"

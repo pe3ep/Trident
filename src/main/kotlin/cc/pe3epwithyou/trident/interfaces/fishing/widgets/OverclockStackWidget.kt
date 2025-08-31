@@ -1,10 +1,8 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
 import cc.pe3epwithyou.trident.client.TridentClient
-import cc.pe3epwithyou.trident.interfaces.shared.widgets.ItemWidget
 import cc.pe3epwithyou.trident.state.Overclock
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
-import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import com.noxcrew.sheeplib.CompoundWidget
@@ -24,14 +22,26 @@ class OverclockStackWidget(
         LinearLayout.Orientation.HORIZONTAL,
         0
     ) {
+        val levels = TridentClient.playerState.supplies.overclocks
         stableClocks.forEachIndexed { index, overclock ->
-            +ItemWidget(
-                Model(
-                    overclock.texturePath,
-                    width,
-                    height,
-                ),
-                marginRight = if (index == stableClocks.lastIndex) 3 else 0
+            val model = cc.pe3epwithyou.trident.utils.Model(
+                overclock.texturePath,
+                width,
+                height,
+            )
+            val label = when (overclock) {
+                OverclockTexture.STRONG_HOOK, OverclockTexture.WISE_HOOK, OverclockTexture.GLIMMERING_HOOK,
+                OverclockTexture.GREEDY_HOOK, OverclockTexture.LUCKY_HOOK -> levelComponent(levels.stableLevels.hook)
+                OverclockTexture.FISH_MAGNET, OverclockTexture.TREASURE_MAGNET, OverclockTexture.SPIRIT_MAGNET,
+                OverclockTexture.PEARL_MAGNET, OverclockTexture.XP_MAGNET -> levelComponent(levels.stableLevels.magnet)
+                OverclockTexture.GLITCHED_ROD, OverclockTexture.GRACEFUL_ROD, OverclockTexture.STABLE_ROD,
+                OverclockTexture.BOOSTED_ROD, OverclockTexture.SPEEDY_ROD -> levelComponent(levels.stableLevels.rod)
+                else -> null
+            }
+            +IconWithLabelWidget(
+                model,
+                label,
+                marginRight = 2
             )
         }
 
@@ -59,19 +69,25 @@ class OverclockStackWidget(
             width,
             height,
             unstableTexture,
-            3,
-            getOverclockComponent(overclockState.unstable)
+            2,
+            getOverclockComponent(overclockState.unstable, overclockState.unstable.level),
+            levelLabel = levelComponent(overclockState.unstable.level)
         )
         if (overclockState.supreme.isAvailable) +UnstableOverclockWidget(
             height,
             height,
             supremeTexture,
             0,
-            getOverclockComponent(overclockState.supreme)
+            getOverclockComponent(overclockState.supreme, overclockState.supreme.level)
         )
     }
 
-    private fun getOverclockComponent(state: Overclock): Component {
+    private fun levelComponent(level: Int?): Component? {
+        if (level == null) return null
+        return Component.literal("$level").mccFont(offset = 1)
+    }
+
+    private fun getOverclockComponent(state: Overclock, level: Int?): Component {
         val normalColors = listOf(
             TridentColor(0xFFFFFF),
             TridentColor(0xFFFFFF),
@@ -109,7 +125,7 @@ class OverclockStackWidget(
             )
 
         if (!state.isActive && !state.isCooldown) {
-            component = Component.literal("READY")
+            component = Component.literal("READY").mccFont()
                 .mccFont(offset = 3)
                 .withStyle(
                     Style.EMPTY
