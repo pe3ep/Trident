@@ -110,12 +110,14 @@ class UpgradesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 val augBonus = totals.augment
                 val ocBonus = totals.overclock
                 val unBonus = totals.unstable
-                val total = base + augBonus + ocBonus + unBonus
+                val eqBonus = totals.equipment
+                val total = base + augBonus + ocBonus + unBonus + eqBonus
                 var comp = Component.literal("$base").mccFont()
                 if (ocBonus > 0) comp = comp.append(Component.literal("+$ocBonus").mccFont().withStyle(ChatFormatting.AQUA))
                 if (augBonus > 0) comp = comp.append(Component.literal("+$augBonus").mccFont().withStyle(ChatFormatting.GREEN))
                 if (unBonus > 0) comp = comp.append(Component.literal("+$unBonus").mccFont().withStyle(ChatFormatting.AQUA))
-                if(ocBonus > 0 || augBonus > 0 || unBonus > 0) comp = comp.append(Component.literal("=$total").mccFont())
+                if (eqBonus > 0) comp = comp.append(Component.literal("+$eqBonus").mccFont().withStyle(ChatFormatting.GOLD))
+                if(ocBonus > 0 || augBonus > 0 || unBonus > 0 || eqBonus > 0) comp = comp.append(Component.literal("=$total").mccFont())
                 StringWidget(comp, mcFont)
                     .at(row, (c + 1) * 2, settings = LayoutConstants.CENTRE)
             }
