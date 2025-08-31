@@ -2,6 +2,10 @@ package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
+import cc.pe3epwithyou.trident.state.fishing.UseCondition
+import cc.pe3epwithyou.trident.state.fishing.PerkState
+import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
+import cc.pe3epwithyou.trident.state.fishing.PlayerUpgrades
 
 data class Bait(var type: Rarity = Rarity.COMMON, var amount: Int? = null)
 data class Line(var type: Rarity = Rarity.COMMON, var uses: Int? = null)
@@ -14,7 +18,8 @@ data class UnstableOverclock(
     override var cooldownDuration: Long = 60 * 45 * 20,
 //    override var cooldownDuration: Long = 15 * 20,
     override var isActive: Boolean = false,
-    override var isCooldown: Boolean = false
+    override var isCooldown: Boolean = false,
+    var level: Int? = null
 ) : Overclock(false, duration, timeLeft, cooldownLeft, cooldownDuration, isActive, isCooldown)
 
 data class SupremeOverclock(
@@ -25,7 +30,8 @@ data class SupremeOverclock(
     override var cooldownDuration: Long = 60 * 60 * 20,
 //    override var cooldownDuration: Long = 15 * 20,
     override var isActive: Boolean = false,
-    override var isCooldown: Boolean = false
+    override var isCooldown: Boolean = false,
+    var level: Int? = null
 ) : Overclock(false, duration, timeLeft, cooldownLeft, cooldownDuration, isActive, isCooldown)
 
 abstract class Overclock(
@@ -43,13 +49,20 @@ data class Overclocks(
     var magnet: Augment? = null,
     var rod: Augment? = null,
     var unstable: UnstableOverclock = UnstableOverclock(),
-    var supreme: SupremeOverclock = SupremeOverclock()
+    var supreme: SupremeOverclock = SupremeOverclock(),
+    var stableLevels: StableOverclockLevels = StableOverclockLevels()
+)
+
+data class StableOverclockLevels(
+    var hook: Int? = null,
+    var magnet: Int? = null,
+    var rod: Int? = null,
 )
 
 data class Supplies(
     var bait: Bait = Bait(),
     var line: Line = Line(),
-    var augments: MutableList<Augment> = mutableListOf(),
+    var augments: MutableList<MutableAugment> = mutableListOf(),
     var augmentsAvailable: Int = 0,
     var overclocks: Overclocks = Overclocks(),
     var baitDesynced: Boolean = true,
@@ -57,4 +70,14 @@ data class Supplies(
 )
 data class PlayerState(
     var supplies: Supplies = Supplies(),
+    var upgrades: PlayerUpgrades = PlayerUpgrades(),
+    var perkState: PerkState = PerkState(),
+)
+
+data class MutableAugment(
+    val augment: Augment,
+    var usesCurrent: Int? = null,
+    var usesMax: Int? = null,
+    var useCondition: UseCondition? = null,
+    var bannedInGrotto: Boolean = false,
 )

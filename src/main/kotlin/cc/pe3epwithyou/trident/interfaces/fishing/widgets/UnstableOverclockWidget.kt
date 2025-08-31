@@ -15,20 +15,22 @@ class UnstableOverclockWidget(
     height: Int,
     overclockTexture: OverclockTexture,
     private val marginRight: Int = 0,
-    timeComponent: Component
+    timeComponent: Component,
+    levelLabel: Component? = null
 ) : CompoundWidget(0, 0, width, height) {
     override val layout = LinearLayout(
         LinearLayout.Orientation.HORIZONTAL,
         0,
     ) {
         val font = Minecraft.getInstance().font
-        +ItemWidget(
+        +IconWithLabelWidget(
             Model(
                 overclockTexture.texturePath,
                 height,
                 height,
             ),
-            marginRight = 2
+            levelLabel,
+            marginRight = 3
         )
         +StringWidget(timeComponent, font).alignLeft()
     }

@@ -12,6 +12,13 @@ import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.UpgradesDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.ChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.HookChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.MagnetChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.RodChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.PotChanceDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.ChancePerksDialog
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
@@ -38,6 +45,13 @@ class TridentClient : ClientModInitializer {
     private val debugDialogs = mapOf(
         "supplies" to ::SuppliesDialog,
         "questing" to ::QuestingDialog,
+        "upgrades" to ::UpgradesDialog,
+        "chances" to ::ChanceDialog,
+        "hookchances" to ::HookChanceDialog,
+        "magnetchances" to ::MagnetChanceDialog,
+        "rodchances" to ::RodChanceDialog,
+        "potchances" to ::PotChanceDialog,
+        "chanceperks" to ::ChancePerksDialog,
     )
 
     companion object {

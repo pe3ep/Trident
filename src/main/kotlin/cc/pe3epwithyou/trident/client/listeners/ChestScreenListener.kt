@@ -9,6 +9,7 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
+import cc.pe3epwithyou.trident.state.MutableAugment
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
@@ -35,6 +36,11 @@ object ChestScreenListener {
         if ("FISHING SUPPLIES" in screen.title.string) {
             DelayedAction.delayTicks(2L) {
                 findAugments(screen)
+            }
+        }
+        if ("FISHING PERKS" in screen.title.string) {
+            DelayedAction.delayTicks(2L) {
+                findFishingPerks(screen)
             }
         }
         if ("ISLAND REWARDS" in screen.title.string) {
@@ -133,10 +139,11 @@ object ChestScreenListener {
 
         // Process augments slots
         val augmentSlotsIndices = listOf(30, 31, 32, 33, 34, 39, 40, 41, 42, 43)
-        val augmentsRaw = augmentSlotsIndices.map { screen.menu.slots[it].item.displayName.string } as MutableList
+        val augmentItems = augmentSlotsIndices.map { screen.menu.slots[it].item }
+        val augmentsRaw = augmentItems.map { it.displayName.string } as MutableList
 
         var availableSlots = 10
-        TridentClient.playerState.supplies.augments = augmentsRaw.mapNotNull { rawName ->
+        val parsedAugments: MutableList<Augment?> = augmentsRaw.mapNotNull { rawName ->
             when {
                 rawName.contains("Locked Supply Slot") -> {
                     availableSlots--
@@ -152,23 +159,49 @@ object ChestScreenListener {
                     getAugmentByName(cleanedName)
                 }
             }
-        } as MutableList<Augment>
+        } as MutableList<Augment?>
         ChatUtils.debugLog("""
             Augments: ${TridentClient.playerState.supplies.augments}
         """.trimIndent())
         TridentClient.playerState.supplies.augmentsAvailable = availableSlots
+        // Parse uses for each augment; keep length aligned with augments list, skip locked/empty
+        val mutableAugments = mutableListOf<MutableAugment>()
+        augmentItems.forEachIndexed { idx, item ->
+            val name = item.displayName.string
+            if (name.contains("Locked Supply Slot") || name.contains("Empty Supply Slot")) {
+                // skip placeholders in new structure
+            } else {
+                val parsed = ItemParser.getAugmentUses(item)
+                val augment = parsedAugments.getOrNull(idx)
+                if (augment != null) {
+                    val meta = ItemParser.getAugmentUseCondition(item)
+                    val mutable = MutableAugment(
+                        augment = augment,
+                        usesCurrent = parsed?.first,
+                        usesMax = parsed?.second,
+                        useCondition = meta.condition,
+                        bannedInGrotto = meta.bannedInGrotto
+                    )
+                    mutableAugments.add(mutable)
+                }
+            }
+        }
+        TridentClient.playerState.supplies.augments = mutableAugments
         TridentClient.playerState.supplies.baitDesynced = false
         TridentClient.playerState.supplies.needsUpdating = false
 
         // Overclocks (slots 12-15)
         val hookOverclock = screen.menu.slots[12]
         TridentClient.playerState.supplies.overclocks.hook = ItemParser.getActiveOverclock(hookOverclock.item)
+        TridentClient.playerState.supplies.overclocks.stableLevels.hook = ItemParser.getOverclockLevel(hookOverclock.item)
 
         val magnetOverclock = screen.menu.slots[13]
         TridentClient.playerState.supplies.overclocks.magnet = ItemParser.getActiveOverclock(magnetOverclock.item)
+        TridentClient.playerState.supplies.overclocks.stableLevels.magnet = ItemParser.getOverclockLevel(magnetOverclock.item)
 
         val rodOverclock = screen.menu.slots[14]
         TridentClient.playerState.supplies.overclocks.rod = ItemParser.getActiveOverclock(rodOverclock.item)
+        TridentClient.playerState.supplies.overclocks.stableLevels.rod = ItemParser.getOverclockLevel(rodOverclock.item)
 
         val unstableOverclock = screen.menu.slots[15]
         val unstableModel = unstableOverclock.item.components[DataComponents.ITEM_MODEL]
@@ -176,13 +209,48 @@ object ChestScreenListener {
             TridentClient.playerState.supplies.overclocks.unstable.isAvailable = !unstableModel.path.startsWith("island_interface/locked")
         }
         TridentClient.playerState.supplies.overclocks.unstable.texture = ItemParser.getUnstableOverclock(unstableOverclock.item)
+        TridentClient.playerState.supplies.overclocks.unstable.level = ItemParser.getOverclockLevel(unstableOverclock.item)
 
         val supremeOverclock = screen.menu.slots[16]
         val supremeModel = supremeOverclock.item.components[DataComponents.ITEM_MODEL]
         if (supremeModel != null) {
             TridentClient.playerState.supplies.overclocks.supreme.isAvailable = !supremeModel.path.startsWith("island_interface/locked")
         }
+        TridentClient.playerState.supplies.overclocks.stableLevels.hook = ItemParser.getOverclockLevel(hookOverclock.item)
+        TridentClient.playerState.supplies.overclocks.stableLevels.magnet = ItemParser.getOverclockLevel(magnetOverclock.item)
+        TridentClient.playerState.supplies.overclocks.stableLevels.rod = ItemParser.getOverclockLevel(rodOverclock.item)
+        // Recompute and refresh dialogs
+        TridentClient.playerState.perkState = cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator.recompute(TridentClient.playerState)
         // Refresh supplies dialog if open
         DialogCollection.refreshDialog("supplies")
+        DialogCollection.refreshDialog("upgrades")
+        DialogCollection.refreshDialog("chances")
+        DialogCollection.refreshDialog("hookchances")
+        DialogCollection.refreshDialog("magnetchances")
+        DialogCollection.refreshDialog("rodchances")
+        DialogCollection.refreshDialog("potchances")
+        DialogCollection.refreshDialog("chanceperks")
+    }
+
+    fun findFishingPerks(screen: ContainerScreen) {
+        // This menu lists permanent upgrades. We'll scan visible slots for names like
+        // "Strong Hook (8/20)" and set corresponding levels.
+        val upgrades = TridentClient.playerState.upgrades
+        screen.menu.slots.forEach { slot ->
+            val name = slot.item.displayName.string
+            val line = ItemParser.parseUpgradeLine(name) ?: return@forEach
+            val type = ItemParser.parseUpgradeType(name) ?: return@forEach
+            val level = ItemParser.parseUpgradeLevelFromName(name) ?: return@forEach
+            upgrades.setLevel(line, type, level)
+        }
+        // Refresh dialog to reflect newly parsed values immediately
+        DialogCollection.refreshDialog("upgrades")
+        DialogCollection.refreshDialog("chances")
+        DialogCollection.refreshDialog("hookchances")
+        DialogCollection.refreshDialog("magnetchances")
+        DialogCollection.refreshDialog("rodchances")
+        DialogCollection.refreshDialog("potchances")
+        DialogCollection.refreshDialog("chanceperks")
+        TridentClient.playerState.perkState = cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator.recompute(TridentClient.playerState)
     }
 }

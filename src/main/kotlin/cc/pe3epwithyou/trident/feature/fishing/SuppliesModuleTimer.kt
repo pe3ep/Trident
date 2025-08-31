@@ -57,6 +57,8 @@ class SuppliesModuleTimer : ClientTickEvents.EndTick {
         if (this.unstableOverclock % 20 == 0L) {
             unstableOverclockState.timeLeft = this.unstableOverclock
             DialogCollection.refreshDialog("supplies")
+            DialogCollection.refreshDialog("upgrades")
+            DialogCollection.refreshDialog("chanceperks")
         }
 
         if (this.unstableOverclock == 0L) {
@@ -64,6 +66,8 @@ class SuppliesModuleTimer : ClientTickEvents.EndTick {
             unstableOverclockState.isCooldown = true
 
             DialogCollection.refreshDialog("supplies")
+            DialogCollection.refreshDialog("upgrades")
+            DialogCollection.refreshDialog("chanceperks")
         }
         this.unstableOverclock--
 
@@ -76,6 +80,8 @@ class SuppliesModuleTimer : ClientTickEvents.EndTick {
         if (this.unstableOverclockCooldown % 20 == 0L) {
             unstableOverclockState.cooldownLeft = this.unstableOverclockCooldown
             DialogCollection.refreshDialog("supplies")
+            DialogCollection.refreshDialog("upgrades")
+            DialogCollection.refreshDialog("chanceperks")
         }
 
         if (this.unstableOverclockCooldown == 0L) {
@@ -83,6 +89,8 @@ class SuppliesModuleTimer : ClientTickEvents.EndTick {
             unstableOverclockState.isCooldown = false
             sendReadyMessage("Unstable Overclock")
             DialogCollection.refreshDialog("supplies")
+            DialogCollection.refreshDialog("upgrades")
+            DialogCollection.refreshDialog("chanceperks")
         }
         this.unstableOverclockCooldown--
 
@@ -95,6 +103,8 @@ class SuppliesModuleTimer : ClientTickEvents.EndTick {
         if (this.supremeOverclock % 20 == 0L) {
             supremeOverclockState.timeLeft = this.supremeOverclock
             DialogCollection.refreshDialog("supplies")
+            DialogCollection.refreshDialog("upgrades")
+            DialogCollection.refreshDialog("chanceperks")
         }
 
         if (this.supremeOverclock == 0L) {
@@ -102,6 +112,8 @@ class SuppliesModuleTimer : ClientTickEvents.EndTick {
             supremeOverclockState.isCooldown = true
 
             DialogCollection.refreshDialog("supplies")
+            DialogCollection.refreshDialog("upgrades")
+            DialogCollection.refreshDialog("chanceperks")
         }
         this.supremeOverclock--
 
@@ -114,6 +126,8 @@ class SuppliesModuleTimer : ClientTickEvents.EndTick {
         if (this.supremeOverclockCooldown % 20 == 0L) {
             supremeOverclockState.cooldownLeft = this.supremeOverclockCooldown
             DialogCollection.refreshDialog("supplies")
+            DialogCollection.refreshDialog("upgrades")
+            DialogCollection.refreshDialog("chanceperks")
         }
 
         if (this.supremeOverclockCooldown == 0L) {
@@ -121,6 +135,8 @@ class SuppliesModuleTimer : ClientTickEvents.EndTick {
             supremeOverclockState.isCooldown = false
             sendReadyMessage("Supreme Overclock")
             DialogCollection.refreshDialog("supplies")
+            DialogCollection.refreshDialog("upgrades")
+            DialogCollection.refreshDialog("chanceperks")
         }
         this.supremeOverclockCooldown--
 

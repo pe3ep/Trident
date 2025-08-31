@@ -4,6 +4,10 @@ import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
+import cc.pe3epwithyou.trident.state.fishing.PlayerUpgrades
+import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
+import cc.pe3epwithyou.trident.state.fishing.UpgradeType
+import cc.pe3epwithyou.trident.state.fishing.UseCondition
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.world.item.ItemStack
 
@@ -59,5 +63,95 @@ object ItemParser {
             }
         }
         return null
+    }
+
+    fun getOverclockLevel(item: ItemStack): Int? {
+        val nameCandidates = listOf(
+            item.displayName.string,
+            item.hoverName.string
+        )
+        val pattern = Regex("""\((\d+)\s*/\s*\d+\)""")
+        nameCandidates.forEach { n ->
+            val m = pattern.find(n)
+            if (m != null) return m.groups[1]?.value?.toIntOrNull()
+        }
+        return null
+    }
+
+    // Fishing Perks (ANGLR -> Fishing Perks) parsing helpers
+    fun parseUpgradeLine(name: String): UpgradeLine? {
+        val n = name.lowercase()
+        for (line in UpgradeLine.entries) {
+            for (label in line.allLabels()) {
+                if (n.contains(label.lowercase())) return line
+            }
+        }
+        return null
+    }
+
+    fun parseUpgradeType(name: String): UpgradeType? = when {
+        name.contains("Hook", true) -> UpgradeType.HOOK
+        name.contains("Magnet", true) -> UpgradeType.MAGNET
+        name.contains("Rod", true) -> UpgradeType.ROD
+        name.contains("Pot", true) -> UpgradeType.POT
+        name.contains("Chance", true) -> UpgradeType.CHANCE
+        name.contains("Wayfinder", true) -> UpgradeType.CHANCE
+        else -> null
+    }
+
+    fun parseUpgradeLevelFromName(name: String): Int? {
+        // Expected formats include: "(8/20)", "Lv 8" etc. Prefer (cur/max)
+        val paren = Regex("\\((\\d+)\\s*/\\s*\\d+\\)").find(name)?.groups?.get(1)?.value?.toIntOrNull()
+        if (paren != null) return paren
+        val lv = Regex("(?i)lv\\s*(\\d+)").find(name)?.groups?.get(1)?.value?.toIntOrNull()
+        if (lv != null) return lv
+        return null
+    }
+
+    fun getAugmentUses(item: ItemStack): Pair<Int?, Int?>? {
+        val nameCandidates = listOf(
+            item.displayName.string,
+            item.hoverName.string
+        )
+        val pattern = Regex("""(?i)Uses\s*Remaining\s*:?\s*(\d+)\s*/\s*(\d+)""")
+        nameCandidates.forEach { n ->
+            val m = pattern.find(n)
+            if (m != null) {
+                val cur = m.groups[1]?.value?.toIntOrNull()
+                val max = m.groups[2]?.value?.toIntOrNull()
+                return Pair(cur, max)
+            }
+        }
+        // Fallback to lore if needed
+        item.getLore().forEach { line ->
+            val m = pattern.find(line.string)
+            if (m != null) {
+                val cur = m.groups[1]?.value?.toIntOrNull()
+                val max = m.groups[2]?.value?.toIntOrNull()
+                return Pair(cur, max)
+            }
+        }
+        return null
+    }
+
+    data class ParsedAugmentMeta(val condition: UseCondition?, val bannedInGrotto: Boolean)
+
+    fun getAugmentUseCondition(item: ItemStack): ParsedAugmentMeta {
+        val lore = item.getLore().map { it.string.lowercase() }
+        val key = lore.firstOrNull { it.contains("use condition") }
+        val condition = when {
+            key == null -> null
+            key.contains("spirit") -> UseCondition.SPIRIT
+            key.contains("pearl") -> UseCondition.PEARL
+            key.contains("elusive") -> UseCondition.ELUSIVE_FISH
+            key.contains("treasure") -> UseCondition.TREASURE
+            key.contains("grotto") -> UseCondition.IN_GROTTO
+            key.contains("anything") -> UseCondition.ANYTHING
+            key.contains("cast into spot") -> UseCondition.CAST_INTO_SPOT
+            key.contains("fish") -> UseCondition.FISH
+            else -> null
+        }
+        val banned = lore.any { it.contains("does not work in grottos") }
+        return ParsedAugmentMeta(condition, banned)
     }
 }

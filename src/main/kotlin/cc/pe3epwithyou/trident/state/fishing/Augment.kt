@@ -1,93 +1,143 @@
 package cc.pe3epwithyou.trident.state.fishing
 
 import net.minecraft.resources.ResourceLocation
+import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
+import cc.pe3epwithyou.trident.state.fishing.UpgradeType
 
 enum class Augment(
     val augmentName: String,
     val texturePath: ResourceLocation,
     val textureWidth: Int = 16,
     val textureHeight: Int = textureWidth,
-    val asociatedOverclockTexture: OverclockTexture? = null
+    val asociatedOverclockTexture: OverclockTexture? = null,
+    val affectsType: UpgradeType? = null,
+    val affectsLine: UpgradeLine? = null,
+    val bonusPoints: Int = 0
 ) {
    // Hook Augments (can be used by the hook overclock)
     STRONG_HOOK(
        "Strong Hook",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/strong_hook"),
-        asociatedOverclockTexture = OverclockTexture.STRONG_HOOK
+        asociatedOverclockTexture = OverclockTexture.STRONG_HOOK,
+        affectsType = UpgradeType.HOOK,
+        affectsLine = UpgradeLine.STRONG,
+        bonusPoints = 3
     ),
     WISE_HOOK(
         "Wise Hook",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/wise_hook"),
-        asociatedOverclockTexture = OverclockTexture.WISE_HOOK
+        asociatedOverclockTexture = OverclockTexture.WISE_HOOK,
+        affectsType = UpgradeType.HOOK,
+        affectsLine = UpgradeLine.WISE,
+        bonusPoints = 3
     ),
     GLIMMERING_HOOK(
         "Glimmering Hook",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/glimmering_hook"),
-        asociatedOverclockTexture = OverclockTexture.GLIMMERING_HOOK
+        asociatedOverclockTexture = OverclockTexture.GLIMMERING_HOOK,
+        affectsType = UpgradeType.HOOK,
+        affectsLine = UpgradeLine.GLIMMERING,
+        bonusPoints = 3
     ),
     GREEDY_HOOK(
         "Greedy Hook",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/greedy_hook"),
-        asociatedOverclockTexture = OverclockTexture.GREEDY_HOOK
+        asociatedOverclockTexture = OverclockTexture.GREEDY_HOOK,
+        affectsType = UpgradeType.HOOK,
+        affectsLine = UpgradeLine.GREEDY,
+        bonusPoints = 3
     ),
     LUCKY_HOOK(
         "Lucky Hook",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/lucky_hook"),
-        asociatedOverclockTexture = OverclockTexture.LUCKY_HOOK
+        asociatedOverclockTexture = OverclockTexture.LUCKY_HOOK,
+        affectsType = UpgradeType.HOOK,
+        affectsLine = UpgradeLine.LUCKY,
+        bonusPoints = 3
     ),
 
     // Magnet Augments (can be used by the magnet overclock)
     XP_MAGNET(
         "XP Magnet",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/xp_magnet"),
-        asociatedOverclockTexture = OverclockTexture.XP_MAGNET
+        asociatedOverclockTexture = OverclockTexture.XP_MAGNET,
+        affectsType = UpgradeType.MAGNET,
+        affectsLine = null,
+        bonusPoints = 3
     ),
     FISH_MAGNET(
         "Fish Magnet",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/fish_magnet"),
-        asociatedOverclockTexture = OverclockTexture.FISH_MAGNET
+        asociatedOverclockTexture = OverclockTexture.FISH_MAGNET,
+        affectsType = UpgradeType.MAGNET,
+        affectsLine = null,
+        bonusPoints = 3
     ),
     PEARL_MAGNET(
         "Pearl Magnet",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/pearl_magnet"),
-        asociatedOverclockTexture = OverclockTexture.PEARL_MAGNET
+        asociatedOverclockTexture = OverclockTexture.PEARL_MAGNET,
+        affectsType = UpgradeType.MAGNET,
+        affectsLine = null,
+        bonusPoints = 3
     ),
     TREASURE_MAGNET(
         "Treasure Magnet",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/treasure_magnet"),
-        asociatedOverclockTexture = OverclockTexture.TREASURE_MAGNET
+        asociatedOverclockTexture = OverclockTexture.TREASURE_MAGNET,
+        affectsType = UpgradeType.MAGNET,
+        affectsLine = null,
+        bonusPoints = 3
     ),
     SPIRIT_MAGNET(
         "Spirit Magnet",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/spirit_magnet"),
-        asociatedOverclockTexture = OverclockTexture.SPIRIT_MAGNET
+        asociatedOverclockTexture = OverclockTexture.SPIRIT_MAGNET,
+        affectsType = UpgradeType.MAGNET,
+        affectsLine = null,
+        bonusPoints = 3
     ),
 
     // Rod Augments (can be used by the rod overclock)
     BOOSTED_ROD(
         "Boosted Rod",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/boosted_rod"),
-        asociatedOverclockTexture = OverclockTexture.BOOSTED_ROD
+        asociatedOverclockTexture = OverclockTexture.BOOSTED_ROD,
+        affectsType = UpgradeType.ROD,
+        affectsLine = null,
+        bonusPoints = 4
     ),
     SPEEDY_ROD(
         "Speedy Rod",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/speedy_rod"),
-        asociatedOverclockTexture = OverclockTexture.SPEEDY_ROD
+        asociatedOverclockTexture = OverclockTexture.SPEEDY_ROD,
+        affectsType = UpgradeType.ROD,
+        affectsLine = null,
+        bonusPoints = 4
     ),
     GRACEFUL_ROD(
         "Graceful Rod",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/graceful_rod"),
-        asociatedOverclockTexture = OverclockTexture.GRACEFUL_ROD
+        asociatedOverclockTexture = OverclockTexture.GRACEFUL_ROD,
+        affectsType = UpgradeType.ROD,
+        affectsLine = null,
+        bonusPoints = 4
     ),
     GLITCHED_ROD(
         "Glitched Rod",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/glitched_rod"),
-        asociatedOverclockTexture = OverclockTexture.GLITCHED_ROD
+        asociatedOverclockTexture = OverclockTexture.GLITCHED_ROD,
+        affectsType = UpgradeType.ROD,
+        affectsLine = null,
+        bonusPoints = 4
     ),
     STABLE_ROD(
         "Stable Rod",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/stable_rod"),
-        asociatedOverclockTexture = OverclockTexture.STABLE_ROD
+        asociatedOverclockTexture = OverclockTexture.STABLE_ROD,
+        affectsType = UpgradeType.ROD,
+        affectsLine = null,
+        bonusPoints = 4
     ),
 
     // Lure Augments (can be used by the unstable overclock)
