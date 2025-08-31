@@ -128,9 +128,10 @@ class HookChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), 
             if (idx > 0) {
                 comp = comp.append(Component.literal(" | ").mccFont().withStyle(ChatFormatting.GRAY))
             }
+            val abbrev = cat.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
             val nameColored = rarityColorFor(cat.name)?.let { color ->
-                Component.literal(cat.name).mccFont().withColor(color)
-            } ?: Component.literal(cat.name).mccFont().withStyle(accent)
+                Component.literal(abbrev).mccFont().withColor(color)
+            } ?: Component.literal(abbrev).mccFont().withStyle(accent)
 
             val pctComp = Component.literal(" ${"""%.2f""".format(cat.pct)}%").mccFont().withStyle(accent)
             comp = comp.append(nameColored).append(pctComp)

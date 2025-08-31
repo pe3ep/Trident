@@ -62,7 +62,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/xp_magnet"),
         asociatedOverclockTexture = OverclockTexture.XP_MAGNET,
         affectsType = UpgradeType.MAGNET,
-        affectsLine = null,
+        affectsLine = UpgradeLine.STRONG,
         bonusPoints = 3
     ),
     FISH_MAGNET(
@@ -70,7 +70,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/fish_magnet"),
         asociatedOverclockTexture = OverclockTexture.FISH_MAGNET,
         affectsType = UpgradeType.MAGNET,
-        affectsLine = null,
+        affectsLine = UpgradeLine.WISE,
         bonusPoints = 3
     ),
     PEARL_MAGNET(
@@ -78,7 +78,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/pearl_magnet"),
         asociatedOverclockTexture = OverclockTexture.PEARL_MAGNET,
         affectsType = UpgradeType.MAGNET,
-        affectsLine = null,
+        affectsLine = UpgradeLine.GLIMMERING,
         bonusPoints = 3
     ),
     TREASURE_MAGNET(
@@ -86,7 +86,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/treasure_magnet"),
         asociatedOverclockTexture = OverclockTexture.TREASURE_MAGNET,
         affectsType = UpgradeType.MAGNET,
-        affectsLine = null,
+        affectsLine = UpgradeLine.GREEDY,
         bonusPoints = 3
     ),
     SPIRIT_MAGNET(
@@ -94,7 +94,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/spirit_magnet"),
         asociatedOverclockTexture = OverclockTexture.SPIRIT_MAGNET,
         affectsType = UpgradeType.MAGNET,
-        affectsLine = null,
+        affectsLine = UpgradeLine.LUCKY,
         bonusPoints = 3
     ),
 
@@ -104,7 +104,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/boosted_rod"),
         asociatedOverclockTexture = OverclockTexture.BOOSTED_ROD,
         affectsType = UpgradeType.ROD,
-        affectsLine = null,
+        affectsLine = UpgradeLine.STRONG,
         bonusPoints = 4
     ),
     SPEEDY_ROD(
@@ -112,7 +112,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/speedy_rod"),
         asociatedOverclockTexture = OverclockTexture.SPEEDY_ROD,
         affectsType = UpgradeType.ROD,
-        affectsLine = null,
+        affectsLine = UpgradeLine.WISE,
         bonusPoints = 4
     ),
     GRACEFUL_ROD(
@@ -120,7 +120,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/graceful_rod"),
         asociatedOverclockTexture = OverclockTexture.GRACEFUL_ROD,
         affectsType = UpgradeType.ROD,
-        affectsLine = null,
+        affectsLine = UpgradeLine.GLIMMERING,
         bonusPoints = 4
     ),
     GLITCHED_ROD(
@@ -128,7 +128,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/glitched_rod"),
         asociatedOverclockTexture = OverclockTexture.GLITCHED_ROD,
         affectsType = UpgradeType.ROD,
-        affectsLine = null,
+        affectsLine = UpgradeLine.GREEDY,
         bonusPoints = 4
     ),
     STABLE_ROD(
@@ -136,7 +136,7 @@ enum class Augment(
         ResourceLocation.fromNamespaceAndPath("mcc", "island_interface/fishing/perk_icon/stable_rod"),
         asociatedOverclockTexture = OverclockTexture.STABLE_ROD,
         affectsType = UpgradeType.ROD,
-        affectsLine = null,
+        affectsLine = UpgradeLine.LUCKY,
         bonusPoints = 4
     ),
 
