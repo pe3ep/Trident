@@ -28,23 +28,27 @@ object PerkStateCalculator {
         val upgrades = player.upgrades
         val supplies = player.supplies
 
-        // Equipment bonuses
-        val baitBonus = when (supplies.bait.type) {
-            Rarity.COMMON -> 1
-            Rarity.UNCOMMON -> 2
-            Rarity.RARE -> 4
-            Rarity.EPIC -> 7
-            Rarity.LEGENDARY -> 10
-            Rarity.MYTHIC -> 15
-        }
-        val lineBonus = when (supplies.line.type) {
-            Rarity.COMMON -> 2
-            Rarity.UNCOMMON -> 4
-            Rarity.RARE -> 7
-            Rarity.EPIC -> 10
-            Rarity.LEGENDARY -> 15
-            Rarity.MYTHIC -> 20
-        }
+        // Equipment bonuses only if equipped (non-null and > 0)
+        val baitBonus = if ((supplies.bait.amount ?: 0) > 0) {
+            when (supplies.bait.type) {
+                Rarity.COMMON -> 1
+                Rarity.UNCOMMON -> 2
+                Rarity.RARE -> 4
+                Rarity.EPIC -> 7
+                Rarity.LEGENDARY -> 10
+                Rarity.MYTHIC -> 15
+            }
+        } else 0
+        val lineBonus = if ((supplies.line.uses ?: 0) > 0) {
+            when (supplies.line.type) {
+                Rarity.COMMON -> 2
+                Rarity.UNCOMMON -> 4
+                Rarity.RARE -> 7
+                Rarity.EPIC -> 10
+                Rarity.LEGENDARY -> 15
+                Rarity.MYTHIC -> 20
+            }
+        } else 0
 
         val selectedHook = supplies.overclocks.hook
         val selectedMagnet = supplies.overclocks.magnet
