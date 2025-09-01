@@ -9,6 +9,8 @@ import cc.pe3epwithyou.trident.state.fishing.UpgradeType
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
+import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
+import cc.pe3epwithyou.trident.state.fishing.PerkTotals
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
@@ -88,7 +90,7 @@ class UpgradesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val mcFont = Minecraft.getInstance().font
         val upgrades = TridentClient.playerState.upgrades
         // Ensure perkState is up to date
-        TridentClient.playerState.perkState = cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator.recompute(TridentClient.playerState)
+        TridentClient.playerState.perkState = PerkStateCalculator.recompute(TridentClient.playerState)
 
         // Header row: blank corner + types
         StringWidget(Component.literal("").mccFont(), mcFont).at(0, 0)
@@ -105,7 +107,7 @@ class UpgradesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
             UpgradeType.entries.forEachIndexed { c, type ->
                 val totals = TridentClient.playerState.perkState.totals[line]?.get(type)
-                    ?: cc.pe3epwithyou.trident.state.fishing.PerkTotals()
+                    ?: PerkTotals()
                 val base = totals.base
                 val augBonus = totals.augment
                 val ocBonus = totals.overclock

@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
 import cc.pe3epwithyou.trident.state.fishing.UpgradeType
+import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
@@ -155,7 +156,7 @@ class ChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Them
     override fun layout(): GridLayout = grid {
         val font = Minecraft.getInstance().font
         // Ensure perk state is up to date before rendering
-        TridentClient.playerState.perkState = cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator.recompute(
+        TridentClient.playerState.perkState = PerkStateCalculator.recompute(
             TridentClient.playerState
         )
         val ps = TridentClient.playerState.perkState

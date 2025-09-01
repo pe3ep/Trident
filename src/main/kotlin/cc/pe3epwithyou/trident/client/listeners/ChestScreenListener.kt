@@ -15,6 +15,7 @@ import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
+import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -222,7 +223,7 @@ object ChestScreenListener {
         TridentClient.playerState.supplies.overclocks.stableLevels.magnet = ItemParser.getOverclockLevel(magnetOverclock.item)
         TridentClient.playerState.supplies.overclocks.stableLevels.rod = ItemParser.getOverclockLevel(rodOverclock.item)
         // Recompute and refresh dialogs
-        TridentClient.playerState.perkState = cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator.recompute(TridentClient.playerState)
+        TridentClient.playerState.perkState = PerkStateCalculator.recompute(TridentClient.playerState)
         // Refresh supplies dialog if open
         DialogCollection.refreshDialog("supplies")
         DialogCollection.refreshDialog("upgrades")
@@ -253,6 +254,6 @@ object ChestScreenListener {
         DialogCollection.refreshDialog("rodchances")
         DialogCollection.refreshDialog("potchances")
         DialogCollection.refreshDialog("chanceperks")
-        TridentClient.playerState.perkState = cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator.recompute(TridentClient.playerState)
+        TridentClient.playerState.perkState = PerkStateCalculator.recompute(TridentClient.playerState)
     }
 }

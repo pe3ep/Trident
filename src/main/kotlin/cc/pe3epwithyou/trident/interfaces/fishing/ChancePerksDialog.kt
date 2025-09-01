@@ -123,8 +123,8 @@ class ChancePerksDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
             ChanceRow("Elusive Chance", base = 0.0, bonus = ptsStrong * 0.5 + (if (spot.hasSpot) spot.elusiveChanceBonusPercent else 0.0) + (if (winds.contains(UpgradeLine.STRONG)) 5.0 else 0.0) + (if (hasElusiveLure) 100.0 else 0.0) + (if (hasElusiveSoda) 10.0 else 0.0), isPercent = true),
             ChanceRow("Wayfinder Data", base = 10.0, bonus = ptsWise * 1.0 + (if (spot.hasSpot) spot.wayfinderDataBonus else 0.0) + (if (winds.contains(UpgradeLine.WISE)) 10.0 else 0.0) + wayfinderFromLures, isPercent = false),
             ChanceRow("Pearl Chance", base = 5.0, bonus = ptsGlim * 0.5 + (if (spot.hasSpot) spot.pearlChanceBonusPercent else 0.0) + (if (winds.contains(UpgradeLine.GLIMMERING)) 5.0 else 0.0), isPercent = true),
-            ChanceRow("Treasure Chance", base = 1.0, bonus = ptsGreedy * 0.1 + (if (spot.hasSpot) spot.treasureChanceBonusPercent else 0.0) + (if (winds.contains(cc.pe3epwithyou.trident.state.fishing.UpgradeLine.GREEDY)) 0.1 * 100 else 0.0), isPercent = true),
-            ChanceRow("Spirit Chance", base = 2.0, bonus = ptsLucky * 0.2 + (if (spot.hasSpot) spot.spiritChanceBonusPercent else 0.0) + (if (winds.contains(cc.pe3epwithyou.trident.state.fishing.UpgradeLine.LUCKY)) 5.0 else 0.0), isPercent = true),
+            ChanceRow("Treasure Chance", base = 1.0, bonus = ptsGreedy * 0.1 + (if (spot.hasSpot) spot.treasureChanceBonusPercent else 0.0) + (if (winds.contains(UpgradeLine.GREEDY)) 0.1 * 100 else 0.0), isPercent = true),
+            ChanceRow("Spirit Chance", base = 2.0, bonus = ptsLucky * 0.2 + (if (spot.hasSpot) spot.spiritChanceBonusPercent else 0.0) + (if (winds.contains(UpgradeLine.LUCKY)) 5.0 else 0.0), isPercent = true),
         )
 
         rows.forEach { r ->
