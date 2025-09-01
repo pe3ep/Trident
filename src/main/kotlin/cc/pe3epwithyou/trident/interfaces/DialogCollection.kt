@@ -87,11 +87,11 @@ object DialogCollection {
     }
 
     fun saveAllDialogs() {
-        DialogIO.saveDialogPositions(dialogPositions)
+        DialogIO.save(dialogPositions)
     }
 
     fun loadAllDialogs() {
-        val pos = DialogIO.loadAllDialogPositions()
+        val pos = DialogIO.load()
         pos.forEach { (key, position) ->
             dialogPositions[key] = position
         }

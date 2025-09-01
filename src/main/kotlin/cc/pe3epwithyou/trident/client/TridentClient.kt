@@ -14,6 +14,7 @@ import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
+import cc.pe3epwithyou.trident.state.PlayerStateIO
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.TridentFont
@@ -41,7 +42,7 @@ class TridentClient : ClientModInitializer {
     )
 
     companion object {
-        val playerState = PlayerState()
+        var playerState = PlayerState()
         lateinit var settingsKeymapping: KeyMapping
         var jokeCooldown: Boolean = false
     }
@@ -132,6 +133,21 @@ class TridentClient : ClientModInitializer {
                         }
                         0
                     }
+            ).then(
+                ClientCommandManager.literal("resetPlayerState")
+                    .executes { _ ->
+                        playerState = PlayerState()
+                        PlayerStateIO.load()
+                        DialogCollection.refreshOpenedDialogs()
+                        val c = Component.literal("Player state has been ")
+                            .withColor(TridentFont.TRIDENT_COLOR)
+                            .append(
+                                Component.literal("successfully reset")
+                                    .withColor(TridentFont.TRIDENT_ACCENT)
+                            )
+                        ChatUtils.sendMessage(c, true)
+                        0
+                    }
             )
 
     override fun onInitializeClient() {
@@ -172,5 +188,6 @@ class TridentClient : ClientModInitializer {
         }
 
         DialogCollection.loadAllDialogs()
+        playerState = PlayerStateIO.load()
     }
 }

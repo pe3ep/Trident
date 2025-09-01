@@ -20,7 +20,7 @@ object DialogIO {
 
     private val json = Json { prettyPrint = true }
 
-    fun saveDialogPositions(positions: Map<String, Pair<Int, Int>>) {
+    fun save(positions: Map<String, Pair<Int, Int>>) {
         val serializable = positions.mapValues { (_, pair) -> Position(pair.first, pair.second) }
 
         // Ensure the trident directory exists
@@ -40,7 +40,7 @@ object DialogIO {
         Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
     }
 
-    fun loadAllDialogPositions(): Map<String, Pair<Int, Int>> {
+    fun load(): Map<String, Pair<Int, Int>> {
         if (!Files.exists(path)) return emptyMap()
 
         val text = Files.readString(path)
