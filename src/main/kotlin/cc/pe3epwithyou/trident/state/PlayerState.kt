@@ -6,6 +6,8 @@ import cc.pe3epwithyou.trident.state.fishing.UseCondition
 import cc.pe3epwithyou.trident.state.fishing.PerkState
 import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
 import cc.pe3epwithyou.trident.state.fishing.PlayerUpgrades
+import cc.pe3epwithyou.trident.state.fishing.SpotState
+import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
 
 data class Bait(var type: Rarity = Rarity.COMMON, var amount: Int? = null)
 data class Line(var type: Rarity = Rarity.COMMON, var uses: Int? = null)
@@ -72,6 +74,11 @@ data class PlayerState(
     var supplies: Supplies = Supplies(),
     var upgrades: PlayerUpgrades = PlayerUpgrades(),
     var perkState: PerkState = PerkState(),
+    var spot: SpotState = SpotState(),
+    var inGrotto: Boolean = false,
+    var tideLines: MutableSet<UpgradeLine> = mutableSetOf(),
+    var windLines: MutableSet<UpgradeLine> = mutableSetOf(),
+    var magnetPylonBonus: Int = 0,
 )
 
 data class MutableAugment(
@@ -79,5 +86,6 @@ data class MutableAugment(
     var usesCurrent: Int? = null,
     var usesMax: Int? = null,
     var useCondition: UseCondition? = null,
+    var paused: Boolean = false,
     var bannedInGrotto: Boolean = false,
 )

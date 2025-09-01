@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
 import cc.pe3epwithyou.trident.state.fishing.UpgradeType
+import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
@@ -34,10 +35,18 @@ class RodChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
 
     override fun layout(): GridLayout = grid {
         val font = Minecraft.getInstance().font
-        TridentClient.playerState.perkState = cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator.recompute(
+        TridentClient.playerState.perkState = PerkStateCalculator.recompute(
             TridentClient.playerState
         )
         val ps = TridentClient.playerState.perkState
+
+        fun rodLabel(line: UpgradeLine): String = when (line) {
+            UpgradeLine.STRONG -> "Boosted Rod"
+            UpgradeLine.WISE -> "Speedy Rod"
+            UpgradeLine.GLIMMERING -> "Graceful Rod"
+            UpgradeLine.GREEDY -> "Glitched Rod"
+            UpgradeLine.LUCKY -> "Stable Rod"
+        }
 
         var row = 0
         StringWidget(Component.literal("RODS").mccFont().withStyle(ChatFormatting.AQUA), font)
@@ -45,10 +54,14 @@ class RodChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
 
         UpgradeLine.entries.forEach { line ->
             val ptsRod = ps.totals[line]?.get(UpgradeType.ROD)?.total ?: 0
-            val t = Component.literal("${line.name.lowercase().replaceFirstChar { it.uppercase() }} Rod: ").mccFont()
+            val t = Component.literal("${rodLabel(line)}: ").mccFont()
                 .append(Component.literal("${ptsRod}%").mccFont().withStyle(ChatFormatting.AQUA))
             StringWidget(t, font).at(row++, 0, settings = LayoutConstants.LEFT)
         }
+
+        // Footnote
+        StringWidget(Component.literal("Module Credit: Hydrogen").mccFont().withStyle(ChatFormatting.GRAY), font)
+            .atBottom(0, settings = LayoutConstants.LEFT)
     }
 
     override fun refresh() {

@@ -175,11 +175,13 @@ object ChestScreenListener {
                 val augment = parsedAugments.getOrNull(idx)
                 if (augment != null) {
                     val meta = ItemParser.getAugmentUseCondition(item)
+                    val paused = ItemParser.isAugmentPaused(item)
                     val mutable = MutableAugment(
                         augment = augment,
                         usesCurrent = parsed?.first,
                         usesMax = parsed?.second,
                         useCondition = meta.condition,
+                        paused = paused,
                         bannedInGrotto = meta.bannedInGrotto
                     )
                     mutableAugments.add(mutable)

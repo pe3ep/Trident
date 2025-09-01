@@ -111,17 +111,23 @@ class UpgradesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 val ocBonus = totals.overclock
                 val unBonus = totals.unstable
                 val eqBonus = totals.equipment
-                val total = base + augBonus + ocBonus + unBonus + eqBonus
+                val pylon = if (type == UpgradeType.MAGNET) TridentClient.playerState.magnetPylonBonus else 0
+                val total = base + augBonus + ocBonus + unBonus + eqBonus + pylon
                 var comp = Component.literal("$base").mccFont()
                 if (ocBonus > 0) comp = comp.append(Component.literal("+$ocBonus").mccFont().withStyle(ChatFormatting.AQUA))
                 if (augBonus > 0) comp = comp.append(Component.literal("+$augBonus").mccFont().withStyle(ChatFormatting.GREEN))
                 if (unBonus > 0) comp = comp.append(Component.literal("+$unBonus").mccFont().withStyle(ChatFormatting.AQUA))
                 if (eqBonus > 0) comp = comp.append(Component.literal("+$eqBonus").mccFont().withStyle(ChatFormatting.GOLD))
-                if(ocBonus > 0 || augBonus > 0 || unBonus > 0 || eqBonus > 0) comp = comp.append(Component.literal("=$total").mccFont())
+                if (pylon > 0) comp = comp.append(Component.literal("+$pylon").mccFont().withStyle(ChatFormatting.YELLOW))
+                if(ocBonus > 0 || augBonus > 0 || unBonus > 0 || eqBonus > 0 || pylon > 0) comp = comp.append(Component.literal("=$total").mccFont())
                 StringWidget(comp, mcFont)
                     .at(row, (c + 1) * 2, settings = LayoutConstants.CENTRE)
             }
         }
+
+        // Footnote
+        StringWidget(Component.literal("Module Credit: Hydrogen").mccFont().withStyle(ChatFormatting.GRAY), mcFont)
+            .at(UpgradeLine.entries.size + 2, 0, settings = LayoutConstants.LEFT)
     }
 
     override fun refresh() {

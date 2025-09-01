@@ -5,9 +5,11 @@ import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.Rarity
+import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
 import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
 import cc.pe3epwithyou.trident.state.fishing.UpgradeType
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.state.fishing.Augment
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
@@ -16,6 +18,7 @@ import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -32,6 +35,14 @@ class HookChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), 
     }
 
     override var title = getWidgetTitle()
+
+    private val expanded: MutableMap<UpgradeLine, Boolean> = mutableMapOf(
+        UpgradeLine.STRONG to false,
+        UpgradeLine.WISE to false,
+        UpgradeLine.GLIMMERING to false,
+        UpgradeLine.GREEDY to false,
+        UpgradeLine.LUCKY to false,
+    )
 
     private fun hookMultiplier(points: Int): Double = 1.0 + (points * 0.1)
 
@@ -65,6 +76,42 @@ class HookChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), 
 
     private fun applyMultiplier(line: UpgradeLine, base: List<Cat>, targets: Set<String>, mult: Double): List<Cat> {
         if (mult == 1.0 || base.isEmpty()) return base
+        // Rarity Rod augment: Guarantees Uncommon+ and triples Legendary/Mythic for Wise hook
+        val augments = TridentClient.playerState.supplies.augments.map { it.augment }
+        if (line == UpgradeLine.WISE && augments.any { it == Augment.RARITY_ROD }) {
+            val map = base.associate { it.name to it.pct }.toMutableMap()
+            // Triple Legendary/Mythic; take from Common first, then Rare if needed, then proportionally from remaining non-targets, add remainder to Uncommon
+            val legendaryNames = setOf("Legendary", "Mythic")
+            val tripleTargets = base.filter { it.name in legendaryNames }
+            val increase = tripleTargets.sumOf { it.pct * 2.0 }
+            var remainingRemoval = increase
+            // remove from Common
+            val commonBase = map["Common"] ?: 0.0
+            val takeCommon = kotlin.math.min(commonBase, remainingRemoval)
+            map["Common"] = commonBase - takeCommon
+            remainingRemoval -= takeCommon
+            if (remainingRemoval > 1e-9) {
+                val rareBase = map["Rare"] ?: 0.0
+                val takeRare = kotlin.math.min(rareBase, remainingRemoval)
+                map["Rare"] = rareBase - takeRare
+                remainingRemoval -= takeRare
+            }
+            if (remainingRemoval > 1e-9) {
+                val others = listOf("Uncommon", "Epic").associateWith { map[it] ?: 0.0 }
+                val sum = others.values.sum()
+                if (sum > 0) {
+                    val scale = (sum - remainingRemoval).coerceAtLeast(0.0) / sum
+                    others.keys.forEach { k -> map[k] = (map[k] ?: 0.0) * scale }
+                    remainingRemoval = 0.0
+                }
+            }
+            // apply triple
+            tripleTargets.forEach { t -> map[t.name] = (map[t.name] ?: 0.0) * 3.0 }
+            // move any leftover removal to Uncommon add
+            val uncommonBase = map["Uncommon"] ?: 0.0
+            map["Uncommon"] = (uncommonBase + takeCommon + (map["Rare"] ?: 0.0))
+            return base.map { Cat(it.name, map[it.name] ?: 0.0) }
+        }
         val baseSum = base.sumOf { it.pct }
         val targetSet = targets.toSet()
         val targetBaseSum = base.filter { it.name in targetSet }.sumOf { it.pct }
@@ -142,7 +189,7 @@ class HookChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), 
 
     override fun layout(): GridLayout = grid {
         val font = Minecraft.getInstance().font
-        TridentClient.playerState.perkState = cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator.recompute(
+        TridentClient.playerState.perkState = PerkStateCalculator.recompute(
             TridentClient.playerState
         )
         val ps = TridentClient.playerState.perkState
@@ -152,20 +199,59 @@ class HookChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), 
             .at(row++, 0, settings = LayoutConstants.LEFT)
 
         UpgradeLine.entries.forEach { line ->
-            val pts = ps.totals[line]?.get(UpgradeType.HOOK)?.total ?: 0
-            val mult = hookMultiplier(pts)
-            val head = Component.literal("${line.name.lowercase().replaceFirstChar { it.uppercase() }}: ")
-                .mccFont()
+            val basePts = ps.totals[line]?.get(UpgradeType.HOOK)?.total ?: 0
+            val spot = TridentClient.playerState.spot
+            val tides = TridentClient.playerState.tideLines
+            val spotPct = if (spot.hasSpot) (spot.hookPercents[line] ?: 0.0) else 0.0
+            val tidePct = if (tides.contains(line)) 20.0 else 0.0
+            val combinedPct = spotPct + tidePct
+            val effectivePts = basePts * (1.0 + combinedPct / 100.0)
+            val mult = 1.0 + (effectivePts * 0.1)
+            val deltaSpot = basePts * (spotPct / 100.0)
+            val deltaTide = basePts * (tidePct / 100.0)
+            val lineLabel = line.name.lowercase().replaceFirstChar { it.uppercase() }
+            val caret = if (expanded[line] == true) "v" else ">"
+            val condensedCalc = Component.literal(" ${basePts}*(${"""%.0f""".format(spotPct)}%+${"""%.0f""".format(tidePct)}%)")
+                .mccFont().withStyle(ChatFormatting.GRAY)
+            val headerBase = Component.literal("$caret $lineLabel: ").mccFont()
                 .append(Component.literal("x${"""%.1f""".format(mult)}").mccFont().withStyle(ChatFormatting.AQUA))
-            StringWidget(head, font).at(row++, 0, settings = LayoutConstants.LEFT)
+            val headerCollapsed = headerBase.copy().append(condensedCalc)
+            val headerExpanded = headerBase
 
-            val baseCats = hookBase(line)
-            val boosted = applyMultiplier(line, baseCats, hookTargets(line), mult)
-            val baseRow = renderChancesRow("Base:", baseCats, ChatFormatting.GRAY, font)
-            baseRow.at(row++, 0, settings = LayoutConstants.LEFT)
-            val realRow = renderChancesRow("Real:", boosted, ChatFormatting.AQUA, font)
-            realRow.at(row++, 0, settings = LayoutConstants.LEFT)
+            val buttonLabel = if (expanded[line] == true) headerExpanded else headerCollapsed
+
+            Button.builder(buttonLabel) {
+                expanded[line] = !(expanded[line] ?: false)
+                this@HookChanceDialog.refresh()
+            }.bounds(0, 0, 180, 12).build().at(row++, 0, settings = LayoutConstants.LEFT)
+
+            if (expanded[line] == true) {
+                val baseCats = hookBase(line)
+                val boosted = applyMultiplier(line, baseCats, hookTargets(line), mult)
+                // Expanded detailed calculation
+                val detail = Component.literal("pts ").mccFont().withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("${basePts}").mccFont().withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal(" + ").mccFont().withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal("${"""%.2f""".format(spotPct)}% ").mccFont().withStyle(ChatFormatting.DARK_AQUA))
+                    .append(Component.literal("(+${"""%.2f""".format(deltaSpot)}) ").mccFont().withStyle(ChatFormatting.AQUA))
+                    .append(Component.literal("+ ").mccFont().withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal("${"""%.2f""".format(tidePct)}% ").mccFont().withStyle(ChatFormatting.DARK_AQUA))
+                    .append(Component.literal("(+${"""%.2f""".format(deltaTide)}) ").mccFont().withStyle(ChatFormatting.AQUA))
+                    .append(Component.literal("= ${"""%.2f""".format(effectivePts)}").mccFont().withStyle(ChatFormatting.GRAY))
+                StringWidget(detail, font).at(row++, 0, settings = LayoutConstants.LEFT)
+
+                val baseRow = renderChancesRow("Base:", baseCats, ChatFormatting.GRAY, font)
+                baseRow.at(row++, 0, settings = LayoutConstants.LEFT)
+                val realRow = renderChancesRow("Real:", boosted, ChatFormatting.AQUA, font)
+                realRow.at(row++, 0, settings = LayoutConstants.LEFT)
+            }
+            // extra spacing row between types
+            row++
         }
+
+        // Footnote
+        StringWidget(Component.literal("Module Credit: Hydrogen").mccFont().withStyle(ChatFormatting.GRAY), font)
+            .atBottom(0, settings = LayoutConstants.LEFT)
     }
 
     override fun refresh() {
