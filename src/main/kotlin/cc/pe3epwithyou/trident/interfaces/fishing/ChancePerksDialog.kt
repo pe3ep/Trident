@@ -14,6 +14,10 @@ import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
+import cc.pe3epwithyou.trident.state.FishRarityColor
+import cc.pe3epwithyou.trident.state.PearlQualityColor
+import cc.pe3epwithyou.trident.state.TreasureRarityColor
+import cc.pe3epwithyou.trident.state.SpiritPurityColor
 import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
@@ -172,7 +176,18 @@ class ChancePerksDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
             val totalStr = if (r.isPercent) "${"""%.2f""".format(total)}%" else "${total.toInt()} per catch"
 
             val caret = if (expanded[r.label] == true) "v" else ">"
-            val buttonLabel = Component.literal("$caret ${r.label}: ").mccFont()
+            val color = when (r.label) {
+                "Elusive Chance" -> ChatFormatting.RED.color!!
+                "Wayfinder Data" -> FishRarityColor.baseColor
+                "Pearl Chance" -> PearlQualityColor.baseColor
+                "Treasure Chance" -> TreasureRarityColor.baseColor
+                "Spirit Chance" -> SpiritPurityColor.baseColor
+                "Fish Chance" -> ChatFormatting.AQUA.color!!
+                else -> ChatFormatting.AQUA.color!!
+            }
+            val buttonLabel = Component.literal("$caret ").mccFont()
+                .append(Component.literal(r.label).mccFont().withColor(color))
+                .append(Component.literal(": ").mccFont())
                 .append(Component.literal(totalStr).mccFont().withStyle(ChatFormatting.AQUA))
 
             Button.builder(buttonLabel) {

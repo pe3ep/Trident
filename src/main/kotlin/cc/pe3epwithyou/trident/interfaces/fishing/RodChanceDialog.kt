@@ -8,6 +8,11 @@ import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
 import cc.pe3epwithyou.trident.state.fishing.UpgradeType
 import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.state.FishRarityColor
+import cc.pe3epwithyou.trident.state.FishWeightColor
+import cc.pe3epwithyou.trident.state.PearlQualityColor
+import cc.pe3epwithyou.trident.state.SpiritPurityColor
+import cc.pe3epwithyou.trident.state.TreasureRarityColor
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
@@ -54,7 +59,15 @@ class RodChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
 
         UpgradeLine.entries.forEach { line ->
             val ptsRod = ps.totals[line]?.get(UpgradeType.ROD)?.total ?: 0
-            val t = Component.literal("${rodLabel(line)}: ").mccFont()
+            val baseColor = when (line) {
+                UpgradeLine.STRONG -> FishWeightColor.baseColor
+                UpgradeLine.WISE -> FishRarityColor.baseColor
+                UpgradeLine.GLIMMERING -> PearlQualityColor.baseColor
+                UpgradeLine.GREEDY -> TreasureRarityColor.baseColor
+                UpgradeLine.LUCKY -> SpiritPurityColor.baseColor
+            }
+            val t = Component.literal(rodLabel(line)).mccFont().withColor(baseColor)
+                .append(Component.literal(": ").mccFont())
                 .append(Component.literal("${ptsRod}%").mccFont().withStyle(ChatFormatting.AQUA))
             StringWidget(t, font).at(row++, 0, settings = LayoutConstants.LEFT)
         }

@@ -20,6 +20,11 @@ import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import cc.pe3epwithyou.trident.state.FishRarityColor
+import cc.pe3epwithyou.trident.state.FishWeightColor
+import cc.pe3epwithyou.trident.state.PearlQualityColor
+import cc.pe3epwithyou.trident.state.SpiritPurityColor
+import cc.pe3epwithyou.trident.state.TreasureRarityColor
 
 class MagnetChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
     private companion object {
@@ -54,6 +59,13 @@ class MagnetChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key)
             .at(row++, 0, settings = LayoutConstants.LEFT)
 
         val spot = TridentClient.playerState.spot
+        fun baseColorForLine(line: UpgradeLine): Int = when (line) {
+            UpgradeLine.STRONG -> FishWeightColor.baseColor
+            UpgradeLine.WISE -> FishRarityColor.baseColor
+            UpgradeLine.GLIMMERING -> PearlQualityColor.baseColor
+            UpgradeLine.GREEDY -> TreasureRarityColor.baseColor
+            UpgradeLine.LUCKY -> SpiritPurityColor.baseColor
+        }
         listOf(
             "XP Magnet" to UpgradeLine.STRONG,
             "Fish Magnet" to UpgradeLine.WISE,
@@ -72,7 +84,9 @@ class MagnetChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key)
             val deltaTide = pts * (tidePct / 100.0)
 
             val caret = if (expanded[line] == true) "v" else ">"
-            val headerBase = Component.literal("$caret $label: ").mccFont()
+            val headerBase = Component.literal("$caret ").mccFont()
+                .append(Component.literal(label).mccFont().withColor(baseColorForLine(line)))
+                .append(Component.literal(": ").mccFont())
                 .append(Component.literal("${"""%.2f""".format(percent)}% ").mccFont().withStyle(ChatFormatting.AQUA))
             val condensedCalc = Component.literal(" ${pts}*(${"""%.0f""".format(spotPct)}%+${"""%.0f""".format(tidePct)}%)")
                 .mccFont().withStyle(ChatFormatting.GRAY)

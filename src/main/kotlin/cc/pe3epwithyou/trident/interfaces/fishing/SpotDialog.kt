@@ -5,6 +5,9 @@ import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
+import cc.pe3epwithyou.trident.state.FishWeightColor
+import cc.pe3epwithyou.trident.state.PearlQualityColor
+import cc.pe3epwithyou.trident.state.SpiritPurityColor
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
@@ -48,8 +51,15 @@ class SpotDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed
             StringWidget(Component.literal("Hooks").mccFont().withStyle(ChatFormatting.GRAY), font).at(row++, 0, settings = LayoutConstants.LEFT)
             UpgradeLine.entries.forEach { l ->
                 val v = spot.hookPercents[l] ?: return@forEach
+                val baseColor = when(l){
+                    UpgradeLine.STRONG -> FishWeightColor.baseColor
+                    UpgradeLine.WISE -> cc.pe3epwithyou.trident.state.FishRarityColor.baseColor
+                    UpgradeLine.GLIMMERING -> PearlQualityColor.baseColor
+                    UpgradeLine.GREEDY -> cc.pe3epwithyou.trident.state.TreasureRarityColor.baseColor
+                    UpgradeLine.LUCKY -> SpiritPurityColor.baseColor
+                }
                 val t = Component.literal("${lineLabel(l)} Hook: ").mccFont()
-                    .append(Component.literal("+${"""%.2f""".format(v)}% ").mccFont().withStyle(ChatFormatting.AQUA))
+                    .append(Component.literal("+${"""%.2f""".format(v)}% ").mccFont().withColor(baseColor))
                 StringWidget(t, font).at(row++, 0, settings = LayoutConstants.LEFT)
             }
         }
@@ -65,8 +75,15 @@ class SpotDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed
                     UpgradeLine.GREEDY -> "Treasure Magnet"
                     UpgradeLine.LUCKY -> "Spirit Magnet"
                 }
+                val baseColor = when(l){
+                    UpgradeLine.STRONG -> FishWeightColor.baseColor
+                    UpgradeLine.WISE -> cc.pe3epwithyou.trident.state.FishRarityColor.baseColor
+                    UpgradeLine.GLIMMERING -> PearlQualityColor.baseColor
+                    UpgradeLine.GREEDY -> cc.pe3epwithyou.trident.state.TreasureRarityColor.baseColor
+                    UpgradeLine.LUCKY -> SpiritPurityColor.baseColor
+                }
                 val t = Component.literal("$label: ").mccFont()
-                    .append(Component.literal("+${"""%.2f""".format(v)}% ").mccFont().withStyle(ChatFormatting.AQUA))
+                    .append(Component.literal("+${"""%.2f""".format(v)}% ").mccFont().withColor(baseColor))
                 StringWidget(t, font).at(row++, 0, settings = LayoutConstants.LEFT)
             }
         }

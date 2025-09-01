@@ -5,6 +5,9 @@ import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.Rarity
+import cc.pe3epwithyou.trident.state.FishWeightColor
+import cc.pe3epwithyou.trident.state.PearlQualityColor
+import cc.pe3epwithyou.trident.state.SpiritPurityColor
 import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
 import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
 import cc.pe3epwithyou.trident.state.fishing.UpgradeType
@@ -164,6 +167,19 @@ class HookChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), 
         "epic" -> Rarity.EPIC.color
         "legendary" -> Rarity.LEGENDARY.color
         "mythic" -> Rarity.MYTHIC.color
+        // Fish weight (Strong)
+        "average" -> FishWeightColor.AVERAGE.color
+        "large" -> FishWeightColor.LARGE.color
+        "massive" -> FishWeightColor.MASSIVE.color
+        "gargantuan" -> FishWeightColor.GARGANTUAN.color
+        // Pearls (Glimmering)
+        "rough" -> PearlQualityColor.ROUGH.color
+        "polished" -> PearlQualityColor.POLISHED.color
+        "pristine" -> PearlQualityColor.PRISTINE.color
+        // Spirits (Lucky)
+        "normal" -> SpiritPurityColor.NORMAL.color
+        "refined" -> SpiritPurityColor.REFINED.color
+        "pure" -> SpiritPurityColor.PURE.color
         else -> null
     }
 
@@ -213,7 +229,16 @@ class HookChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), 
             val caret = if (expanded[line] == true) "v" else ">"
             val condensedCalc = Component.literal(" ${basePts}*(${"""%.0f""".format(spotPct)}%+${"""%.0f""".format(tidePct)}%)")
                 .mccFont().withStyle(ChatFormatting.GRAY)
-            val headerBase = Component.literal("$caret $lineLabel: ").mccFont()
+            val headerBase = Component.literal("$caret ").mccFont()
+                .append(Component.literal(lineLabel).mccFont().withColor(
+                    when(line){
+                        UpgradeLine.STRONG -> FishWeightColor.baseColor
+                        UpgradeLine.WISE -> Rarity.RARE.color
+                        UpgradeLine.GLIMMERING -> PearlQualityColor.baseColor
+                        UpgradeLine.GREEDY -> Rarity.LEGENDARY.color
+                        UpgradeLine.LUCKY -> SpiritPurityColor.baseColor
+                    }
+                )).append(Component.literal(": ").mccFont())
                 .append(Component.literal("x${"""%.1f""".format(mult)}").mccFont().withStyle(ChatFormatting.AQUA))
             val headerCollapsed = headerBase.copy().append(condensedCalc)
             val headerExpanded = headerBase

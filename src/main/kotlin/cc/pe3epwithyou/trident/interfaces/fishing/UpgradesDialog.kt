@@ -5,6 +5,11 @@ import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
+import cc.pe3epwithyou.trident.state.FishRarityColor
+import cc.pe3epwithyou.trident.state.FishWeightColor
+import cc.pe3epwithyou.trident.state.PearlQualityColor
+import cc.pe3epwithyou.trident.state.SpiritPurityColor
+import cc.pe3epwithyou.trident.state.TreasureRarityColor
 import cc.pe3epwithyou.trident.state.fishing.UpgradeType
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.ItemParser
@@ -102,7 +107,17 @@ class UpgradesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         // Rows per line
         UpgradeLine.entries.forEachIndexed { r, line ->
             val row = r + 1
-            StringWidget(Component.literal(line.name.lowercase().replaceFirstChar { it.uppercase() }).mccFont(), mcFont)
+            val lineColor = when (line) {
+                UpgradeLine.STRONG -> cc.pe3epwithyou.trident.state.FishWeightColor.baseColor
+                UpgradeLine.WISE -> cc.pe3epwithyou.trident.state.FishRarityColor.baseColor
+                UpgradeLine.GLIMMERING -> cc.pe3epwithyou.trident.state.PearlQualityColor.baseColor
+                UpgradeLine.GREEDY -> cc.pe3epwithyou.trident.state.TreasureRarityColor.baseColor
+                UpgradeLine.LUCKY -> cc.pe3epwithyou.trident.state.SpiritPurityColor.baseColor
+            }
+            StringWidget(
+                Component.literal(line.name.lowercase().replaceFirstChar { it.uppercase() }).mccFont().withColor(lineColor),
+                mcFont
+            )
                 .at(row, 0, settings = LayoutConstants.LEFT)
 
             UpgradeType.entries.forEachIndexed { c, type ->
@@ -115,13 +130,21 @@ class UpgradesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 val eqBonus = totals.equipment
                 val pylon = if (type == UpgradeType.MAGNET) TridentClient.playerState.magnetPylonBonus else 0
                 val total = base + augBonus + ocBonus + unBonus + eqBonus + pylon
-                var comp = Component.literal("$base").mccFont()
+                val baseColor = when (line) {
+                    UpgradeLine.STRONG -> cc.pe3epwithyou.trident.state.FishWeightColor.baseColor
+                    UpgradeLine.WISE -> cc.pe3epwithyou.trident.state.FishRarityColor.baseColor
+                    UpgradeLine.GLIMMERING -> cc.pe3epwithyou.trident.state.PearlQualityColor.baseColor
+                    UpgradeLine.GREEDY -> cc.pe3epwithyou.trident.state.TreasureRarityColor.baseColor
+                    UpgradeLine.LUCKY -> cc.pe3epwithyou.trident.state.SpiritPurityColor.baseColor
+                }
+                var comp = Component.literal("$base").mccFont().withColor(baseColor)
                 if (ocBonus > 0) comp = comp.append(Component.literal("+$ocBonus").mccFont().withStyle(ChatFormatting.AQUA))
                 if (augBonus > 0) comp = comp.append(Component.literal("+$augBonus").mccFont().withStyle(ChatFormatting.GREEN))
                 if (unBonus > 0) comp = comp.append(Component.literal("+$unBonus").mccFont().withStyle(ChatFormatting.AQUA))
+                // Revert bait coloration change: use gold for equipment bonus as before
                 if (eqBonus > 0) comp = comp.append(Component.literal("+$eqBonus").mccFont().withStyle(ChatFormatting.GOLD))
                 if (pylon > 0) comp = comp.append(Component.literal("+$pylon").mccFont().withStyle(ChatFormatting.YELLOW))
-                if(ocBonus > 0 || augBonus > 0 || unBonus > 0 || eqBonus > 0 || pylon > 0) comp = comp.append(Component.literal("=$total").mccFont())
+                if(ocBonus > 0 || augBonus > 0 || unBonus > 0 || eqBonus > 0 || pylon > 0) comp = comp.append(Component.literal("=$total").mccFont().withStyle(ChatFormatting.WHITE))
                 StringWidget(comp, mcFont)
                     .at(row, (c + 1) * 2, settings = LayoutConstants.CENTRE)
             }
