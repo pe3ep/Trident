@@ -108,11 +108,11 @@ class UpgradesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         UpgradeLine.entries.forEachIndexed { r, line ->
             val row = r + 1
             val lineColor = when (line) {
-                UpgradeLine.STRONG -> cc.pe3epwithyou.trident.state.FishWeightColor.baseColor
-                UpgradeLine.WISE -> cc.pe3epwithyou.trident.state.FishRarityColor.baseColor
-                UpgradeLine.GLIMMERING -> cc.pe3epwithyou.trident.state.PearlQualityColor.baseColor
-                UpgradeLine.GREEDY -> cc.pe3epwithyou.trident.state.TreasureRarityColor.baseColor
-                UpgradeLine.LUCKY -> cc.pe3epwithyou.trident.state.SpiritPurityColor.baseColor
+                UpgradeLine.STRONG -> FishWeightColor.baseColor
+                UpgradeLine.WISE -> FishRarityColor.baseColor
+                UpgradeLine.GLIMMERING -> PearlQualityColor.baseColor
+                UpgradeLine.GREEDY -> TreasureRarityColor.baseColor
+                UpgradeLine.LUCKY -> SpiritPurityColor.baseColor
             }
             StringWidget(
                 Component.literal(line.name.lowercase().replaceFirstChar { it.uppercase() }).mccFont().withColor(lineColor),
@@ -131,17 +131,16 @@ class UpgradesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 val pylon = if (type == UpgradeType.MAGNET) TridentClient.playerState.magnetPylonBonus else 0
                 val total = base + augBonus + ocBonus + unBonus + eqBonus + pylon
                 val baseColor = when (line) {
-                    UpgradeLine.STRONG -> cc.pe3epwithyou.trident.state.FishWeightColor.baseColor
-                    UpgradeLine.WISE -> cc.pe3epwithyou.trident.state.FishRarityColor.baseColor
-                    UpgradeLine.GLIMMERING -> cc.pe3epwithyou.trident.state.PearlQualityColor.baseColor
-                    UpgradeLine.GREEDY -> cc.pe3epwithyou.trident.state.TreasureRarityColor.baseColor
-                    UpgradeLine.LUCKY -> cc.pe3epwithyou.trident.state.SpiritPurityColor.baseColor
+                    UpgradeLine.STRONG -> FishWeightColor.baseColor
+                    UpgradeLine.WISE -> FishRarityColor.baseColor
+                    UpgradeLine.GLIMMERING -> PearlQualityColor.baseColor
+                    UpgradeLine.GREEDY -> TreasureRarityColor.baseColor
+                    UpgradeLine.LUCKY -> SpiritPurityColor.baseColor
                 }
                 var comp = Component.literal("$base").mccFont().withColor(baseColor)
                 if (ocBonus > 0) comp = comp.append(Component.literal("+$ocBonus").mccFont().withStyle(ChatFormatting.AQUA))
                 if (augBonus > 0) comp = comp.append(Component.literal("+$augBonus").mccFont().withStyle(ChatFormatting.GREEN))
                 if (unBonus > 0) comp = comp.append(Component.literal("+$unBonus").mccFont().withStyle(ChatFormatting.AQUA))
-                // Revert bait coloration change: use gold for equipment bonus as before
                 if (eqBonus > 0) comp = comp.append(Component.literal("+$eqBonus").mccFont().withStyle(ChatFormatting.GOLD))
                 if (pylon > 0) comp = comp.append(Component.literal("+$pylon").mccFont().withStyle(ChatFormatting.YELLOW))
                 if(ocBonus > 0 || augBonus > 0 || unBonus > 0 || eqBonus > 0 || pylon > 0) comp = comp.append(Component.literal("=$total").mccFont().withStyle(ChatFormatting.WHITE))

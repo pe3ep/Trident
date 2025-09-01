@@ -8,6 +8,8 @@ import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
 import cc.pe3epwithyou.trident.state.FishWeightColor
 import cc.pe3epwithyou.trident.state.PearlQualityColor
 import cc.pe3epwithyou.trident.state.SpiritPurityColor
+import cc.pe3epwithyou.trident.state.TreasureRarityColor
+import cc.pe3epwithyou.trident.state.FishRarityColor
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
@@ -53,9 +55,9 @@ class SpotDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed
                 val v = spot.hookPercents[l] ?: return@forEach
                 val baseColor = when(l){
                     UpgradeLine.STRONG -> FishWeightColor.baseColor
-                    UpgradeLine.WISE -> cc.pe3epwithyou.trident.state.FishRarityColor.baseColor
+                    UpgradeLine.WISE -> FishRarityColor.baseColor
                     UpgradeLine.GLIMMERING -> PearlQualityColor.baseColor
-                    UpgradeLine.GREEDY -> cc.pe3epwithyou.trident.state.TreasureRarityColor.baseColor
+                    UpgradeLine.GREEDY -> TreasureRarityColor.baseColor
                     UpgradeLine.LUCKY -> SpiritPurityColor.baseColor
                 }
                 val t = Component.literal("${lineLabel(l)} Hook: ").mccFont()
@@ -77,9 +79,9 @@ class SpotDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed
                 }
                 val baseColor = when(l){
                     UpgradeLine.STRONG -> FishWeightColor.baseColor
-                    UpgradeLine.WISE -> cc.pe3epwithyou.trident.state.FishRarityColor.baseColor
+                    UpgradeLine.WISE -> FishRarityColor.baseColor
                     UpgradeLine.GLIMMERING -> PearlQualityColor.baseColor
-                    UpgradeLine.GREEDY -> cc.pe3epwithyou.trident.state.TreasureRarityColor.baseColor
+                    UpgradeLine.GREEDY -> TreasureRarityColor.baseColor
                     UpgradeLine.LUCKY -> SpiritPurityColor.baseColor
                 }
                 val t = Component.literal("$label: ").mccFont()
