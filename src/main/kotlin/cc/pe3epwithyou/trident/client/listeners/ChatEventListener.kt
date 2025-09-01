@@ -89,7 +89,7 @@ object ChatEventListener {
             if (message.isStockReplenished()) {
                 // Handle use condition CAST_INTO_SPOT when stock is replenished
                 val augments = TridentClient.playerState.supplies.augments
-                val isGrotto = cc.pe3epwithyou.trident.state.MCCIState.fishingState.isGrotto
+                val isGrotto = MCCIState.fishingState.isGrotto
                 var changed = false
                 augments.forEach { a ->
                     if (a.useCondition == UseCondition.CAST_INTO_SPOT) {

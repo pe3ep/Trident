@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.client.listeners
 import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.fishing.UpgradeLine
+import cc.pe3epwithyou.trident.mixin.BossHealthOverlayAccessor
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.BossHealthOverlay
@@ -22,7 +23,7 @@ class TideWindBossbarListener : ClientTickEvents.EndTick {
     override fun onEndTick(client: Minecraft) {
         val gui = client.gui ?: return
         val overlay: BossHealthOverlay = gui.bossOverlay
-        val accessor = overlay as cc.pe3epwithyou.trident.mixin.BossHealthOverlayAccessor
+        val accessor = overlay as BossHealthOverlayAccessor
         val events: Map<UUID, LerpingBossEvent> = accessor.events
         val titles = events.values.map { it.name.string }.joinToString(" | ")
         if (titles == lastSeen) return
