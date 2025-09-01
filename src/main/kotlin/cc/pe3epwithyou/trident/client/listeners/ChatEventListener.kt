@@ -142,8 +142,7 @@ object ChatEventListener {
 
                 // Decrease uses for augments independently of bait/junk logic
                 val augments = TridentClient.playerState.supplies.augments
-                // TODO: Replace with actual grotto state when available
-                val isGrotto = cc.pe3epwithyou.trident.state.MCCIState.fishingState.isGrotto
+                val isGrotto = MCCIState.fishingState.isGrotto
                 val caughtMsg = lastCaughtMessage
                 val caughtText = caughtMsg?.string ?: ""
                 val caughtSpirit = caughtText.contains("Spirit", ignoreCase = true)
@@ -169,10 +168,11 @@ object ChatEventListener {
                         ).trimIndent()
                 )
                 augments.forEach { a ->
+                    if (a.paused) return@forEach
                     val cond = a.useCondition
                     val shouldUse = when (cond) {
                         UseCondition.SPIRIT -> caughtSpirit
-                        UseCondition.FISH -> caughtFish
+                        UseCondition.FISH -> (caughtFish || caughtElusive)
                         UseCondition.PEARL -> caughtPearl
                         UseCondition.ELUSIVE_FISH -> caughtElusive
                         UseCondition.TREASURE -> caughtTreasure

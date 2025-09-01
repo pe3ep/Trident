@@ -194,6 +194,9 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             ).atBottom(0, 2, LayoutConstants.LEFT)
         }
 
+        // Footnote
+        StringWidget(Component.literal("Module Credit: pe3ep, Hydrogen").mccFont().withStyle(ChatFormatting.GRAY), mcFont)
+            .atBottom(0, 3, LayoutConstants.LEFT)
     }
 
     override fun refresh() {

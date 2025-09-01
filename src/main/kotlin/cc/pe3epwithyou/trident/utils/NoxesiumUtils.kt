@@ -10,6 +10,7 @@ import cc.pe3epwithyou.trident.feature.questing.game.RSRHandlers
 import cc.pe3epwithyou.trident.feature.questing.game.SkyBattleHandlers
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.SpotDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.UpgradesDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.ChanceDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.HookChanceDialog
@@ -42,12 +43,20 @@ object NoxesiumUtils {
     }
 
     private fun updateGameDialogs(currentGame: Game, game: String) {
+        // If we are staying in the same game and it's Fishing, keep existing dialogs and state (avoid resetting dropdowns)
+        if (currentGame == MCCIState.game && currentGame == Game.FISHING) {
+            return
+        }
         DialogCollection.clear()
         KillFeedDialog.clearKills()
 
         if (currentGame == Game.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
+        }
+        if (currentGame == Game.FISHING) {
+            val k = "spot"
+            DialogCollection.open(k, SpotDialog(10, 10, k))
         }
         if (currentGame == Game.FISHING) {
             val k = "upgrades"

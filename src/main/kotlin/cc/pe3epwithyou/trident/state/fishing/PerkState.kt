@@ -69,8 +69,10 @@ object PerkStateCalculator {
             UpgradeType.entries.forEach { type ->
                 val base = upgrades.getLevel(line, type)
                 val augment = supplies.augments.sumOf { ma ->
-                    val a = ma.augment
-                    if (a.affectsType == type && a.affectsLine == line) a.bonusPoints else 0
+                    if (ma.paused) 0 else {
+                        val a = ma.augment
+                        if (a.affectsType == type && a.affectsLine == line) a.bonusPoints else 0
+                    }
                 }
                 val ocLevel = when (type) {
                     UpgradeType.HOOK -> supplies.overclocks.stableLevels.hook

@@ -3,7 +3,9 @@ package cc.pe3epwithyou.trident.client
 import cc.pe3epwithyou.trident.client.events.QuestingEvents
 import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
+import cc.pe3epwithyou.trident.client.listeners.SpotEntityListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
+import cc.pe3epwithyou.trident.client.listeners.TideWindBossbarListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.feature.fishing.SuppliesModuleTimer
@@ -19,6 +21,7 @@ import cc.pe3epwithyou.trident.interfaces.fishing.MagnetChanceDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.RodChanceDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.PotChanceDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.ChancePerksDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.SpotDialog
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.ChatUtils
@@ -52,6 +55,7 @@ class TridentClient : ClientModInitializer {
         "rodchances" to ::RodChanceDialog,
         "potchances" to ::PotChanceDialog,
         "chanceperks" to ::ChancePerksDialog,
+        "spot" to ::SpotDialog,
     )
 
     companion object {
@@ -167,7 +171,9 @@ class TridentClient : ClientModInitializer {
 
         ChatEventListener.register()
         ChestScreenListener.register()
+        SpotEntityListener.register()
         DepletedDisplay.DepletedTimer.register()
+        TideWindBossbarListener.register()
         SuppliesModuleTimer.register()
         KillChatListener.register()
         DelayedAction.init()

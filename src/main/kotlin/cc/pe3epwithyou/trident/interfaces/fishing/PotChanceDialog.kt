@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
+import cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
@@ -33,7 +34,7 @@ class PotChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
 
     override fun layout(): GridLayout = grid {
         val font = Minecraft.getInstance().font
-        TridentClient.playerState.perkState = cc.pe3epwithyou.trident.state.fishing.PerkStateCalculator.recompute(
+        TridentClient.playerState.perkState = PerkStateCalculator.recompute(
             TridentClient.playerState
         )
 
@@ -43,6 +44,10 @@ class PotChanceDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
 
         MultiLineTextWidget(Component.literal("POTS: TODO").mccFont().withStyle(ChatFormatting.GRAY), font)
             .at(row++, 0, settings = LayoutConstants.LEFT)
+
+        // Footnote
+        StringWidget(Component.literal("Module Credit: Hydrogen").mccFont().withStyle(ChatFormatting.GRAY), font)
+            .atBottom(0, settings = LayoutConstants.LEFT)
     }
 
     override fun refresh() {

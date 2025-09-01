@@ -141,7 +141,7 @@ enum class Augment(
     ),
 
     // Lure Augments (can be used by the unstable overclock)
-    ELUSUVE_LURE(
+    ELUSIVE_LURE(
         "Elusive Lure",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_items/infinibag/fishing_item/anglr_lure_strong")
     ),
@@ -163,7 +163,7 @@ enum class Augment(
     ),
 
     // Ultralure Augments
-    ELUSUVE_ULTRALURE(
+    ELUSIVE_ULTRALURE(
         "Elusive Ultralure",
         ResourceLocation.fromNamespaceAndPath("mcc", "island_items/infinibag/fishing_item/anglr_ultralure_strong"),
         16,
