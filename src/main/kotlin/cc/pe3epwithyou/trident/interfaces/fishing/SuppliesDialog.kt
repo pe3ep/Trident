@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.interfaces.fishing.widgets.OverclockStackWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
+import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
@@ -31,8 +32,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     }
 
     private fun getWidgetTitle(): DialogTitleWidget {
-        val icon = Component.literal("\uE10C")
-            .mccFont("icon")
+        val icon = FontCollection.get("_fonts/fishing_perk/supply_preserve.png")
             .withStyle(
                 Style.EMPTY
                     .withShadowColor(0x0 opacity 0)
