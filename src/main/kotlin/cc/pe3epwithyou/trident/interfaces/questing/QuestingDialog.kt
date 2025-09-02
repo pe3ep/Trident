@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.questing.widgets.QuestWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
+import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
@@ -30,8 +31,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     }
 
     private fun getTitleWidget(): QuestDialogTitle {
-        val icon = Component.literal("\uE279")
-            .mccFont("icon")
+        val icon = FontCollection.get("_fonts/quest_log.png")
             .withStyle(
                 Style.EMPTY
                     .withShadowColor(0x0 opacity 0)
@@ -44,8 +44,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         }
 
         val backgroundColor = 0x38AFF opacity 127
-        val gameIcon = Component.literal(currentGame.icon.toString())
-            .mccFont("icon")
+        val gameIcon = FontCollection.get(currentGame.icon)
             .withStyle(
                 Style.EMPTY
                     .withShadowColor(0x0 opacity 0)
