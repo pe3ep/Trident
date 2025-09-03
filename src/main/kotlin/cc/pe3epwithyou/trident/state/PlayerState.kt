@@ -77,8 +77,40 @@ data class Supplies(
 )
 
 @Serializable
+data class WayfinderStatus(
+    var island: String,
+    var data: Int = 0,
+    var hasGrotto: Boolean = false,
+    var grottoStability: Int = 100,
+)
+
+@Serializable
+data class WayfinderData(
+    var temperate: WayfinderStatus = WayfinderStatus("Temperate"),
+    var tropical: WayfinderStatus = WayfinderStatus("Tropical"),
+    var barren: WayfinderStatus = WayfinderStatus("Barren"),
+    var needsUpdating: Boolean = true,
+)
+
+@Serializable
+data class Research(
+    var type: String,
+    var tier: Int = 1,
+    var progressThroughTier: Int = 0,
+    var totalForTier: Int = 1000
+)
+
+@Serializable
+data class FishingResearch(
+    var researchTypes: MutableList<Research> = mutableListOf(),
+    var needsUpdating: Boolean = true,
+)
+
+@Serializable
 data class PlayerState(
     var supplies: Supplies = Supplies(),
+    var wayfinderData: WayfinderData = WayfinderData(),
+    var research: FishingResearch = FishingResearch(),
 )
 
 object PlayerStateIO {
