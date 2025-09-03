@@ -93,9 +93,24 @@ data class WayfinderData(
 )
 
 @Serializable
+data class Research(
+    var type: String,
+    var tier: Int = 1,
+    var progressThroughTier: Int = 0,
+    var totalForTier: Int = 1000
+)
+
+@Serializable
+data class FishingResearch(
+    var researchTypes: MutableList<Research> = mutableListOf(),
+    var needsUpdating: Boolean = true,
+)
+
+@Serializable
 data class PlayerState(
     var supplies: Supplies = Supplies(),
     var wayfinderData: WayfinderData = WayfinderData(),
+    var research: FishingResearch = FishingResearch(),
 )
 
 object PlayerStateIO {

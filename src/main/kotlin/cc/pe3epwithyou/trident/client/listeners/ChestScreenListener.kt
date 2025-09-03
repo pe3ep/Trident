@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestingParser
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.Rarity
+import cc.pe3epwithyou.trident.state.Research
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
@@ -45,6 +46,11 @@ object ChestScreenListener {
         if ("FISHING ISLANDS" in screen.title.string) {
             DelayedAction.delayTicks(2L) {
                 findWayfinderData(screen)
+            }
+        }
+        if ("FISHING PROGRESS" in screen.title.string) {
+            DelayedAction.delayTicks(2L) {
+                findFishingResearch(screen)
             }
         }
 
@@ -232,5 +238,34 @@ object ChestScreenListener {
 
         TridentClient.playerState.wayfinderData.needsUpdating = false
         DialogCollection.refreshDialog("wayfinder")
+    }
+
+    fun findFishingResearch(screen: ContainerScreen) {
+        if ("FISHING PROGRESS" !in screen.title.string) return
+
+        // empty the list
+        TridentClient.playerState.research.researchTypes = mutableListOf()
+
+        val researchSlots = listOf( 12, 13, 14, 15, 16 )
+        val researchTypes = mapOf( 12 to "Strong", 13 to "Wise", 14 to "Glimmering", 15 to "Greedy", 16 to "Lucky" )
+        for (slot in researchSlots) {
+            val tierLine = screen.menu.slots[slot].item.getLore()[0].string.split("(")[1]
+            val tierLineNoBrackets = tierLine.substring(0, tierLine.length - 2)
+            val tier = tierLineNoBrackets.split("/")[0].replace(",", "").toIntOrNull()!!
+
+            val progress = screen.menu.slots[slot].item.getLore()[4].string
+            if (progress.contains("Progress: ")) {
+                val amount = progress.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
+                val total = progress.split(": ")[1].split("/")[1].replace(",", "").toIntOrNull()!!
+
+                TridentClient.playerState.research.researchTypes.add(
+                    researchSlots.indexOf(slot),
+                    Research(researchTypes[slot] ?: "Strong", tier = tier, progressThroughTier = amount, totalForTier = total)
+                )
+            }
+        }
+
+        TridentClient.playerState.research.needsUpdating = false
+        DialogCollection.refreshDialog("research")
     }
 }
