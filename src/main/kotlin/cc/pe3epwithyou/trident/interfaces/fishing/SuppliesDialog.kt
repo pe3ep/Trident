@@ -109,7 +109,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             .append(
                 Component.literal(" $baitAmount")
                     .mccFont()
-                    .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else ChatFormatting.WHITE.color!!)
+                    .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
             )
         StringWidget(baitComponent, mcFont)
             .at(0, 0, settings = LayoutConstants.LEFT)
@@ -132,7 +132,10 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val lineComponent = Component.literal(lineIcon)
             .withTridentFont()
             .append(Component.empty().withStyle(ChatFormatting.RESET))
-            .append(Component.literal(" $lineDurability/50").mccFont())
+            .append(Component.literal(" $lineDurability/50")
+                .mccFont()
+                .withColor(supplies.line.type.color)
+            )
         StringWidget(lineComponent, mcFont)
             .at(0, 1, settings = LayoutConstants.LEFT)
             .apply {
