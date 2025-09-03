@@ -2,29 +2,33 @@
   "schemaVersion": 1,
   "id": "trident",
   "version": "${version}",
-
   "name": "Trident",
   "description": "Client-side utility mod for MCC Island, providing a huge range of utility and quality of life features.",
-  "authors": ["Pe3ep", "SirArchibald97"],
+  "authors": [
+    "Pe3ep",
+    "SirArchibald97"
+  ],
   "contact": {
     "issues": "https://github.com/pe3ep/Trident/issues",
     "sources": "https://github.com/pe3ep/Trident"
   },
-  
   "license": "LGPL-3.0",
   "icon": "assets/trident/icon.png",
-
   "environment": "client",
   "entrypoints": {
-    "client": ["cc.pe3epwithyou.trident.client.TridentClient"],
-    "main": ["cc.pe3epwithyou.trident.Trident"],
-    "modmenu": ["cc.pe3epwithyou.trident.config.ModMenuIntegration"]
+    "client": [
+      "cc.pe3epwithyou.trident.client.TridentClient"
+    ],
+    "main": [
+      "cc.pe3epwithyou.trident.Trident"
+    ],
+    "modmenu": [
+      "cc.pe3epwithyou.trident.config.ModMenuIntegration"
+    ]
   },
-
   "mixins": [
     "trident.mixins.json"
   ],
-
   "custom": {
     "modmenu": {
       "links": {
@@ -33,13 +37,15 @@
       "update_checker": true
     }
   },
-
   "depends": {
-    "yet_another_config_lib_v3":  ">=3.7.1+1.21.5-fabric",
+    "yet_another_config_lib_v3": ">=3.7.1+1.21.5-fabric",
     "noxesium": ">=2.7",
     "fabricloader": ">=${loader_version}",
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}"
+  },
+  "conflicts": {
+    "islandplusplus": ">=1.1.0"
   }
 }

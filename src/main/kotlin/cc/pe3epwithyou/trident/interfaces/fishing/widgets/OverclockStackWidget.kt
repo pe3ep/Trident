@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
 import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.interfaces.shared.widgets.ItemWidget
-import cc.pe3epwithyou.trident.state.Overclock
+import cc.pe3epwithyou.trident.state.OverclockState
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.TridentColor
@@ -40,38 +40,38 @@ class OverclockStackWidget(
 //        Get the needed overclock texture
         var unstableTexture = OverclockTexture.COOLDOWN
         when {
-            overclockState.unstable.isCooldown -> unstableTexture = OverclockTexture.COOLDOWN
-            overclockState.unstable.isActive -> unstableTexture =
+            overclockState.unstable.state.isCooldown -> unstableTexture = OverclockTexture.COOLDOWN
+            overclockState.unstable.state.isActive -> unstableTexture =
                 overclockState.unstable.texture ?: OverclockTexture.COOLDOWN
 
-            !overclockState.unstable.isActive && !overclockState.unstable.isCooldown -> unstableTexture =
+            !overclockState.unstable.state.isActive && !overclockState.unstable.state.isCooldown -> unstableTexture =
                 OverclockTexture.ACTIVATED
         }
         var supremeTexture = OverclockTexture.SUPREME
         when {
-            overclockState.supreme.isCooldown -> supremeTexture = OverclockTexture.COOLDOWN
-            overclockState.supreme.isActive -> supremeTexture = OverclockTexture.SUPREME
-            !overclockState.supreme.isActive && !overclockState.supreme.isCooldown -> supremeTexture =
+            overclockState.supreme.state.isCooldown -> supremeTexture = OverclockTexture.COOLDOWN
+            overclockState.supreme.state.isActive -> supremeTexture = OverclockTexture.SUPREME
+            !overclockState.supreme.state.isActive && !overclockState.supreme.state.isCooldown -> supremeTexture =
                 OverclockTexture.ACTIVATED
         }
 
-        if (overclockState.unstable.isAvailable) +UnstableOverclockWidget(
+        if (overclockState.unstable.state.isAvailable) +UnstableOverclockWidget(
             width,
             height,
             unstableTexture,
             3,
-            getOverclockComponent(overclockState.unstable)
+            getOverclockComponent(overclockState.unstable.state)
         )
-        if (overclockState.supreme.isAvailable) +UnstableOverclockWidget(
+        if (overclockState.supreme.state.isAvailable) +UnstableOverclockWidget(
             height,
             height,
             supremeTexture,
             0,
-            getOverclockComponent(overclockState.supreme)
+            getOverclockComponent(overclockState.supreme.state)
         )
     }
 
-    private fun getOverclockComponent(state: Overclock): Component {
+    private fun getOverclockComponent(state: OverclockState): Component {
         val normalColors = listOf(
             TridentColor(0xFFFFFF),
             TridentColor(0xFFFFFF),

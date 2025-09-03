@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestSubtype
+import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
@@ -34,13 +35,13 @@ class QuestWidget(
     themed: Themed
 ) : CompoundWidget(0, 0, 0, 0) {
     companion object {
-        private const val PROGRESS_BLANK = ''
-        private const val PROGRESS_HALF = ''
-        private const val PROGRESS_FULL = ''
+        private val COMP_BLANK
+            get() = FontCollection.get("_fonts/progress_counter/empty.png", 7, 7)
+        private val COMP_HALF
+            get() = FontCollection.get("_fonts/progress_counter/half.png", 7, 7)
+        private val COMP_FULL
+            get() = FontCollection.get("_fonts/progress_counter/full.png", 7, 7)
 
-        private val COMP_BLANK: Component = Component.literal(PROGRESS_BLANK.toString()).mccFont("icon")
-        private val COMP_HALF: Component = Component.literal(PROGRESS_HALF.toString()).mccFont("icon")
-        private val COMP_FULL: Component = Component.literal(PROGRESS_FULL.toString()).mccFont("icon")
         private val COMP_SPACE: Component =
             Component.literal("\uE001").withFont(ResourceLocation.withDefaultNamespace("padding"))
 

@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.interfaces.fishing.widgets.OverclockStackWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
+import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
@@ -31,8 +32,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     }
 
     private fun getWidgetTitle(): DialogTitleWidget {
-        val icon = Component.literal("\uE10C")
-            .mccFont("icon")
+        val icon = FontCollection.get("_fonts/fishing_perk/supply_preserve.png")
             .withStyle(
                 Style.EMPTY
                     .withShadowColor(0x0 opacity 0)
@@ -109,7 +109,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             .append(
                 Component.literal(" $baitAmount")
                     .mccFont()
-                    .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else ChatFormatting.WHITE.color!!)
+                    .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
             )
         StringWidget(baitComponent, mcFont)
             .at(0, 0, settings = LayoutConstants.LEFT)
@@ -132,7 +132,10 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val lineComponent = Component.literal(lineIcon)
             .withTridentFont()
             .append(Component.empty().withStyle(ChatFormatting.RESET))
-            .append(Component.literal(" $lineDurability/50").mccFont())
+            .append(Component.literal(" $lineDurability/50")
+                .mccFont()
+                .withColor(supplies.line.type.color)
+            )
         StringWidget(lineComponent, mcFont)
             .at(0, 1, settings = LayoutConstants.LEFT)
             .apply {

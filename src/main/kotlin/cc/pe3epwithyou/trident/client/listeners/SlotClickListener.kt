@@ -20,11 +20,12 @@ object SlotClickListener {
             if ("FISHING SUPPLIES" !in screen.title.string) return
             val item = slot.item
             if (clickType == ClickType.QUICK_MOVE && isLeftClick && "Unstable Overclock" in item.hoverName.string) {
-                if (TridentClient.playerState.supplies.overclocks.unstable.isAvailable) startUnstableOverclock()
+                if (TridentClient.playerState.supplies.overclocks.unstable.state.isAvailable) startUnstableOverclock()
             }
             if ((clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE)
-                && isLeftClick && "Supreme Overclock" in item.hoverName.string) {
-                if (TridentClient.playerState.supplies.overclocks.supreme.isAvailable) startSupremeOverclock()
+                && isLeftClick && "Supreme Overclock" in item.hoverName.string
+            ) {
+                if (TridentClient.playerState.supplies.overclocks.supreme.state.isAvailable) startSupremeOverclock()
             }
         }
 
@@ -40,13 +41,13 @@ object SlotClickListener {
 
     private fun startUnstableOverclock() {
         val overclock = TridentClient.playerState.supplies.overclocks.unstable
-        if (overclock.isActive || overclock.isCooldown) return
+        if (overclock.state.isActive || overclock.state.isCooldown) return
         SuppliesModuleTimer.INSTANCE.startUnstableOverclock()
     }
 
     private fun startSupremeOverclock() {
         val overclock = TridentClient.playerState.supplies.overclocks.supreme
-        if (overclock.isActive || overclock.isCooldown) return
+        if (overclock.state.isActive || overclock.state.isCooldown) return
         SuppliesModuleTimer.INSTANCE.startSupremeOverclock()
     }
 }

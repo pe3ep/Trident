@@ -1,130 +1,199 @@
 {
   "providers": [
-    { "type": "space", "advances": { " ": 4.0 } },
+    {
+      "type": "space",
+      "advances": {
+        " ": 4.0
+      }
+    },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/line_common.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE001"]
+      "chars": [
+        "\uE001"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/line_uncommon.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE002"]
+      "chars": [
+        "\uE002"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/line_rare.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE003"]
+      "chars": [
+        "\uE003"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/line_epic.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE004"]
+      "chars": [
+        "\uE004"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/line_legendary.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE005"]
+      "chars": [
+        "\uE005"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/line_mythic.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE006"]
+      "chars": [
+        "\uE006"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/bait_common.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE007"]
+      "chars": [
+        "\uE007"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/bait_uncommon.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE008"]
+      "chars": [
+        "\uE008"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/bait_rare.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE009"]
+      "chars": [
+        "\uE009"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/bait_epic.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE00A"]
+      "chars": [
+        "\uE00A"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/bait_legendary.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE00B"]
+      "chars": [
+        "\uE00B"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:island_items/infinibag/fishing_item/bait_mythic.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE00C"]
+      "chars": [
+        "\uE00C"
+      ]
     },
     {
       "type": "bitmap",
       "file": "mcc:_fonts/kills.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE00D"]
+      "chars": [
+        "\uE00D"
+      ]
     },
     {
       "type": "bitmap",
       "file": "trident:_font/range.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE00E"]
+      "chars": [
+        "\uE00E"
+      ]
     },
     {
       "type": "bitmap",
-      "file": "trident:_font/pot.png",
+      "file": "trident:_font/orb.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE00F"]
+      "chars": [
+        "\uE00F"
+      ]
     },
     {
       "type": "bitmap",
       "file": "trident:_font/disconnect.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE010"]
+      "chars": [
+        "\uE010"
+      ]
     },
     {
       "type": "bitmap",
       "file": "trident:_font/tnt.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE011"]
-    },{
+      "chars": [
+        "\uE011"
+      ]
+    },
+    {
       "type": "bitmap",
       "file": "mcc:_fonts/skull.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE012"]
+      "chars": [
+        "\uE012"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/fire.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE013"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/lava.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE014"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/potion.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE015"
+      ]
     }
   ]
 }

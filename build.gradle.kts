@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.2.0"
     id("fabric-loom") version "1.11-SNAPSHOT"
+    kotlin("plugin.serialization") version "2.0.20"
     id("maven-publish")
 }
 
@@ -65,10 +66,11 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
-    include(modImplementation("com.noxcrew.sheeplib:api:1.4.1+1.21.8")!!)
+    include(modImplementation("com.noxcrew.sheeplib:api:1.4.2+1.21.8")!!)
     modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
     modImplementation("com.noxcrew.noxesium:fabric:2.7.7")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 }
 
 loom {
@@ -84,10 +86,12 @@ tasks.processResources {
     filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand("version" to project.version,
+        expand(
+            "version" to project.version,
             "minecraft_version" to project.property("minecraft_version"),
             "loader_version" to project.property("loader_version"),
-            "kotlin_loader_version" to project.property("kotlin_loader_version"))
+            "kotlin_loader_version" to project.property("kotlin_loader_version")
+        )
     }
 }
 

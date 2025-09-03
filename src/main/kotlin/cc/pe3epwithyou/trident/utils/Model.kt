@@ -17,11 +17,15 @@ data class Model(
     val modelPath: ResourceLocation,
     val width: Int,
     val height: Int,
+    val damagePercent: Int = 100
 ) {
     private val item = ItemStack(Items.ECHO_SHARD)
 
     init {
         item.set(DataComponents.ITEM_MODEL, modelPath)
+        item.set(DataComponents.MAX_STACK_SIZE, 1)
+        item.set(DataComponents.MAX_DAMAGE, 100)
+        item.set(DataComponents.DAMAGE, 100 - damagePercent)
     }
 
     /**
@@ -33,8 +37,8 @@ data class Model(
      */
     fun render(guiGraphics: GuiGraphics, x: Int, y: Int) {
         val client = Minecraft.getInstance()
+        val font = client.font
         guiGraphics.pose().pushMatrix()
-
         val trackingItemStackRenderState = TrackingItemStackRenderState()
         client.itemModelResolver.updateForTopItem(
             trackingItemStackRenderState,
@@ -59,6 +63,12 @@ data class Model(
                 y,
                 ScreenRectangle(x, y, width, height)
             )
+        )
+        guiGraphics.renderItemDecorations(
+            font,
+            item,
+            x,
+            y
         )
         guiGraphics.pose().popMatrix()
     }
