@@ -22,7 +22,7 @@ enum class DeathMessages(
         Regex("^\\[.] .+ tried to swim in lava.+"), KillMethod.LAVA
     ),
     MAGIC_KILL(
-        Regex("^\\[.] .+ was eliminated with magic by .+ using .+"), KillMethod.MAGIC
+        Regex("^\\[.] .+ was eliminated with magic by .+"), KillMethod.MAGIC
     ),
     MAGIC_KILL_CONTACT(
         Regex("^\\[.] .+ was hit by .+"), KillMethod.MAGIC
