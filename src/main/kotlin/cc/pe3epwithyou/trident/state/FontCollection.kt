@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -19,9 +20,11 @@ object FontCollection {
     }
 
     fun get(icon: Icon): MutableComponent {
-        val char =
-            collection[icon]
-                ?: throw IllegalStateException("Failed to get a char ${icon.path} from the font collection")
+        val char = collection[icon]
+        if (char == null) {
+            ChatUtils.error("Failed to get a char ${icon.path} from the font collection")
+            return Component.literal("?").defaultFont()
+        }
         val comp = Component.literal(char).mccFont("icon")
         return comp
     }
@@ -37,8 +40,6 @@ object FontCollection {
     }
 
     data class Icon(
-        val path: ResourceLocation,
-        val ascent: Int,
-        val height: Int
+        val path: ResourceLocation, val ascent: Int, val height: Int
     )
 }
