@@ -30,7 +30,7 @@ import net.minecraft.network.chat.Style
 
 class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
     private companion object {
-        private val TITLE_COLOR: Int = 0xeb0e30 opacity 127
+        private val TITLE_COLOR: Int = 0x2199f0 opacity 127
     }
 
     private fun getWidgetTitle(): DialogTitleWidget {

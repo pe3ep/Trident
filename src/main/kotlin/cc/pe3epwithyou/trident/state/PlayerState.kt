@@ -75,12 +75,16 @@ data class Supplies(
     var baitDesynced: Boolean = true,
     var needsUpdating: Boolean = true,
 )
+
+@Serializable
 data class WayfinderStatus(
     var island: String,
     var data: Int = 0,
     var hasGrotto: Boolean = false,
+    var grottoStability: Int = 100,
 )
 
+@Serializable
 data class WayfinderData(
     var temperate: WayfinderStatus = WayfinderStatus("Temperate"),
     var tropical: WayfinderStatus = WayfinderStatus("Tropical"),
