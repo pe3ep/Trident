@@ -20,6 +20,5 @@ public class ConnectionMixin {
         QuestListener.INSTANCE.interruptTasks();
         DelayedAction.INSTANCE.closeAllPendingTasks();
         PlayerStateIO.INSTANCE.save();
-        FontCollection.INSTANCE.clear();
     }
 }
