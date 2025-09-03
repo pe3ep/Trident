@@ -128,9 +128,9 @@ class QuestWidget(
     /**
      * Build a progress bar Component using preallocated Component pieces.
      *
-     * @param progress 0.0..1.0 progress fraction
-     * @param width number of characters in the bar (excludes grouping spaces)
-     * @param groups number of groups to split the width into; when > 0 a
+     * @param progress - 0.0..1.0 progress fraction
+     * @param width - number of characters in the bar (excludes grouping spaces)
+     * @param groups - number of groups to split the width into; when > 0 a
      *   space is inserted after each group (e.g. width=20, divisions=4 ->
      *   space every 5 chars). If <= 0 no spaces.
      */

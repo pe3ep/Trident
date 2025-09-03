@@ -55,6 +55,21 @@ data class Supplies(
     var baitDesynced: Boolean = true,
     var needsUpdating: Boolean = true,
 )
+
+data class WayfinderStatus(
+    var island: String,
+    var data: Int = 0,
+    var hasGrotto: Boolean = false,
+)
+
+data class WayfinderData(
+    var temperate: WayfinderStatus = WayfinderStatus("Temperate"),
+    var tropical: WayfinderStatus = WayfinderStatus("Tropical"),
+    var barren: WayfinderStatus = WayfinderStatus("Barren"),
+    var needsUpdating: Boolean = true,
+)
+
 data class PlayerState(
     var supplies: Supplies = Supplies(),
+    var wayfinderData: WayfinderData = WayfinderData(),
 )

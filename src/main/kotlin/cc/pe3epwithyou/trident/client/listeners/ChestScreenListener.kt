@@ -42,6 +42,11 @@ object ChestScreenListener {
                 findQuests(screen)
             }
         }
+        if ("FISHING ISLANDS" in screen.title.string) {
+            DelayedAction.delayTicks(2L) {
+                findWayfinderData(screen)
+            }
+        }
 
         ChatUtils.debugLog("Screen title: " + screen.title.string)
     }
@@ -184,5 +189,17 @@ object ChestScreenListener {
         }
         // Refresh supplies dialog if open
         DialogCollection.refreshDialog("supplies")
+    }
+
+    fun findWayfinderData(screen: ContainerScreen) {
+        if ("FISHING ISLANDS" !in screen.title.string) return
+
+        val temperateData = screen.menu.slots[24].item.getLore()[13].string.split(": ")[1].split("/")[0]
+        val tropicalData = screen.menu.slots[33].item.getLore()[13].string.split(": ")[1].split("/")[0]
+        val barrenData = screen.menu.slots[42].item.getLore()[13].string.split(": ")[1].split("/")[0]
+        TridentClient.playerState.wayfinderData.temperate.data = temperateData.replace(",", "").toIntOrNull()!!
+        TridentClient.playerState.wayfinderData.tropical.data = tropicalData.replace(",", "").toIntOrNull()!!
+        TridentClient.playerState.wayfinderData.barren.data = barrenData.replace(",", "").toIntOrNull()!!
+        TridentClient.playerState.wayfinderData.needsUpdating = false
     }
 }

@@ -11,6 +11,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
@@ -38,6 +39,7 @@ class TridentClient : ClientModInitializer {
     private val debugDialogs = mapOf(
         "supplies" to ::SuppliesDialog,
         "questing" to ::QuestingDialog,
+        "wayfinder" to ::WayfinderDialog,
     )
 
     companion object {
