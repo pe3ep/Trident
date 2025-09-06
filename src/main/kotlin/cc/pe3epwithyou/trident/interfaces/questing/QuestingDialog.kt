@@ -36,10 +36,12 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 Style.EMPTY
                     .withShadowColor(0x0 opacity 0)
             )
-        val titleText = if (isDesynced) " DESYNCED ⚠" else " QUESTS"
+        val titleText = if (isDesynced) " DESYNCED" else " QUESTS"
         val title = Component.literal(titleText)
             .withTridentFont("hud_title")
         if (isDesynced) {
+            title.append(" ⚠")
+                .defaultFont()
             title.withStyle(ChatFormatting.GOLD)
         }
 
