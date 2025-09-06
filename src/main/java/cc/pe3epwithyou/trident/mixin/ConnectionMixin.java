@@ -19,6 +19,5 @@ public class ConnectionMixin {
         ChatUtils.INSTANCE.info("Disconnected from a server, cancelling all pending tasks");
         QuestListener.INSTANCE.interruptTasks();
         DelayedAction.INSTANCE.closeAllPendingTasks();
-        PlayerStateIO.INSTANCE.save();
     }
 }
