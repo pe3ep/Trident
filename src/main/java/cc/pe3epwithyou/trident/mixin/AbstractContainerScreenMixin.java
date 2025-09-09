@@ -42,6 +42,7 @@ public class AbstractContainerScreenMixin extends Screen {
             DebugDraw.INSTANCE.renderSlotNumber(guiGraphics, slot);
         }
         TideWindIndicator.INSTANCE.render(guiGraphics, slot);
+        CraftableIndicator.INSTANCE.render(guiGraphics, slot);
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))
