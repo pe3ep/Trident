@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "trident:interface/rampage_fire"
+  },
+  "oversized_in_gui": true
+}
