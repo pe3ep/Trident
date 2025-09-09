@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestSubtype
 import cc.pe3epwithyou.trident.state.FontCollection
+import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
@@ -43,10 +44,10 @@ class QuestWidget(
             get() = FontCollection.get("_fonts/progress_counter/full.png", 7, 7)
 
         private val COMP_SPACE: Component =
-            Component.literal("\uE001").withFont(ResourceLocation.withDefaultNamespace("padding"))
+            Component.literal("\uE001").withFont(Resources.minecraft("padding"))
 
         private val COMPLETED_QUEST_SPRITE: ResourceLocation =
-            ResourceLocation.fromNamespaceAndPath("mcc", "textures/island_interface/quest_log/quest_complete.png")
+            Resources.mcc("textures/island_interface/quest_log/quest_complete.png")
         private const val COMPLETED_QUEST_COLOR: Int = 0x1EFC00
     }
 
