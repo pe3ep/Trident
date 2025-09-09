@@ -3,13 +3,10 @@ package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
-import cc.pe3epwithyou.trident.utils.Texture
-import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 
 class KillStreakFire() : AbstractWidget(0, 0, 22, 10, Component.empty()) {
     private companion object {

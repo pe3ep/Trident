@@ -8,7 +8,6 @@ import cc.pe3epwithyou.trident.utils.TridentFont
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
 import java.util.*
 
