@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Resources
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry
@@ -13,7 +14,6 @@ import dev.isxander.yacl3.dsl.*
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 
 class Config {
     @Deprecated("This option has been moved to a separate group")
@@ -174,11 +174,10 @@ class Config {
 
     companion object {
         val handler: ConfigClassHandler<Config> by lazy {
-            ConfigClassHandler.createBuilder(Config::class.java)
-                .id(ResourceLocation.fromNamespaceAndPath("trident", "config")).serializer { config ->
-                    GsonConfigSerializerBuilder.create(config)
-                        .setPath(FabricLoader.getInstance().configDir.resolve("trident.json")).build()
-                }.build()
+            ConfigClassHandler.createBuilder(Config::class.java).id(Resources.trident("config")).serializer { config ->
+                GsonConfigSerializerBuilder.create(config)
+                    .setPath(FabricLoader.getInstance().configDir.resolve("trident.json")).build()
+            }.build()
         }
 
         @Suppress("DEPRECATION")
@@ -187,8 +186,7 @@ class Config {
             if (rarityOverlayPrev != null) {
                 ChatUtils.warn("Detected a deprecated config value for rarity overlay, converting it")
 
-                handler.instance().raritySlotEnabled = rarityOverlayPrev
-                /* Reset the old value to null */
+                handler.instance().raritySlotEnabled = rarityOverlayPrev/* Reset the old value to null */
                 handler.instance().globalRarityOverlay = null
             }
 
@@ -219,8 +217,8 @@ class Config {
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.global.blueprint_indicators.description"))
                                 .image(
-                                    ResourceLocation.fromNamespaceAndPath(
-                                        "trident", "textures/config/blueprint_indicators.png"
+                                    Resources.trident(
+                                        "textures/config/blueprint_indicators.png"
                                     ), 405, 316
                                 ).build()
                         )
@@ -233,9 +231,7 @@ class Config {
                         description(
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.global.theme.description")).image(
-                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/theme.png"),
-                                    497,
-                                    329
+                                    Resources.trident("textures/config/theme.png"), 497, 329
                                 ).build()
                         )
                         binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
@@ -256,8 +252,8 @@ class Config {
                         description(
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.rarity_slot.description")).image(
-                                    ResourceLocation.fromNamespaceAndPath(
-                                        "trident", "textures/config/rarity_overlay.png"
+                                    Resources.trident(
+                                        "textures/config/rarity_overlay.png"
                                     ), 120, 88
                                 ).build()
                         )
@@ -298,9 +294,7 @@ class Config {
                         description(
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.killfeed.enabled.description")).image(
-                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/killfeed.png"),
-                                    618,
-                                    332
+                                    Resources.trident("textures/config/killfeed.png"), 618, 332
                                 ).build()
                         )
                         binding(handler.instance()::killfeedEnabled, true)
@@ -373,9 +367,7 @@ class Config {
                         description(
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.questing.enabled.description")).image(
-                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/questing.png"),
-                                    414,
-                                    338
+                                    Resources.trident("textures/config/questing.png"), 414, 338
                                 ).build()
                         )
                         binding(handler.instance()::questingEnabled, true)
@@ -421,9 +413,7 @@ class Config {
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.fishing.supplies_module.description"))
                                 .image(
-                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/supplies.png"),
-                                    507,
-                                    333
+                                    Resources.trident("textures/config/supplies.png"), 507, 333
                                 ).build()
                         )
                         binding(handler.instance()::fishingSuppliesModule, true)

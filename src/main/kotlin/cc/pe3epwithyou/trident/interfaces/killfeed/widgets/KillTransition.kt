@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 
+import cc.pe3epwithyou.trident.utils.Resources
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -12,8 +13,8 @@ class KillTransition(
     private val rightColor: Int,
 ) : AbstractWidget(0, 0, 8, 15, Component.empty()) {
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        val leftPath = ResourceLocation.fromNamespaceAndPath("trident", "interface/killfeed/left")
-        val rightPath = ResourceLocation.fromNamespaceAndPath("trident", "interface/killfeed/right")
+        val leftPath = Resources.trident("interface/killfeed/left")
+        val rightPath = Resources.trident("interface/killfeed/right")
         guiGraphics.blitSprite(
             RenderPipelines.GUI_TEXTURED,
             leftPath,

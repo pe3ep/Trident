@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
+import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentionIfInactive
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
@@ -59,7 +60,7 @@ object ChatEventListener {
                 Minecraft.getInstance().window.requestAttentionIfInactive()
                 Minecraft.getInstance().player?.playSound(
                     SoundEvent(
-                        ResourceLocation.fromNamespaceAndPath("mcc", "games.fishing.stock_depleted"),
+                        Resources.mcc("games.fishing.stock_depleted"),
                         Optional.empty()
                     )
                 )
