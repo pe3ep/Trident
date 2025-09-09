@@ -11,7 +11,6 @@ import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentio
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
 import java.util.*
 
