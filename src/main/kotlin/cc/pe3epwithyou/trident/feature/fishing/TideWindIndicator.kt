@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.inventory.Slot
 
 object TideWindIndicator {
+//    20, 29, 38
     fun render(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Fishing.islandIndicators) return
         val client = Minecraft.getInstance()
@@ -19,16 +20,37 @@ object TideWindIndicator {
         item.getLore().forEach { l ->
             if ("Active Tide: " in l.string) {
                 val tideString = l.string.split(": ")[1]
-                if (tideString == "None") return
+                if (tideString == "None") return@forEach
                 val tide = Tide.valueOf(tideString.uppercase())
                 renderTide(graphics, slot, tide)
-                return
+                return@forEach
+            }
+        }
+        if (slot.index in listOf(20, 29, 38)) {
+            item.getLore().forEach { l ->
+                if ("Active Winds: " in l.string) {
+                    val windsString = l.string.split(": ")[1]
+                    if (windsString == "None") return
+                    val winds = Winds.valueOf(windsString.uppercase())
+                    renderWind(graphics, slot, winds)
+                    return
+                }
             }
         }
     }
 
-    private fun renderWind(graphics: GuiGraphics, slot: Slot) {
-
+    private fun renderWind(graphics: GuiGraphics, slot: Slot, winds: Winds) {
+        Texture(
+            winds.texture,
+            8,
+            8,
+            16,
+            16
+        ).blit(
+            graphics,
+            slot.x - 12,
+            slot.y + 4
+        )
     }
 
     private fun renderTide(graphics: GuiGraphics, slot: Slot, tide: Tide) {
