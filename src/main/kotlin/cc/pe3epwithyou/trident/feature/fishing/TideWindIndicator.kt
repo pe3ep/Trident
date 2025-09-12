@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.fishing
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
@@ -10,6 +11,7 @@ import net.minecraft.world.inventory.Slot
 
 object TideWindIndicator {
     fun render(graphics: GuiGraphics, slot: Slot) {
+        if (!Config.Fishing.islandIndicators) return
         val client = Minecraft.getInstance()
         val screen = client.screen ?: return
         if ("FISHING ISLANDS" !in screen.title.string) return

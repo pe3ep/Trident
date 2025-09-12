@@ -42,6 +42,9 @@ class Config {
     var fishingFlashIfDepleted: Boolean = true
 
     @SerialEntry
+    var fishingIslandIndicators: Boolean = true
+
+    @SerialEntry
     var debugEnableLogging: Boolean = false
 
     @SerialEntry
@@ -131,6 +134,8 @@ class Config {
             get() = handler.instance().fishingWayfinderModule
         val flashIfDepleted: Boolean
             get() = handler.instance().fishingFlashIfDepleted
+        val islandIndicators: Boolean
+            get() = handler.instance().fishingIslandIndicators
     }
 
     object Games {
@@ -424,6 +429,13 @@ class Config {
                         name(Component.translatable("config.trident.fishing.flash_if_depleted.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.fishing.flash_if_depleted.description")))
                         binding(handler.instance()::fishingFlashIfDepleted, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("island_indicators") {
+                        name(Component.translatable("config.trident.fishing.island_indicators.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.fishing.island_indicators.description")))
+                        binding(handler.instance()::fishingIslandIndicators, true)
                         controller(tickBox())
                     }
 //                    options.register<Boolean>("wayfinder_module") {

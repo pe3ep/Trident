@@ -28,6 +28,8 @@
   "config.trident.fishing.supplies_module.description": "Shows a window that displays your current Bait, Line durability, your equipped Augments and your active Overclocks.",
   "config.trident.fishing.flash_if_depleted.name": "Flash if Depleted",
   "config.trident.fishing.flash_if_depleted.description": "Makes Minecraft's taskbar/dock icon flash when your current spot depletes.",
+  "config.trident.fishing.island_indicators.name": "Fishing Island Indicators",
+  "config.trident.fishing.island_indicators.description": "Shows the current wind and tides on fishing island inside the Navigator menu.",
   "config.trident.fishing.wayfinder_module.name": "Wayfinder Module",
   "config.trident.fishing.wayfinder_module.description": "Shows a window that displays your progress towards a Grotto in your current climate.",
   "config.trident.games.name": "All Games",
