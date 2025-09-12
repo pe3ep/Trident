@@ -24,6 +24,9 @@ class Config {
     var globalBlueprintIndicators: Boolean = true
 
     @SerialEntry
+    var globalCraftableIndicators: Boolean = true
+
+    @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
 
     @SerialEntry
@@ -107,6 +110,8 @@ class Config {
             get() = handler.instance().globalBlueprintIndicators
         val currentTheme: TridentThemes
             get() = handler.instance().globalCurrentTheme
+        val craftableIndicators: Boolean
+            get() = handler.instance().globalCraftableIndicators
     }
 
     object RaritySlot {
@@ -241,6 +246,17 @@ class Config {
                         )
                         binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
                         controller(enumSwitch<TridentThemes> { v -> v.displayName })
+                    }
+
+                    options.register<Boolean>("craftable_indicators") {
+                        name(Component.translatable("config.trident.global.craftable_indicators.name"))
+                        description(
+                            OptionDescription.of(
+                                Component.translatable("config.trident.global.craftable_indicators.description")
+                            )
+                        )
+                        binding(handler.instance()::globalCraftableIndicators, true)
+                        controller(tickBox())
                     }
                 }
 
