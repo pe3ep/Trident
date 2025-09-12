@@ -16,6 +16,8 @@
   "config.trident.global.blueprint_indicators.description": "Displays icons based on blueprint's ownership status.\n\nTick Icon - Blueprint has maxed royal donations\nDiamond icon - Blueprint is not owned by player",
   "config.trident.global.theme.name": "Module theme",
   "config.trident.global.theme.description": "Changes the current theme that Modules are using.",
+  "config.trident.global.craftable_indicators.name": "Craftable Indicators",
+  "config.trident.global.craftable_indicators.description": "Shows an indicator if a blueprint is not craftable (missing materials).",
   "config.trident.rarity_slot.name": "Rarity Overlay",
   "config.trident.rarity_slot.description": "Displays an overlay around the item in its slot, matching the item's rarity color.",
   "config.trident.rarity_slot.enabled.name": "Enabled",
