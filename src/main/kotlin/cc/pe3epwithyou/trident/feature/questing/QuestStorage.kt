@@ -47,6 +47,7 @@ object QuestStorage {
      */
     fun applyIncrement(ctx: IncrementContext, canBeDuplicated: Boolean = false): Boolean {
         ChatUtils.debugLog("Received increment from context ${ctx.sourceTag}: amount: ${ctx.amount}")
+        if (QuestListener.checkIfPlobby()) return false
         val id = WorldUtils.getGameID()
         if (!canBeDuplicated && lastOperation[ctx.criteria] == id) {
             ChatUtils.warn("Got duplicate context increment by ${ctx.amount} from ${ctx.sourceTag}")
