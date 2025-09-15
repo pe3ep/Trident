@@ -1,7 +1,6 @@
 package cc.pe3epwithyou.trident.modrinth
 
 import cc.pe3epwithyou.trident.utils.ChatUtils
-import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.TridentFont
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -10,7 +9,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.Version
-import net.minecraft.ChatFormatting
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
@@ -41,8 +39,8 @@ object UpdateChecker {
         val background = Util.backgroundExecutor().asCoroutineDispatcher()
         CoroutineScope(background).launch {
             val req =
-                HttpRequest.newBuilder().uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version")).GET()
-                    .setHeader("User-Agent", "trident-mc-mod").build()
+                HttpRequest.newBuilder().uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version"))
+                    .GET().setHeader("User-Agent", "trident-mc-mod").build()
             val body = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
             Minecraft.getInstance().execute {
                 handleResponse(body)
@@ -76,13 +74,10 @@ object UpdateChecker {
         val component = Component.literal("New Trident version available: ").withColor(TridentFont.TRIDENT_COLOR)
             .append(Component.literal(currentVersion?.friendlyString ?: "Unknown").withColor(TridentFont.TRIDENT_COLOR))
             .append(Component.literal(" -> ").withColor(TridentFont.TRIDENT_COLOR))
-            .append(Component.literal(new).withColor(TridentFont.TRIDENT_ACCENT))
-            .append(
-                Component.literal("\nClick here to download the latest version")
-                    .withStyle(Style.EMPTY
-                        .withColor(TridentFont.TRIDENT_ACCENT)
-                        .withUnderlined(true)
-                        .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
+            .append(Component.literal(new).withColor(TridentFont.TRIDENT_ACCENT)).append(
+                Component.literal("\nClick here to download the latest version").withStyle(
+                        Style.EMPTY.withColor(TridentFont.TRIDENT_ACCENT).withUnderlined(true)
+                            .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
                     )
             )
         ChatUtils.sendMessage(component, true)
