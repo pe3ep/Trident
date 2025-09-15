@@ -71,6 +71,7 @@ dependencies {
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
     modImplementation("com.noxcrew.noxesium:fabric:2.7.7")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+    compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
 }
 
 loom {

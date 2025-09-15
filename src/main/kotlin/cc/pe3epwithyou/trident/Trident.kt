@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.utils.NoxesiumUtils
 import net.fabricmc.api.ModInitializer
 import org.slf4j.Logger
@@ -14,5 +15,6 @@ class Trident : ModInitializer {
         LOGGER.info("[Trident] Initializing Client...")
         Config.init()
         NoxesiumUtils.registerListeners()
+        UpdateChecker.init()
     }
 }
