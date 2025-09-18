@@ -32,7 +32,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     }
 
     private fun getTitleWidget(): QuestDialogTitle {
-        val icon = FontCollection.get("_fonts/quest_log.png")
+        val icon = FontCollection.get("_fonts/icon/quest_log.png")
             .withStyle(
                 Style.EMPTY
                     .withShadowColor(0x0 opacity 0)

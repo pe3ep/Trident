@@ -71,19 +71,19 @@ object TideWindIndicator {
         val path: ResourceLocation
     ) {
         STRONG(
-            Resources.mcc("textures/_fonts/fishing/tide_strong.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/tide_strong.png"),
         ),
         GLIMMERING(
-            Resources.mcc("textures/_fonts/fishing/tide_glimmering.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/tide_glimmering.png"),
         ),
         GREEDY(
-            Resources.mcc("textures/_fonts/fishing/tide_greedy.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/tide_greedy.png"),
         ),
         LUCKY(
-            Resources.mcc("textures/_fonts/fishing/tide_lucky.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/tide_lucky.png"),
         ),
         WISE(
-            Resources.mcc("textures/_fonts/fishing/tide_wise.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/tide_wise.png"),
         );
     }
 
@@ -91,19 +91,19 @@ object TideWindIndicator {
         val texture: ResourceLocation
     ) {
         STRONG(
-            Resources.mcc("textures/_fonts/fishing/winds_strong.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/winds_strong.png"),
         ),
         GLIMMERING(
-            Resources.mcc("textures/_fonts/fishing/winds_glimmering.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/winds_glimmering.png"),
         ),
         GREEDY(
-            Resources.mcc("textures/_fonts/fishing/winds_greedy.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/winds_greedy.png"),
         ),
         LUCKY(
-            Resources.mcc("textures/_fonts/fishing/winds_lucky.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/winds_lucky.png"),
         ),
         WISE(
-            Resources.mcc("textures/_fonts/fishing/winds_wise.png"),
+            Resources.mcc("textures/_fonts/icon/fishing/winds_wise.png"),
         );
     }
 }
