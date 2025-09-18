@@ -37,11 +37,11 @@ class QuestWidget(
 ) : CompoundWidget(0, 0, 0, 0) {
     companion object {
         private val COMP_BLANK
-            get() = FontCollection.get("_fonts/progress_counter/empty.png", 7, 7)
+            get() = FontCollection.get("_fonts/icon/progress_counter/empty.png", 7, 7)
         private val COMP_HALF
-            get() = FontCollection.get("_fonts/progress_counter/half.png", 7, 7)
+            get() = FontCollection.get("_fonts/icon/progress_counter/half.png", 7, 7)
         private val COMP_FULL
-            get() = FontCollection.get("_fonts/progress_counter/full.png", 7, 7)
+            get() = FontCollection.get("_fonts/icon/progress_counter/full.png", 7, 7)
 
         private val COMP_SPACE: Component =
             Component.literal("\uE001").withFont(Resources.minecraft("padding"))
