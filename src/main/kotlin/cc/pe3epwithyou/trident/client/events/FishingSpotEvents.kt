@@ -16,6 +16,11 @@ object FishingSpotEvents {
     }
 
     fun interface FishingSpotEventCallback {
+        /**
+         * Called when fishing rod is cast in a new spot.
+         * Isn't called when player re-casts their rod into the same spot.
+         * @param spot The new spot
+         */
         fun onCast(
             spot: FishingSpotListener.FishingSpot
         )
