@@ -4,13 +4,11 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestSubtype
-import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.utils.ProgressBar
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
-import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withFont
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.GridLayout
@@ -25,12 +23,8 @@ import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.roundToInt
 
 class QuestWidget(
     quest: Quest,
