@@ -3,11 +3,11 @@ package cc.pe3epwithyou.trident.feature.fishing
 import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.TridentFont
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
 import java.util.*
 
@@ -135,7 +135,7 @@ class SuppliesModuleTimer : ClientTickEvents.EndTick {
             )
         ChatUtils.sendMessage(component, true)
         Minecraft.getInstance().player?.playSound(
-            SoundEvent(ResourceLocation.fromNamespaceAndPath("mcc", "games.fishing.overclock_ready"), Optional.empty())
+            SoundEvent(Resources.mcc("games.fishing.overclock_ready"), Optional.empty())
         )
     }
 }

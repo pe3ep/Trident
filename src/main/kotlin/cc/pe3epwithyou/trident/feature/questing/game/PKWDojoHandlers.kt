@@ -22,7 +22,7 @@ object PKWDojoHandlers {
             TimeUtil.parseMmSsMmmToTimeUnit(timeElapsedString, TimeUnit.MILLISECONDS)
 
         // thresholds in milliseconds
-        val twoMin = TimeUnit.MINUTES.toMillis(2)
+        val two = TimeUnit.MINUTES.toMillis(2)
         val three = TimeUnit.MINUTES.toMillis(3)
         val four = TimeUnit.MINUTES.toMillis(4)
         val five = TimeUnit.MINUTES.toMillis(5)
@@ -69,7 +69,7 @@ object PKWDojoHandlers {
             true
         )
 
-        if (runType >= ADVANCED_CMPL) {
+        if (runType >= ADVANCED_CMPL && timeMillis <= five) {
             QuestStorage.applyIncrement(
                 IncrementContext(
                     Game.PARKOUR_WARRIOR_DOJO,
@@ -81,7 +81,7 @@ object PKWDojoHandlers {
             )
         }
 
-        if (timeMillis <= twoMin) {
+        if (timeMillis <= two) {
             inc(QuestCriteria.PW_SOLO_STANDARD_CMPL_BELOW_TWO_MIN, 1, "timed_criteria_TWO_MIN")
         }
         if (timeMillis <= three) {

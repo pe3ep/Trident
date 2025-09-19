@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.feature.questing
 import cc.pe3epwithyou.trident.feature.questing.QuestCriteria.*
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.Rarity
+import cc.pe3epwithyou.trident.utils.Resources
 import net.minecraft.resources.ResourceLocation
 
 class Quest(
@@ -18,7 +19,7 @@ class Quest(
         get() {
             val directory = type.directoryPath
             val raritySuffix = rarity.name.lowercase()
-            return ResourceLocation.fromNamespaceAndPath("mcc", "textures/$directory$raritySuffix.png")
+            return Resources.mcc("textures/$directory$raritySuffix.png")
         }
 
     val display_name: String = criteria.shortName

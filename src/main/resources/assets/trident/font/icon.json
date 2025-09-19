@@ -116,7 +116,7 @@
     },
     {
       "type": "bitmap",
-      "file": "mcc:_fonts/kills.png",
+      "file": "mcc:_fonts/icon/kills.png",
       "ascent": 7,
       "height": 8,
       "chars": [
@@ -161,7 +161,7 @@
     },
     {
       "type": "bitmap",
-      "file": "mcc:_fonts/skull.png",
+      "file": "mcc:_fonts/icon/skull.png",
       "ascent": 7,
       "height": 8,
       "chars": [

@@ -29,7 +29,11 @@ class KillWidget(
         val victimColor = if (self == victim) secondSelfColor else killColors.second
 
         if (attacker != null) {
-            +KillStreak(attackerColor, streak)
+            if (streak < 5) {
+                +KillStreak(attackerColor, streak)
+            } else {
+                +KillStreakFire()
+            }
             +KillBackground(attackerColor, attacker, killMethod, isSelf = (self == attacker))
             +KillTransition(attackerColor, victimColor)
             +KillBackground(victimColor, victim, isLeft = false, isSelf = (self == victim))

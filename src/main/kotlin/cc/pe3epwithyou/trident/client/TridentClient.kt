@@ -27,6 +27,7 @@ import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.ChatFormatting
@@ -193,5 +194,11 @@ class TridentClient : ClientModInitializer {
 
         DialogCollection.loadAllDialogs()
         playerState = PlayerStateIO.load()
+
+        ClientLifecycleEvents.CLIENT_STOPPING.register { onShutdownClient() }
+    }
+
+    private fun onShutdownClient() {
+        PlayerStateIO.save()
     }
 }

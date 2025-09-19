@@ -32,7 +32,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     }
 
     private fun getWidgetTitle(): DialogTitleWidget {
-        val icon = FontCollection.get("_fonts/fishing_perk/supply_preserve.png")
+        val icon = FontCollection.get("_fonts/icon/fishing_perk/supply_preserve.png")
             .withStyle(
                 Style.EMPTY
                     .withShadowColor(0x0 opacity 0)

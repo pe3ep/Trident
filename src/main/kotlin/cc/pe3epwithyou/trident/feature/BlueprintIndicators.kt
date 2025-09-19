@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature
 
+import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.client.gui.GuiGraphics
@@ -41,10 +42,10 @@ object BlueprintIndicators {
 
     private enum class Icons(val texturePath: ResourceLocation) {
         NEW_COSMETIC(
-            ResourceLocation.fromNamespaceAndPath("trident", "textures/interface/blueprint_indicators/new.png")
+            Resources.trident("textures/interface/blueprint_indicators/new.png")
         ),
         MAXED_COSMETIC(
-            ResourceLocation.fromNamespaceAndPath("trident", "textures/interface/blueprint_indicators/maxed.png")
+            Resources.trident("textures/interface/blueprint_indicators/maxed.png")
         )
     }
 }
