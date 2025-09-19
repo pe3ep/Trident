@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.ChatUtils
@@ -20,28 +21,15 @@ data class Line(var type: Rarity = Rarity.COMMON, var uses: Int? = null)
 
 @Serializable
 data class UnstableOverclock(
-    var texture: OverclockTexture? = null,
-    var state: OverclockState = OverclockState(
-        isAvailable = false,
-        duration = 60 * 5 * 20,
-        timeLeft = 0,
-        cooldownLeft = 0,
-        cooldownDuration = 60 * 45 * 20,
-        isActive = false,
-        isCooldown = false
+    var texture: OverclockTexture? = null, var state: OverclockState = OverclockState(
+        isAvailable = false, duration = 60 * 5, cooldownDuration = 60 * 45, isActive = false, isCooldown = false
     )
 )
 
 @Serializable
 data class SupremeOverclock(
     var state: OverclockState = OverclockState(
-        isAvailable = false,
-        duration = 60 * 10 * 20,
-        timeLeft = 0,
-        cooldownLeft = 0,
-        cooldownDuration = 60 * 60 * 20,
-        isCooldown = false,
-        isActive = false
+        isAvailable = false, duration = 60 * 10, cooldownDuration = 60 * 60, isCooldown = false, isActive = false
     )
 )
 
@@ -49,8 +37,8 @@ data class SupremeOverclock(
 data class OverclockState(
     var isAvailable: Boolean,
     var duration: Long,
-    var timeLeft: Long,
-    var cooldownLeft: Long,
+    var activeUntil: Long = 0,
+    var availableIn: Long = 0,
     var cooldownDuration: Long,
     var isActive: Boolean,
     var isCooldown: Boolean
@@ -78,6 +66,7 @@ data class Supplies(
 
 @Serializable
 data class WayfinderStatus(
+    var unlocked: Boolean = false,
     var island: String,
     var data: Int = 0,
     var hasGrotto: Boolean = false,
@@ -86,18 +75,15 @@ data class WayfinderStatus(
 
 @Serializable
 data class WayfinderData(
-    var temperate: WayfinderStatus = WayfinderStatus("Temperate"),
-    var tropical: WayfinderStatus = WayfinderStatus("Tropical"),
-    var barren: WayfinderStatus = WayfinderStatus("Barren"),
+    var temperate: WayfinderStatus = WayfinderStatus(island = "Temperate"),
+    var tropical: WayfinderStatus = WayfinderStatus(island = "Tropical"),
+    var barren: WayfinderStatus = WayfinderStatus(island = "Barren"),
     var needsUpdating: Boolean = true,
 )
 
 @Serializable
 data class Research(
-    var type: String,
-    var tier: Int = 1,
-    var progressThroughTier: Int = 0,
-    var totalForTier: Int = 1000
+    var type: String, var tier: Int = 1, var progressThroughTier: Int = 0, var totalForTier: Int = 1000
 )
 
 @Serializable
@@ -115,10 +101,7 @@ data class PlayerState(
 
 object PlayerStateIO {
     // configDir/trident/playerstate.json
-    private val path: Path = FabricLoader.getInstance()
-        .configDir
-        .resolve("trident")
-        .resolve("playerstate.json")
+    private val path: Path = FabricLoader.getInstance().configDir.resolve("trident").resolve("playerstate.json")
 
     private val json = Json { prettyPrint = true }
 
@@ -131,11 +114,7 @@ object PlayerStateIO {
 
         val tmp = path.resolveSibling("${path.fileName}.tmp")
         Files.writeString(
-            tmp,
-            text,
-            StandardOpenOption.CREATE,
-            StandardOpenOption.TRUNCATE_EXISTING,
-            StandardOpenOption.WRITE
+            tmp, text, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
         )
         Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
     }
@@ -145,6 +124,16 @@ object PlayerStateIO {
         if (!Files.exists(path)) return PlayerState()
         val text = Files.readString(path)
         val serializable = json.decodeFromString<PlayerState>(text)
+        if (serializable.supplies.overclocks.unstable.state.isActive || serializable.supplies.overclocks.unstable.state.isCooldown) {
+            OverclockClock.registerHandler(
+                OverclockClock.ClockHandler("Unstable", serializable.supplies.overclocks.unstable.state)
+            )
+        }
+        if (serializable.supplies.overclocks.supreme.state.isActive || serializable.supplies.overclocks.supreme.state.isCooldown) {
+            OverclockClock.registerHandler(
+                OverclockClock.ClockHandler("Supreme", serializable.supplies.overclocks.supreme.state)
+            )
+        }
         return serializable
     }
 }

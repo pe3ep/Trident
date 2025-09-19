@@ -4,11 +4,12 @@ import cc.pe3epwithyou.trident.client.events.FishingSpotEvents
 import cc.pe3epwithyou.trident.client.events.QuestingEvents
 import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
+import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
-import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
-import cc.pe3epwithyou.trident.feature.fishing.SuppliesModuleTimer
+import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
+import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
@@ -55,15 +56,12 @@ class TridentClient : ClientModInitializer {
     }
 
     private val debugCommands: LiteralArgumentBuilder<FabricClientCommandSource> =
-        ClientCommandManager.literal("trident")
-            .then(
-                ClientCommandManager.literal("open").then(
-                    ClientCommandManager.argument("dialog", StringArgumentType.string())
-                        .suggests { _, builder ->
+        ClientCommandManager.literal("trident").then(
+                ClientCommandManager.literal("open")
+                    .then(ClientCommandManager.argument("dialog", StringArgumentType.string()).suggests { _, builder ->
                             debugDialogs.keys.forEach(builder::suggest)
                             builder.buildFuture()
-                        }
-                        .executes { ctx ->
+                        }.executes { ctx ->
                             if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
                                 ChatUtils.sendMessage(
                                     Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
@@ -75,15 +73,13 @@ class TridentClient : ClientModInitializer {
                                 DialogCollection.open(key, it(10, 10, key))
                             }
                             0
-                        }
-                )).then(
-                ClientCommandManager.literal("close").then(
-                    ClientCommandManager.argument("dialog", StringArgumentType.string())
-                        .suggests { _, builder ->
+                        }))
+            .then(
+                ClientCommandManager.literal("close")
+                    .then(ClientCommandManager.argument("dialog", StringArgumentType.string()).suggests { _, builder ->
                             debugDialogs.keys.forEach(builder::suggest)
                             builder.buildFuture()
-                        }
-                        .executes { ctx ->
+                        }.executes { ctx ->
                             if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
                                 ChatUtils.sendMessage(
                                     Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
@@ -92,23 +88,18 @@ class TridentClient : ClientModInitializer {
                             }
                             DialogCollection.close(ctx.getArgument("dialog", String::class.java))
                             0
-                        }
-                )).then(
-                ClientCommandManager.literal("resetDialogPositions")
-                    .executes { _ ->
+                        })).then(
+                ClientCommandManager.literal("resetDialogPositions").executes { _ ->
                         DialogCollection.resetDialogPositions()
-                        val c = Component.literal("Saved dialog positions have been ")
-                            .withColor(TridentFont.TRIDENT_COLOR)
-                            .append(
-                                Component.literal("successfully reset")
-                                    .withColor(TridentFont.TRIDENT_ACCENT)
-                            )
+                        val c =
+                            Component.literal("Saved dialog positions have been ").withColor(TridentFont.TRIDENT_COLOR)
+                                .append(
+                                    Component.literal("successfully reset").withColor(TridentFont.TRIDENT_ACCENT)
+                                )
                         ChatUtils.sendMessage(c, true)
                         0
-                    }
-            ).then(
-                ClientCommandManager.literal("autofish")
-                    .executes { _ ->
+                    }).then(
+                ClientCommandManager.literal("autofish").executes { _ ->
                         if (jokeCooldown) return@executes 0
                         jokeCooldown = true
                         ChatUtils.sendMessage("Requesting autofish.jar...")
@@ -126,36 +117,32 @@ class TridentClient : ClientModInitializer {
                         }
                         DelayedAction.delayTicks(180L) {
                             ChatUtils.sendMessage(
-                                Component.literal("Are we serious right meow bro?")
-                                    .withStyle(ChatFormatting.AQUA)
+                                Component.literal("Are we serious right meow bro?").withStyle(ChatFormatting.AQUA)
                             )
                         }
                         DelayedAction.delayTicks(240L) {
                             ChatUtils.sendMessage(
-                                Component.literal("This incident will be reported.")
-                                    .withStyle(ChatFormatting.DARK_RED)
+                                Component.literal("This incident will be reported.").withStyle(ChatFormatting.DARK_RED)
                                     .withStyle(ChatFormatting.BOLD)
                             )
                             jokeCooldown = false
                         }
                         0
-                    }
-            ).then(
-                ClientCommandManager.literal("resetPlayerState")
-                    .executes { _ ->
+                    }).then(
+                ClientCommandManager.literal("resetPlayerState").executes { _ ->
                         playerState = PlayerState()
                         PlayerStateIO.load()
                         DialogCollection.refreshOpenedDialogs()
-                        val c = Component.literal("Player state has been ")
-                            .withColor(TridentFont.TRIDENT_COLOR)
-                            .append(
-                                Component.literal("successfully reset")
-                                    .withColor(TridentFont.TRIDENT_ACCENT)
+                        val c = Component.literal("Player state has been ").withColor(TridentFont.TRIDENT_COLOR).append(
+                                Component.literal("successfully reset").withColor(TridentFont.TRIDENT_ACCENT)
                             )
                         ChatUtils.sendMessage(c, true)
                         0
-                    }
-            )
+                    }).then(
+                ClientCommandManager.literal("fakeUnstable").executes { _ ->
+                        OverclockHandlers.startTimedOverclock("Unstable", playerState.supplies.overclocks.unstable.state)
+                        0
+                    })
 
     override fun onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
@@ -164,10 +151,7 @@ class TridentClient : ClientModInitializer {
 
         settingsKeymapping = KeyBindingHelper.registerKeyBinding(
             KeyMapping(
-                "key.trident.config",
-                InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_U,
-                "category.trident.keys"
+                "key.trident.config", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, "category.trident.keys"
             )
         )
 
@@ -177,10 +161,10 @@ class TridentClient : ClientModInitializer {
         ChatEventListener.register()
         ChestScreenListener.register()
         DepletedDisplay.DepletedTimer.register()
-        SuppliesModuleTimer.register()
         KillChatListener.register()
         DelayedAction.init()
         QuestListener.register()
+        OverclockClock.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->
@@ -196,12 +180,14 @@ class TridentClient : ClientModInitializer {
 
         // Debug implementation of a fishing cast listener
         FishingSpotEvents.CAST.register { spot ->
-            ChatUtils.debugLog("""
+            ChatUtils.debugLog(
+                """
                 New spot called!
                 x: ${spot.x}
                 y: ${spot.y}
                 perks: ${spot.perks}
-            """.trimIndent())
+            """.trimIndent()
+            )
         }
 
 //        Register Questing events
