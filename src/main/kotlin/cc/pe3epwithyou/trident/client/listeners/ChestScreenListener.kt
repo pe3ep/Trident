@@ -207,8 +207,8 @@ object ChestScreenListener {
         if ("FISHING ISLANDS" !in screen.title.string) return
 
         // temperate
-        val temperateDataLine = screen.menu.slots[24].item.getLore()[13].string
-        if (temperateDataLine.contains("Wayfinder Data: ")) {
+        val temperateDataLine = screen.menu.slots[24].item.getLore().getOrNull(13)?.string
+        if (temperateDataLine != null && temperateDataLine.contains("Wayfinder Data: ")) {
             val temperateData = temperateDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
             TridentClient.playerState.wayfinderData.temperate.data = temperateData
             if (temperateData >= 2000) TridentClient.playerState.wayfinderData.temperate.hasGrotto = true
@@ -217,8 +217,8 @@ object ChestScreenListener {
         }
 
         // tropical
-        val tropicalDataLine = screen.menu.slots[33].item.getLore()[13].string
-        if (tropicalDataLine.contains("Wayfinder Data: ")) {
+        val tropicalDataLine = screen.menu.slots[33].item.getLore().getOrNull(13)?.string
+        if (tropicalDataLine != null && tropicalDataLine.contains("Wayfinder Data: ")) {
             val tropicalData = tropicalDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
             TridentClient.playerState.wayfinderData.tropical.data = tropicalData
             if (tropicalData >= 2000) TridentClient.playerState.wayfinderData.tropical.hasGrotto = true
@@ -227,8 +227,8 @@ object ChestScreenListener {
         }
 
         // barren
-        val barrenDataLine = screen.menu.slots[42].item.getLore()[13].string
-        if (barrenDataLine.contains("Wayfinder Data: ")) {
+        val barrenDataLine = screen.menu.slots[42].item.getLore().getOrNull(13)?.string
+        if (barrenDataLine != null && barrenDataLine.contains("Wayfinder Data: ")) {
             val barrenData = barrenDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
             TridentClient.playerState.wayfinderData.barren.data = barrenData
             if (barrenData >= 2000) TridentClient.playerState.wayfinderData.barren.hasGrotto = true
