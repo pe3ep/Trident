@@ -46,7 +46,7 @@ class ResearchWidget(
         WayfinderNameWidget(RESEARCH_ICONS[research.type], researchName, mcFont).atBottom(0, settings = LayoutConstants.LEFT)
 
         val progressPercentage = (research.progressThroughTier.toDouble() / research.totalForTier.toDouble()) * 100
-        val progressBarComponent = ProgressBar.createProgressBarComponent(research.progressThroughTier.toFloat() / research.totalForTier.toFloat(), 20, 4)
+        val progressBarComponent = ProgressBar.progressComponent(research.progressThroughTier.toFloat() / research.totalForTier.toFloat(), 20, 4)
 
         StringWidget(
             Component.literal("${research.tier - 1} ").defaultFont()
