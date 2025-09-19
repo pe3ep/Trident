@@ -1,11 +1,13 @@
 package cc.pe3epwithyou.trident.client
 
+import cc.pe3epwithyou.trident.client.events.FishingSpotEvents
 import cc.pe3epwithyou.trident.client.events.QuestingEvents
 import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
+import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.feature.fishing.SuppliesModuleTimer
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -186,6 +188,21 @@ class TridentClient : ClientModInitializer {
             if (!settingsKeymapping.consumeClick() || client.player == null) return@EndTick
             client.setScreen(Config.getScreen(client.screen))
         })
+
+        ClientTickEvents.END_CLIENT_TICK.register { _ ->
+            if (!MCCIState.isOnIsland()) return@register
+            FishingSpotListener.handle()
+        }
+
+        // Debug implementation of a fishing cast listener
+        FishingSpotEvents.CAST.register { spot ->
+            ChatUtils.debugLog("""
+                New spot called!
+                x: ${spot.x}
+                y: ${spot.y}
+                perks: ${spot.perks}
+            """.trimIndent())
+        }
 
 //        Register Questing events
         QuestingEvents.INCREMENT_ACTIVE.register { ctx ->
