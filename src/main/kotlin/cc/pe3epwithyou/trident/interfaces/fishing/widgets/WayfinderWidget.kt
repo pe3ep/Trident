@@ -57,7 +57,7 @@ class WayfinderWidget(
                     }
                 )
             val progressBarComponent =
-                ProgressBar.progressComponent(wayfinderStatus.grottoStability.toFloat() / 100f, 20, 4)
+                ProgressBar.progressComponent(wayfinderStatus.grottoStability.toFloat() / 100f, 20, 5)
 
             StringWidget(progressBarComponent.append(progress), mcFont).atBottom(0, settings = LayoutConstants.LEFT)
         } else {
