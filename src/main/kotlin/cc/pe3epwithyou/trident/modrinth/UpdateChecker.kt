@@ -26,12 +26,14 @@ import java.time.Duration
 import java.time.Instant
 
 object UpdateChecker {
-    private var currentVersion: Version? = null
+    var currentVersion: Version? = null
     private const val PROJECT_ID = "L6RCcsrd"
     private const val MOD_ID = "trident"
 
     private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()
     private val JSON = Json.Default
+
+    var latestVersion: Version? = null
 
     fun init() {
         val container = FabricLoader.getInstance().getModContainer(MOD_ID)
@@ -55,7 +57,6 @@ object UpdateChecker {
 
     private fun handleResponse(response: String) {
         val versions = JSON.decodeFromString<List<VersionResponseSchema.ModrinthVersion>>(response)
-        var fetchedVersion: Version? = null
         var fetchedVersionModrinth: VersionResponseSchema.ModrinthVersion? = null
         if (currentVersion == null) {
             ChatUtils.error("Missing current version")
@@ -64,16 +65,16 @@ object UpdateChecker {
 
         for (version in versions) {
             if (version.version_type != "release") continue
-            fetchedVersion = Version.parse(version.version_number)
+            latestVersion = Version.parse(version.version_number)
             fetchedVersionModrinth = version
             break
         }
-        if (fetchedVersion == null) return
+        if (latestVersion == null) return
         ChatUtils.info("Current version: ${currentVersion?.friendlyString}")
-        ChatUtils.info("Fetched version: ${fetchedVersion.friendlyString}")
-        if (fetchedVersion > currentVersion) {
+        ChatUtils.info("Fetched version: ${latestVersion!!.friendlyString}")
+        if (latestVersion!! > currentVersion) {
             // New version available, notify the user
-            sendUpdateAvailableMessage(fetchedVersion.friendlyString)
+            sendUpdateAvailableMessage(latestVersion!!.friendlyString)
 
             if (TridentClient.playerState.hatesUpdates) return
             val published = Instant.parse(fetchedVersionModrinth?.date_published ?: return)
