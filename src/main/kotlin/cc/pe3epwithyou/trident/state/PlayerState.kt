@@ -97,6 +97,7 @@ data class PlayerState(
     var supplies: Supplies = Supplies(),
     var wayfinderData: WayfinderData = WayfinderData(),
     var research: FishingResearch = FishingResearch(),
+    var hatesUpdates: Boolean = false
 )
 
 object PlayerStateIO {

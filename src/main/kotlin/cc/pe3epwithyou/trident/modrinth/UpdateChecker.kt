@@ -1,6 +1,10 @@
 package cc.pe3epwithyou.trident.modrinth
 
+import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.TridentFont
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -19,6 +23,7 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
+import java.time.Instant
 
 object UpdateChecker {
     private var currentVersion: Version? = null
@@ -51,6 +56,7 @@ object UpdateChecker {
     private fun handleResponse(response: String) {
         val versions = JSON.decodeFromString<List<VersionResponseSchema.ModrinthVersion>>(response)
         var fetchedVersion: Version? = null
+        var fetchedVersionModrinth: VersionResponseSchema.ModrinthVersion? = null
         if (currentVersion == null) {
             ChatUtils.error("Missing current version")
             return
@@ -59,6 +65,7 @@ object UpdateChecker {
         for (version in versions) {
             if (version.version_type != "release") continue
             fetchedVersion = Version.parse(version.version_number)
+            fetchedVersionModrinth = version
             break
         }
         if (fetchedVersion == null) return
@@ -67,6 +74,17 @@ object UpdateChecker {
         if (fetchedVersion > currentVersion) {
             // New version available, notify the user
             sendUpdateAvailableMessage(fetchedVersion.friendlyString)
+
+            if (TridentClient.playerState.hatesUpdates) return
+            val published = Instant.parse(fetchedVersionModrinth?.date_published ?: return)
+            val now = Instant.now()
+            val activateSillyDate = published.plus(Duration.ofDays(7L))
+            if (!now.isBefore(activateSillyDate)) {
+                DelayedAction.delayTicks(100) {
+                    val key = "grumpycat"
+                    DialogCollection.open(key, DisappointedCatDialog(10, 10, key))
+                }
+            }
         }
     }
 
@@ -76,9 +94,9 @@ object UpdateChecker {
             .append(Component.literal(" -> ").withColor(TridentFont.TRIDENT_COLOR))
             .append(Component.literal(new).withColor(TridentFont.TRIDENT_ACCENT)).append(
                 Component.literal("\nClick here to download the latest version").withStyle(
-                        Style.EMPTY.withColor(TridentFont.TRIDENT_ACCENT).withUnderlined(true)
-                            .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
-                    )
+                    Style.EMPTY.withColor(TridentFont.TRIDENT_ACCENT).withUnderlined(true)
+                        .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
+                )
             )
         ChatUtils.sendMessage(component, true)
     }

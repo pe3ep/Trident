@@ -17,6 +17,7 @@ import cc.pe3epwithyou.trident.interfaces.fishing.ResearchDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
+import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
@@ -47,6 +48,7 @@ class TridentClient : ClientModInitializer {
         "questing" to ::QuestingDialog,
         "wayfinder" to ::WayfinderDialog,
         "research" to ::ResearchDialog,
+        "grumpycat" to ::DisappointedCatDialog,
     )
 
     companion object {
