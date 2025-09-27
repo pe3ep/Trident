@@ -36,10 +36,10 @@ object ItemParser {
                 val minutes = line.string.split(": ")[1]
                 if (minutes.split(" ").size == 1) {
                     val minuteInt = minutes.dropLast(1).toInt()
-                    TridentClient.playerState.supplies.overclocks.unstable.state.duration = minuteInt * 60L * 20L
+                    TridentClient.playerState.supplies.overclocks.unstable.state.duration = minuteInt * 60L
                 } else {
                     val minuteInt = minutes.split(" ")[1].dropLast(1).toInt()
-                    TridentClient.playerState.supplies.overclocks.unstable.state.duration = minuteInt * 60L * 20L
+                    TridentClient.playerState.supplies.overclocks.unstable.state.duration = minuteInt * 60L
                 }
             }
             if ("Overclocked Perk:" in line.string) {

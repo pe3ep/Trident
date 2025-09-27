@@ -4,11 +4,9 @@ import cc.pe3epwithyou.trident.utils.Resources
 import net.minecraft.resources.ResourceLocation
 
 enum class OverclockTexture(
-    val texturePath: ResourceLocation,
-    val textureWidth: Int = 16,
-    val textureHeight: Int = textureWidth
+    val texturePath: ResourceLocation, val textureWidth: Int = 16, val textureHeight: Int = textureWidth
 ) {
-//    Hook Overclock
+    //    Hook Overclock
     WISE_HOOK(
         Resources.mcc("island_interface/fishing/overclock/wise_hook")
     ),
@@ -25,7 +23,7 @@ enum class OverclockTexture(
         Resources.mcc("island_interface/fishing/overclock/lucky_hook")
     ),
 
-//    Magnet Overclock
+    //    Magnet Overclock
     FISH_MAGNET(
         Resources.mcc("island_interface/fishing/overclock/fish_magnet")
     ),
@@ -42,7 +40,7 @@ enum class OverclockTexture(
         Resources.mcc("island_interface/fishing/overclock/xp_magnet")
     ),
 
-//    Rod Overclock
+    //    Rod Overclock
     GLITCHED_ROD(
         Resources.mcc("island_interface/fishing/overclock/glitched_rod")
     ),
@@ -59,44 +57,30 @@ enum class OverclockTexture(
         Resources.mcc("island_interface/fishing/overclock/speedy_rod")
     ),
 
-//    Timed overclocks
+    //    Timed overclocks
     GLIMMERING_UNSTABLE(
-        Resources.mcc("island_interface/fishing/overclock/glimmering_unstable"),
-        16,
-        176
+        Resources.mcc("island_interface/fishing/overclock/glimmering_unstable"), 16, 176
     ),
     GREEDY_UNSTABLE(
-        Resources.mcc("island_interface/fishing/overclock/greedy_unstable"),
-        16,
-        176
+        Resources.mcc("island_interface/fishing/overclock/greedy_unstable"), 16, 176
     ),
     LUCKY_UNSTABLE(
-        Resources.mcc("island_interface/fishing/overclock/lucky_unstable"),
-        16,
-        176
+        Resources.mcc("island_interface/fishing/overclock/lucky_unstable"), 16, 176
     ),
     STRONG_UNSTABLE(
-        Resources.mcc("island_interface/fishing/overclock/strong_unstable"),
-        16,
-        176
+        Resources.mcc("island_interface/fishing/overclock/strong_unstable"), 16, 176
     ),
     WISE_UNSTABLE(
-        Resources.mcc("island_interface/fishing/overclock/wise_unstable"),
-        16,
-        176
+        Resources.mcc("island_interface/fishing/overclock/wise_unstable"), 16, 176
     ),
 
     SUPREME(
-        Resources.mcc("island_interface/fishing/overclock/supreme"),
-        16,
-        80
+        Resources.mcc("island_interface/fishing/overclock/supreme"), 16, 80
     ),
 
-//    Misc
-    ACTIVATED(
-        Resources.mcc("island_interface/fishing/overclock/activated"),
-        16,
-        48
+    //    Misc
+    READY(
+        Resources.mcc("island_interface/fishing/overclock/activated"), 16, 48
     ),
     COOLDOWN(
         Resources.mcc("island_interface/fishing/overclock/cooldown"),

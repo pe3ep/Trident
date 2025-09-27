@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.feature.fishing.SuppliesModuleTimer
+import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import net.minecraft.client.Minecraft
@@ -22,9 +22,7 @@ object SlotClickListener {
             if (clickType == ClickType.QUICK_MOVE && isLeftClick && "Unstable Overclock" in item.hoverName.string) {
                 if (TridentClient.playerState.supplies.overclocks.unstable.state.isAvailable) startUnstableOverclock()
             }
-            if ((clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE)
-                && isLeftClick && "Supreme Overclock" in item.hoverName.string
-            ) {
+            if ((clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE) && isLeftClick && "Supreme Overclock" in item.hoverName.string) {
                 if (TridentClient.playerState.supplies.overclocks.supreme.state.isAvailable) startSupremeOverclock()
             }
         }
@@ -42,12 +40,12 @@ object SlotClickListener {
     private fun startUnstableOverclock() {
         val overclock = TridentClient.playerState.supplies.overclocks.unstable
         if (overclock.state.isActive || overclock.state.isCooldown) return
-        SuppliesModuleTimer.INSTANCE.startUnstableOverclock()
+        OverclockHandlers.startTimedOverclock("Unstable", overclock.state)
     }
 
     private fun startSupremeOverclock() {
         val overclock = TridentClient.playerState.supplies.overclocks.supreme
         if (overclock.state.isActive || overclock.state.isCooldown) return
-        SuppliesModuleTimer.INSTANCE.startSupremeOverclock()
+        OverclockHandlers.startTimedOverclock("Supreme", overclock.state)
     }
 }
