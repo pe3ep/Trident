@@ -1,14 +1,15 @@
 package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.client.events.FishingSpotEvents
-import cc.pe3epwithyou.trident.state.fishing.Augment
+import cc.pe3epwithyou.trident.feature.fishing.FishingSpotParser
+import cc.pe3epwithyou.trident.state.fishing.Perk
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.Display
 import net.minecraft.world.entity.projectile.FishingHook
 import net.minecraft.world.phys.AABB
 
 object FishingSpotListener {
-    data class FishingSpot(val x: Double, val y: Double, val perks: List<Pair<Augment, Double>>)
+    data class FishingSpot(val x: Double, val y: Double, val perks: List<Pair<Perk, Double>>)
 
     /**
      * If this is null then player is not currently fishing.
@@ -43,8 +44,11 @@ object FishingSpotListener {
         val display: Display.TextDisplay = entities.first() as Display.TextDisplay
 
         // Temporary fake perk list due to display parser not existing yet
-        val debugAugments = listOf(Pair(Augment.FISH_MAGNET, 0.3))
-        val spot = FishingSpot(display.x, display.y, debugAugments)
+        val perks = FishingSpotParser.parse(display.text)
+        if (perks.isEmpty()) return null
+        val spot = FishingSpot(display.x, display.y, perks)
         return spot
     }
+
+
 }
