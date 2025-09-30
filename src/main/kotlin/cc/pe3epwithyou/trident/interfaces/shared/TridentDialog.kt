@@ -44,6 +44,8 @@ abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x
         )
     }
 
+    fun publicLayout() = layout()
+
     open fun refresh() {
         val distances: SideDistances = getDistances(x, y, width, height)
         val quadrant = getQuadrant(distances)
