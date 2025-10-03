@@ -19,7 +19,11 @@ abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x
         )
     }
 
-    fun publicLayout() = layout()
+    /**
+     * Used to access dialog's layout
+     */
+    val publicLayout
+        get() = layout()
 
     open fun refresh() {
         val screenWidth = Minecraft.getInstance().window.guiScaledWidth
