@@ -19,6 +19,6 @@ object MCCIState {
     fun isOnIsland(): Boolean {
         if (Config.Debug.bypassOnIsland) return true
         val server = Minecraft.getInstance().currentServer ?: return false
-        return server.ip.contains("mccisland.net", true)
+        return server.ip.contains("mccisland.net", true) || server.ip.contains("mccisland.com", true)
     }
 }
