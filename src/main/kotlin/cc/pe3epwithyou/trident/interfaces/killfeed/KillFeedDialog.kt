@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.interfaces.killfeed
 
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.feature.killfeed.Position
+import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
@@ -56,8 +56,8 @@ class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val client = Minecraft.getInstance()
         val screenWidth = client.window.guiScaledWidth
         val pos = when (Config.KillFeed.positionSide) {
-            Position.LEFT -> 0
-            Position.RIGHT -> screenWidth - width
+            KillfeedPosition.LEFT -> 0
+            KillfeedPosition.RIGHT -> screenWidth - width
         }
         return pos
 
@@ -66,8 +66,8 @@ class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
     override fun layout(): GridLayout = grid {
         val side = when (Config.KillFeed.positionSide) {
-            Position.RIGHT -> LayoutConstants.RIGHT
-            Position.LEFT -> LayoutConstants.LEFT
+            KillfeedPosition.RIGHT -> LayoutConstants.RIGHT
+            KillfeedPosition.LEFT -> LayoutConstants.LEFT
         }
         val widgets = killWidgets.toMutableList()
         if (Config.KillFeed.reverseOrder) {

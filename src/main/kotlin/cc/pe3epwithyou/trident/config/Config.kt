@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.config
 
-import cc.pe3epwithyou.trident.feature.killfeed.Position
+import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
@@ -79,7 +79,7 @@ class Config {
     var killfeedReverseOrder: Boolean = false
 
     @SerialEntry
-    var killfeedPositionSide: Position = Position.RIGHT
+    var killfeedPositionSide: KillfeedPosition = KillfeedPosition.RIGHT
 
     @SerialEntry
     var killfeedRemoveKillTime: Int = 10
@@ -159,7 +159,7 @@ class Config {
             get() = handler.instance().killfeedShowYouInKill
         val reverseOrder: Boolean
             get() = handler.instance().killfeedReverseOrder
-        val positionSide: Position
+        val positionSide: KillfeedPosition
             get() = handler.instance().killfeedPositionSide
         val removeKillTime: Int
             get() = handler.instance().killfeedRemoveKillTime
@@ -357,11 +357,11 @@ class Config {
                         controller(tickBox())
                     }
 
-                    options.register<Position>("killfeed_position_side") {
+                    options.register<KillfeedPosition>("killfeed_position_side") {
                         name(Component.translatable("config.trident.killfeed.position_side.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.position_side.description")))
-                        binding(handler.instance()::killfeedPositionSide, Position.RIGHT)
-                        controller(enumSwitch<Position> { v -> v.displayName })
+                        binding(handler.instance()::killfeedPositionSide, KillfeedPosition.RIGHT)
+                        controller(enumSwitch<KillfeedPosition> { v -> v.displayName })
                     }
 
                     options.register<Int>("killfeed_remove_kill_time") {

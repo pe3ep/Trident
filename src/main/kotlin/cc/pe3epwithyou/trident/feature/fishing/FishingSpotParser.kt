@@ -12,7 +12,7 @@ object FishingSpotParser {
             val perkData = (match.groups[1]?.value?.toDoubleOrNull()) ?: return@forEach
             val perkString = match.groups[2]?.value ?: return@forEach
 
-            val perk = Perk.get(perkString) ?: return@forEach
+            val perk = Perk.getPerkByName(perkString) ?: return@forEach
             val perkValue: Double = if (perk.usesInt) perkData else (perkData / 100)
             perks.add(Pair(perk, perkValue))
         }
