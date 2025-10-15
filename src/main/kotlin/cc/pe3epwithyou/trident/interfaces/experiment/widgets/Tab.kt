@@ -6,5 +6,5 @@ import net.minecraft.network.chat.Component
 data class Tab(
     val disabled: Boolean = false,
     val title: Component,
-    val layout: Layout
+    val layout: () -> Layout
 )

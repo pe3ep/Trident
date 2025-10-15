@@ -14,16 +14,23 @@ class TabbedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Them
     private var tabs: List<Tab> = listOf(
         Tab(
             title = Component.literal("Ice Cream"),
-            layout = iceCreamTab()
+            layout = ::iceCreamTab
         ),
         Tab(
             title = Component.literal("Burger"),
-            layout = burgerTab()
+            layout = ::burgerTab
         )
     )
 
+    private var currentTab: Tab = tabs.first()
+    fun setTab(t: Tab) {
+        currentTab = t
+        refresh()
+    }
+
+    // Main layout
     override fun layout() = grid {
-        TabView(this@TabbedDialog, tabs).atBottom(0)
+        TabView(this@TabbedDialog, tabs, currentTab, ::setTab).atBottom(0)
     }
 
     private fun iceCreamTab() = grid {
