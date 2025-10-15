@@ -13,7 +13,7 @@ import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
-import cc.pe3epwithyou.trident.interfaces.TestDialog
+import cc.pe3epwithyou.trident.interfaces.experiment.TabbedDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.ResearchDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderDialog
@@ -50,7 +50,7 @@ class TridentClient : ClientModInitializer {
         "wayfinder" to ::WayfinderDialog,
         "research" to ::ResearchDialog,
         "grumpycat" to ::DisappointedCatDialog,
-        "test" to ::TestDialog,
+        "experiment/tabbed" to ::TabbedDialog,
     )
 
     companion object {
