@@ -50,7 +50,7 @@ class TridentClient : ClientModInitializer {
         "wayfinder" to ::WayfinderDialog,
         "research" to ::ResearchDialog,
         "grumpycat" to ::DisappointedCatDialog,
-        "experiment/tabbed" to ::TabbedDialog,
+        "experiment_tabbed" to ::TabbedDialog,
     )
 
     companion object {

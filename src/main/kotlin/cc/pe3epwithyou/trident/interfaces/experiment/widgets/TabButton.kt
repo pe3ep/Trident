@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.experiment.widgets
 
+import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.theme.Themed
@@ -13,8 +14,8 @@ class TabButton(
     width: Int = theme.theme.dimensions.buttonWidth,
     height: Int = theme.theme.dimensions.buttonHeight,
     var tab: Tab,
+    val view: TabView,
     val style: Theme.ButtonStyle = theme.theme.buttonStyles.standard,
-    val clickHandler: () -> Unit
 ) : AbstractWidget(0, 0, width, height, tab.title), Themed by theme {
     override fun renderWidget(
         graphics: GuiGraphics, i: Int, j: Int, f: Float
@@ -28,11 +29,14 @@ class TabButton(
             }.get(theme)
         )
         val textColor = if (tab.disabled) theme.colors.textSecondary else theme.colors.textPrimary
-        graphics.drawString(minecraft.font, tab.title, x + theme.dimensions.paddingInner, y, textColor)
+        graphics.drawString(minecraft.font, tab.title, x + theme.dimensions.paddingInner, y + theme.dimensions.paddingInner, textColor)
     }
 
     override fun onClick(d: Double, e: Double) {
-        if (!tab.disabled) clickHandler()
+        if (!tab.disabled) {
+            ChatUtils.sendMessage("Clicked on tab ${tab.title.string}")
+            view.changeTab(tab)
+        }
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {

@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.experiment.widgets
 
+import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.shared.widgets.LayoutPortal
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.grid
@@ -7,13 +8,19 @@ import com.noxcrew.sheeplib.theme.Themed
 import net.minecraft.client.gui.layouts.Layout
 
 class TabView(
-    dialog: Themed,
+    private val dialog: TridentDialog,
     val tabs: List<Tab>,
-    var currentTab: Tab = tabs.first(),
+    val currentTab: Tab,
+    val tabSetter: (Tab) -> Unit,
 ) : CompoundWidget(0, 0, 0, 0), Themed by dialog {
+    override fun getWidth() = layout.width
+    override fun getHeight() = layout.height
+
+    fun changeTab(new: Tab) = tabSetter(new)
+
     override val layout: Layout = grid {
-        TabGroup(dialog, tabs, this@TabView).atBottom(0)
-        LayoutPortal(currentTab.layout).atBottom(0)
+        TabButtonGroup(dialog, tabs, currentTab, this@TabView).atBottom(0)
+        LayoutPortal(currentTab.layout()).atBottom(0)
     }
 
     init {
