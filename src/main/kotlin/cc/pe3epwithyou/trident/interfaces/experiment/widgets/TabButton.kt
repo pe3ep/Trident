@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.interfaces.experiment.widgets
 
-import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.theme.Themed
@@ -33,10 +32,7 @@ class TabButton(
     }
 
     override fun onClick(d: Double, e: Double) {
-        if (!tab.disabled) {
-            ChatUtils.sendMessage("Clicked on tab ${tab.title.string}")
-            view.changeTab(tab)
-        }
+        if (!tab.disabled) view.changeTab(tab)
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {
