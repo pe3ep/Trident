@@ -5,7 +5,10 @@ import cc.pe3epwithyou.trident.interfaces.shared.widgets.LayoutPortal
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.Layout
+import net.minecraft.network.chat.Component
 
 class TabView(
     private val dialog: TridentDialog,
@@ -20,11 +23,28 @@ class TabView(
 
     override val layout: Layout = grid {
         TabButtonGroup(dialog, tabs, currentTab, this@TabView).atBottom(0)
-        LayoutPortal(currentTab.layout()).atBottom(0)
+        LayoutPortal(
+            if (currentTab.isDetached) detachedLayout() else currentTab.layout()
+        ).atBottom(0)
     }
 
     init {
         layout.arrangeElements()
         layout.visitWidgets(this::addChild)
+    }
+
+    private fun detachedLayout() = grid {
+        val font = Minecraft.getInstance().font
+        StringWidget(Component.literal("This tab is detached"), font).atBottom(0)
+    }
+
+    fun detachTab(tab: Tab) {
+        if (!tabs.contains(tab)) return
+        tabs.filter { t -> t.title == tab.title }[0].isDetached = true
+    }
+
+    fun attachTab(tab: Tab) {
+        if (!tabs.contains(tab)) return
+        tabs.filter { t -> t.title == tab.title }[0].isDetached = false
     }
 }
