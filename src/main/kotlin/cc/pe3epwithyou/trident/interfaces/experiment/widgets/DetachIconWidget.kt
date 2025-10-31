@@ -1,7 +1,6 @@
 import cc.pe3epwithyou.trident.interfaces.experiment.widgets.Tab
 import cc.pe3epwithyou.trident.interfaces.experiment.widgets.TabView
 import com.noxcrew.sheeplib.theme.Themed
-import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
