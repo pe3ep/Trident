@@ -41,10 +41,12 @@ class TabView(
     fun detachTab(tab: Tab) {
         if (!tabs.contains(tab)) return
         tabs.filter { t -> t.title == tab.title }[0].isDetached = true
+        dialog.refresh()
     }
 
     fun attachTab(tab: Tab) {
         if (!tabs.contains(tab)) return
         tabs.filter { t -> t.title == tab.title }[0].isDetached = false
+        dialog.refresh()
     }
 }

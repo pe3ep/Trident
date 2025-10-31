@@ -18,7 +18,7 @@ class TabButtonGroup(
         tabs.forEach { tab ->
             if (tab == currentTab) {
                 TabLong(
-                    themed = this@TabButtonGroup, tab = tab, style = theme.buttonStyles.positive
+                    themed = this@TabButtonGroup, tab = tab, style = theme.buttonStyles.positive, view = view
                 ).at(0, col)
             } else {
                 TabShort(

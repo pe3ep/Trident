@@ -22,11 +22,14 @@ class TabShort(
                 else -> style.defaultColor
             }.get(theme.theme)
         )
-        tab.icon.blit(
-            graphics,
-            x + theme.theme.dimensions.paddingInner,
-            y + theme.theme.dimensions.paddingInner,
-        )
+        when {
+            tab.isDetached -> Tab.DETACH_ICON
+            else -> tab.icon
+        }.blit(
+                graphics,
+                x + theme.theme.dimensions.paddingInner,
+                y + theme.theme.dimensions.paddingInner,
+            )
     }
 
     override fun onClick(d: Double, e: Double) {
