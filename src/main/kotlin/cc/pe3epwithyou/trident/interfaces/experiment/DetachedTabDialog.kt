@@ -14,15 +14,16 @@ import net.minecraft.network.chat.Component
 
 class DetachedTabDialog(x: Int, y: Int, key: String, val tab: Tab, val view: TabView) : TridentDialog(x, y, key),
     Themed by TridentThemed {
-    override val title = DialogTitle(this@DetachedTabDialog, tab.title, color = 0xFF0000 opacity 128)
+    override val title = DialogTitle(
+        this@DetachedTabDialog,
+        tab.title,
+        color = 0xFF0000 opacity 128,
+        tab = tab,
+        tabView = view,
+        isCloseable = false
+    )
 
     override fun layout() = grid {
-        ThemedButton(
-            theme = this@DetachedTabDialog,
-            message = Component.literal("Go back"),
-        ) {
-            TODO()
-        }
         LayoutPortal(tab.layout()).atBottom(0)
     }
 }
