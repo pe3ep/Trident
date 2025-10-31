@@ -1,5 +1,7 @@
 package cc.pe3epwithyou.trident.interfaces.experiment.widgets
 
+import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.experiment.DetachedTabDialog
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.shared.widgets.LayoutPortal
 import com.noxcrew.sheeplib.CompoundWidget
@@ -41,12 +43,15 @@ class TabView(
     fun detachTab(tab: Tab) {
         if (!tabs.contains(tab)) return
         tabs.filter { t -> t.title == tab.title }[0].isDetached = true
+        val key = "detached:${tab.id}"
+        DialogCollection.open(key, DetachedTabDialog(0,0, key, tab, this@TabView))
         dialog.refresh()
     }
 
     fun attachTab(tab: Tab) {
         if (!tabs.contains(tab)) return
         tabs.filter { t -> t.title == tab.title }[0].isDetached = false
+        DialogCollection.close("detached:${tab.id}")
         dialog.refresh()
     }
 }

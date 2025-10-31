@@ -6,6 +6,7 @@ import net.minecraft.client.gui.layouts.Layout
 import net.minecraft.network.chat.Component
 
 data class Tab(
+    val id: String,
     val disabled: Boolean = false,
     val icon: Texture,
     val title: Component,

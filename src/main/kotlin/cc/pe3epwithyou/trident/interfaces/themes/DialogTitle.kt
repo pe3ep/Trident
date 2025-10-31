@@ -1,5 +1,8 @@
 package cc.pe3epwithyou.trident.interfaces.themes
 
+import DetachIconWidget
+import cc.pe3epwithyou.trident.interfaces.experiment.widgets.Tab
+import cc.pe3epwithyou.trident.interfaces.experiment.widgets.TabView
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.dialog.Dialog
@@ -20,7 +23,9 @@ class DialogTitle(
     private val component: Component,
     private val color: Int = 0x111111 opacity 127,
     private val isCloseable: Boolean = true,
-    private val tooltip: Tooltip? = null
+    private val tooltip: Tooltip? = null,
+    private val tab: Tab? = null,
+    private val tabView: TabView? = null
 ) :
     CompoundWidget(0, 0, dialog.width, FONT_HEIGHT + dialog.theme.dimensions.paddingOuter * 2),
     DialogTitleWidget,
@@ -56,6 +61,15 @@ class DialogTitle(
                 marginX = theme.dimensions.paddingOuter,
             ) { _, _ -> dialog.close() }
                 .at(top = 0, right = 0)
+        }
+        if (tab != null && tabView != null) {
+            DetachIconWidget(
+                theme,
+                tab,
+                tabView,
+                marginX = theme.dimensions.paddingOuter,
+                marginY = theme.dimensions.paddingOuter,
+            ).at(top = 0, right = 0)
         }
     }
 

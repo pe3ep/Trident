@@ -28,12 +28,13 @@ class TabbedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Them
     private var tabs: List<Tab> = listOf(
         Tab(
             title = Component.literal("Ice Cream".uppercase()).mccFont(), icon = ICE_CREAM_ICON, layout = ::iceCreamTab,
-        ),
-        Tab(
+            id = "ice_cream",
+        ), Tab(
             title = Component.literal("Burger".uppercase()).mccFont(), icon = BURGER_ICON, layout = ::burgerTab,
-        ),
-        Tab(
+            id = "burger",
+        ), Tab(
             title = Component.literal("Fries".uppercase()).mccFont(), icon = FRIES_ICON, layout = ::friesTab,
+            id = "fries",
         )
     )
 
