@@ -4,13 +4,12 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.WorldUtils
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 object QuestStorage {
     private val store: MutableMap<Game, MutableList<Quest>> = ConcurrentHashMap()
-    private val lastOperation: MutableMap<QuestCriteria, UUID> = ConcurrentHashMap()
+    private val lastOperation: MutableMap<QuestCriteria, String> = ConcurrentHashMap()
     var dailyRemaining: Int = 0
     var weeklyRemaining: Int = 0
 
