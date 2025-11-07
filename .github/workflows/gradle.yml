@@ -1,0 +1,58 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - "master"
+      - "experiment/**"
+      - "ver/**"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      # This action restores Gradle caches AND can provision a Gradle runtime
+      # so the build works even if the wrapper is missing.
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: 8.14.1
+
+      - name: Build with Gradle (wrapper if present, otherwise provisioned Gradle)
+        run: |
+          set -euo pipefail
+          if [ -f ./gradlew ]; then
+            chmod +x ./gradlew
+            ./gradlew --version
+            ./gradlew build
+          else
+            echo "No Gradle wrapper found; using provisioned Gradle."
+            gradle --version
+            gradle build
+          fi
+
+      # Upload all jars from any module's build/libs.
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mod-build-artifacts
+          path: |
+            **/build/libs/*.jar
+            !**/*-sources.jar
+            !**/*-dev.jar
+            !**/*-shadow-dev.jar
+          if-no-files-found: warn
+          retention-days: 14
