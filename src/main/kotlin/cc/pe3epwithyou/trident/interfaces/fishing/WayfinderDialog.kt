@@ -1,16 +1,11 @@
 package cc.pe3epwithyou.trident.interfaces.fishing
 
 import cc.pe3epwithyou.trident.client.TridentClient
-import cc.pe3epwithyou.trident.interfaces.fishing.widgets.AugmentStackWidget
-import cc.pe3epwithyou.trident.interfaces.fishing.widgets.OverclockStackWidget
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.WayfinderWidget
-import cc.pe3epwithyou.trident.interfaces.questing.widgets.QuestWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
-import cc.pe3epwithyou.trident.state.Rarity
-import cc.pe3epwithyou.trident.state.WayfinderStatus
-import cc.pe3epwithyou.trident.state.fishing.Augment
+import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
@@ -34,14 +29,10 @@ class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
     }
 
     private fun getWidgetTitle(): DialogTitleWidget {
-        val icon = Component.literal("\uE10C")
-            .mccFont("icon")
-            .withStyle(
-                Style.EMPTY
-                    .withShadowColor(0x0 opacity 0)
-            )
-        val text = Component.literal(" WAYFINDER DATA".uppercase())
-            .withTridentFont("hud_title")
+        val icon = FontCollection.get("_fonts/icon/fishing_perk/anglr_lure_wise.png").withStyle(
+            Style.EMPTY.withShadowColor(0x0 opacity 0)
+        )
+        val text = Component.literal(" WAYFINDER DATA".uppercase()).withTridentFont("hud_title")
 
         val baseTitle = icon.append(text)
 
@@ -77,10 +68,15 @@ class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
             ).atBottom(0, settings = LayoutConstants.LEFT)
             return@grid
         }
-
-        WayfinderWidget(wayfinderData.temperate, this@WayfinderDialog).atBottom(0, settings = LayoutConstants.LEFT)
-        WayfinderWidget(wayfinderData.tropical, this@WayfinderDialog).atBottom(0, settings = LayoutConstants.LEFT)
-        WayfinderWidget(wayfinderData.barren, this@WayfinderDialog).atBottom(0, settings = LayoutConstants.LEFT)
+        if (wayfinderData.temperate.unlocked) WayfinderWidget(wayfinderData.temperate, this@WayfinderDialog).atBottom(
+            0, settings = LayoutConstants.LEFT
+        )
+        if (wayfinderData.tropical.unlocked) WayfinderWidget(wayfinderData.tropical, this@WayfinderDialog).atBottom(
+            0, settings = LayoutConstants.LEFT
+        )
+        if (wayfinderData.barren.unlocked) WayfinderWidget(wayfinderData.barren, this@WayfinderDialog).atBottom(
+            0, settings = LayoutConstants.LEFT
+        )
     }
 
     override fun refresh() {
