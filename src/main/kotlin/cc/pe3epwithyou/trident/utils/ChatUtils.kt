@@ -32,7 +32,7 @@ object ChatUtils {
 
     fun sendMessage(c: Component, prefix: Boolean = true) {
         if (prefix) {
-            Minecraft.getInstance().gui.chat.addMessage(TridentFont.tridentPrefix().append(c))
+            Minecraft.getInstance().gui.chat.addMessage(TridentFont.tridentPrefix.append(c))
             return
         }
         Minecraft.getInstance().gui.chat.addMessage(c)

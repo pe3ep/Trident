@@ -90,12 +90,12 @@ object UpdateChecker {
     }
 
     private fun sendUpdateAvailableMessage(new: String) {
-        val component = Component.literal("New Trident version available: ").withColor(TridentFont.TRIDENT_COLOR)
-            .append(Component.literal(currentVersion?.friendlyString ?: "Unknown").withColor(TridentFont.TRIDENT_COLOR))
-            .append(Component.literal(" -> ").withColor(TridentFont.TRIDENT_COLOR))
-            .append(Component.literal(new).withColor(TridentFont.TRIDENT_ACCENT)).append(
+        val component = Component.literal("New Trident version available: ").withColor(TridentFont.TRIDENT_COLOR.baseColor)
+            .append(Component.literal(currentVersion?.friendlyString ?: "Unknown").withColor(TridentFont.TRIDENT_COLOR.baseColor))
+            .append(Component.literal(" -> ").withColor(TridentFont.TRIDENT_COLOR.baseColor))
+            .append(Component.literal(new).withColor(TridentFont.TRIDENT_ACCENT.baseColor)).append(
                 Component.literal("\nClick here to download the latest version").withStyle(
-                    Style.EMPTY.withColor(TridentFont.TRIDENT_ACCENT).withUnderlined(true)
+                    Style.EMPTY.withColor(TridentFont.TRIDENT_ACCENT.baseColor).withUnderlined(true)
                         .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
                 )
             )

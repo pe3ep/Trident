@@ -68,7 +68,7 @@ class TridentClient : ClientModInitializer {
                         }.executes { ctx ->
                             if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
                                 ChatUtils.sendMessage(
-                                    Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
+                                    Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR.baseColor)
                                 )
                                 return@executes 0
                             }
@@ -86,7 +86,7 @@ class TridentClient : ClientModInitializer {
                         }.executes { ctx ->
                             if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
                                 ChatUtils.sendMessage(
-                                    Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR)
+                                    Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR.baseColor)
                                 )
                                 return@executes 0
                             }
@@ -96,9 +96,9 @@ class TridentClient : ClientModInitializer {
                 ClientCommandManager.literal("resetDialogPositions").executes { _ ->
                         DialogCollection.resetDialogPositions()
                         val c =
-                            Component.literal("Saved dialog positions have been ").withColor(TridentFont.TRIDENT_COLOR)
+                            Component.literal("Saved dialog positions have been ").withColor(TridentFont.TRIDENT_COLOR.baseColor)
                                 .append(
-                                    Component.literal("successfully reset").withColor(TridentFont.TRIDENT_ACCENT)
+                                    Component.literal("successfully reset").withColor(TridentFont.TRIDENT_ACCENT.baseColor)
                                 )
                         ChatUtils.sendMessage(c, true)
                         0
@@ -137,14 +137,18 @@ class TridentClient : ClientModInitializer {
                         playerState = PlayerState()
                         PlayerStateIO.load()
                         DialogCollection.refreshOpenedDialogs()
-                        val c = Component.literal("Player state has been ").withColor(TridentFont.TRIDENT_COLOR).append(
-                                Component.literal("successfully reset").withColor(TridentFont.TRIDENT_ACCENT)
+                        val c = Component.literal("Player state has been ").withColor(TridentFont.TRIDENT_COLOR.baseColor).append(
+                                Component.literal("successfully reset").withColor(TridentFont.TRIDENT_ACCENT.baseColor)
                             )
                         ChatUtils.sendMessage(c, true)
                         0
                     }).then(
                 ClientCommandManager.literal("fakeUnstable").executes { _ ->
                         OverclockHandlers.startTimedOverclock("Unstable", playerState.supplies.overclocks.unstable.state)
+                        0
+                    }).then(
+                ClientCommandManager.literal("send").executes { _ ->
+                        OverclockClock.ClockHandler.sendReadyMessage("Unstable Overclock")
                         0
                     })
 
