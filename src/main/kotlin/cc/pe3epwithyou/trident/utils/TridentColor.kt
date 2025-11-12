@@ -1,5 +1,7 @@
 package cc.pe3epwithyou.trident.utils
 
+import com.noxcrew.sheeplib.util.opacity
+import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.network.chat.TextColor
 
 class TridentColor(
@@ -10,6 +12,9 @@ class TridentColor(
     val blue: Int = color and 0xFF
     val textColor: TextColor
         get() = TextColor.fromRgb(color)
+    val opaqueColor: Int
+        get() = color.opaqueColor()
+    fun opacity(v: Int): Int = color.opacity(v)
 
     companion object {
         /**

@@ -63,16 +63,19 @@ object OverclockClock : ClientTickEvents.EndTick {
             clockTimer++
         }
 
-        private fun sendReadyMessage(oc: String) {
-            val component = Component.literal("Your ").withColor(TridentFont.TRIDENT_COLOR)
-                .append(Component.literal(oc).withColor(TridentFont.TRIDENT_ACCENT)).append(
-                    Component.literal(" is no longer on cooldown and is ready to be used")
-                        .withColor(TridentFont.TRIDENT_COLOR)
+        companion object {
+            fun sendReadyMessage(oc: String) {
+                val component = Component.literal("Your ").withStyle(TridentFont.TRIDENT_COLOR.baseStyle).append(
+                        Component.literal(oc).withStyle(TridentFont.TRIDENT_ACCENT.baseStyle)
+                    ).append(
+                        Component.literal(" is no longer on cooldown and is ready to be used")
+                            .withStyle(TridentFont.TRIDENT_COLOR.baseStyle)
+                    )
+                ChatUtils.sendMessage(component, true)
+                Minecraft.getInstance().player?.playSound(
+                    SoundEvent(Resources.mcc("games.fishing.overclock_ready"), Optional.empty())
                 )
-            ChatUtils.sendMessage(component, true)
-            Minecraft.getInstance().player?.playSound(
-                SoundEvent(Resources.mcc("games.fishing.overclock_ready"), Optional.empty())
-            )
+            }
         }
     }
 }
