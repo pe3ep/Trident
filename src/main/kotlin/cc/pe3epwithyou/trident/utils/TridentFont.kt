@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.utils
 
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
@@ -40,7 +41,7 @@ object TridentFont {
     val tridentPrefix: MutableComponent
         get() {
             val a = Component.literal("‹").withStyle(TRIDENT_COLOR.baseStyle)
-            val b = Component.literal("\uE000").withStyle(Style.EMPTY.withFont(getTridentFont("glyph")))
+            val b = Component.literal("\uE000").withTridentFont("glyph")
             val c = Component.literal("› ")
             return a.append(b).append(c).append(Component.empty().withStyle(ChatFormatting.RESET))
         }
