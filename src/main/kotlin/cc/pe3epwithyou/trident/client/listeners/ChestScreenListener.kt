@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestingParser
@@ -51,6 +52,12 @@ object ChestScreenListener {
         if ("FISHING PROGRESS" in screen.title.string) {
             DelayedAction.delayTicks(2L) {
                 findFishingResearch(screen)
+            }
+        }
+
+        if ("ISLAND EXCHANGE" in screen.title.string) {
+            DelayedAction.delayTicks(2L) {
+                ExchangeHandler.handleScreen(screen)
             }
         }
 

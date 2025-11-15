@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
 import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
 import cc.pe3epwithyou.trident.feature.CraftableIndicator;
+import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
 import cc.pe3epwithyou.trident.feature.fishing.TideWindIndicator;
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot;
 import cc.pe3epwithyou.trident.state.MCCIState;
@@ -44,6 +45,7 @@ public class AbstractContainerScreenMixin extends Screen {
         }
         TideWindIndicator.INSTANCE.render(guiGraphics, slot);
         CraftableIndicator.INSTANCE.render(guiGraphics, slot);
+        ExchangeHandler.INSTANCE.render(guiGraphics, slot);
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))

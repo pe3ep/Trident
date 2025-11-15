@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.client
 import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.experiment.TabbedDialog
@@ -168,8 +169,8 @@ object TridentCommand {
                         delay(3000)
                         runMain {
                             ChatUtils.sendMessage(
-                                Component.literal("This incident will be reported.").withStyle(TridentFont.ERROR.baseStyle)
-                                    .withStyle(ChatFormatting.BOLD)
+                                Component.literal("This incident will be reported.")
+                                    .withStyle(TridentFont.ERROR.baseStyle).withStyle(ChatFormatting.BOLD)
                             )
                             jokeCooldown = false
                         }
@@ -206,8 +207,7 @@ object TridentCommand {
                         }
                         if (key == "supreme") {
                             OverclockHandlers.startTimedOverclock(
-                                "Supreme",
-                                playerState.supplies.overclocks.supreme.state
+                                "Supreme", playerState.supplies.overclocks.supreme.state
                             )
                         }
                     }
@@ -222,6 +222,16 @@ object TridentCommand {
                     ChatUtils.sendMessage("——————— PLAYERSTATE BEGIN ———————", false)
                     ChatUtils.sendMessage(text, false)
                     ChatUtils.sendMessage("———————— PLAYERSTATE END ————————", false)
+                }
+            }
+
+            literal("dump_lowest_prices") {
+                executes {
+                    ChatUtils.sendMessage("—————— LOWEST PRICE BEGIN ——————", false)
+                    ExchangeHandler.priceMap.forEach { (key, value) ->
+                        ChatUtils.sendMessage("${key.name} costs $value", false)
+                    }
+                    ChatUtils.sendMessage("——————— LOWEST PRICE END ———————", false)
                 }
             }
         }.register(dispatcher)
