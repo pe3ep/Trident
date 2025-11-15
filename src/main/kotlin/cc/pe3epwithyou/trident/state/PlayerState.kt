@@ -104,7 +104,10 @@ object PlayerStateIO {
     // configDir/trident/playerstate.json
     private val path: Path = FabricLoader.getInstance().configDir.resolve("trident").resolve("playerstate.json")
 
-    private val json = Json { prettyPrint = true }
+    private val json = Json {
+        prettyPrint = true
+        ignoreUnknownKeys = true
+    }
 
     fun save() {
         val serializable = TridentClient.playerState

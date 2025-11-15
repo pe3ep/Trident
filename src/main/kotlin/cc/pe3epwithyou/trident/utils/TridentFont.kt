@@ -24,6 +24,13 @@ object TridentFont {
         mutedShadow = 0x1c4957
     )
 
+    val ERROR: Swatch = Swatch(
+        baseColor = 0xff3366,
+        baseShadow = 0x500f20,
+        mutedColor = 0xff3366,
+        mutedShadow = 0x500f20,
+    )
+
     fun getMCCFont(font: String = "hud", offset: Int = 0): ResourceLocation {
         if (offset == 0) {
             return Resources.mcc(font)

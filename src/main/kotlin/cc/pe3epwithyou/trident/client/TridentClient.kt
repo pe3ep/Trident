@@ -29,6 +29,7 @@ import org.lwjgl.glfw.GLFW
 class TridentClient : ClientModInitializer {
     companion object {
         var playerState = PlayerState()
+        var hasFailedToLoadConfig: Boolean = false
         lateinit var settingsKeymapping: KeyMapping
     }
 
@@ -71,15 +72,21 @@ class TridentClient : ClientModInitializer {
             QuestStorage.applyIncrement(ctx)
         }
 
-        DialogCollection.loadAllDialogs()
-        playerState = PlayerStateIO.load()
+        try {
+            DialogCollection.loadAllDialogs()
+            playerState = PlayerStateIO.load()
+        } catch (e: Exception) {
+            hasFailedToLoadConfig = true
+            ChatUtils.error("FATAL ERROR OCCURRED WHEN LOADING CONFIGS")
+            ChatUtils.error(e.message ?: "No error message")
+        }
 
         ClientLifecycleEvents.CLIENT_STOPPING.register { onShutdownClient() }
     }
 
     private fun onShutdownClient() {
         try {
-            PlayerStateIO.save()
+            if (!hasFailedToLoadConfig) PlayerStateIO.save()
         } catch (e: Exception) {
             ChatUtils.error("Failed to save data on shutdown: ${e.message}")
         }

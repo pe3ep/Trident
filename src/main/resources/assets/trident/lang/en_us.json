@@ -72,5 +72,6 @@
   "config.trident.killfeed.reverse_order.description": "Reverses the order kills in the kill feed.\n\n(When enabled, kills come from the top instead of the bottom)",
   "trident.not_island": "You are not currently playing on MCC Island",
   "category.trident.keys": "Trident",
-  "key.trident.config": "Open Trident settings"
+  "key.trident.config": "Open Trident settings",
+  "trident.failed_config": "Trident has failed to load the config. Your settings have been reset. Please contact developers to fix this issue."
 }
