@@ -62,7 +62,7 @@ object ExchangeHandler {
 
     private fun getItemPrice(item: ItemStack): Long? {
         val priceLine = item.getLore().reversed().getOrNull(2)?.string ?: return null
-        val match = Regex("""Listed Price: .((?:\d|,)+)""").matchEntire(priceLine) ?: return null
+        val match = Regex("""Listed Price: .((?:\d+|,)+)""").matchEntire(priceLine) ?: return null
         val price = match.groups[1]?.value?.replace(",", "")?.toLongOrNull() ?: return null
         return price
     }
