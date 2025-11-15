@@ -168,7 +168,7 @@ object TridentCommand {
                         delay(3000)
                         runMain {
                             ChatUtils.sendMessage(
-                                Component.literal("This incident will be reported.").withStyle(ChatFormatting.DARK_RED)
+                                Component.literal("This incident will be reported.").withStyle(TridentFont.ERROR.baseStyle)
                                     .withStyle(ChatFormatting.BOLD)
                             )
                             jokeCooldown = false
