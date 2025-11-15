@@ -56,18 +56,23 @@ object ExchangeLookup {
             ).setHeader("Content-Type", "application/json").setHeader("User-Agent", "trident-mc-mod/$player")
                 .setHeader("X-API-Key", key).build()
 
-            val responseText = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
-            val listingsResponse = json.decodeFromString<ExchangeListingsResponse>(responseText)
-            val firstListing = listingsResponse.data.activeIslandExchangeListings.first()
-            responseCache = listingsResponse
-            Minecraft.getInstance().execute {
-                ChatUtils.sendMessage(
-                    """
-                        Listing: ${firstListing.asset.name}
-                        Amount: ${firstListing.amount}
-                        Price: ${firstListing.cost}
-                    """.trimIndent()
-                )
+            try {
+                val responseText = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
+                val listingsResponse = json.decodeFromString<ExchangeListingsResponse>(responseText)
+                ExchangeHandler.isFetching = false
+                Minecraft.getInstance().execute {
+                    responseCache = listingsResponse
+                    ExchangeHandler.updatePrices()
+                }
+            } catch (e: Exception) {
+                ExchangeHandler.isFetching = false
+                Minecraft.getInstance().execute {
+                    ChatUtils.error("Failed to fetch exchange API: ${e.message}")
+                    ChatUtils.sendMessage(
+                        Component.literal("Something went wrong when fetching Exchange API. Please contact developers to fix this issue")
+                            .withStyle(TridentFont.ERROR.baseStyle)
+                    )
+                }
             }
         }
     }

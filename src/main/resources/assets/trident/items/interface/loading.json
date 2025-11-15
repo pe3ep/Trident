@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "trident:interface/loading"
+  },
+  "oversized_in_gui": true
+}

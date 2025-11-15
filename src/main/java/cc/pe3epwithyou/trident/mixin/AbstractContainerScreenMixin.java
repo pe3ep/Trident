@@ -17,12 +17,19 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
 public class AbstractContainerScreenMixin extends Screen {
+    @Shadow
+    protected int leftPos;
+
+    @Shadow
+    protected int topPos;
+
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
     }
@@ -45,7 +52,7 @@ public class AbstractContainerScreenMixin extends Screen {
         }
         TideWindIndicator.INSTANCE.render(guiGraphics, slot);
         CraftableIndicator.INSTANCE.render(guiGraphics, slot);
-        ExchangeHandler.INSTANCE.render(guiGraphics, slot);
+        ExchangeHandler.INSTANCE.renderSlot(guiGraphics, slot);
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))
@@ -59,6 +66,17 @@ public class AbstractContainerScreenMixin extends Screen {
             }
             if (s.getTitle().getString().contains("ISLAND REWARDS")) {
                 ChestScreenListener.INSTANCE.findQuests(s);
+            }
+        }
+    }
+
+    @Inject(method = "renderBackground", at = @At(value = "TAIL"))
+    public void renderBackground(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
+        if (!MCCIState.INSTANCE.isOnIsland()) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.screen instanceof ContainerScreen s) {
+            if (s.getTitle().getString().contains("ISLAND EXCHANGE")) {
+                ExchangeHandler.INSTANCE.renderBackground(guiGraphics, leftPos, topPos);
             }
         }
     }

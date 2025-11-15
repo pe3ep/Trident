@@ -1,8 +1,11 @@
 package cc.pe3epwithyou.trident.feature.exchange
 
+import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
+import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
@@ -15,33 +18,53 @@ object ExchangeHandler {
         val name: String,
         val amount: Int,
     )
-
+    var isFetching: Boolean = false
     val priceMap = hashMapOf<Listing, Long>()
 
     fun handleScreen(screen: Screen) {
-//        10-16 until 52
         val chest = screen as ContainerScreen
+
+        if (ExchangeLookup.responseCache == null) {
+            isFetching = true
+            ExchangeLookup.lookup()
+        } else {
+            updatePrices()
+        }
+
         chest.menu.slots.forEach { slot ->
             if (!inSlotBoundary(slot)) return@forEach
             val item = slot.item
 
             val price = getItemPrice(item) ?: return@forEach
 
-            val itemName = item.displayName.string
+            val itemName = item.displayName.string.replace(" Token", "")
             val listing = Listing(itemName, slot.item.count)
             val current = priceMap[listing]
             if (current == null || price < current) {
+                ChatUtils.info("(SCREEN) Updating price for $listing -> $price")
                 priceMap[listing] = price
             }
         }
     }
 
-    fun render(graphics: GuiGraphics, slot: Slot) {
+    fun updatePrices() {
+        ExchangeLookup.responseCache!!.data.activeIslandExchangeListings.forEach { (cost, asset, amount) ->
+            val name = "[${asset.name}]".replace(" Token", "")
+            val listing = Listing(name, amount)
+            val current = priceMap[listing]
+            if (current == null || cost < current) {
+                ChatUtils.info("(API) Updating price for $listing -> $cost")
+                priceMap[listing] = cost
+            }
+        }
+    }
+
+    fun renderSlot(graphics: GuiGraphics, slot: Slot) {
         val screen = Minecraft.getInstance().screen ?: return
         if ("ISLAND EXCHANGE" !in screen.title.string) return
         if (!inSlotBoundary(slot)) return
 
-        val itemName = slot.item.displayName.string
+        val itemName = slot.item.displayName.string.replace(" Token", "")
         val price = getItemPrice(slot.item) ?: return
         val listing = Listing(itemName, slot.item.count)
         if (priceMap.contains(listing) && priceMap[listing] == price) {
@@ -53,7 +76,21 @@ object ExchangeHandler {
                 graphics, x = slot.x + 10, y = slot.y - 1
             )
         }
+    }
 
+    fun renderBackground(graphics: GuiGraphics, left: Int, top: Int) {
+        if (!isFetching) return
+        val font = Minecraft.getInstance().font
+        Model(
+            modelPath = Resources.trident("interface/loading"),
+            width = 8,
+            height = 8
+        ).render(
+            graphics,
+            left + 90,
+            top - 30,
+        )
+        graphics.drawString(font, "Fetching API...", left + 12 + 90, top - 29, 0xFFFFFF.opaqueColor())
     }
 
     private fun inSlotBoundary(slot: Slot): Boolean {
@@ -61,9 +98,13 @@ object ExchangeHandler {
     }
 
     private fun getItemPrice(item: ItemStack): Long? {
-        val priceLine = item.getLore().reversed().getOrNull(2)?.string ?: return null
-        val match = Regex("""Listed Price: .((?:\d+|,)+)""").matchEntire(priceLine) ?: return null
-        val price = match.groups[1]?.value?.replace(",", "")?.toLongOrNull() ?: return null
-        return price
+        val priceLines = item.getLore().reversed()
+        if (priceLines.isEmpty()) return null
+        priceLines.forEach { priceLine ->
+            val match = Regex("""Listed Price: .((?:\d+|,)+)""").matchEntire(priceLine.string) ?: return@forEach
+            val price = match.groups[1]?.value?.replace(",", "")?.toLongOrNull() ?: return null
+            return price
+        }
+        return null
     }
 }
