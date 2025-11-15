@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
+import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.experiment.TabbedDialog
@@ -181,6 +182,30 @@ object TridentCommand {
 
             }
 
+            literal("api") {
+                literal("setToken") {
+                    argument("token") {
+                        suggests { _, builder ->
+                            builder.suggest("Enter you API key")
+                            builder.buildFuture()
+                        }
+                        executes {
+                            val arg = it.getArgument("token", String::class.java)
+                            Config.handler.instance().apiKey = arg
+                            Config.handler.save()
+                            ChatUtils.sendMessage("Successfully set the token. You can now use API features")
+                        }
+                    }
+                }
+                literal("resetToken") {
+                    executes {
+                        Config.handler.instance().apiKey = ""
+                        Config.handler.save()
+                        ChatUtils.sendMessage(Component.literal("Your API token has been reset").withStyle(TridentFont.ERROR.baseStyle))
+                    }
+                }
+            }
+
         }.register(dispatcher)
 
         if (!Config.Debug.enableLogging) return
@@ -232,6 +257,12 @@ object TridentCommand {
                         ChatUtils.sendMessage("${key.name} costs $value", false)
                     }
                     ChatUtils.sendMessage("——————— LOWEST PRICE END ———————", false)
+                }
+            }
+
+            literal("send_exchange_req") {
+                executes {
+                    ExchangeLookup.lookup()
                 }
             }
         }.register(dispatcher)

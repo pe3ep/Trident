@@ -105,6 +105,9 @@ class Config {
     @SerialEntry
     var questingHideIfNoQuests: Boolean = false
 
+    @SerialEntry
+    var apiKey: String = ""
+
     object Global {
         val blueprintIndicators: Boolean
             get() = handler.instance().globalBlueprintIndicators
@@ -180,6 +183,11 @@ class Config {
             get() = handler.instance().questingShowLeft
         val hideIfNoQuests: Boolean
             get() = handler.instance().questingHideIfNoQuests
+    }
+
+    object Api {
+        val key: String
+            get() = handler.instance().apiKey
     }
 
     companion object {
@@ -466,6 +474,23 @@ class Config {
                 }
             }
 
+//            categories.register("mcci_api") {
+//                name(Component.translatable("config.trident.api.name"))
+//
+//                groups.register("api") {
+//                    name(Component.translatable("config.trident.api.name"))
+//                    description(OptionDescription.of(Component.translatable("config.trident.api.description")))
+//
+//                    options.register<String>("api_key") {
+//                        name(Component.translatable("config.trident.api.key.name"))
+//                        description(OptionDescription.of(Component.translatable("config.trident.api.key.description")))
+//                        binding(handler.instance()::apiKey, "")
+//                        controller(stringField())
+//                    }
+//                }
+//
+//            }
+
             categories.register("debug") {
                 name(Component.translatable("config.trident.debug"))
 
@@ -503,6 +528,8 @@ class Config {
                 }
 
             }
+
+
         }.generateScreen(parentScreen)
     }
 }
