@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import net.minecraft.network.chat.Component
@@ -14,7 +15,7 @@ object FontCollection {
     fun get(path: String) = get(path, 7, 8)
 
     fun get(path: String, ascent: Int, height: Int): MutableComponent {
-        val loc = ResourceLocation.fromNamespaceAndPath("mcc", path)
+        val loc = Resources.mcc(path)
         val icon = Icon(loc, ascent, height)
         return get(icon)
     }

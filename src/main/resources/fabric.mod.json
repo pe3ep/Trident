@@ -23,7 +23,7 @@
       "cc.pe3epwithyou.trident.Trident"
     ],
     "modmenu": [
-      "cc.pe3epwithyou.trident.config.ModMenuIntegration"
+      "cc.pe3epwithyou.trident.modmenu.ModMenuIntegration"
     ]
   },
   "mixins": [

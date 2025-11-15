@@ -2,8 +2,8 @@ package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.WayfinderStatus
-import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.ProgressBar
+import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
@@ -57,17 +57,25 @@ class WayfinderWidget(
                         ChatFormatting.RED
                     }
                 )
-            val progressBarComponent = ProgressBar.createProgressBarComponent(wayfinderStatus.grottoStability.toFloat() / 100f, 20, 4)
+            val progressBarComponent =
+                ProgressBar.progressComponent(wayfinderStatus.grottoStability.toFloat() / 100f, 20, 5)
 
             StringWidget(progressBarComponent.append(progress), mcFont).atBottom(0, settings = LayoutConstants.LEFT)
         } else {
             val progressPercentage = (wayfinderStatus.data.toDouble() / 2000) * 100
             val progress =
-                Component.literal(" ${wayfinderStatus.data}").withStyle(if (progressPercentage >= 100) ChatFormatting.GREEN else ChatFormatting.WHITE)
-                    .append(Component.literal("/2000 ").withStyle(if (progressPercentage >= 100) ChatFormatting.GREEN else ChatFormatting.GRAY))
-                    .append(Component.literal(if (wayfinderStatus.hasGrotto) "DONE" else "(${round(progressPercentage * 10) / 10.0}%)").withStyle(if (progressPercentage >= 100) ChatFormatting.GREEN else ChatFormatting.GRAY))
+                Component.literal(" ${wayfinderStatus.data}")
+                    .withStyle(if (progressPercentage >= 100) ChatFormatting.GREEN else ChatFormatting.WHITE)
+                    .append(
+                        Component.literal("/2000 ")
+                            .withStyle(if (progressPercentage >= 100) ChatFormatting.GREEN else ChatFormatting.GRAY)
+                    )
+                    .append(
+                        Component.literal(if (wayfinderStatus.hasGrotto) "DONE" else "(${round(progressPercentage * 10) / 10.0}%)")
+                            .withStyle(if (progressPercentage >= 100) ChatFormatting.GREEN else ChatFormatting.GRAY)
+                    )
                     .defaultFont()
-            val progressBarComponent = ProgressBar.createProgressBarComponent((wayfinderStatus.data.toFloat() / 2000f), 25, 5)
+            val progressBarComponent = ProgressBar.progressComponent((wayfinderStatus.data.toFloat() / 2000f), 25, 5)
 
             StringWidget(progressBarComponent.append(progress), mcFont).atBottom(0, settings = LayoutConstants.LEFT)
         }

@@ -18,7 +18,6 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.MultiLineTextWidget
 import net.minecraft.client.gui.components.StringWidget
-import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -47,10 +46,7 @@ class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
 
         if (wayfinderData.needsUpdating) {
             StringWidget(
-                Component.literal("Wayfinder data missing".uppercase())
-                    .mccFont()
-                    .withStyle(ChatFormatting.GOLD),
-                mcFont
+                Component.literal("Wayfinder data missing".uppercase()).mccFont().withStyle(ChatFormatting.GOLD), mcFont
             ).atBottom(0, settings = LayoutConstants.CENTRE)
             MultiLineTextWidget(
                 Component.literal(
@@ -61,10 +57,7 @@ class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
                     menu: Navigator -> 
                     Fishing
                 """.trimIndent()
-                )
-                    .defaultFont()
-                    .withStyle(ChatFormatting.GRAY),
-                mcFont
+                ).defaultFont().withStyle(ChatFormatting.GRAY), mcFont
             ).atBottom(0, settings = LayoutConstants.LEFT)
             return@grid
         }

@@ -24,6 +24,7 @@ import net.minecraft.network.chat.MutableComponent
 import java.util.*
 
 object NoxesiumUtils {
+
     fun skullComponent(
         uuid: UUID, grayscale: Boolean = false, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F
     ): MutableComponent {
@@ -42,7 +43,7 @@ object NoxesiumUtils {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
         }
-        if ((currentGame == Game.BATTLE_BOX || currentGame == Game.DYNABALL || currentGame == Game.SKY_BATTLE) && Config.KillFeed.enabled) {
+        if (KillChatListener.killfeedGames.contains(currentGame) && Config.KillFeed.enabled) {
             val k = "killfeed"
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
         }
@@ -67,7 +68,7 @@ object NoxesiumUtils {
     }
 
     private fun removeKillsIfNeeded(packet: ClientboundMccGameStatePacket) {
-        if (MCCIState.game !in listOf(Game.BATTLE_BOX, Game.DYNABALL, Game.SKY_BATTLE)) return
+        if (MCCIState.game !in KillChatListener.killfeedGames) return
         KillChatListener.resetStreaks()
         if (Config.KillFeed.enabled && Config.KillFeed.clearAfterRound) {
             if (packet.phaseType == "INTERMISSION" && packet.stage == "countdownphase") {
@@ -119,7 +120,7 @@ object NoxesiumUtils {
 
             val currentGame = getCurrentGame(server, type, game)
             updateGameDialogs(currentGame, game)
-            if (currentGame in listOf(Game.DYNABALL, Game.BATTLE_BOX)) {
+            if (currentGame in KillChatListener.killfeedGames) {
                 KillFeedDialog.clearKills()
             }
             if (currentGame != MCCIState.game) {
@@ -189,7 +190,10 @@ object NoxesiumUtils {
 
         Game.entries.forEach { mccGame ->
             if (mccGame in listOf(
-                    Game.HUB, Game.FISHING, Game.PARKOUR_WARRIOR_DOJO, Game.PARKOUR_WARRIOR_SURVIVOR
+                    Game.HUB,
+                    Game.FISHING,
+                    Game.PARKOUR_WARRIOR_DOJO,
+                    Game.PARKOUR_WARRIOR_SURVIVOR
                 )
             ) return@forEach
 

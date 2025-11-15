@@ -3,6 +3,8 @@ package cc.pe3epwithyou.trident.mixin;
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
 import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
+import cc.pe3epwithyou.trident.feature.CraftableIndicator;
+import cc.pe3epwithyou.trident.feature.fishing.TideWindIndicator;
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.DebugDraw;
@@ -28,6 +30,7 @@ public class AbstractContainerScreenMixin extends Screen {
     public void renderSlot(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         RaritySlot.INSTANCE.render(guiGraphics, slot);
+        TideWindIndicator.INSTANCE.renderOutline(guiGraphics, slot);
     }
 
     @Inject(method = "renderSlot", at = @At(value = "TAIL"))
@@ -39,6 +42,8 @@ public class AbstractContainerScreenMixin extends Screen {
         if (Config.Debug.INSTANCE.getDrawSlotNumber()) {
             DebugDraw.INSTANCE.renderSlotNumber(guiGraphics, slot);
         }
+        TideWindIndicator.INSTANCE.render(guiGraphics, slot);
+        CraftableIndicator.INSTANCE.render(guiGraphics, slot);
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))

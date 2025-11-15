@@ -218,7 +218,7 @@ enum class QuestCriteria(val shortName: String, val regexPattern: Regex, val isT
     ),
     ROCKET_SPLEEF_DIRECT_HITS(
         "Direct hits",
-        Regex("Land (\\d) direct rocket hits on players during games of Rocket Spleef Rush"),
+        Regex("Land (\\d+) direct rocket hits on players during games of Rocket Spleef Rush"),
         false
     )
 }

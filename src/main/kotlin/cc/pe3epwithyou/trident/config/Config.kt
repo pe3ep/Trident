@@ -1,10 +1,11 @@
 package cc.pe3epwithyou.trident.config
 
-import cc.pe3epwithyou.trident.feature.killfeed.Position
+import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Resources
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry
@@ -13,7 +14,6 @@ import dev.isxander.yacl3.dsl.*
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 
 class Config {
     @Deprecated("This option has been moved to a separate group")
@@ -22,6 +22,9 @@ class Config {
 
     @SerialEntry
     var globalBlueprintIndicators: Boolean = true
+
+    @SerialEntry
+    var globalCraftableIndicators: Boolean = true
 
     @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
@@ -40,6 +43,9 @@ class Config {
 
     @SerialEntry
     var fishingFlashIfDepleted: Boolean = true
+
+    @SerialEntry
+    var fishingIslandIndicators: Boolean = true
 
     @SerialEntry
     var debugEnableLogging: Boolean = false
@@ -73,7 +79,7 @@ class Config {
     var killfeedReverseOrder: Boolean = false
 
     @SerialEntry
-    var killfeedPositionSide: Position = Position.RIGHT
+    var killfeedPositionSide: KillfeedPosition = KillfeedPosition.RIGHT
 
     @SerialEntry
     var killfeedRemoveKillTime: Int = 10
@@ -104,6 +110,8 @@ class Config {
             get() = handler.instance().globalBlueprintIndicators
         val currentTheme: TridentThemes
             get() = handler.instance().globalCurrentTheme
+        val craftableIndicators: Boolean
+            get() = handler.instance().globalCraftableIndicators
     }
 
     object RaritySlot {
@@ -131,6 +139,8 @@ class Config {
             get() = handler.instance().fishingWayfinderModule
         val flashIfDepleted: Boolean
             get() = handler.instance().fishingFlashIfDepleted
+        val islandIndicators: Boolean
+            get() = handler.instance().fishingIslandIndicators
     }
 
     object Games {
@@ -149,7 +159,7 @@ class Config {
             get() = handler.instance().killfeedShowYouInKill
         val reverseOrder: Boolean
             get() = handler.instance().killfeedReverseOrder
-        val positionSide: Position
+        val positionSide: KillfeedPosition
             get() = handler.instance().killfeedPositionSide
         val removeKillTime: Int
             get() = handler.instance().killfeedRemoveKillTime
@@ -174,11 +184,10 @@ class Config {
 
     companion object {
         val handler: ConfigClassHandler<Config> by lazy {
-            ConfigClassHandler.createBuilder(Config::class.java)
-                .id(ResourceLocation.fromNamespaceAndPath("trident", "config")).serializer { config ->
-                    GsonConfigSerializerBuilder.create(config)
-                        .setPath(FabricLoader.getInstance().configDir.resolve("trident.json")).build()
-                }.build()
+            ConfigClassHandler.createBuilder(Config::class.java).id(Resources.trident("config")).serializer { config ->
+                GsonConfigSerializerBuilder.create(config)
+                    .setPath(FabricLoader.getInstance().configDir.resolve("trident.json")).build()
+            }.build()
         }
 
         @Suppress("DEPRECATION")
@@ -187,8 +196,7 @@ class Config {
             if (rarityOverlayPrev != null) {
                 ChatUtils.warn("Detected a deprecated config value for rarity overlay, converting it")
 
-                handler.instance().raritySlotEnabled = rarityOverlayPrev
-                /* Reset the old value to null */
+                handler.instance().raritySlotEnabled = rarityOverlayPrev/* Reset the old value to null */
                 handler.instance().globalRarityOverlay = null
             }
 
@@ -219,8 +227,8 @@ class Config {
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.global.blueprint_indicators.description"))
                                 .image(
-                                    ResourceLocation.fromNamespaceAndPath(
-                                        "trident", "textures/config/blueprint_indicators.png"
+                                    Resources.trident(
+                                        "textures/config/blueprint_indicators.png"
                                     ), 405, 316
                                 ).build()
                         )
@@ -233,13 +241,22 @@ class Config {
                         description(
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.global.theme.description")).image(
-                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/theme.png"),
-                                    497,
-                                    329
+                                    Resources.trident("textures/config/theme.png"), 497, 329
                                 ).build()
                         )
                         binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
                         controller(enumSwitch<TridentThemes> { v -> v.displayName })
+                    }
+
+                    options.register<Boolean>("craftable_indicators") {
+                        name(Component.translatable("config.trident.global.craftable_indicators.name"))
+                        description(
+                            OptionDescription.of(
+                                Component.translatable("config.trident.global.craftable_indicators.description")
+                            )
+                        )
+                        binding(handler.instance()::globalCraftableIndicators, true)
+                        controller(tickBox())
                     }
                 }
 
@@ -256,8 +273,8 @@ class Config {
                         description(
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.rarity_slot.description")).image(
-                                    ResourceLocation.fromNamespaceAndPath(
-                                        "trident", "textures/config/rarity_overlay.png"
+                                    Resources.trident(
+                                        "textures/config/rarity_overlay.png"
                                     ), 120, 88
                                 ).build()
                         )
@@ -298,9 +315,7 @@ class Config {
                         description(
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.killfeed.enabled.description")).image(
-                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/killfeed.png"),
-                                    618,
-                                    332
+                                    Resources.trident("textures/config/killfeed.png"), 618, 332
                                 ).build()
                         )
                         binding(handler.instance()::killfeedEnabled, true)
@@ -342,11 +357,11 @@ class Config {
                         controller(tickBox())
                     }
 
-                    options.register<Position>("killfeed_position_side") {
+                    options.register<KillfeedPosition>("killfeed_position_side") {
                         name(Component.translatable("config.trident.killfeed.position_side.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.position_side.description")))
-                        binding(handler.instance()::killfeedPositionSide, Position.RIGHT)
-                        controller(enumSwitch<Position> { v -> v.displayName })
+                        binding(handler.instance()::killfeedPositionSide, KillfeedPosition.RIGHT)
+                        controller(enumSwitch<KillfeedPosition> { v -> v.displayName })
                     }
 
                     options.register<Int>("killfeed_remove_kill_time") {
@@ -373,9 +388,7 @@ class Config {
                         description(
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.questing.enabled.description")).image(
-                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/questing.png"),
-                                    414,
-                                    338
+                                    Resources.trident("textures/config/questing.png"), 414, 338
                                 ).build()
                         )
                         binding(handler.instance()::questingEnabled, true)
@@ -421,9 +434,7 @@ class Config {
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.fishing.supplies_module.description"))
                                 .image(
-                                    ResourceLocation.fromNamespaceAndPath("trident", "textures/config/supplies.png"),
-                                    507,
-                                    333
+                                    Resources.trident("textures/config/supplies.png"), 507, 333
                                 ).build()
                         )
                         binding(handler.instance()::fishingSuppliesModule, true)
@@ -434,6 +445,13 @@ class Config {
                         name(Component.translatable("config.trident.fishing.flash_if_depleted.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.fishing.flash_if_depleted.description")))
                         binding(handler.instance()::fishingFlashIfDepleted, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("island_indicators") {
+                        name(Component.translatable("config.trident.fishing.island_indicators.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.fishing.island_indicators.description")))
+                        binding(handler.instance()::fishingIslandIndicators, true)
                         controller(tickBox())
                     }
 //                    options.register<Boolean>("wayfinder_module") {

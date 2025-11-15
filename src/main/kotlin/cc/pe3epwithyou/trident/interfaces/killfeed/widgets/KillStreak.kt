@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import net.minecraft.client.gui.GuiGraphics
@@ -14,12 +15,9 @@ class KillStreak(
     private val streak: Int
 ) : AbstractWidget(0, 0, 15, 9, Component.empty()) {
     private fun getStreakTexture(): Texture {
-        val coercedStreak = streak.coerceIn(1, 6)
+        val coercedStreak = streak.coerceIn(1, 5)
         return Texture(
-            ResourceLocation.fromNamespaceAndPath(
-                "trident",
-                "textures/interface/killfeed/streaks/streak$coercedStreak.png"
-            ),
+            Resources.trident("textures/interface/killfeed/streaks/streak$coercedStreak.png"),
             13,
             9
         )

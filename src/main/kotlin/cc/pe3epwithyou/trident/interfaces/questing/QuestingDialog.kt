@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import com.noxcrew.sheeplib.LayoutConstants
@@ -31,24 +32,19 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     }
 
     private fun getTitleWidget(): QuestDialogTitle {
-        val icon = FontCollection.get("_fonts/quest_log.png")
-            .withStyle(
-                Style.EMPTY
-                    .withShadowColor(0x0 opacity 0)
+        val icon = FontCollection.get("_fonts/icon/quest_log.png").withStyle(
+                Style.EMPTY.withShadowColor(0x0 opacity 0)
             )
-        val titleText = if (isDesynced) " DESYNCED ⚠" else " QUESTS"
-        val title = Component.literal(titleText)
-            .withTridentFont("hud_title")
+        val titleText = if (isDesynced) " DESYNCED" else " QUESTS"
+        val title = Component.literal(titleText).withTridentFont("hud_title")
         if (isDesynced) {
+            title.append(Component.literal(" ⚠").defaultFont())
             title.withStyle(ChatFormatting.GOLD)
         }
 
         val backgroundColor = 0x38AFF opacity 127
-        val gameIcon = FontCollection.get(currentGame.icon)
-            .withStyle(
-                Style.EMPTY
-                    .withShadowColor(0x0 opacity 0)
-                    .withColor(ChatFormatting.WHITE)
+        val gameIcon = FontCollection.get(currentGame.icon).withStyle(
+                Style.EMPTY.withShadowColor(0x0 opacity 0).withColor(ChatFormatting.WHITE)
             )
 
         return QuestDialogTitle(
@@ -64,8 +60,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                     Module is not synced.
                     Trident has detected that quest progress is not up to date. Please open your Quest Log to update it.
                 """.trimIndent()
-                )
-                    .withStyle(ChatFormatting.GRAY)
+                ).withStyle(ChatFormatting.GRAY)
             )
         )
     }
@@ -80,18 +75,14 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         if (currentGame == Game.HUB || currentGame == Game.FISHING) {
             MultiLineTextWidget(
                 Component.literal("Join a game to\nview quests".uppercase()).mccFont()
-                    .withColor(ChatFormatting.GRAY.color!!),
-                font
+                    .withColor(ChatFormatting.GRAY.color!!), font
             ).atBottom(0, settings = LayoutConstants.LEFT)
             return@grid
         }
 
         if (quests.isEmpty()) {
             StringWidget(
-                Component.literal("No quests detected".uppercase())
-                    .mccFont()
-                    .withStyle(ChatFormatting.GRAY),
-                font
+                Component.literal("No quests detected".uppercase()).mccFont().withStyle(ChatFormatting.GRAY), font
             ).atBottom(0)
             return@grid
         }

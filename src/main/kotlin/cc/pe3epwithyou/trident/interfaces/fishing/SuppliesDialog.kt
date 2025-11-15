@@ -32,28 +32,21 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     }
 
     private fun getWidgetTitle(): DialogTitleWidget {
-        val icon = FontCollection.get("_fonts/fishing_perk/supply_preserve.png")
-            .withStyle(
-                Style.EMPTY
-                    .withShadowColor(0x0 opacity 0)
-            )
-        val text = Component.literal(" SUPPLIES".uppercase())
-            .withTridentFont("hud_title")
+        val icon = FontCollection.get("_fonts/icon/fishing_perk/supply_preserve.png").withStyle(
+            Style.EMPTY.withShadowColor(0x0 opacity 0)
+        )
+        val text = Component.literal(" SUPPLIES".uppercase()).withTridentFont("hud_title")
 
         val baseTitle = icon.append(text)
 
         return if (TridentClient.playerState.supplies.baitDesynced) {
-            val warn = Component.literal(" ⚠")
-                .defaultFont()
-                .withStyle(ChatFormatting.GOLD)
+            val warn = Component.literal(" ⚠").defaultFont().withStyle(ChatFormatting.GOLD)
             val tooltip = Tooltip.create(
-                Component.literal("Module is not synced").withStyle(ChatFormatting.GOLD)
-                    .append(
-                        Component.literal(
-                            "\nTrident has detected that you've received bait, meaning your Supply Module is out of date. " +
-                                    "\nPlease open your Supply menu to update it."
-                        ).withStyle(ChatFormatting.GRAY)
-                    )
+                Component.literal("Module is not synced").withStyle(ChatFormatting.GOLD).append(
+                    Component.literal(
+                        "\nTrident has detected that you've received bait, meaning your Supply Module is out of date. " + "\nPlease open your Supply menu to update it."
+                    ).withStyle(ChatFormatting.GRAY)
+                )
             )
             DialogTitle(this, baseTitle.append(warn), TITLE_COLOR, tooltip = tooltip)
         } else {
@@ -70,10 +63,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
         if (supplies.needsUpdating) {
             StringWidget(
-                Component.literal("Fishing data missing".uppercase())
-                    .mccFont()
-                    .withStyle(ChatFormatting.GOLD),
-                mcFont
+                Component.literal("Fishing data missing".uppercase()).mccFont().withStyle(ChatFormatting.GOLD), mcFont
             ).atBottom(0, settings = LayoutConstants.CENTRE)
             MultiLineTextWidget(
                 Component.literal(
@@ -84,10 +74,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                     menu: A.N.G.L.R. Panel -> 
                     Fishing Supplies
                 """.trimIndent()
-                )
-                    .defaultFont()
-                    .withStyle(ChatFormatting.GRAY),
-                mcFont
+                ).defaultFont().withStyle(ChatFormatting.GRAY), mcFont
             ).atBottom(0, settings = LayoutConstants.LEFT)
             return@grid
         }
@@ -103,20 +90,16 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             Rarity.MYTHIC -> "\uE00C"
         }
 
-        val baitComponent = Component.literal(baitIcon)
-            .withTridentFont()
-            .append(Component.empty().withStyle(ChatFormatting.RESET))
-            .append(
-                Component.literal(" $baitAmount")
-                    .mccFont()
-                    .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
-            )
-        StringWidget(baitComponent, mcFont)
-            .at(0, 0, settings = LayoutConstants.LEFT)
-            .apply {
-                alignLeft()
-                width = 46
-            }
+        val baitComponent =
+            Component.literal(baitIcon).withTridentFont().append(Component.empty().withStyle(ChatFormatting.RESET))
+                .append(
+                    Component.literal(" $baitAmount").mccFont()
+                        .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
+                )
+        StringWidget(baitComponent, mcFont).at(0, 0, settings = LayoutConstants.LEFT).apply {
+            alignLeft()
+            width = 46
+        }
 
         // Line component
         val lineDurability = supplies.line.uses ?: "0"
@@ -129,23 +112,18 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             Rarity.MYTHIC -> "\uE006"
         }
 
-        val lineComponent = Component.literal(lineIcon)
-            .withTridentFont()
-            .append(Component.empty().withStyle(ChatFormatting.RESET))
-            .append(Component.literal(" $lineDurability/50")
-                .mccFont()
-                .withColor(supplies.line.type.color)
-            )
-        StringWidget(lineComponent, mcFont)
-            .at(0, 1, settings = LayoutConstants.LEFT)
-            .apply {
-                alignLeft()
-                width = 46
-            }
+        val lineComponent =
+            Component.literal(lineIcon).withTridentFont().append(Component.empty().withStyle(ChatFormatting.RESET))
+                .append(
+                    Component.literal(" $lineDurability/50").mccFont().withColor(supplies.line.type.color)
+                )
+        StringWidget(lineComponent, mcFont).at(0, 1, settings = LayoutConstants.LEFT).apply {
+            alignLeft()
+            width = 46
+        }
 
         // Overclocks
-        StringWidget(Component.literal("Overclocks".uppercase()).mccFont(), mcFont)
-            .atBottom(0, 2, LayoutConstants.LEFT)
+        StringWidget(Component.literal("Overclocks".uppercase()).mccFont(), mcFont).atBottom(0, 2, LayoutConstants.LEFT)
 
         val stableOverclocks = listOfNotNull(
             supplies.overclocks.hook?.asociatedOverclockTexture,
@@ -154,10 +132,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         )
         if (stableOverclocks.isEmpty()) {
             StringWidget(
-                Component.literal("OVERCLOCKS UNAVAILABLE")
-                    .mccFont()
-                    .withStyle(ChatFormatting.GOLD),
-                mcFont
+                Component.literal("OVERCLOCKS UNAVAILABLE").mccFont().withStyle(ChatFormatting.GOLD), mcFont
             ).atBottom(0, 2, LayoutConstants.LEFT)
         } else {
             OverclockStackWidget(
@@ -171,14 +146,9 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val augmentsEquipped = supplies.augments.size
         val augmentsTotal = supplies.augmentsAvailable
         StringWidget(
-            Component.literal("AUGMENTS ")
-                .mccFont()
-                .append(
-                    Component.literal("($augmentsEquipped/$augmentsTotal)")
-                        .mccFont()
-                        .withStyle(ChatFormatting.GRAY)
-                ),
-            mcFont
+            Component.literal("AUGMENTS ").mccFont().append(
+                Component.literal("($augmentsEquipped/$augmentsTotal)").mccFont().withStyle(ChatFormatting.GRAY)
+            ), mcFont
         ).atBottom(0, 2, settings = LayoutConstants.LEFT)
 
         val augmentLine = supplies.augments.toMutableList()
@@ -189,16 +159,11 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         }
         if (augmentLine.isEmpty()) {
             StringWidget(
-                Component.literal("AUGMENTS UNAVAILABLE")
-                    .mccFont()
-                    .withStyle(ChatFormatting.GOLD),
-                mcFont
+                Component.literal("AUGMENTS UNAVAILABLE").mccFont().withStyle(ChatFormatting.GOLD), mcFont
             ).atBottom(0, 2, LayoutConstants.LEFT)
         } else {
             AugmentStackWidget(
-                width = 12,
-                height = 12,
-                entries = augmentLine
+                width = 12, height = 12, entries = augmentLine
             ).atBottom(0, 2, LayoutConstants.LEFT)
         }
 

@@ -19,6 +19,10 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object KillChatListener {
+    val killfeedGames = listOf(
+        Game.BATTLE_BOX, Game.DYNABALL, Game.SKY_BATTLE, Game.ROCKET_SPLEEF_RUSH
+    )
+
     private val fallbackColor = 0xFFFFFF opacity 128
 
     val streaks = hashMapOf<String, Int>()
@@ -60,7 +64,7 @@ object KillChatListener {
                 attacker.string, attacker.style.color?.value ?: fallbackColor
             ), killMethod
         )
-        if (MCCIState.game !in listOf(Game.BATTLE_BOX, Game.DYNABALL, Game.SKY_BATTLE)) return true
+        if (MCCIState.game !in killfeedGames) return true
 
         if (attacker != null) {
             //        Questing
@@ -105,7 +109,12 @@ object KillChatListener {
 
     private fun getColors(victim: Component, attacker: Component): Pair<Int, Int> {
         val attackerColor = attacker.style.color?.value?.opacity(128) ?: fallbackColor
-        val victimColor = victim.style.color?.value?.opacity(128) ?: fallbackColor
+        var victimColor = victim.style.color?.value?.opacity(128) ?: fallbackColor
+
+        if (attackerColor == victimColor) {
+            victimColor = victim.style.color?.value?.opacity(96) ?: 0xFFFFFF.opacity(96)
+        }
+
         return Pair(attackerColor, victimColor)
     }
 
