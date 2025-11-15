@@ -15,7 +15,10 @@ object DialogIO {
         .resolve("trident")
         .resolve("dialog_positions.json")
 
-    private val json = Json { prettyPrint = true }
+    private val json = Json {
+        prettyPrint = true
+        ignoreUnknownKeys = true
+    }
 
     fun save(positions: Map<String, TridentDialog.Position>) {
 

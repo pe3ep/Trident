@@ -81,7 +81,11 @@ object DialogCollection {
     }
 
     fun saveAllDialogs() {
-        DialogIO.save(dialogPositions)
+        try {
+            DialogIO.save(dialogPositions)
+        } catch (e: Exception) {
+            ChatUtils.error("Failed to save dialogs: ${e.message}")
+        }
     }
 
     fun loadAllDialogs() {
