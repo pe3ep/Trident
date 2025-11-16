@@ -6,8 +6,9 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
+import net.minecraft.network.chat.TextColor
 import net.minecraft.resources.ResourceLocation
-
+import net.minecraft.util.ARGB
 
 
 object TridentFont {
@@ -45,13 +46,31 @@ object TridentFont {
         return Resources.trident("${font}_offset_${offset}")
     }
 
-    val tridentPrefix: MutableComponent
+    private val tridentPrefix: MutableComponent
         get() {
-            val a = Component.literal("‹").withStyle(TRIDENT_COLOR.baseStyle)
+            val a = Component.literal("‹")
             val b = Component.literal("\uE000").withTridentFont("glyph")
             val c = Component.literal("› ")
-            return a.append(b).append(c).append(Component.empty().withStyle(ChatFormatting.RESET))
+            return a.append(b).append(c)
         }
+
+    fun withPrefix(c: Component): MutableComponent {
+        val white = TextColor.fromLegacyFormat(ChatFormatting.WHITE)
+        val compStyle = c.toFlatList().firstOrNull()?.style
+        val compColor = compStyle?.color ?: white
+
+        var style = Style.EMPTY
+        if (compColor == white) {
+            // Color is default, we fall back to TRIDENT_COLOR
+            style = TRIDENT_COLOR.baseStyle
+        } else {
+            // Use color from the component to match!
+            style = style.withColor(compColor)
+            if (compStyle?.shadowColor != null) style = style.withShadowColor(compStyle.shadowColor!!)
+        }
+
+        return tridentPrefix.withStyle(style).append(c)
+    }
 
     data class Swatch(
         val baseColor: Int,
