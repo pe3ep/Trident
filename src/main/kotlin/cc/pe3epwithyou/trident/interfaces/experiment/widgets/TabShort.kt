@@ -19,6 +19,7 @@ class TabShort(
         graphics.fillRoundedAll(
             x, y, getWidth(), getHeight(), when {
                 isHovered -> style.hoverColor
+                tab.isDetached -> style.disabledColor
                 else -> style.defaultColor
             }.get(theme.theme)
         )
@@ -26,10 +27,10 @@ class TabShort(
             tab.isDetached -> Tab.DETACH_ICON
             else -> tab.icon
         }.blit(
-                graphics,
-                x + theme.theme.dimensions.paddingInner,
-                y + theme.theme.dimensions.paddingInner,
-            )
+            graphics,
+            x + 3,
+            y + 3,
+        )
     }
 
     override fun onClick(d: Double, e: Double) {

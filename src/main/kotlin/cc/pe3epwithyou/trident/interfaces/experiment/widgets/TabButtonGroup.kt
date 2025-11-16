@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.experiment.widgets
 
+import cc.pe3epwithyou.trident.interfaces.themes.TabbedDialogTheme
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.grid
@@ -9,7 +10,7 @@ import net.minecraft.client.gui.GuiGraphics
 
 class TabButtonGroup(
     private val dialog: Themed, tabs: List<Tab>, currentTab: Tab, val view: TabView
-) : CompoundWidget(0, 0, 0, 0), Themed by dialog {
+) : CompoundWidget(0, 0, 0, 0), Themed by TabbedDialogTheme {
     override fun getWidth() = layout.width
     override fun getHeight() = layout.height
 

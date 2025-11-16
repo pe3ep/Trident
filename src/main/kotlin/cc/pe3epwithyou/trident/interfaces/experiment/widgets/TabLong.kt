@@ -1,6 +1,8 @@
 package cc.pe3epwithyou.trident.interfaces.experiment.widgets
 
 import DetachIconWidget
+import cc.pe3epwithyou.trident.interfaces.themes.TabbedDialogTheme
+import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.linear
@@ -19,7 +21,7 @@ class TabLong(
     val view: TabView,
     val style: Theme.ButtonStyle = themed.theme.buttonStyles.standard,
 ) : CompoundWidget(0, 0, themed.theme.dimensions.buttonWidth, themed.theme.dimensions.buttonHeight),
-    Themed by themed.theme {
+    Themed by TridentThemed {
 
     override val layout: LinearLayout = linear(
         LinearLayout.Orientation.HORIZONTAL
@@ -32,7 +34,7 @@ class TabLong(
             title.withColor(0xFFFFFF opacity 128)
         }
 
-        +DetachIconWidget(themed, tab, view, marginX = themed.theme.dimensions.paddingInner + 1)
+        +DetachIconWidget(themed, tab, view, marginX = 3 + 1)
         +StringWidget(title, font)
     }
 
@@ -42,7 +44,7 @@ class TabLong(
                 isHovered() -> if (tab.isDetached) style.disabledColor else style.hoverColor
                 tab.isDetached -> style.disabledColor
                 else -> style.defaultColor
-            }.get(themed.theme)
+            }.get(TabbedDialogTheme.theme)
         )
         super.renderWidget(graphics, i, j, f)
     }
