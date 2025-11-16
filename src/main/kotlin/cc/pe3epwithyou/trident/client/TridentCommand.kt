@@ -32,13 +32,10 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object TridentCommand {
-    private val debugDialogs = mapOf(
+    private val debugDialogs = mutableMapOf(
         "supplies" to ::SuppliesDialog,
         "questing" to ::QuestingDialog,
-        "wayfinder" to ::WayfinderDialog,
-        "research" to ::ResearchDialog,
         "grumpycat" to ::DisappointedCatDialog,
-        "experiment_tabbed" to ::TabbedDialog,
     )
 
     private fun notOnIsland(): Boolean {
@@ -201,7 +198,9 @@ object TridentCommand {
                     executes {
                         Config.handler.instance().apiKey = ""
                         Config.handler.save()
-                        ChatUtils.sendMessage(Component.literal("Your API token has been reset").withStyle(TridentFont.ERROR.baseStyle))
+                        ChatUtils.sendMessage(
+                            Component.literal("Your API token has been reset").withStyle(TridentFont.ERROR.baseStyle)
+                        )
                     }
                 }
             }
@@ -209,6 +208,11 @@ object TridentCommand {
         }.register(dispatcher)
 
         if (!Config.Debug.enableLogging) return
+
+        // Debug dialogs, should only be enabled for cool people (devs)
+        debugDialogs["research"] = ::ResearchDialog
+        debugDialogs["wayfinder"] = ::WayfinderDialog
+        debugDialogs["experiment_tabbed"] = ::TabbedDialog
 
         /**
          * Debug commands for trident. Registered only if logging is enabled.
@@ -226,11 +230,13 @@ object TridentCommand {
                         val key = it.getArgument("overclock", String::class.java)
                         ChatUtils.sendMessage("Starting fake overclock $key")
                         if (key == "unstable") {
+                            playerState.supplies.overclocks.unstable.state.isAvailable = true
                             OverclockHandlers.startTimedOverclock(
                                 "Unstable", playerState.supplies.overclocks.unstable.state
                             )
                         }
                         if (key == "supreme") {
+                            playerState.supplies.overclocks.supreme.state.isAvailable = true
                             OverclockHandlers.startTimedOverclock(
                                 "Supreme", playerState.supplies.overclocks.supreme.state
                             )
