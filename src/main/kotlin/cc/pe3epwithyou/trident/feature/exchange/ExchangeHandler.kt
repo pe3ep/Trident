@@ -69,6 +69,7 @@ object ExchangeHandler {
         val screen = Minecraft.getInstance().screen ?: return
         if ("ISLAND EXCHANGE" !in screen.title.string) return
         if (!inSlotBoundary(slot)) return
+        if (isFetching) return
 
         val itemName = slot.item.displayName.string.replace(" Token", "")
         val price = getItemPrice(slot.item) ?: return
