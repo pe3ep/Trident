@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
+import java.time.Instant
 
 object ExchangeHandler {
     data class Listing(
@@ -23,6 +24,11 @@ object ExchangeHandler {
 
     fun handleScreen(screen: Screen) {
         val chest = screen as ContainerScreen
+        val now = Instant.now().toEpochMilli()
+
+        if (ExchangeLookup.responseCacheExpiresIn != null && now >= ExchangeLookup.responseCacheExpiresIn!!) {
+            ExchangeLookup.responseCache = null
+        }
 
         if (ExchangeLookup.responseCache == null) {
             isFetching = true

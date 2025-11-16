@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.feature.exchange
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.TridentFont
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -16,9 +17,12 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
+import java.time.Instant
 
 object ExchangeLookup {
-    var responseCache: ExchangeListingsResponse? = null // TODO: Implement invalidation and use the cache LOL
+    var responseCache: ExchangeListingsResponse? = null
+    var responseCacheExpiresIn: Long? = null
+
     private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -62,6 +66,8 @@ object ExchangeLookup {
                 ExchangeHandler.isFetching = false
                 Minecraft.getInstance().execute {
                     responseCache = listingsResponse
+                    val expiresIn = Instant.now().toEpochMilli() + Duration.ofSeconds(60).toMillis()
+                    responseCacheExpiresIn = expiresIn
                     ExchangeHandler.updatePrices()
                 }
             } catch (e: Exception) {
