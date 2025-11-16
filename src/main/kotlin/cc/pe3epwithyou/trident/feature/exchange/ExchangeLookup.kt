@@ -11,7 +11,9 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
+import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.Style
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -41,6 +43,14 @@ object ExchangeLookup {
                 Component.literal("Your API key is not set. ").withSwatch(TridentFont.ERROR).append(
                         Component.literal("Set it using /trident api setToken <TOKEN>")
                             .withSwatch(TridentFont.ERROR, TridentFont.SwatchType.MUTED)
+                    )
+            )
+            ChatUtils.sendMessage(
+                Component.literal("Click here to visit Gateway to create a token")
+                    .withSwatch(TridentFont.TRIDENT_ACCENT)
+                    .withStyle(
+                        Style.EMPTY.withUnderlined(true)
+                            .withClickEvent(ClickEvent.OpenUrl(URI.create("https://gateway.noxcrew.com/")))
                     )
             )
             ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
