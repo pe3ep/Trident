@@ -184,7 +184,7 @@ object TridentCommand {
                 literal("setToken") {
                     argument("token") {
                         suggests { _, builder ->
-                            builder.suggest("Enter you API key")
+                            builder.suggest("Enter your API key")
                             builder.buildFuture()
                         }
                         executes {
