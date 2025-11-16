@@ -36,8 +36,9 @@ object ExchangeLookup {
         val key = Config.Api.key
         if (key.isBlank()) {
             ChatUtils.sendMessage(
-                Component.literal("Your API key is not set. Set it using /trident api setToken <TOKEN>")
+                Component.literal("Your API key is not set. ")
                     .withStyle(TridentFont.ERROR.baseStyle)
+                    .append(Component.literal("Set it using /trident api setToken <TOKEN>").withStyle(TridentFont.ERROR.mutedStyle))
             )
             ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
             return

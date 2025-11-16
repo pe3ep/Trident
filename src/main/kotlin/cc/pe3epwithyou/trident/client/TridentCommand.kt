@@ -199,7 +199,8 @@ object TridentCommand {
                         Config.handler.instance().apiKey = ""
                         Config.handler.save()
                         ChatUtils.sendMessage(
-                            Component.literal("Your API token has been reset").withStyle(TridentFont.ERROR.baseStyle)
+                            Component.literal("Your API token has been ").withStyle(TridentFont.TRIDENT_COLOR.baseStyle)
+                                .append(Component.literal("reset").withStyle(TridentFont.ERROR.baseStyle))
                         )
                     }
                 }

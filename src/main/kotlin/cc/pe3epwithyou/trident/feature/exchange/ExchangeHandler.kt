@@ -60,7 +60,7 @@ object ExchangeHandler {
             val listing = Listing(itemName, slot.item.count)
             val current = exchangeDeals[listing]
             if (current == null || price < current) {
-                ChatUtils.info("(SCREEN) Updating price for $listing -> $price")
+                ChatUtils.debugLog("(SCREEN) Updating price for $listing -> $price")
                 exchangeDeals[listing] = price
             }
         }
@@ -72,7 +72,7 @@ object ExchangeHandler {
             val listing = Listing(name, amount)
             val current = exchangeDeals[listing]
             if (current == null || cost < current) {
-                ChatUtils.info("(API) Updating price for $listing -> $cost")
+                ChatUtils.debugLog("(API) Updating price for $listing -> $cost")
                 exchangeDeals[listing] = cost
             }
         }
