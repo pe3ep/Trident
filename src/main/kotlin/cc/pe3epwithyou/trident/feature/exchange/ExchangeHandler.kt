@@ -21,7 +21,16 @@ object ExchangeHandler {
         val amount: Int,
     )
 
-    var isFetching: Boolean = false
+    enum class FetchProgress {
+        NO_DATA,
+        LOADING,
+        COMPLETED,
+        FAILED;
+
+        fun isLoading() = this == NO_DATA || this == LOADING
+    }
+
+    var fetchingProgress: FetchProgress = FetchProgress.NO_DATA
     val exchangeDeals = hashMapOf<Listing, Long>()
 
     val ownedCosmetics = mutableSetOf<String>()
@@ -35,7 +44,7 @@ object ExchangeHandler {
         }
 
         if (ExchangeLookup.exchangeLookupCache == null) {
-            isFetching = true
+            fetchingProgress = FetchProgress.LOADING
             ExchangeLookup.lookup()
         } else {
             updatePrices()
@@ -82,7 +91,7 @@ object ExchangeHandler {
         val screen = Minecraft.getInstance().screen ?: return true
         if ("ISLAND EXCHANGE" !in screen.title.string) return true
         if (!inSlotBoundary(slot)) return true
-        if (isFetching) return true
+        if (fetchingProgress.isLoading()) return true
         if (ExchangeFilter.showOwnedItems) return true
 
         val itemName = slot.item.displayName.string.replace(" Token", "")
@@ -93,7 +102,8 @@ object ExchangeHandler {
         val screen = Minecraft.getInstance().screen ?: return
         if ("ISLAND EXCHANGE" !in screen.title.string) return
         if (!inSlotBoundary(slot)) return
-        if (isFetching) return
+        if (fetchingProgress.isLoading()) return
+        if (fetchingProgress == FetchProgress.FAILED) return
 
         val itemName = slot.item.displayName.string.replace(" Token", "")
         if (ownedCosmetics.contains(itemName) && !ExchangeFilter.showOwnedItems) {
@@ -117,7 +127,7 @@ object ExchangeHandler {
     }
 
     fun renderBackground(graphics: GuiGraphics, left: Int, top: Int) {
-        if (!isFetching) return
+        if (!fetchingProgress.isLoading()) return
         Model(
             modelPath = Resources.trident("interface/loading"), width = 8, height = 8
         ).render(

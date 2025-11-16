@@ -39,6 +39,7 @@ object ExchangeLookup {
                 Component.literal("Your API key is not set. Set it using /trident api setToken <TOKEN>")
                     .withStyle(TridentFont.ERROR.baseStyle)
             )
+            ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
             return
         }
 
@@ -77,7 +78,7 @@ object ExchangeLookup {
             try {
                 val responseText = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
                 val listingsResponse = json.decodeFromString<ExchangeListingsResponse>(responseText)
-                ExchangeHandler.isFetching = false
+                ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.COMPLETED
                 Minecraft.getInstance().execute {
                     exchangeLookupCache = listingsResponse
                     val expiresIn = Instant.now().toEpochMilli() + Duration.ofSeconds(60).toMillis()
@@ -86,7 +87,7 @@ object ExchangeLookup {
                     ExchangeHandler.updateCosmetics()
                 }
             } catch (e: Exception) {
-                ExchangeHandler.isFetching = false
+                ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
                 Minecraft.getInstance().execute {
                     ChatUtils.error("Failed to fetch exchange API: ${e.message}")
                     ChatUtils.sendMessage(

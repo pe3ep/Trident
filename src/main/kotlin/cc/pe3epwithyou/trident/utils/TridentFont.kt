@@ -8,21 +8,14 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.network.chat.TextColor
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.ARGB
 
 
 object TridentFont {
     val TRIDENT_COLOR: Swatch = Swatch(
-        baseColor = 0xc3e2fc,
-        baseShadow = 0x2d4857,
-        mutedColor = 0xb8befc,
-        mutedShadow = 0x3e3e63
+        baseColor = 0xc3e2fc, baseShadow = 0x2d4857, mutedColor = 0xb8befc, mutedShadow = 0x3e3e63
     )
     val TRIDENT_ACCENT: Swatch = Swatch(
-        baseColor = 0x59fce8,
-        baseShadow = 0x195257,
-        mutedColor = 0x4ed1db,
-        mutedShadow = 0x1c4957
+        baseColor = 0x59fce8, baseShadow = 0x195257, mutedColor = 0x4ed1db, mutedShadow = 0x1c4957
     )
 
     val ERROR: Swatch = Swatch(
