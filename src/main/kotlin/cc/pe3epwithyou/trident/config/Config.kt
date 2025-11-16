@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.config
 
-import cc.pe3epwithyou.trident.feature.killfeed.Position
+import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
@@ -25,6 +25,9 @@ class Config {
 
     @SerialEntry
     var globalCraftableIndicators: Boolean = true
+
+    @SerialEntry
+    var globalExchangeImprovements: Boolean = true
 
     @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
@@ -79,7 +82,7 @@ class Config {
     var killfeedReverseOrder: Boolean = false
 
     @SerialEntry
-    var killfeedPositionSide: Position = Position.RIGHT
+    var killfeedPositionSide: KillfeedPosition = KillfeedPosition.RIGHT
 
     @SerialEntry
     var killfeedRemoveKillTime: Int = 10
@@ -105,6 +108,9 @@ class Config {
     @SerialEntry
     var questingHideIfNoQuests: Boolean = false
 
+    @SerialEntry
+    var apiKey: String = ""
+
     object Global {
         val blueprintIndicators: Boolean
             get() = handler.instance().globalBlueprintIndicators
@@ -112,6 +118,8 @@ class Config {
             get() = handler.instance().globalCurrentTheme
         val craftableIndicators: Boolean
             get() = handler.instance().globalCraftableIndicators
+        val exchangeImprovements: Boolean
+            get() = handler.instance().globalExchangeImprovements
     }
 
     object RaritySlot {
@@ -159,7 +167,7 @@ class Config {
             get() = handler.instance().killfeedShowYouInKill
         val reverseOrder: Boolean
             get() = handler.instance().killfeedReverseOrder
-        val positionSide: Position
+        val positionSide: KillfeedPosition
             get() = handler.instance().killfeedPositionSide
         val removeKillTime: Int
             get() = handler.instance().killfeedRemoveKillTime
@@ -180,6 +188,11 @@ class Config {
             get() = handler.instance().questingShowLeft
         val hideIfNoQuests: Boolean
             get() = handler.instance().questingHideIfNoQuests
+    }
+
+    object Api {
+        val key: String
+            get() = handler.instance().apiKey
     }
 
     companion object {
@@ -256,6 +269,20 @@ class Config {
                             )
                         )
                         binding(handler.instance()::globalCraftableIndicators, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("exchange_improvements") {
+                        name(Component.translatable("config.trident.global.exchange_improvements.name"))
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.global.exchange_improvements.description")).image(
+                                    Resources.trident(
+                                        "textures/config/exchange_improvements.png"
+                                    ), 185, 194
+                                ).build()
+                        )
+                        binding(handler.instance()::globalExchangeImprovements, true)
                         controller(tickBox())
                     }
                 }
@@ -357,11 +384,11 @@ class Config {
                         controller(tickBox())
                     }
 
-                    options.register<Position>("killfeed_position_side") {
+                    options.register<KillfeedPosition>("killfeed_position_side") {
                         name(Component.translatable("config.trident.killfeed.position_side.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.position_side.description")))
-                        binding(handler.instance()::killfeedPositionSide, Position.RIGHT)
-                        controller(enumSwitch<Position> { v -> v.displayName })
+                        binding(handler.instance()::killfeedPositionSide, KillfeedPosition.RIGHT)
+                        controller(enumSwitch<KillfeedPosition> { v -> v.displayName })
                     }
 
                     options.register<Int>("killfeed_remove_kill_time") {
@@ -466,6 +493,23 @@ class Config {
                 }
             }
 
+//            categories.register("mcci_api") {
+//                name(Component.translatable("config.trident.api.name"))
+//
+//                groups.register("api") {
+//                    name(Component.translatable("config.trident.api.name"))
+//                    description(OptionDescription.of(Component.translatable("config.trident.api.description")))
+//
+//                    options.register<String>("api_key") {
+//                        name(Component.translatable("config.trident.api.key.name"))
+//                        description(OptionDescription.of(Component.translatable("config.trident.api.key.description")))
+//                        binding(handler.instance()::apiKey, "")
+//                        controller(stringField())
+//                    }
+//                }
+//
+//            }
+
             categories.register("debug") {
                 name(Component.translatable("config.trident.debug"))
 
@@ -503,6 +547,8 @@ class Config {
                 }
 
             }
+
+
         }.generateScreen(parentScreen)
     }
 }

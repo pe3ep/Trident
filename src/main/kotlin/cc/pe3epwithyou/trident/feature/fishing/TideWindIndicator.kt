@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature.fishing
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
@@ -10,7 +11,20 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.inventory.Slot
 
 object TideWindIndicator {
-//    20, 29, 38
+    fun renderOutline(graphics: GuiGraphics, slot: Slot) {
+        if (!Config.Fishing.islandIndicators) return
+        val client = Minecraft.getInstance()
+        val screen = client.screen ?: return
+        if ("FISHING ISLANDS" !in screen.title.string) return
+        val item = slot.item
+        item.getLore().forEach { l ->
+            if ("Active Tide: " in l.string) {
+                val color = l.toFlatList().last().style.color ?: return
+                RaritySlot.renderOutline(graphics, slot, color)
+            }
+        }
+    }
+
     fun render(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Fishing.islandIndicators) return
         val client = Minecraft.getInstance()
@@ -41,29 +55,17 @@ object TideWindIndicator {
 
     private fun renderWind(graphics: GuiGraphics, slot: Slot, winds: Winds) {
         Texture(
-            winds.texture,
-            8,
-            8,
-            16,
-            16
+            winds.texture, 8, 8, 16, 16
         ).blit(
-            graphics,
-            slot.x - 12,
-            slot.y + 4
+            graphics, slot.x - 12, slot.y + 4
         )
     }
 
     private fun renderTide(graphics: GuiGraphics, slot: Slot, tide: Tide) {
         Texture(
-            tide.path,
-            8,
-            8,
-            16,
-            16
+            tide.path, 8, 8, 16, 16
         ).blit(
-            graphics,
-            slot.x + 8,
-            slot.y + 8
+            graphics, slot.x + 8, slot.y + 8
         )
     }
 

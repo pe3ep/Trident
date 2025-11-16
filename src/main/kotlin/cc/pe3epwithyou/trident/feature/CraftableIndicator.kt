@@ -12,18 +12,20 @@ object CraftableIndicator {
         if (!Config.Global.craftableIndicators) return
         val slotName = slot.item.hoverName.string
         if ("Blueprint: " !in slotName) return
-        val lore = slot.item.getLore()
-        val lastLine = lore.last().string
-        if ("Click to Assemble" !in lastLine) return
-        if ("(Missing materials)" !in lastLine) return
-        Texture(
-            Resources.trident("textures/interface/no_materials.png"),
-            6,
-            8,
-        ).blit(
-            graphics,
-            slot.x,
-            slot.y + 8,
-        )
+        val lore = slot.item.getLore().reversed()
+        lore.forEach { line ->
+            if ("Click to Assemble" !in line.string) return@forEach
+            if ("(Missing materials)" !in line.string) return@forEach
+            Texture(
+                Resources.trident("textures/interface/no_materials.png"),
+                6,
+                8,
+            ).blit(
+                graphics,
+                slot.x,
+                slot.y + 8,
+            )
+            return
+        }
     }
 }

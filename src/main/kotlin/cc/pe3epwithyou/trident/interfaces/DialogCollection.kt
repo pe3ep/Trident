@@ -14,7 +14,7 @@ import net.minecraft.client.Minecraft
 object DialogCollection {
     private val openedDialogs = mutableMapOf<String, TridentDialog>()
     private const val DIALOG_GAP = 5
-    private val dialogPositions = mutableMapOf<String, Pair<Int, Int>>()
+    private val dialogPositions = mutableMapOf<String, TridentDialog.Position>()
 
     /**
      * Opens a dialog with the specified [key] if it is not already opened.
@@ -29,18 +29,21 @@ object DialogCollection {
 //            This dialog has its position saved
             val position = dialogPositions[key]!!
             positionDialog(dialog, position)
-
         } else {
-            val position = findPositionForNewDialog(dialog.width, dialog.height)
-            positionDialog(dialog, position)
+            val (x, y) = findPositionForNewDialog(dialog.width, dialog.height)
+            val distances = TridentDialog.getDistances(x, y, dialog.width, dialog.height)
+            positionDialog(dialog, TridentDialog.Position(x, y, distances))
         }
         openedDialogs.putIfAbsent(key, dialog)
     }
 
-    private fun positionDialog(dialog: TridentDialog, position: Pair<Int, Int>) {
-        val (x, y) = position
-        dialog.x = x
-        dialog.y = y
+    private fun positionDialog(dialog: TridentDialog, position: TridentDialog.Position) {
+        var distances = position.distances
+        if (distances == null) {
+            distances = TridentDialog.getDistances(position.x, position.y, dialog.width, dialog.height)
+        }
+        val quad = TridentDialog.getQuadrant(distances)
+        dialog.applyQuadrantPositioning(quad, distances)
     }
 
     /**
@@ -78,16 +81,15 @@ object DialogCollection {
     }
 
     fun saveDialogPosition(key: String, dialog: TridentDialog) {
-        val position: Pair<Int, Int> = Pair(dialog.x, dialog.y)
-        dialogPositions[key] = position
-    }
-
-    fun saveDialogPosition(key: String, position: Pair<Int, Int>) {
-        dialogPositions[key] = position
+        dialogPositions[key] = dialog.position
     }
 
     fun saveAllDialogs() {
-        DialogIO.save(dialogPositions)
+        try {
+            DialogIO.save(dialogPositions)
+        } catch (e: Exception) {
+            ChatUtils.error("Failed to save dialogs: ${e.message}")
+        }
     }
 
     fun loadAllDialogs() {
@@ -136,8 +138,9 @@ object DialogCollection {
         dialogPositions.clear()
         saveAllDialogs()
         openedDialogs.entries.forEach { (_, dialog) ->
-            val position = findPositionForNewDialog(dialog.width, dialog.height)
-            positionDialog(dialog, position)
+            val (x, y) = findPositionForNewDialog(dialog.width, dialog.height)
+            val distances = TridentDialog.getDistances(x, y, dialog.width, dialog.height)
+            positionDialog(dialog, TridentDialog.Position(x, y, distances))
         }
     }
 
@@ -169,20 +172,17 @@ object DialogCollection {
             candidates.add(Pair(dialog.x, maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP))) // Above
             candidates.add(
                 Pair(
-                    dialog.x + dialog.width + DIALOG_GAP,
-                    dialog.y + dialog.height + DIALOG_GAP
+                    dialog.x + dialog.width + DIALOG_GAP, dialog.y + dialog.height + DIALOG_GAP
                 )
             ) // Bottom-right
             candidates.add(
                 Pair(
-                    maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP),
-                    dialog.y + dialog.height + DIALOG_GAP
+                    maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP), dialog.y + dialog.height + DIALOG_GAP
                 )
             ) // Bottom-left
             candidates.add(
                 Pair(
-                    dialog.x + dialog.width + DIALOG_GAP,
-                    maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP)
+                    dialog.x + dialog.width + DIALOG_GAP, maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP)
                 )
             ) // Top-right
         }
@@ -223,11 +223,7 @@ object DialogCollection {
     }
 
     private fun isOverlapping(
-        existingDialogs: List<Dialog>,
-        x: Int,
-        y: Int,
-        width: Int,
-        height: Int
+        existingDialogs: List<Dialog>, x: Int, y: Int, width: Int, height: Int
     ): Boolean {
         for (dialog in existingDialogs) {
             if (rectanglesOverlap(dialog.x, dialog.y, dialog.width, dialog.height, x, y, width, height)) {
@@ -238,13 +234,9 @@ object DialogCollection {
     }
 
     private fun rectanglesOverlap(
-        x1: Int, y1: Int, w1: Int, h1: Int,
-        x2: Int, y2: Int, w2: Int, h2: Int
+        x1: Int, y1: Int, w1: Int, h1: Int, x2: Int, y2: Int, w2: Int, h2: Int
     ): Boolean {
-        return !(x1 + w1 <= x2 ||
-                x2 + w2 <= x1 ||
-                y1 + h1 <= y2 ||
-                y2 + h2 <= y1)
+        return !(x1 + w1 <= x2 || x2 + w2 <= x1 || y1 + h1 <= y2 || y2 + h2 <= y1)
     }
 
     // Internal data class to simplify overlap checks
