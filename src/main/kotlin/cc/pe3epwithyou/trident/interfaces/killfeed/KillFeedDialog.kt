@@ -37,6 +37,22 @@ class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             }
         }
 
+        fun applyKillAssist() {
+            val last = killWidgets.last()
+            killWidgets.removeLast()
+            killWidgets.add(
+                KillWidget(
+                    victim = last.victim,
+                    killMethod = last.killMethod,
+                    attacker = last.attacker,
+                    killColors = last.killColors,
+                    streak = last.streak,
+                    hasAssist = true
+                )
+            )
+            DialogCollection.refreshDialog("killfeed")
+        }
+
         private fun removeWidget(widget: KillWidget) {
             killWidgets.remove(widget)
             DialogCollection.refreshDialog("killfeed")

@@ -7,7 +7,6 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import com.noxcrew.sheeplib.util.opacity
-import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
@@ -99,11 +98,7 @@ object ExchangeHandler {
         val itemName = slot.item.displayName.string.replace(" Token", "")
         if (ownedCosmetics.contains(itemName) && !ExchangeFilter.showOwnedItems) {
             graphics.fill(
-                slot.x,
-                slot.y,
-                slot.x + 16,
-                slot.y + 16,
-                0x325591 opacity 128
+                slot.x, slot.y, slot.x + 16, slot.y + 16, 0x325591 opacity 128
             )
             return
         }

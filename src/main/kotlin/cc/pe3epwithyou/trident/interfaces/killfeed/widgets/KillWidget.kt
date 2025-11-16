@@ -9,17 +9,18 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.layouts.LinearLayout
 
 class KillWidget(
-    private val victim: String,
-    private val killMethod: KillMethod,
-    private val attacker: String? = null,
-    private val killColors: Pair<Int, Int>,
-    private val streak: Int = 0
+    val victim: String,
+    val killMethod: KillMethod,
+    val attacker: String? = null,
+    val killColors: Pair<Int, Int>,
+    val streak: Int = 0,
+    val hasAssist: Boolean = false
 ) : CompoundWidget(0, 0, 0, 0) {
+
     override fun getWidth(): Int = layout.width
     override fun getHeight(): Int = layout.height
     override val layout: LinearLayout = LinearLayout(
-        LinearLayout.Orientation.HORIZONTAL,
-        0
+        LinearLayout.Orientation.HORIZONTAL, 0
     ) {
         val self = Minecraft.getInstance().player?.name?.string ?: "Unknown"
 
@@ -29,9 +30,13 @@ class KillWidget(
         val victimColor = if (self == victim) secondSelfColor else killColors.second
 
         if (attacker != null) {
-            if (streak < 5) {
+            if (hasAssist) {
+                +KillAssist(firstSelfColor)
+            }
+            if (streak in 2..3) {
                 +KillStreak(attackerColor, streak)
-            } else {
+            }
+            if (streak >= 4) {
                 +KillStreakFire()
             }
             +KillBackground(attackerColor, attacker, killMethod, isSelf = (self == attacker))

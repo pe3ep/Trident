@@ -35,6 +35,11 @@ object KillChatListener {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowGame true
 
+            val killAssistMatch = Regex("""^\[.] You assisted in eliminating (.+)!""").matches(message.string)
+            if (killAssistMatch) {
+                KillFeedDialog.applyKillAssist()
+            }
+
             DeathMessages.entries.forEach { deathMessage ->
                 if (deathMessage.regex.matches(message.string)) {
                     return@allowGame handleKill(message, deathMessage.method)
