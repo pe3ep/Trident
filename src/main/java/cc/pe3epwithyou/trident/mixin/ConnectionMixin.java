@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.feature.questing.QuestListener;
-import cc.pe3epwithyou.trident.state.FontCollection;
+import cc.pe3epwithyou.trident.interfaces.DialogCollection;
 import cc.pe3epwithyou.trident.state.PlayerStateIO;
 import cc.pe3epwithyou.trident.utils.ChatUtils;
 import cc.pe3epwithyou.trident.utils.DelayedAction;
@@ -19,5 +19,7 @@ public class ConnectionMixin {
         ChatUtils.INSTANCE.info("Disconnected from a server, cancelling all pending tasks");
         QuestListener.INSTANCE.interruptTasks();
         DelayedAction.INSTANCE.closeAllPendingTasks();
+        PlayerStateIO.INSTANCE.save();
+        DialogCollection.INSTANCE.saveAllDialogs();
     }
 }
