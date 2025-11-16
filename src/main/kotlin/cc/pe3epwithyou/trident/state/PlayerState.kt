@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
@@ -67,7 +68,7 @@ data class Supplies(
 @Serializable
 data class WayfinderStatus(
     var unlocked: Boolean = false,
-    var island: String,
+    var climate: ClimateType,
     var data: Int = 0,
     var hasGrotto: Boolean = false,
     var grottoStability: Int = 100,
@@ -75,10 +76,12 @@ data class WayfinderStatus(
 
 @Serializable
 data class WayfinderData(
-    var temperate: WayfinderStatus = WayfinderStatus(island = "Temperate"),
-    var tropical: WayfinderStatus = WayfinderStatus(island = "Tropical"),
-    var barren: WayfinderStatus = WayfinderStatus(island = "Barren"),
+    var temperate: WayfinderStatus = WayfinderStatus(climate = ClimateType.TEMPERATE),
+    var tropical: WayfinderStatus = WayfinderStatus(climate = ClimateType.TROPICAL),
+    var barren: WayfinderStatus = WayfinderStatus(climate = ClimateType.BARREN),
     var needsUpdating: Boolean = true,
+    var overclockData: Int? = null,
+    var wayfinderPerkData: Int? = null
 )
 
 @Serializable
@@ -96,6 +99,7 @@ data class FishingResearch(
 data class PlayerState(
     var supplies: Supplies = Supplies(),
     var wayfinderData: WayfinderData = WayfinderData(),
+    var currentSpot: FishingSpotListener.FishingSpot? = null,
     var research: FishingResearch = FishingResearch(),
     var hatesUpdates: Boolean = false
 )

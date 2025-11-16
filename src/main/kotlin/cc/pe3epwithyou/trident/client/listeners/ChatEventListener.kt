@@ -3,7 +3,9 @@ package cc.pe3epwithyou.trident.client.listeners
 import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
+import cc.pe3epwithyou.trident.feature.fishing.WayfinderTracker
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.mixin.BossHealthOverlayAccessor
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
@@ -39,6 +41,9 @@ object ChatEventListener {
     private fun Component.isDepletedSpot() =
         Regex("^\\[.] This spot is Depleted, so you can no longer fish here\\.").matches(this.string)
 
+    private fun Component.isGrottoUnlockedMessage() =
+        Regex("^\\[.] Your Grotto has become unstable, teleporting you back to safety\\.\\.\\.").matches(this.string)
+
     private fun Component.isOutOfGrotto() =
         Regex("^\\[.] Your Grotto has become unstable, teleporting you back to safety\\.\\.\\.").matches(this.string)
 
@@ -68,7 +73,25 @@ object ChatEventListener {
 
             if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
                 Minecraft.getInstance().window.requestAttentionIfInactive()
+
+                // Reset grotto state for current climate
+                val currentClimateStatus = WayfinderTracker.wayfinderStatuses[MCCIState.fishingState.climate.climateType]
+                if (currentClimateStatus != null) {
+                    currentClimateStatus.hasGrotto = false
+                    currentClimateStatus.data -= 2000
+                }
             }
+
+
+            if (message.isGrottoUnlockedMessage()) {
+                // Reset grotto state for current climate
+                val currentClimateStatus = WayfinderTracker.wayfinderStatuses[MCCIState.fishingState.climate.climateType]
+                if (currentClimateStatus != null) {
+                    currentClimateStatus.hasGrotto = true
+                }
+                DialogCollection.refreshDialog("wayfinder")
+            }
+
 
             // Check if player received bait and mark supplies as desynced
             if (message.isReceivedItem() && "Bait" in message.string) {
@@ -109,8 +132,11 @@ object ChatEventListener {
                     }
                 }
 
+                WayfinderTracker.update(message)
+
                 catchFinished = true
                 DialogCollection.refreshDialog("supplies")
+                DialogCollection.refreshDialog("wayfinder")
             }
 
             true

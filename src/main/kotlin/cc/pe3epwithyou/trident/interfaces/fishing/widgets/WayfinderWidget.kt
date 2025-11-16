@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
+import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.WayfinderStatus
 import cc.pe3epwithyou.trident.utils.ProgressBar
 import cc.pe3epwithyou.trident.utils.Resources
@@ -30,17 +31,17 @@ class WayfinderWidget(
     override fun getHeight(): Int = layout.height
 
     companion object {
-        val ISLAND_ICONS = hashMapOf<String, ResourceLocation>(
-            "Temperate" to Resources.mcc("textures/island_interface/fishing/island/grotto_temperate.png"),
-            "Tropical" to Resources.mcc("textures/island_interface/fishing/island/grotto_tropical.png"),
-            "Barren" to Resources.mcc("textures/island_interface/fishing/island/grotto_barren.png")
+        val ISLAND_ICONS = hashMapOf<ClimateType, Pair<String, ResourceLocation>>(
+            ClimateType.TEMPERATE to Pair("Temperate", Resources.mcc("textures/island_interface/fishing/island/grotto_temperate.png")),
+            ClimateType.TROPICAL to Pair("Tropical", Resources.mcc("textures/island_interface/fishing/island/grotto_tropical.png")),
+            ClimateType.BARREN to Pair("Barren", Resources.mcc("textures/island_interface/fishing/island/grotto_barren.png"))
         )
     }
 
     override val layout = GridLayout(themed.theme.dimensions.paddingInner) {
         val mcFont = Minecraft.getInstance().font
-        val islandName = Component.literal(wayfinderStatus.island.uppercase()).mccFont()
-        WayfinderNameWidget(ISLAND_ICONS[wayfinderStatus.island], islandName, mcFont).atBottom(
+        val islandName = Component.literal(ISLAND_ICONS[wayfinderStatus.climate]!!.first).mccFont()
+        WayfinderNameWidget(ISLAND_ICONS[wayfinderStatus.climate]!!.second, islandName, mcFont).atBottom(
             0,
             settings = LayoutConstants.LEFT
         )
@@ -102,7 +103,7 @@ class WayfinderWidget(
 
         override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
             Texture(
-                sprite ?: ISLAND_ICONS.values.first(),
+                sprite ?: ISLAND_ICONS.values.first().second,
                 ICON_WIDTH,
                 ICON_WIDTH
             ).blit(guiGraphics, x, y)

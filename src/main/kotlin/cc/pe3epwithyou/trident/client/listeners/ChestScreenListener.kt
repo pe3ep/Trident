@@ -54,6 +54,11 @@ object ChestScreenListener {
                 findFishingResearch(screen)
             }
         }
+        if ("FISHING PERKS" in screen.title.string) {
+            DelayedAction.delayTicks(2L) {
+                findFishingPerks(screen)
+            }
+        }
 
         if ("ISLAND EXCHANGE" in screen.title.string) {
             DelayedAction.delayTicks(1L) {
@@ -187,6 +192,12 @@ object ChestScreenListener {
         TridentClient.playerState.supplies.overclocks.unstable.texture =
             ItemParser.getUnstableOverclock(unstableOverclock.item)
 
+        for (line in unstableOverclock.item.getLore().drop(5)) {
+            if (line.string.contains("Wayfinder Data")) {
+                TridentClient.playerState.wayfinderData.overclockData = line.string.split("+")[1].split(" ")[0].toIntOrNull()
+            }
+        }
+
         val supremeOverclock = screen.menu.slots[16]
         val supremeModel = supremeOverclock.item.components[DataComponents.ITEM_MODEL]
         if (supremeModel != null) {
@@ -265,5 +276,16 @@ object ChestScreenListener {
 
         TridentClient.playerState.research.needsUpdating = false
         DialogCollection.refreshDialog("research")
+    }
+
+    fun findFishingPerks(screen: ContainerScreen) {
+        if ("FISHING PERKS" !in screen.title.string) return
+
+        val wayfinderPerkSlot = screen.menu.slots[24]
+        for (line in wayfinderPerkSlot.item.getLore()) {
+            if (line.string.contains("Data Per Catch")) {
+                TridentClient.playerState.wayfinderData.wayfinderPerkData = line.string.split(": ")[1].toIntOrNull()
+            }
+        }
     }
 }
