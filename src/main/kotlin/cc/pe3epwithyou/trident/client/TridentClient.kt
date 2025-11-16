@@ -7,7 +7,6 @@ import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
-import cc.pe3epwithyou.trident.feature.fishing.WayfinderTracker
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
