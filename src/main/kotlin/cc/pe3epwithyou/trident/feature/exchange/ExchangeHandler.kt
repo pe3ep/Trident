@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.exchange
 
+import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
@@ -78,6 +79,17 @@ object ExchangeHandler {
         }
     }
 
+    fun shouldRenderTooltip(slot: Slot): Boolean {
+        val screen = Minecraft.getInstance().screen ?: return true
+        if ("ISLAND EXCHANGE" !in screen.title.string) return true
+        if (!inSlotBoundary(slot)) return true
+        if (isFetching) return true
+        if (ExchangeFilter.showOwnedItems) return true
+
+        val itemName = slot.item.displayName.string.replace(" Token", "")
+        return !ownedCosmetics.contains(itemName)
+    }
+
     fun renderSlot(graphics: GuiGraphics, slot: Slot) {
         val screen = Minecraft.getInstance().screen ?: return
         if ("ISLAND EXCHANGE" !in screen.title.string) return
@@ -85,13 +97,13 @@ object ExchangeHandler {
         if (isFetching) return
 
         val itemName = slot.item.displayName.string.replace(" Token", "")
-        if (ownedCosmetics.contains(itemName)) {
+        if (ownedCosmetics.contains(itemName) && !ExchangeFilter.showOwnedItems) {
             graphics.fill(
                 slot.x,
                 slot.y,
                 slot.x + 16,
                 slot.y + 16,
-                0x202020 opacity 128
+                0x325591 opacity 128
             )
             return
         }
@@ -111,15 +123,13 @@ object ExchangeHandler {
 
     fun renderBackground(graphics: GuiGraphics, left: Int, top: Int) {
         if (!isFetching) return
-        val font = Minecraft.getInstance().font
         Model(
             modelPath = Resources.trident("interface/loading"), width = 8, height = 8
         ).render(
             graphics,
-            left + 90,
+            left + 160,
             top - 30,
         )
-        graphics.drawString(font, "Fetching API...", left + 12 + 90, top - 29, 0xFFFFFF.opaqueColor())
     }
 
     private fun inSlotBoundary(slot: Slot): Boolean {
