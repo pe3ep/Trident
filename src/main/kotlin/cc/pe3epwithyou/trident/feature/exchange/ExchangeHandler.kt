@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.exchange
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Model
@@ -22,10 +23,7 @@ object ExchangeHandler {
     )
 
     enum class FetchProgress {
-        NO_DATA,
-        LOADING,
-        COMPLETED,
-        FAILED;
+        NO_DATA, LOADING, COMPLETED, FAILED;
 
         fun isLoading() = this == NO_DATA || this == LOADING
     }
@@ -36,6 +34,7 @@ object ExchangeHandler {
     val ownedCosmetics = mutableSetOf<String>()
 
     fun handleScreen(screen: Screen) {
+        if (!Config.Global.exchangeImprovements) return
         val chest = screen as ContainerScreen
         val now = Instant.now().toEpochMilli()
 
@@ -88,6 +87,7 @@ object ExchangeHandler {
     }
 
     fun shouldRenderTooltip(slot: Slot): Boolean {
+        if (!Config.Global.exchangeImprovements) return true
         val screen = Minecraft.getInstance().screen ?: return true
         if ("ISLAND EXCHANGE" !in screen.title.string) return true
         if (!inSlotBoundary(slot)) return true
@@ -99,6 +99,7 @@ object ExchangeHandler {
     }
 
     fun renderSlot(graphics: GuiGraphics, slot: Slot) {
+        if (!Config.Global.exchangeImprovements) return
         val screen = Minecraft.getInstance().screen ?: return
         if ("ISLAND EXCHANGE" !in screen.title.string) return
         if (!inSlotBoundary(slot)) return
@@ -127,6 +128,7 @@ object ExchangeHandler {
     }
 
     fun renderBackground(graphics: GuiGraphics, left: Int, top: Int) {
+        if (!Config.Global.exchangeImprovements) return
         if (!fetchingProgress.isLoading()) return
         Model(
             modelPath = Resources.trident("interface/loading"), width = 8, height = 8

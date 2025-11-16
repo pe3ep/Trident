@@ -32,6 +32,7 @@ object ExchangeLookup {
     }
 
     fun lookup() {
+        if (!Config.Global.exchangeImprovements) return
         val context = Util.backgroundExecutor().asCoroutineDispatcher()
         val player = Minecraft.getInstance().gameProfile
         val key = Config.Api.key

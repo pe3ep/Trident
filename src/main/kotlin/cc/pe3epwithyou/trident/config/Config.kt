@@ -27,6 +27,9 @@ class Config {
     var globalCraftableIndicators: Boolean = true
 
     @SerialEntry
+    var globalExchangeImprovements: Boolean = true
+
+    @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
 
     @SerialEntry
@@ -115,6 +118,8 @@ class Config {
             get() = handler.instance().globalCurrentTheme
         val craftableIndicators: Boolean
             get() = handler.instance().globalCraftableIndicators
+        val exchangeImprovements: Boolean
+            get() = handler.instance().globalExchangeImprovements
     }
 
     object RaritySlot {
@@ -264,6 +269,20 @@ class Config {
                             )
                         )
                         binding(handler.instance()::globalCraftableIndicators, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("exchange_improvements") {
+                        name(Component.translatable("config.trident.global.exchange_improvements.name"))
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.global.exchange_improvements.description")).image(
+                                    Resources.trident(
+                                        "textures/config/exchange_improvements.png"
+                                    ), 185, 194
+                                ).build()
+                        )
+                        binding(handler.instance()::globalExchangeImprovements, true)
                         controller(tickBox())
                     }
                 }

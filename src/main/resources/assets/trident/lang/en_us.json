@@ -14,6 +14,8 @@
   "config.trident.global.description": "Universal non-game specific settings that apply across MCC Island.",
   "config.trident.global.blueprint_indicators.name": "Blueprint Indicators",
   "config.trident.global.blueprint_indicators.description": "Displays icons based on blueprint's ownership status.\n\nTick Icon - Blueprint has maxed royal donations\nDiamond icon - Blueprint is not owned by player",
+  "config.trident.global.exchange_improvements.name": "Island Exchange improvements",
+  "config.trident.global.exchange_improvements.description": "Shows an indicator on best priced listings and gives the ability to hide owned cosmetics. Requires API",
   "config.trident.global.theme.name": "Module theme",
   "config.trident.global.theme.description": "Changes the current theme that Modules are using.",
   "config.trident.global.craftable_indicators.name": "Craftable Indicators",

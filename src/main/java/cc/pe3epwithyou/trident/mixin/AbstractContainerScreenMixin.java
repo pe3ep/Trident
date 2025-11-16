@@ -58,7 +58,9 @@ public class AbstractContainerScreenMixin extends Screen {
         }
         TideWindIndicator.INSTANCE.render(guiGraphics, slot);
         CraftableIndicator.INSTANCE.render(guiGraphics, slot);
-        ExchangeHandler.INSTANCE.renderSlot(guiGraphics, slot);
+        if (Config.Global.INSTANCE.getExchangeImprovements()) {
+            ExchangeHandler.INSTANCE.renderSlot(guiGraphics, slot);
+        }
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))
@@ -96,6 +98,7 @@ public class AbstractContainerScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     public void init(CallbackInfo ci) {
+        if (!Config.Global.INSTANCE.getExchangeImprovements()) return;
         if (this.getTitle().getString().contains("ISLAND EXCHANGE")) {
             int x = this.leftPos + 32;
             int y = this.topPos - 33;
