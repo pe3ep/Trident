@@ -32,7 +32,7 @@ abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x
     }
 
     @Serializable
-    data class Position(val x: Int, val y: Int, val distances: SideDistances)
+    data class Position(val x: Int, val y: Int, val distances: SideDistances? = null)
 
     @Serializable
     data class SideDistances(val top: Int, val left: Int, val right: Int, val bottom: Int)

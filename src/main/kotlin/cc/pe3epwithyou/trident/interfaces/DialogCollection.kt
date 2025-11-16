@@ -38,8 +38,12 @@ object DialogCollection {
     }
 
     private fun positionDialog(dialog: TridentDialog, position: TridentDialog.Position) {
-        val quad = TridentDialog.getQuadrant(position.distances)
-        dialog.applyQuadrantPositioning(quad, position.distances)
+        var distances = position.distances
+        if (distances == null) {
+            distances = TridentDialog.getDistances(position.x, position.y, dialog.width, dialog.height)
+        }
+        val quad = TridentDialog.getQuadrant(distances)
+        dialog.applyQuadrantPositioning(quad, distances)
     }
 
     /**
