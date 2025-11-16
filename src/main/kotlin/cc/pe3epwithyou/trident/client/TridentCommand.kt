@@ -101,9 +101,9 @@ object TridentCommand {
              */
             literal("resetDialogPositions") {
                 executes {
-                    val c = Component.literal("Saved dialog positions have been ")
+                    val c = Component.literal("Saved dialog positions have been successfully ")
                         .withSwatch(TridentFont.TRIDENT_COLOR).append(
-                            Component.literal("successfully reset").withSwatch(TridentFont.TRIDENT_ACCENT)
+                            Component.literal("reset").withSwatch(TridentFont.ERROR)
                         )
                     ChatUtils.sendMessage(c)
                 }
@@ -118,9 +118,9 @@ object TridentCommand {
                     PlayerStateIO.load()
                     DialogCollection.refreshOpenedDialogs()
 
-                    val c = Component.literal("Player state has been ").withSwatch(TridentFont.TRIDENT_COLOR)
+                    val c = Component.literal("Player state has been successfully ").withSwatch(TridentFont.TRIDENT_COLOR)
                         .append(
-                            Component.literal("successfully reset").withSwatch(TridentFont.TRIDENT_ACCENT)
+                            Component.literal("reset").withSwatch(TridentFont.ERROR)
                         )
                     ChatUtils.sendMessage(c)
                 }
