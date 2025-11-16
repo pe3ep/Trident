@@ -2,9 +2,12 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
+import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.world.inventory.ClickType
@@ -16,8 +19,7 @@ object SlotClickListener {
         if (client.screen !is ContainerScreen) return
         val screen = client.screen as ContainerScreen
         ChatUtils.debugLog("ct: ${clickType.name} isleftclick: $isLeftClick slotname: ${slot.item.hoverName.string}")
-        if (Config.Fishing.suppliesModule) {
-            if ("FISHING SUPPLIES" !in screen.title.string) return
+        if (Config.Fishing.suppliesModule && "FISHING SUPPLIES" in screen.title.string) {
             val item = slot.item
             if (clickType == ClickType.QUICK_MOVE && isLeftClick && "Unstable Overclock" in item.hoverName.string) {
                 if (TridentClient.playerState.supplies.overclocks.unstable.state.isAvailable) startUnstableOverclock()
@@ -27,12 +29,21 @@ object SlotClickListener {
             }
         }
 
-        if (Config.Questing.enabled) {
-            if ("ISLAND REWARDS" !in screen.title.string) return
+        if (Config.Questing.enabled && "ISLAND REWARDS" in screen.title.string) {
             val item = slot.item
             if (clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE) {
                 if ("Quest" !in item.hoverName.string) return
                 QuestListener.isWaitingRefresh = true
+            }
+        }
+
+        if ("ISLAND EXCHANGE" in screen.title.string) {
+            val item = slot.item
+            if ((clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE) && "Refresh Listings" in item.hoverName.string) {
+                if ("Click to Refresh" in item.getLore().last().string) {
+                    ExchangeLookup.clearCache()
+                    ExchangeHandler.handleScreen(screen)
+                }
             }
         }
     }

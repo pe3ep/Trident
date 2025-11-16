@@ -35,28 +35,28 @@ object ChestScreenListener {
 
     private fun handleScreen(screen: ContainerScreen) {
         if ("FISHING SUPPLIES" in screen.title.string) {
-            DelayedAction.delayTicks(2L) {
+            DelayedAction.delayTicks(1L) {
                 findAugments(screen)
             }
         }
         if ("ISLAND REWARDS" in screen.title.string) {
-            DelayedAction.delayTicks(2L) {
+            DelayedAction.delayTicks(1L) {
                 findQuests(screen)
             }
         }
         if ("FISHING ISLANDS" in screen.title.string) {
-            DelayedAction.delayTicks(2L) {
+            DelayedAction.delayTicks(1L) {
                 findWayfinderData(screen)
             }
         }
         if ("FISHING PROGRESS" in screen.title.string) {
-            DelayedAction.delayTicks(2L) {
+            DelayedAction.delayTicks(1L) {
                 findFishingResearch(screen)
             }
         }
 
         if ("ISLAND EXCHANGE" in screen.title.string) {
-            DelayedAction.delayTicks(2L) {
+            DelayedAction.delayTicks(1L) {
                 ExchangeHandler.handleScreen(screen)
             }
         }

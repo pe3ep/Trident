@@ -25,6 +25,11 @@ object ExchangeLookup {
     private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()
     private val json = Json { ignoreUnknownKeys = true }
 
+    fun clearCache() {
+        exchangeLookupCache = null
+        exchangeLookupCacheExpiresIn = null
+    }
+
     fun lookup() {
         val context = Util.backgroundExecutor().asCoroutineDispatcher()
         val player = Minecraft.getInstance().gameProfile

@@ -31,7 +31,7 @@ object ExchangeHandler {
         val now = Instant.now().toEpochMilli()
 
         if (ExchangeLookup.exchangeLookupCacheExpiresIn != null && now >= ExchangeLookup.exchangeLookupCacheExpiresIn!!) {
-            ExchangeLookup.exchangeLookupCache = null
+            ExchangeLookup.clearCache()
         }
 
         if (ExchangeLookup.exchangeLookupCache == null) {
