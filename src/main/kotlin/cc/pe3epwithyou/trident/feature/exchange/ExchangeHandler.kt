@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
+import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -19,18 +20,21 @@ object ExchangeHandler {
         val name: String,
         val amount: Int,
     )
+
     var isFetching: Boolean = false
-    val priceMap = hashMapOf<Listing, Long>()
+    val exchangeDeals = hashMapOf<Listing, Long>()
+
+    val ownedCosmetics = mutableSetOf<String>()
 
     fun handleScreen(screen: Screen) {
         val chest = screen as ContainerScreen
         val now = Instant.now().toEpochMilli()
 
-        if (ExchangeLookup.responseCacheExpiresIn != null && now >= ExchangeLookup.responseCacheExpiresIn!!) {
-            ExchangeLookup.responseCache = null
+        if (ExchangeLookup.exchangeLookupCacheExpiresIn != null && now >= ExchangeLookup.exchangeLookupCacheExpiresIn!!) {
+            ExchangeLookup.exchangeLookupCache = null
         }
 
-        if (ExchangeLookup.responseCache == null) {
+        if (ExchangeLookup.exchangeLookupCache == null) {
             isFetching = true
             ExchangeLookup.lookup()
         } else {
@@ -45,23 +49,32 @@ object ExchangeHandler {
 
             val itemName = item.displayName.string.replace(" Token", "")
             val listing = Listing(itemName, slot.item.count)
-            val current = priceMap[listing]
+            val current = exchangeDeals[listing]
             if (current == null || price < current) {
                 ChatUtils.info("(SCREEN) Updating price for $listing -> $price")
-                priceMap[listing] = price
+                exchangeDeals[listing] = price
             }
         }
     }
 
     fun updatePrices() {
-        ExchangeLookup.responseCache!!.data.activeIslandExchangeListings.forEach { (cost, asset, amount) ->
+        ExchangeLookup.exchangeLookupCache!!.data.activeIslandExchangeListings.forEach { (cost, asset, amount) ->
             val name = "[${asset.name}]".replace(" Token", "")
             val listing = Listing(name, amount)
-            val current = priceMap[listing]
+            val current = exchangeDeals[listing]
             if (current == null || cost < current) {
                 ChatUtils.info("(API) Updating price for $listing -> $cost")
-                priceMap[listing] = cost
+                exchangeDeals[listing] = cost
             }
+        }
+    }
+
+    fun updateCosmetics() {
+        val collections = ExchangeLookup.exchangeLookupCache!!.data.player.collections ?: return
+        val filtered = collections.cosmetics.filter { (owned, _) -> owned }
+        ownedCosmetics.clear()
+        filtered.forEach { (_, cosmetic) ->
+            ownedCosmetics.add("[${cosmetic.name}]")
         }
     }
 
@@ -72,9 +85,20 @@ object ExchangeHandler {
         if (isFetching) return
 
         val itemName = slot.item.displayName.string.replace(" Token", "")
+        if (ownedCosmetics.contains(itemName)) {
+            graphics.fill(
+                slot.x,
+                slot.y,
+                slot.x + 16,
+                slot.y + 16,
+                0x202020 opacity 128
+            )
+            return
+        }
+
         val price = getItemPrice(slot.item) ?: return
         val listing = Listing(itemName, slot.item.count)
-        if (priceMap.contains(listing) && priceMap[listing] == price) {
+        if (exchangeDeals.contains(listing) && exchangeDeals[listing] == price) {
             Texture(
                 Resources.trident("textures/interface/exchange/star.png"),
                 width = 7,
@@ -89,9 +113,7 @@ object ExchangeHandler {
         if (!isFetching) return
         val font = Minecraft.getInstance().font
         Model(
-            modelPath = Resources.trident("interface/loading"),
-            width = 8,
-            height = 8
+            modelPath = Resources.trident("interface/loading"), width = 8, height = 8
         ).render(
             graphics,
             left + 90,

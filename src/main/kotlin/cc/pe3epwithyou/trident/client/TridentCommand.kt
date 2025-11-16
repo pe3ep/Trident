@@ -20,7 +20,6 @@ import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Command
 import cc.pe3epwithyou.trident.utils.TridentFont
 import com.mojang.brigadier.CommandDispatcher
-import com.mojang.brigadier.arguments.IntegerArgumentType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -254,7 +253,7 @@ object TridentCommand {
             literal("dump_lowest_prices") {
                 executes {
                     ChatUtils.sendMessage("—————— LOWEST PRICE BEGIN ——————", false)
-                    ExchangeHandler.priceMap.forEach { (key, value) ->
+                    ExchangeHandler.exchangeDeals.forEach { (key, value) ->
                         ChatUtils.sendMessage("$key costs $value", false)
                     }
                     ChatUtils.sendMessage("——————— LOWEST PRICE END ———————", false)

@@ -2,7 +2,6 @@ package cc.pe3epwithyou.trident.feature.exchange
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.ChatUtils
-import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.TridentFont
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -20,15 +19,15 @@ import java.time.Duration
 import java.time.Instant
 
 object ExchangeLookup {
-    var responseCache: ExchangeListingsResponse? = null
-    var responseCacheExpiresIn: Long? = null
+    var exchangeLookupCache: ExchangeListingsResponse? = null
+    var exchangeLookupCacheExpiresIn: Long? = null
 
     private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()
     private val json = Json { ignoreUnknownKeys = true }
 
     fun lookup() {
         val context = Util.backgroundExecutor().asCoroutineDispatcher()
-        val player = Minecraft.getInstance().player?.name?.string
+        val player = Minecraft.getInstance().gameProfile
         val key = Config.Api.key
         if (key.isBlank()) {
             ChatUtils.sendMessage(
@@ -40,6 +39,16 @@ object ExchangeLookup {
 
         val graphQLString = """
             query activeExchangeListings {
+              player(uuid: \"${player.id}\") {
+                collections {
+                  cosmetics {
+                    owned
+                    cosmetic {
+                      name
+                    }
+                  }
+                }
+              }
               activeIslandExchangeListings {
                 asset {
                   name
@@ -57,7 +66,7 @@ object ExchangeLookup {
                         {"query":"$graphQLString"}
                     """.trimIndent()
                 )
-            ).setHeader("Content-Type", "application/json").setHeader("User-Agent", "trident-mc-mod/$player")
+            ).setHeader("Content-Type", "application/json").setHeader("User-Agent", "trident-mc-mod/${player.name}")
                 .setHeader("X-API-Key", key).build()
 
             try {
@@ -65,10 +74,11 @@ object ExchangeLookup {
                 val listingsResponse = json.decodeFromString<ExchangeListingsResponse>(responseText)
                 ExchangeHandler.isFetching = false
                 Minecraft.getInstance().execute {
-                    responseCache = listingsResponse
+                    exchangeLookupCache = listingsResponse
                     val expiresIn = Instant.now().toEpochMilli() + Duration.ofSeconds(60).toMillis()
-                    responseCacheExpiresIn = expiresIn
+                    exchangeLookupCacheExpiresIn = expiresIn
                     ExchangeHandler.updatePrices()
+                    ExchangeHandler.updateCosmetics()
                 }
             } catch (e: Exception) {
                 ExchangeHandler.isFetching = false
