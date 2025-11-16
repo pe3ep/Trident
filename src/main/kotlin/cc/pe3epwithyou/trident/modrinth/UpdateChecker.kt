@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.future.await
@@ -90,12 +91,12 @@ object UpdateChecker {
     }
 
     private fun sendUpdateAvailableMessage(new: String) {
-        val component = Component.literal("New Trident version available: ").withColor(TridentFont.TRIDENT_COLOR.baseColor)
-            .append(Component.literal(currentVersion?.friendlyString ?: "Unknown").withColor(TridentFont.TRIDENT_COLOR.baseColor))
-            .append(Component.literal(" -> ").withColor(TridentFont.TRIDENT_COLOR.baseColor))
-            .append(Component.literal(new).withColor(TridentFont.TRIDENT_ACCENT.baseColor)).append(
-                Component.literal("\nClick here to download the latest version").withStyle(
-                    Style.EMPTY.withColor(TridentFont.TRIDENT_ACCENT.baseColor).withUnderlined(true)
+        val component = Component.literal("New Trident version available: ").withSwatch(TridentFont.TRIDENT_COLOR)
+            .append(Component.literal(currentVersion?.friendlyString ?: "Unknown").withSwatch(TridentFont.TRIDENT_COLOR))
+            .append(Component.literal(" -> ").withSwatch(TridentFont.TRIDENT_COLOR))
+            .append(Component.literal(new).withSwatch(TridentFont.TRIDENT_ACCENT)).append(
+                Component.literal("\nClick here to download the latest version").withSwatch(TridentFont.TRIDENT_ACCENT).withStyle(
+                    Style.EMPTY.withUnderlined(true)
                         .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
                 )
             )

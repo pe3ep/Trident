@@ -65,6 +65,16 @@ object TridentFont {
         return tridentPrefix.withStyle(style).append(c)
     }
 
+    enum class SwatchType {
+        BASE,
+        MUTED;
+
+        fun getStyle(swatch: Swatch): Style {
+            if (this == BASE) return swatch.baseStyle
+            return swatch.mutedStyle
+        }
+    }
+
     data class Swatch(
         val baseColor: Int,
         val baseShadow: Int,

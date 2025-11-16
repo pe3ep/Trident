@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.state.OverclockState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
@@ -65,11 +66,11 @@ object OverclockClock : ClientTickEvents.EndTick {
 
         companion object {
             fun sendReadyMessage(oc: String) {
-                val component = Component.literal("Your ").withStyle(TridentFont.TRIDENT_COLOR.baseStyle).append(
-                        Component.literal("$oc Overclock").withStyle(TridentFont.TRIDENT_ACCENT.baseStyle)
+                val component = Component.literal("Your ").withSwatch(TridentFont.TRIDENT_COLOR).append(
+                        Component.literal("$oc Overclock").withSwatch(TridentFont.TRIDENT_ACCENT)
                     ).append(
                         Component.literal(" is no longer on cooldown and is ready to be used")
-                            .withStyle(TridentFont.TRIDENT_COLOR.baseStyle)
+                            .withSwatch(TridentFont.TRIDENT_COLOR)
                     )
                 ChatUtils.sendMessage(component, true)
                 Minecraft.getInstance().player?.playSound(

@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.feature.exchange
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.future.await
@@ -36,9 +37,10 @@ object ExchangeLookup {
         val key = Config.Api.key
         if (key.isBlank()) {
             ChatUtils.sendMessage(
-                Component.literal("Your API key is not set. ")
-                    .withStyle(TridentFont.ERROR.baseStyle)
-                    .append(Component.literal("Set it using /trident api setToken <TOKEN>").withStyle(TridentFont.ERROR.mutedStyle))
+                Component.literal("Your API key is not set. ").withSwatch(TridentFont.ERROR).append(
+                        Component.literal("Set it using /trident api setToken <TOKEN>")
+                            .withSwatch(TridentFont.ERROR, TridentFont.SwatchType.MUTED)
+                    )
             )
             ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
             return

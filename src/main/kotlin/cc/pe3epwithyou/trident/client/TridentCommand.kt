@@ -19,6 +19,7 @@ import cc.pe3epwithyou.trident.state.PlayerStateIO
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Command
 import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import com.mojang.brigadier.CommandDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -41,7 +42,7 @@ object TridentCommand {
     private fun notOnIsland(): Boolean {
         if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
             ChatUtils.sendMessage(
-                Component.translatable("trident.not_island").withColor(TridentFont.TRIDENT_COLOR.baseColor)
+                Component.translatable("trident.not_island").withSwatch(TridentFont.TRIDENT_COLOR)
             )
             return true
         }
@@ -101,8 +102,8 @@ object TridentCommand {
             literal("resetDialogPositions") {
                 executes {
                     val c = Component.literal("Saved dialog positions have been ")
-                        .withStyle(TridentFont.TRIDENT_COLOR.baseStyle).append(
-                            Component.literal("successfully reset").withStyle(TridentFont.TRIDENT_ACCENT.baseStyle)
+                        .withSwatch(TridentFont.TRIDENT_COLOR).append(
+                            Component.literal("successfully reset").withSwatch(TridentFont.TRIDENT_ACCENT)
                         )
                     ChatUtils.sendMessage(c)
                 }
@@ -117,9 +118,9 @@ object TridentCommand {
                     PlayerStateIO.load()
                     DialogCollection.refreshOpenedDialogs()
 
-                    val c = Component.literal("Player state has been ").withStyle(TridentFont.TRIDENT_COLOR.baseStyle)
+                    val c = Component.literal("Player state has been ").withSwatch(TridentFont.TRIDENT_COLOR)
                         .append(
-                            Component.literal("successfully reset").withStyle(TridentFont.TRIDENT_ACCENT.baseStyle)
+                            Component.literal("successfully reset").withSwatch(TridentFont.TRIDENT_ACCENT)
                         )
                     ChatUtils.sendMessage(c)
                 }
@@ -168,7 +169,7 @@ object TridentCommand {
                         runMain {
                             ChatUtils.sendMessage(
                                 Component.literal("This incident will be reported.")
-                                    .withStyle(TridentFont.ERROR.baseStyle).withStyle(ChatFormatting.BOLD)
+                                    .withSwatch(TridentFont.ERROR).withStyle(ChatFormatting.BOLD)
                             )
                             jokeCooldown = false
                         }
@@ -199,8 +200,8 @@ object TridentCommand {
                         Config.handler.instance().apiKey = ""
                         Config.handler.save()
                         ChatUtils.sendMessage(
-                            Component.literal("Your API token has been ").withStyle(TridentFont.TRIDENT_COLOR.baseStyle)
-                                .append(Component.literal("reset").withStyle(TridentFont.ERROR.baseStyle))
+                            Component.literal("Your API token has been ").withSwatch(TridentFont.TRIDENT_COLOR)
+                                .append(Component.literal("reset").withSwatch(TridentFont.ERROR))
                         )
                     }
                 }
