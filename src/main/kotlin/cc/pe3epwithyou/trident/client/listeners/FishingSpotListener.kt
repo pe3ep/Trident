@@ -3,14 +3,12 @@ package cc.pe3epwithyou.trident.client.listeners
 import cc.pe3epwithyou.trident.client.events.FishingSpotEvents
 import cc.pe3epwithyou.trident.feature.fishing.FishingSpotParser
 import cc.pe3epwithyou.trident.state.fishing.Perk
-import kotlinx.serialization.Serializable
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.Display
 import net.minecraft.world.entity.projectile.FishingHook
 import net.minecraft.world.phys.AABB
 
 object FishingSpotListener {
-    @Serializable
     data class FishingSpot(val x: Double, val y: Double, val perks: List<Pair<Perk, Double>>)
 
     /**
