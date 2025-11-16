@@ -36,10 +36,10 @@ data class SupremeOverclock(
 @Serializable
 data class OverclockState(
     var isAvailable: Boolean,
-    var duration: Long,
+    var duration: Long = 0,
     var activeUntil: Long = 0,
     var availableIn: Long = 0,
-    var cooldownDuration: Long,
+    var cooldownDuration: Long = 0,
     var isActive: Boolean,
     var isCooldown: Boolean
 )
@@ -107,6 +107,7 @@ object PlayerStateIO {
     private val json = Json {
         prettyPrint = true
         ignoreUnknownKeys = true
+        encodeDefaults = true
     }
 
     fun save() {
@@ -128,6 +129,14 @@ object PlayerStateIO {
         if (!Files.exists(path)) return PlayerState()
         val text = Files.readString(path)
         val serializable = json.decodeFromString<PlayerState>(text)
+
+        // Migration from 1.0.5 -> 1.0.6
+        serializable.supplies.overclocks.unstable.state.duration = 60 * 5
+        serializable.supplies.overclocks.supreme.state.duration = 60 * 10
+
+        serializable.supplies.overclocks.unstable.state.cooldownDuration = 60 * 45
+        serializable.supplies.overclocks.supreme.state.cooldownDuration = 60 * 60
+
         if (serializable.supplies.overclocks.unstable.state.isActive || serializable.supplies.overclocks.unstable.state.isCooldown) {
             OverclockClock.registerHandler(
                 OverclockClock.ClockHandler("Unstable", serializable.supplies.overclocks.unstable.state)
