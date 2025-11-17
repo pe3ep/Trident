@@ -7,7 +7,7 @@ object FishingSpotParser {
     fun parse(text: Component): List<Pair<Perk, Double>> {
         val stripped = text.string.split("\n")
         val perks = mutableListOf<Pair<Perk, Double>>()
-        stripped.subList(4, stripped.lastIndex + 1).forEach { l ->
+        stripped.reversed().forEach { l ->
             val match = Regex("""^.\+(\d+)(?:% | )(.+)""").matchEntire(l) ?: return@forEach
             val perkData = (match.groups[1]?.value?.toDoubleOrNull()) ?: return@forEach
             val perkString = match.groups[2]?.value ?: return@forEach

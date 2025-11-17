@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.client
 
 import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
+import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
@@ -271,6 +272,12 @@ object TridentCommand {
             literal("send_exchange_req") {
                 executes {
                     ExchangeLookup.lookup()
+                }
+            }
+
+            literal("send_current_spot") {
+                executes {
+                    ChatUtils.sendMessage("${FishingSpotListener.currentSpot}")
                 }
             }
         }.register(dispatcher)
