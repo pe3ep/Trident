@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
 import java.util.Optional
 
-class ExchangeFilter(x: Int, y: Int) : AbstractWidget(x, y, 63, 15, Component.empty()) {
+class ExchangeFilterWidget(x: Int, y: Int) : AbstractWidget(x, y, 63, 15, Component.empty()) {
     companion object {
         var showOwnedItems: Boolean = true
     }

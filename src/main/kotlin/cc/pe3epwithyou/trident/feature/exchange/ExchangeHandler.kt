@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.feature.exchange
 
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter
+import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilterWidget
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
@@ -92,7 +92,7 @@ object ExchangeHandler {
         if ("ISLAND EXCHANGE" !in screen.title.string) return true
         if (!inSlotBoundary(slot)) return true
         if (fetchingProgress.isLoading()) return true
-        if (ExchangeFilter.showOwnedItems) return true
+        if (ExchangeFilterWidget.showOwnedItems) return true
 
         val itemName = slot.item.displayName.string.replace(" Token", "")
         return !ownedCosmetics.contains(itemName)
@@ -107,7 +107,7 @@ object ExchangeHandler {
         if (fetchingProgress == FetchProgress.FAILED) return
 
         val itemName = slot.item.displayName.string.replace(" Token", "")
-        if (ownedCosmetics.contains(itemName) && !ExchangeFilter.showOwnedItems) {
+        if (ownedCosmetics.contains(itemName) && !ExchangeFilterWidget.showOwnedItems) {
             graphics.fill(
                 slot.x, slot.y, slot.x + 16, slot.y + 16, 0x325591 opacity 128
             )
@@ -127,7 +127,7 @@ object ExchangeHandler {
         }
     }
 
-    fun renderBackground(graphics: GuiGraphics, left: Int, top: Int) {
+    fun renderLoading(graphics: GuiGraphics, left: Int, top: Int) {
         if (!Config.Global.exchangeImprovements) return
         if (!fetchingProgress.isLoading()) return
         Model(
@@ -137,6 +137,11 @@ object ExchangeHandler {
             left + 160,
             top - 30,
         )
+    }
+
+    // slot 28
+    fun renderNewListingPrice(graphics: GuiGraphics, left: Int, top: Int) {
+
     }
 
     private fun inSlotBoundary(slot: Slot): Boolean {

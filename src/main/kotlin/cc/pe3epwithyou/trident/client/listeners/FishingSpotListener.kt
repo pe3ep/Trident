@@ -9,7 +9,27 @@ import net.minecraft.world.entity.projectile.FishingHook
 import net.minecraft.world.phys.AABB
 
 object FishingSpotListener {
-    data class FishingSpot(val x: Double, val y: Double, val perks: List<Pair<Perk, Double>>)
+    data class FishingSpot(val x: Double, val y: Double, val perks: List<Pair<Perk, Double>>) {
+        override fun hashCode(): Int {
+            var result = x.hashCode()
+            result = 31 * result + y.hashCode()
+            result = 31 * result + perks.hashCode()
+            return result
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as FishingSpot
+
+            if (x != other.x) return false
+            if (y != other.y) return false
+            if (perks != other.perks) return false
+
+            return true
+        }
+    }
 
     /**
      * If this is null then player is not currently fishing.
@@ -28,7 +48,7 @@ object FishingSpotListener {
             currentSpot = null
             return
         }
-        if (spot != null && (currentSpot == null || currentSpot != spot)) {
+        if (spot != null && (currentSpot == null || spot != currentSpot)) {
             currentSpot = spot
             FishingSpotEvents.CAST.invoker().onCast(spot)
         }

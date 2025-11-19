@@ -7,7 +7,7 @@ import cc.pe3epwithyou.trident.feature.CraftableIndicator;
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
 import cc.pe3epwithyou.trident.feature.fishing.TideWindIndicator;
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot;
-import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter;
+import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilterWidget;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.DebugDraw;
 import net.minecraft.client.Minecraft;
@@ -91,7 +91,7 @@ public class AbstractContainerScreenMixin extends Screen {
         Minecraft client = Minecraft.getInstance();
         if (client.screen instanceof ContainerScreen s) {
             if (s.getTitle().getString().contains("ISLAND EXCHANGE")) {
-                ExchangeHandler.INSTANCE.renderBackground(guiGraphics, leftPos, topPos);
+                ExchangeHandler.INSTANCE.renderLoading(guiGraphics, leftPos, topPos);
             }
         }
     }
@@ -102,7 +102,7 @@ public class AbstractContainerScreenMixin extends Screen {
         if (this.getTitle().getString().contains("ISLAND EXCHANGE")) {
             int x = this.leftPos + 32;
             int y = this.topPos - 33;
-            this.addRenderableWidget(new ExchangeFilter(x, y));
+            this.addRenderableWidget(new ExchangeFilterWidget(x, y));
         }
     }
 
