@@ -97,7 +97,6 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                         .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
                 )
         StringWidget(baitComponent, mcFont).at(0, 0, settings = LayoutConstants.LEFT).apply {
-            alignLeft()
             width = 46
         }
 
@@ -118,7 +117,6 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                     Component.literal(" $lineDurability/50").mccFont().withColor(supplies.line.type.color)
                 )
         StringWidget(lineComponent, mcFont).at(0, 1, settings = LayoutConstants.LEFT).apply {
-            alignLeft()
             width = 46
         }
 
@@ -153,7 +151,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
         val augmentLine = supplies.augments.toMutableList()
         if (augmentLine.size < supplies.augmentsAvailable) {
-            for (i in 1..(supplies.augmentsAvailable - augmentLine.size)) {
+            repeat((1..(supplies.augmentsAvailable - augmentLine.size)).count()) {
                 augmentLine.add(Augment.EMPTY_AUGMENT)
             }
         }

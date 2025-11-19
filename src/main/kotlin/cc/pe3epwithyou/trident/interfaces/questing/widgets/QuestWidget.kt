@@ -103,7 +103,6 @@ class QuestWidget(
             .defaultFont()
         if (quest.isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
         val w = StringWidget(progressComponent.append(progress), mcFont)
-        w.alignLeft()
         w.atBottom(0, settings = LayoutConstants.LEFT)
     }
 

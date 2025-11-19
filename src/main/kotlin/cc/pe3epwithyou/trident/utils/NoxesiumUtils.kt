@@ -16,7 +16,7 @@ import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import com.noxcrew.noxesium.NoxesiumFabricMod
-import com.noxcrew.noxesium.feature.skull.SkullContents
+import com.noxcrew.noxesium.feature.skull.SkullSprite
 import com.noxcrew.noxesium.network.NoxesiumPackets
 import com.noxcrew.noxesium.network.clientbound.ClientboundMccGameStatePacket
 import net.fabricmc.loader.api.FabricLoader
@@ -28,11 +28,9 @@ object NoxesiumUtils {
     fun skullComponent(
         uuid: UUID, grayscale: Boolean = false, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F
     ): MutableComponent {
-        return MutableComponent.create(
-            SkullContents(
-                Optional.of(uuid), Optional.empty(), grayscale, advance, ascent, scale
-            )
-        )
+        return SkullSprite.create(
+            uuid, grayscale, advance, ascent, scale
+        ) as MutableComponent
     }
 
     private fun updateGameDialogs(currentGame: Game, game: String) {
@@ -190,10 +188,7 @@ object NoxesiumUtils {
 
         Game.entries.forEach { mccGame ->
             if (mccGame in listOf(
-                    Game.HUB,
-                    Game.FISHING,
-                    Game.PARKOUR_WARRIOR_DOJO,
-                    Game.PARKOUR_WARRIOR_SURVIVOR
+                    Game.HUB, Game.FISHING, Game.PARKOUR_WARRIOR_DOJO, Game.PARKOUR_WARRIOR_SURVIVOR
                 )
             ) return@forEach
 

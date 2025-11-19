@@ -39,7 +39,7 @@ class KillBackground(
         if (player == null && killMethod != null) {
             val c = Component.literal("${killMethod.icon}")
                 .withTridentFont()
-            StringWidget(c, mcFont).alignCenter().add(LayoutSettings.defaults().apply {
+            StringWidget(c, mcFont).add(LayoutSettings.defaults().apply {
                 padding(4, 3, if (isLeft) 2 else 4, 3)
             })
             return@LinearLayout
@@ -60,7 +60,7 @@ class KillBackground(
                     .withTridentFont()
             )
         }
-        StringWidget(c, mcFont).alignCenter().add(LayoutSettings.defaults().apply {
+        StringWidget(c, mcFont).add(LayoutSettings.defaults().apply {
             padding(4, 3, if (isLeft) 2 else 4, 3)
         })
     }
