@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.2.0"
-    id("fabric-loom") version "1.11-SNAPSHOT"
+    id("fabric-loom") version "1.13-SNAPSHOT"
     kotlin("plugin.serialization") version "2.0.20"
     id("maven-publish")
 }
@@ -56,18 +56,12 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
-    include(modImplementation("com.noxcrew.sheeplib:api:1.4.2+1.21.8")!!)
+    include(modImplementation("com.noxcrew.sheeplib:api:1.4.3+1.21.10")!!)
     modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    modImplementation("com.noxcrew.noxesium:fabric:2.7.7")
+    modImplementation("com.noxcrew.noxesium:fabric:2.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
-}
-
-loom {
-    mixin {
-        defaultRefmapName.set("trident.refmap.json")
-    }
 }
 
 tasks.processResources {

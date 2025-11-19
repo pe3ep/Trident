@@ -17,6 +17,7 @@ import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
+import cc.pe3epwithyou.trident.utils.Resources
 import com.mojang.blaze3d.platform.InputConstants
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
@@ -41,7 +42,8 @@ class TridentClient : ClientModInitializer {
 
         settingsKeymapping = KeyBindingHelper.registerKeyBinding(
             KeyMapping(
-                "key.trident.config", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, "category.trident.keys"
+                "key.trident.config", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, KeyMapping.Category.register(
+                    Resources.trident("keys"))
             )
         )
 

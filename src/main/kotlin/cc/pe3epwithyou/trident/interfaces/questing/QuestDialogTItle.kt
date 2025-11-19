@@ -69,7 +69,6 @@ class QuestDialogTitle(
             game,
             font
         )
-        icon.alignRight()
         icon.at(top = theme.dimensions.paddingOuter, right = theme.dimensions.paddingOuter - 1)
     }
 

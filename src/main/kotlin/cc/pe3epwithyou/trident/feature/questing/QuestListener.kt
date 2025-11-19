@@ -94,7 +94,7 @@ object QuestListener {
     }
 
     fun checkIfPlobby(): Boolean {
-        val scoreboard = Minecraft.getInstance().player?.scoreboard ?: return false
+        val scoreboard = Minecraft.getInstance().level?.scoreboard ?: return false
         val obj = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return false
         return obj.displayName.string.contains("Plobby", true)
     }
