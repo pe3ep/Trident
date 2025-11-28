@@ -132,7 +132,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         )
         if (stableOverclocks.isEmpty()) {
             StringWidget(
-                Component.literal("OVERCLOCKS UNAVAILABLE").mccFont().withStyle(ChatFormatting.GOLD), mcFont
+                Component.literal("NONE").mccFont().withStyle(ChatFormatting.GRAY), mcFont
             ).atBottom(0, 2, LayoutConstants.LEFT)
         } else {
             OverclockStackWidget(
@@ -159,7 +159,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         }
         if (augmentLine.isEmpty()) {
             StringWidget(
-                Component.literal("AUGMENTS UNAVAILABLE").mccFont().withStyle(ChatFormatting.GOLD), mcFont
+                Component.literal("NONE").mccFont().withStyle(ChatFormatting.GRAY), mcFont
             ).atBottom(0, 2, LayoutConstants.LEFT)
         } else {
             AugmentStackWidget(
