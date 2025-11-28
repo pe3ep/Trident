@@ -188,12 +188,22 @@ object NoxesiumUtils {
             }
         }
 
+        if (game == "battle_box") {
+            return if (type == Game.BATTLE_BOX_ARENA.subtype) {
+                Game.BATTLE_BOX_ARENA
+            } else {
+                Game.BATTLE_BOX
+            }
+        }
+
         Game.entries.forEach { mccGame ->
             if (mccGame in listOf(
                     Game.HUB,
                     Game.FISHING,
                     Game.PARKOUR_WARRIOR_DOJO,
-                    Game.PARKOUR_WARRIOR_SURVIVOR
+                    Game.PARKOUR_WARRIOR_SURVIVOR,
+                    Game.BATTLE_BOX,
+                    Game.BATTLE_BOX_ARENA
                 )
             ) return@forEach
 
