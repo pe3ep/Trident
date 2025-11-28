@@ -1,19 +1,20 @@
 package cc.pe3epwithyou.trident.utils
 
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
-import cc.pe3epwithyou.trident.utils.DelayedAction.delay
+import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
-import net.minecraft.client.Minecraft
+import net.minecraft.Util
 import java.util.*
 import java.util.concurrent.*
 
 object DelayedAction {
-    private val executorService: ScheduledExecutorService =
-        Executors.newSingleThreadScheduledExecutor { r ->
-            Thread(r, "trident-delay-thread").apply { isDaemon = true }
-        }
-
-    private val tasks: ConcurrentHashMap<UUID, ScheduledFuture<*>> = ConcurrentHashMap()
+    private val tasks: ConcurrentHashMap<UUID, Job> = ConcurrentHashMap()
 
     data class DelayedTask(val id: UUID) {
         /**
@@ -21,9 +22,10 @@ object DelayedAction {
          * @return true if the task was cancelled; false otherwise (already run or already cancelled).
          */
         fun cancel(): Boolean {
-            val future = tasks.remove(id)
+            val future = tasks.remove(id) ?: return false
+            future.cancel()
             ChatUtils.debugLog("Task with id $id was cancelled")
-            return future?.cancel(false) ?: false
+            return true
         }
 
         /**
@@ -41,19 +43,25 @@ object DelayedAction {
     }
 
     /**
-     * Schedule an action to run after [delay] milliseconds.
+     * Schedule an action to run after [delayMs] milliseconds.
      * Returns a DelayedTask that can be used to cancel the task.
      */
-    fun delay(delay: Long, action: () -> Unit): DelayedTask {
+    fun delay(delayMs: Long, action: () -> Unit): DelayedTask {
         val id = UUID.randomUUID()
-        val future: ScheduledFuture<*> = executorService.schedule({
-            // Remove from map as it's about to run (or already running)
+//        val future: ScheduledFuture<*> = executorService.schedule({
+//            // Remove from map as it's about to run (or already running)
+//            tasks.remove(id)
+//            QuestListener.interruptibleTasks.remove(id)
+//            // enqueue back to Minecraft client (main) thread
+//            Minecraft.getInstance().execute(action)
+//        }, delay, TimeUnit.MILLISECONDS)
+        val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
+        val future = CoroutineScope(ctx).launch {
+            delay(delayMs)
             tasks.remove(id)
             QuestListener.interruptibleTasks.remove(id)
-            // enqueue back to Minecraft client (main) thread
-            Minecraft.getInstance().execute(action)
-        }, delay, TimeUnit.MILLISECONDS)
-
+            main(action)
+        }
         tasks[id] = future
         return DelayedTask(id)
     }
@@ -68,7 +76,7 @@ object DelayedAction {
 
     fun closeAllPendingTasks() {
         for ((_, future) in tasks) {
-            future.cancel(false)
+            future.cancel()
         }
         tasks.clear()
     }
@@ -79,7 +87,5 @@ object DelayedAction {
     private fun shutdown() {
         // Cancel tracked futures
         closeAllPendingTasks()
-
-        executorService.shutdownNow()
     }
 }

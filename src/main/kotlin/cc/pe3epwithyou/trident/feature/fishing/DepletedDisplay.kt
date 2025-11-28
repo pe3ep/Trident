@@ -1,7 +1,9 @@
 package cc.pe3epwithyou.trident.feature.fishing
 
 import cc.pe3epwithyou.trident.utils.Title
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
+import kotlinx.coroutines.*
+import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.world.phys.Vec3
@@ -17,64 +19,52 @@ object DepletedDisplay {
 
     fun showDepletedTitle() {
         Title.sendTitle(
-            Component.empty(),
-            depletedTitle,
-            5,
-            20,
-            15
+            Component.empty(), depletedTitle, 5, 20, 15
         )
-        DepletedTimer.INSTANCE.startLoop(depletedTitle, 10)
+        DepletedTimer.startLoop(depletedTitle, 10)
     }
 
-    class DepletedTimer : ClientTickEvents.EndTick {
+    object DepletedTimer {
         private var ticks: Long = 0
         private var playerPosition: Vec3 = Vec3(0.0, 0.0, 0.0)
         private var title: Component = depletedTitle
         private var castAt: Instant? = null
+        private var job: Job? = null
+
         fun startLoop(component: Component, waitFor: Long) {
             this.playerPosition = Minecraft.getInstance().player?.position()!!
-            this.ticks = waitFor
+            this.ticks = waitFor * 50
             this.title = component
             this.castAt = Instant.now()
+
+            this.job = CoroutineScope(Util.backgroundExecutor().asCoroutineDispatcher()).launch {
+                while (true) {
+                    delay(ticks)
+                    ticks = 100
+                    val currentPos = Minecraft.getInstance().player?.position() ?: Vec3(0.0, 0.0, 0.0)
+                    if ((castAt != null && hasHourPassed(castAt!!)) || currentPos != playerPosition) {
+                        stopLoop()
+                        break
+                    }
+                    main {
+                        Title.sendTitle(
+                            Component.empty(), title, 0, 10, 5, false
+                        )
+                    }
+                }
+            }
         }
 
         fun stopLoop() {
             playerPosition = Vec3(0.0, 0.0, 0.0)
             this.ticks = 0
             this.castAt = null
-        }
-
-        override fun onEndTick(client: Minecraft) {
-            if (--this.ticks == 0L) {
-                if (castAt != null && hasHourPassed(castAt!!)) {
-                    stopLoop()
-                }
-                Title.sendTitle(
-                    Component.empty(),
-                    this.title,
-                    0,
-                    10,
-                    5,
-                    false
-                )
-                if ((Minecraft.getInstance().player?.position() ?: Vec3(0.0, 0.0, 0.0)) == playerPosition) {
-                    this.ticks = 2
-                }
-            }
-        }
-
-        companion object {
-            val INSTANCE: DepletedTimer = DepletedTimer()
-            fun register() {
-                ClientTickEvents.END_CLIENT_TICK.register(INSTANCE)
-            }
+            job?.cancel()
         }
 
         fun hasHourPassed(saved: Instant, zone: ZoneId = ZoneId.systemDefault()): Boolean {
             val now = Instant.now().atZone(zone).toInstant()
-            val savedHourStart = saved.atZone(zone)
-                .truncatedTo(ChronoUnit.HOURS)
-                .toInstant()
+            val savedHourStart = saved.atZone(zone).truncatedTo(ChronoUnit.HOURS).toInstant()
             val nextHourStart = savedHourStart.plus(1, ChronoUnit.HOURS)
             return !now.isBefore(nextHourStart)
         }

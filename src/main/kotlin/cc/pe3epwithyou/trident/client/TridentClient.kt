@@ -50,7 +50,6 @@ class TridentClient : ClientModInitializer {
 
         ChatEventListener.register()
         ChestScreenListener.register()
-        DepletedDisplay.DepletedTimer.register()
         KillChatListener.register()
         DelayedAction.init()
         QuestListener.register()

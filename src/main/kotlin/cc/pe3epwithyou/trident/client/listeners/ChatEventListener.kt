@@ -79,7 +79,7 @@ object ChatEventListener {
             }
 
             if (message.isStockReplenished() && Config.Fishing.flashIfDepleted) {
-                DepletedDisplay.DepletedTimer.INSTANCE.stopLoop()
+                DepletedDisplay.DepletedTimer.stopLoop()
             }
 
             if (message.isCaughtMessage() && catchFinished) {
