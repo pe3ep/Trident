@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.utils.extensions
 
+import cc.pe3epwithyou.trident.utils.ChatUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
@@ -8,11 +9,31 @@ import net.minecraft.world.item.TooltipFlag
 
 object ItemStackExtensions {
     fun ItemStack.getLore(): List<Component> {
-        if (Minecraft.getInstance().player == null) return listOf(Component.empty())
+        val player = Minecraft.getInstance().player ?: return listOf(Component.empty())
+
         return this.getTooltipLines(
             Item.TooltipContext.EMPTY,
-            Minecraft.getInstance().player,
+            player,
             TooltipFlag.Default.NORMAL
         )
+    }
+
+    fun ItemStack.safeGetLine(index: Int): Component? {
+        val c = this.getLore().getOrNull(index)
+        if (c == null) {
+            ChatUtils.warn("Failed to get line $index on item " + this.hoverName.string)
+        }
+        return c
+    }
+
+    fun ItemStack.findInLore(predicate: Regex): MatchResult? {
+        val c = this.getLore().find { component ->
+            predicate.containsMatchIn(component.string)
+        }
+        if (c == null) {
+            ChatUtils.warn("Failed to find predicate $predicate in item ${this.hoverName.string}")
+            return null
+        }
+        return predicate.find(c.string)
     }
 }

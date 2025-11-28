@@ -80,7 +80,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         }
 
         // Bait component
-        val baitAmount = supplies.bait.amount ?: "0"
+        val baitAmount = supplies.bait.amount ?: 0
         val baitIcon: String = when (supplies.bait.type) {
             Rarity.COMMON -> "\uE007"
             Rarity.UNCOMMON -> "\uE008"
@@ -98,11 +98,10 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 )
         StringWidget(baitComponent, mcFont).at(0, 0, settings = LayoutConstants.LEFT).apply {
             alignLeft()
-            width = 46
         }
 
         // Line component
-        val lineDurability = supplies.line.uses ?: "0"
+        val lineDurability = supplies.line.uses ?: 0
         val lineIcon: String = when (supplies.line.type) {
             Rarity.COMMON -> "\uE001"
             Rarity.UNCOMMON -> "\uE002"
@@ -112,14 +111,15 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             Rarity.MYTHIC -> "\uE006"
         }
 
+        val lineAmount = supplies.line.amount ?: 0
+
         val lineComponent =
             Component.literal(lineIcon).withTridentFont().append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(
-                    Component.literal(" $lineDurability/50").mccFont().withColor(supplies.line.type.color)
+                    Component.literal(" $lineDurability/$lineAmount").mccFont().withColor(supplies.line.type.color)
                 )
         StringWidget(lineComponent, mcFont).at(0, 1, settings = LayoutConstants.LEFT).apply {
             alignLeft()
-            width = 46
         }
 
         // Overclocks

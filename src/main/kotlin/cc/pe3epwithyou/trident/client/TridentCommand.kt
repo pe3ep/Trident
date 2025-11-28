@@ -21,6 +21,7 @@ import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Command
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
+import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import com.mojang.brigadier.CommandDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -30,7 +31,6 @@ import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
 import net.minecraft.Util
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object TridentCommand {
@@ -51,10 +51,6 @@ object TridentCommand {
     }
 
     var jokeCooldown: Boolean = false
-
-    private fun runMain(block: () -> Unit) {
-        Minecraft.getInstance().execute(block)
-    }
 
     fun registerCommands(dispatcher: CommandDispatcher<FabricClientCommandSource>) {
         /**
@@ -119,10 +115,11 @@ object TridentCommand {
                     PlayerStateIO.load()
                     DialogCollection.refreshOpenedDialogs()
 
-                    val c = Component.literal("Player state has been successfully ").withSwatch(TridentFont.TRIDENT_COLOR)
-                        .append(
-                            Component.literal("reset").withSwatch(TridentFont.ERROR)
-                        )
+                    val c =
+                        Component.literal("Player state has been successfully ").withSwatch(TridentFont.TRIDENT_COLOR)
+                            .append(
+                                Component.literal("reset").withSwatch(TridentFont.ERROR)
+                            )
                     ChatUtils.sendMessage(c)
                 }
             }
@@ -137,22 +134,22 @@ object TridentCommand {
 
                     val scope = Util.backgroundExecutor().asCoroutineDispatcher()
                     CoroutineScope(scope).launch {
-                        runMain {
+                        main {
                             ChatUtils.sendMessage("Requesting autofish.jar...")
                         }
 
                         delay(4000)
-                        runMain {
+                        main {
                             ChatUtils.sendMessage("Received a response from the server")
                         }
 
                         delay(2000)
-                        runMain {
+                        main {
                             ChatUtils.sendMessage("It says the following:")
                         }
 
                         delay(3000)
-                        runMain {
+                        main {
                             ChatUtils.sendMessage(
                                 Component.literal("Did you really just try to enable autofishing?")
                                     .withStyle(ChatFormatting.AQUA)
@@ -160,17 +157,17 @@ object TridentCommand {
                         }
 
                         delay(3000)
-                        runMain {
+                        main {
                             ChatUtils.sendMessage(
                                 Component.literal("Are we serious right meow bro?").withStyle(ChatFormatting.AQUA)
                             )
                         }
 
                         delay(3000)
-                        runMain {
+                        main {
                             ChatUtils.sendMessage(
-                                Component.literal("This incident will be reported.")
-                                    .withSwatch(TridentFont.ERROR).withStyle(ChatFormatting.BOLD)
+                                Component.literal("This incident will be reported.").withSwatch(TridentFont.ERROR)
+                                    .withStyle(ChatFormatting.BOLD)
                             )
                             jokeCooldown = false
                         }

@@ -15,7 +15,9 @@ import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
+import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
+import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -128,12 +130,19 @@ object ChestScreenListener {
             TridentClient.playerState.supplies.line.uses = null
             TridentClient.playerState.supplies.line.type = Rarity.COMMON
         } else {
-            val lineLore = lineSlot.item.getLore()
-            val lineUses =
-                lineLore.getOrNull(15)?.string?.split(" ")?.getOrNull(2)?.split("/")?.getOrNull(0)?.replace(",", "")
-                    ?.toIntOrNull()
+//            val lineUses =
+//                lineLore.getOrNull(15)?.string?.split(" ")?.getOrNull(2)?.split("/")?.getOrNull(0)?.replace(",", "")
+//                    ?.toIntOrNull()
+            val match = lineSlot.item.findInLore(Regex("""Uses Remaining: ((?:\d|,)+)/((?:\d|,)+)"""))
+            var lineUses: Int? = null
+            var lineAmount: Int? = null
+            match?.groups?.let {
+                lineUses = it[1]?.value?.parseFormattedInt()
+                lineAmount = it[2]?.value?.parseFormattedInt()
+            }
 
             TridentClient.playerState.supplies.line.uses = lineUses
+            TridentClient.playerState.supplies.line.amount = lineAmount
 
             val lineRarityName = lineItemName.split(" ").firstOrNull()
             TridentClient.playerState.supplies.line.type = parseRarity(lineRarityName ?: "")
@@ -197,6 +206,7 @@ object ChestScreenListener {
         DialogCollection.refreshDialog("supplies")
     }
 
+    // TODO: Use safer methods to get data from a slot
     fun findWayfinderData(screen: ContainerScreen) {
         if ("FISHING ISLANDS" !in screen.title.string) return
 
