@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
-public class PacketListenerMixin {
+public class ClientPacketListenerMixin {
     @Inject(method = "setSubtitleText", at = @At("TAIL"))
     private void subtitleText(ClientboundSetSubtitleTextPacket clientboundSetSubtitleTextPacket, CallbackInfo ci) {
         FocusGame.INSTANCE.handleSubtitle(clientboundSetSubtitleTextPacket.text().getString());

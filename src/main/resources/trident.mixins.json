@@ -14,7 +14,7 @@
     "FontLoaderMixin",
     "GuiAccessor",
     "JoinIslandMixin",
-    "PacketListenerMixin"
+    "ClientPacketListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

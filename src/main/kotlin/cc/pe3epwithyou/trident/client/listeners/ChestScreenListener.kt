@@ -16,7 +16,7 @@ import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
-import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
+import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.safeGetLine
 import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screens.Screen
@@ -107,10 +107,9 @@ object ChestScreenListener {
         // Process bait slot (slot 19)
         val baitSlot = screen.menu.slots[19]
         val baitItemName = baitSlot.item.displayName.string
-        val baitLore = baitSlot.item.getLore()
 
         if (!baitItemName.contains("Empty Bait Slot")) {
-            val baitCount = baitLore.getOrNull(15)?.string?.split(" ")?.getOrNull(2)?.replace(",", "")?.toIntOrNull()
+            val baitCount = baitSlot.item.safeGetLine(15)?.string?.split(" ")?.getOrNull(2)?.parseFormattedInt()
 
             TridentClient.playerState.supplies.bait.amount = baitCount
             ChatUtils.debugLog("Bait found - ${TridentClient.playerState.supplies.bait.amount}")
@@ -162,8 +161,7 @@ object ChestScreenListener {
 
                 rawName.contains("Empty Supply Slot") -> null
                 else -> {
-                    val cleanedName =
-                        rawName.replace("A.N.G.L.R. ", "").replace("[", "").replace("]", "").replace(" Augment", "")
+                    val cleanedName = rawName.replace(Regex("""(A\.N\.G\.L\.R\.|\[|]|Augment)"""), "").trim()
                     getAugmentByName(cleanedName)
                 }
             }
@@ -211,7 +209,7 @@ object ChestScreenListener {
         if ("FISHING ISLANDS" !in screen.title.string) return
 
         // temperate
-        val temperateDataLine = screen.menu.slots[24].item.getLore().getOrNull(13)?.string
+        val temperateDataLine = screen.menu.slots[24].item.safeGetLine(13)?.string
         if (temperateDataLine != null && temperateDataLine.contains("Wayfinder Data: ")) {
             val temperateData = temperateDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
             TridentClient.playerState.wayfinderData.temperate.data = temperateData
@@ -222,7 +220,7 @@ object ChestScreenListener {
         }
 
         // tropical
-        val tropicalDataLine = screen.menu.slots[33].item.getLore().getOrNull(13)?.string
+        val tropicalDataLine = screen.menu.slots[33].item.safeGetLine(13)?.string
         if (tropicalDataLine != null && tropicalDataLine.contains("Wayfinder Data: ")) {
             val tropicalData = tropicalDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
             TridentClient.playerState.wayfinderData.tropical.data = tropicalData
@@ -233,7 +231,7 @@ object ChestScreenListener {
         }
 
         // barren
-        val barrenDataLine = screen.menu.slots[42].item.getLore().getOrNull(13)?.string
+        val barrenDataLine = screen.menu.slots[42].item.safeGetLine(13)?.string
         if (barrenDataLine != null && barrenDataLine.contains("Wayfinder Data: ")) {
             val barrenData = barrenDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
             TridentClient.playerState.wayfinderData.barren.data = barrenData
@@ -256,11 +254,11 @@ object ChestScreenListener {
         val researchSlots = listOf(12, 13, 14, 15, 16)
         val researchTypes = mapOf(12 to "Strong", 13 to "Wise", 14 to "Glimmering", 15 to "Greedy", 16 to "Lucky")
         for (slot in researchSlots) {
-            val tierLine = screen.menu.slots[slot].item.getLore()[0].string.split("(")[1]
+            val tierLine = screen.menu.slots[slot].item.safeGetLine(0)?.string?.split("(")?.getOrNull(1) ?: continue
             val tierLineNoBrackets = tierLine.dropLast(2)
             val tier = tierLineNoBrackets.split("/")[0].replace(",", "").toIntOrNull()!!
 
-            val progress = screen.menu.slots[slot].item.getLore()[4].string
+            val progress = screen.menu.slots[slot].item.safeGetLine(4)?.string ?: continue
             if (progress.contains("Progress: ")) {
                 val amount = progress.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
                 val total = progress.split(": ")[1].split("/")[1].replace(",", "").toIntOrNull()!!
