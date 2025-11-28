@@ -24,12 +24,13 @@ class QuestDialogTitle(
     private val game: Component,
     private val gameColor: Int = FALLBACK_COLOR
 ) :
-    CompoundWidget(0, 0, dialog.width, FONT_HEIGHT + dialog.theme.dimensions.paddingOuter * 2),
+    CompoundWidget(0, 0, dialog.width, FONT_HEIGHT + PADDING * 2),
     DialogTitleWidget,
     Themed by dialog {
     companion object {
         const val FONT_HEIGHT = 7
-        const val PADDING = 1
+        const val GAP = 1
+        private const val PADDING = 4
         val FALLBACK_COLOR = 0x111111 opacity 127
     }
 
@@ -42,10 +43,10 @@ class QuestDialogTitle(
 
     override val layout: CanvasLayout = CanvasLayout(
         100,
-        FONT_HEIGHT + theme.dimensions.paddingOuter * 2,
+        FONT_HEIGHT + PADDING * 2,
     ).apply {
         val font = Minecraft.getInstance().font
-        val rightPadding = height + PADDING
+        val rightPadding = height + GAP
 
         val w = StringWidget(
             component,
@@ -54,13 +55,13 @@ class QuestDialogTitle(
         if (tooltip != null) {
             w.setTooltip(tooltip)
         }
-        w.at(top = theme.dimensions.paddingOuter, left = theme.dimensions.paddingOuter)
+        w.at(top = PADDING, left = PADDING)
 
         if (isCloseable) {
             IconButton(
                 theme.icons.close,
-                marginY = theme.dimensions.paddingOuter + 1,
-                marginX = theme.dimensions.paddingOuter,
+                marginY = PADDING + 1,
+                marginX = PADDING,
             ) { _, _ -> dialog.close() }
                 .at(top = 0, right = rightPadding)
         }
@@ -70,7 +71,7 @@ class QuestDialogTitle(
             font
         )
         icon.alignRight()
-        icon.at(top = theme.dimensions.paddingOuter, right = theme.dimensions.paddingOuter - 1)
+        icon.at(top = PADDING, right = PADDING - 1)
     }
 
     override fun getRectangle(): ScreenRectangle = super<DialogTitleWidget>.getRectangle()
@@ -84,7 +85,7 @@ class QuestDialogTitle(
         graphics.fillRoundedAll(
             x,
             y,
-            getWidth() - getHeight() - PADDING,
+            getWidth() - getHeight() - GAP,
             getHeight(),
             color
         )

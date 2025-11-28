@@ -27,11 +27,12 @@ class DialogTitle(
     private val tab: Tab? = null,
     private val tabView: TabView? = null
 ) :
-    CompoundWidget(0, 0, dialog.width, FONT_HEIGHT + dialog.theme.dimensions.paddingOuter * 2),
+    CompoundWidget(0, 0, dialog.width, FONT_HEIGHT + PADDING * 2),
     DialogTitleWidget,
     Themed by dialog {
     companion object {
         const val FONT_HEIGHT = 7
+        const val PADDING = 4
     }
 
     override fun getWidth(): Int = layout.width
@@ -43,7 +44,7 @@ class DialogTitle(
 
     override val layout: CanvasLayout = CanvasLayout(
         100,
-        FONT_HEIGHT + theme.dimensions.paddingOuter * 2,
+        FONT_HEIGHT + PADDING * 2,
     ).apply {
         val font = Minecraft.getInstance().font
         val w = StringWidget(
@@ -53,12 +54,12 @@ class DialogTitle(
         if (tooltip != null) {
             w.setTooltip(tooltip)
         }
-        w.at(top = theme.dimensions.paddingOuter, left = theme.dimensions.paddingOuter)
+        w.at(top = PADDING, left = PADDING)
         if (isCloseable) {
             IconButton(
                 theme.icons.close,
-                marginY = theme.dimensions.paddingOuter + 1,
-                marginX = theme.dimensions.paddingOuter,
+                marginY = PADDING + 1,
+                marginX = PADDING,
             ) { _, _ -> dialog.close() }
                 .at(top = 0, right = 0)
         }
@@ -67,8 +68,8 @@ class DialogTitle(
                 theme,
                 tab,
                 tabView,
-                marginX = theme.dimensions.paddingOuter,
-                marginY = theme.dimensions.paddingOuter,
+                marginX = PADDING,
+                marginY = PADDING,
             ).at(top = 0, right = 0)
         }
     }
