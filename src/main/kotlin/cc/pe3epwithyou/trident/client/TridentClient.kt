@@ -52,7 +52,6 @@ class TridentClient : ClientModInitializer {
 
         ChatEventListener.register()
         ChestScreenListener.register()
-        DepletedDisplay.DepletedTimer.register()
         KillChatListener.register()
         DelayedAction.init()
         QuestListener.register()
@@ -65,14 +64,14 @@ class TridentClient : ClientModInitializer {
             client.setScreen(Config.getScreen(client.screen))
         })
 
-        ClientTickEvents.END_CLIENT_TICK.register { _ ->
+        ClientTickEvents.END_CLIENT_TICK.register {
             if (!MCCIState.isOnIsland()) return@register
             FishingSpotListener.handle()
         }
 
 //        Register Questing events
-        QuestingEvents.INCREMENT_ACTIVE.register { ctx ->
-            QuestStorage.applyIncrement(ctx)
+        QuestingEvents.INCREMENT_ACTIVE.register {
+            QuestStorage.applyIncrement(it)
         }
 
         try {
@@ -86,9 +85,9 @@ class TridentClient : ClientModInitializer {
 
         ClientLifecycleEvents.CLIENT_STOPPING.register { onShutdownClient() }
 
-        FishingSpotEvents.CAST.register { spot ->
+        FishingSpotEvents.CAST.register {
             if (Config.Debug.enableLogging) {
-                ChatUtils.sendMessage("Cast into spot $spot")
+                ChatUtils.sendMessage("Cast into spot $it")
             }
         }
     }

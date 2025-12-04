@@ -21,6 +21,13 @@ enum class Game(
         primaryColor = 0x88B932,
         icon = "_fonts/icon/game_icons/game_battle_box_small.png"
     ),
+    BATTLE_BOX_ARENA(
+        "Battle Box Arena",
+        "battle_box",
+        "arena",
+        primaryColor = 0x88B932,
+        icon = "_fonts/icon/game_icons/game_battle_box_small.png"
+    ),
     PARKOUR_WARRIOR_SURVIVOR(
         "Parkour Warrior Survivor",
         "parkour_warrior",

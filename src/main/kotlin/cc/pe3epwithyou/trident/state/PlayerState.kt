@@ -17,7 +17,7 @@ import java.nio.file.StandardOpenOption
 data class Bait(var type: Rarity = Rarity.COMMON, var amount: Int? = null)
 
 @Serializable
-data class Line(var type: Rarity = Rarity.COMMON, var uses: Int? = null)
+data class Line(var type: Rarity = Rarity.COMMON, var uses: Int? = null, var amount: Int? = null)
 
 @Serializable
 data class UnstableOverclock(

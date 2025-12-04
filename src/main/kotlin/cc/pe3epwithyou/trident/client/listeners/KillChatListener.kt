@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component
 
 object KillChatListener {
     val killfeedGames = listOf(
-        Game.BATTLE_BOX, Game.DYNABALL, Game.SKY_BATTLE, Game.ROCKET_SPLEEF_RUSH
+        Game.BATTLE_BOX, Game.BATTLE_BOX_ARENA, Game.DYNABALL, Game.SKY_BATTLE, Game.ROCKET_SPLEEF_RUSH
     )
 
     private val fallbackColor = 0xFFFFFF opacity 128
