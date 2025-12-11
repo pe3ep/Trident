@@ -38,7 +38,7 @@ class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         }
 
         fun applyKillAssist() {
-            val last = killWidgets.last()
+            val last = killWidgets.lastOrNull() ?: return
             killWidgets.removeLast()
             killWidgets.add(
                 KillWidget(

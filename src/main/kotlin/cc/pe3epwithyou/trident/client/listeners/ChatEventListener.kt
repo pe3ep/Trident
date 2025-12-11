@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.client.listeners
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
@@ -72,8 +72,8 @@ object ChatEventListener {
 
             // Check if player received bait and mark supplies as desynced
             if (message.isReceivedItem() && "Bait" in message.string) {
-                if (!TridentClient.playerState.supplies.baitDesynced) {
-                    TridentClient.playerState.supplies.baitDesynced = true
+                if (!Trident.playerState.supplies.baitDesynced) {
+                    Trident.playerState.supplies.baitDesynced = true
                     DialogCollection.refreshDialog("supplies")
                 }
             }
@@ -99,13 +99,13 @@ object ChatEventListener {
                     return@allowMessage true
                 }
 
-                TridentClient.playerState.supplies.line.uses?.let {
-                    if (it != 0) TridentClient.playerState.supplies.line.uses = it - 1
+                Trident.playerState.supplies.line.uses?.let {
+                    if (it != 0) Trident.playerState.supplies.line.uses = it - 1
                 }
 
                 if (triggerBait) {
-                    TridentClient.playerState.supplies.bait.amount?.let {
-                        if (it != 0) TridentClient.playerState.supplies.bait.amount = it - 1
+                    Trident.playerState.supplies.bait.amount?.let {
+                        if (it != 0) Trident.playerState.supplies.bait.amount = it - 1
                     }
                 }
 

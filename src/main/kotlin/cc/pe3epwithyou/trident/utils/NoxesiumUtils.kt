@@ -15,16 +15,14 @@ import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
-import com.noxcrew.noxesium.NoxesiumFabricMod
-import com.noxcrew.noxesium.feature.skull.SkullContents
-import com.noxcrew.noxesium.network.NoxesiumPackets
-import com.noxcrew.noxesium.network.clientbound.ClientboundMccGameStatePacket
-import net.fabricmc.loader.api.FabricLoader
+import com.noxcrew.noxesium.core.fabric.feature.skull.SkullContents
+import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
+import com.noxcrew.noxesium.core.mcc.ClientboundMccServerPacket
+import com.noxcrew.noxesium.core.mcc.MccPackets
 import net.minecraft.network.chat.MutableComponent
 import java.util.*
 
 object NoxesiumUtils {
-
     fun skullComponent(
         uuid: UUID, grayscale: Boolean = false, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F
     ): MutableComponent {
@@ -35,7 +33,7 @@ object NoxesiumUtils {
         )
     }
 
-    private fun updateGameDialogs(currentGame: Game, game: String) {
+    private fun updateGameDialogs(currentGame: Game) {
         DialogCollection.clear()
         KillFeedDialog.clearKills()
 
@@ -59,10 +57,10 @@ object NoxesiumUtils {
                 DialogCollection.open(k, QuestingDialog(10, 10, k))
             }
         }
-        if (currentGame == Game.HUB && game != "" && Config.Questing.showInLobby) {
+        if (currentGame == Game.HUB && Config.Questing.showInLobby) {
             val k = "questing"
             if (!Config.Questing.enabled) return
-            QuestingDialog.currentGame = Game.entries.filter { g -> g.server == game }.getOrNull(0) ?: return
+            QuestingDialog.currentGame = Game.entries.filter { g -> g == currentGame }.getOrNull(0) ?: return
             DialogCollection.open(k, QuestingDialog(10, 10, k))
         }
     }
@@ -98,28 +96,18 @@ object NoxesiumUtils {
     }
 
     fun registerListeners() {
-        if (FabricLoader.getInstance().isModLoaded("noxesium")) {
-            NoxesiumFabricMod.initialize()
-        }
-
-        NoxesiumPackets.CLIENT_MCC_SERVER.addListener(this) { _, packet, _ ->
-            val server = packet.serverType
-            val type = packet.subType
-            val game = packet.associatedGame
+        MccPackets.CLIENTBOUND_MCC_SERVER.addListener(this, ClientboundMccServerPacket::class.java) { _, packet, _ ->
+            val server = packet.server
+            val types = packet.types
 
             ChatUtils.debugLog(
-                "NOX Packet received:\nserver: $server\ntype: $type\ngame: $game"
+                "NOX Packet received:\nserver: $server\ntypes: $types"
             )
 
+            updateFishingState(types.last())
 
-            if (Config.Debug.logForScrapers) (ChatUtils.info(
-                "Got Nox packet CLIENT_MCC_SERVER: serverType:$server subType:$type associatedGame:$game"
-            ))
-
-            updateFishingState(type)
-
-            val currentGame = getCurrentGame(server, type, game)
-            updateGameDialogs(currentGame, game)
+            val currentGame = getCurrentGame(types)
+            updateGameDialogs(currentGame)
             if (currentGame in KillChatListener.killfeedGames) {
                 KillFeedDialog.clearKills()
             }
@@ -129,7 +117,7 @@ object NoxesiumUtils {
             }
         }
 
-        NoxesiumPackets.CLIENT_MCC_GAME_STATE.addListener(this) { _, packet, _ ->
+        MccPackets.CLIENTBOUND_MCC_GAME_STATE.addListener(this, ClientboundMccGameStatePacket::class.java) { _, packet, _ ->
             removeKillsIfNeeded(packet)
             if (packet.phaseType == "PLAY" || packet.stage == "inround") {
                 handleTimedQuests()
@@ -145,59 +133,36 @@ object NoxesiumUtils {
                 totalRounds: ${packet.totalRounds}
                 """.trimIndent()
             )
-            if (Config.Debug.logForScrapers) (ChatUtils.info(
-                """
-                        Got Nox packet CLIENT_MCC_GAME_STATE:
-                        mapID:${packet.mapId}
-                        mapName:${packet.mapName}
-                        round:${packet.round}
-                        stage:${packet.stage}
-                        phaseType:${packet.phaseType}
-                        totalRounds:${packet.totalRounds}
-                """.trimIndent()
-            ))
         }
     }
 
     private fun updateFishingState(island: String) {
         MCCIState.fishingState.isGrotto = island.contains("grotto", ignoreCase = true)
 
-        ClimateType.entries.forEach { climate ->
-            if (island.contains(climate.prefix, ignoreCase = true)) {
-                MCCIState.fishingState.climate.climateType = climate
+        ClimateType.entries.forEach {
+            if (island.contains(it.prefix, ignoreCase = true)) {
+                MCCIState.fishingState.climate.climateType = it
                 return
             }
         }
     }
 
-    private fun getCurrentGame(server: String, type: String, game: String): Game {
-        if (server == Game.HUB.server) {
-            return when {
-                type.contains("temperate", ignoreCase = true) -> Game.FISHING
-                type.contains("tropical", ignoreCase = true) -> Game.FISHING
-                type.contains("barren", ignoreCase = true) -> Game.FISHING
-                else -> Game.HUB
-            }
+    private fun getCurrentGame(types: List<String>): Game {
+        if (types.size < 2) {
+            ChatUtils.error("Returned server types were too short")
+            return Game.HUB
         }
 
-        if (game == "parkour_warrior") {
-            return if (type == Game.PARKOUR_WARRIOR_SURVIVOR.subtype) {
-                Game.PARKOUR_WARRIOR_SURVIVOR
-            } else {
-                Game.PARKOUR_WARRIOR_DOJO
-            }
+        if (types[0] == "lobby" && types[1] == "game_lobbies") {
+            return parseGameString(types[2])
         }
 
-        if (game == "battle_box") {
-            return if (type == Game.BATTLE_BOX_ARENA.subtype) {
-                Game.BATTLE_BOX_ARENA
-            } else {
-                Game.BATTLE_BOX
-            }
-        }
+        return Game.HUB
+    }
 
-        Game.entries.forEach { mccGame ->
-            if (mccGame in listOf(
+    private fun parseGameString(game: String): Game {
+        Game.entries.forEach {
+            if (it in listOf(
                     Game.HUB,
                     Game.FISHING,
                     Game.PARKOUR_WARRIOR_DOJO,
@@ -207,11 +172,55 @@ object NoxesiumUtils {
                 )
             ) return@forEach
 
-            if (mccGame.server == game) {
-                return mccGame
+            if (it.server == game) {
+                return it
             }
         }
-
         return Game.HUB
     }
+//
+//    private fun getCurrentGameOld(server: String, types: List<String>): Game {
+//        if (server == Game.HUB.server) {
+//            return when {
+//                type.contains("temperate", ignoreCase = true) -> Game.FISHING
+//                type.contains("tropical", ignoreCase = true) -> Game.FISHING
+//                type.contains("barren", ignoreCase = true) -> Game.FISHING
+//                else -> Game.HUB
+//            }
+//        }
+//
+//        if (game == "parkour_warrior") {
+//            return if (type == Game.PARKOUR_WARRIOR_SURVIVOR.subtype) {
+//                Game.PARKOUR_WARRIOR_SURVIVOR
+//            } else {
+//                Game.PARKOUR_WARRIOR_DOJO
+//            }
+//        }
+//
+//        if (game == "battle_box") {
+//            return if (type == Game.BATTLE_BOX_ARENA.subtype) {
+//                Game.BATTLE_BOX_ARENA
+//            } else {
+//                Game.BATTLE_BOX
+//            }
+//        }
+//
+//        Game.entries.forEach {
+//            if (it in listOf(
+//                    Game.HUB,
+//                    Game.FISHING,
+//                    Game.PARKOUR_WARRIOR_DOJO,
+//                    Game.PARKOUR_WARRIOR_SURVIVOR,
+//                    Game.BATTLE_BOX,
+//                    Game.BATTLE_BOX_ARENA
+//                )
+//            ) return@forEach
+//
+//            if (it.server == game) {
+//                return it
+//            }
+//        }
+//
+//        return Game.HUB
+//    }
 }

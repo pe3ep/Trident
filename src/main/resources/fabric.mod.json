@@ -16,7 +16,7 @@
   "icon": "assets/trident/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": [
+    "noxesium": [
       "cc.pe3epwithyou.trident.client.TridentClient"
     ],
     "main": [

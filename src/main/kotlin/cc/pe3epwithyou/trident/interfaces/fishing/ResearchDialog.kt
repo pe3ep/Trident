@@ -1,17 +1,10 @@
 package cc.pe3epwithyou.trident.interfaces.fishing
 
-import cc.pe3epwithyou.trident.client.TridentClient
-import cc.pe3epwithyou.trident.interfaces.fishing.widgets.AugmentStackWidget
-import cc.pe3epwithyou.trident.interfaces.fishing.widgets.OverclockStackWidget
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.ResearchWidget
-import cc.pe3epwithyou.trident.interfaces.fishing.widgets.WayfinderWidget
-import cc.pe3epwithyou.trident.interfaces.questing.widgets.QuestWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
-import cc.pe3epwithyou.trident.state.Rarity
-import cc.pe3epwithyou.trident.state.WayfinderStatus
-import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
@@ -24,7 +17,6 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.MultiLineTextWidget
 import net.minecraft.client.gui.components.StringWidget
-import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -53,7 +45,7 @@ class ResearchDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
-        val research = TridentClient.playerState.research
+        val research = Trident.playerState.research
 
         if (research.needsUpdating or research.researchTypes.isEmpty()) {
             StringWidget(
@@ -79,7 +71,7 @@ class ResearchDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             return@grid
         }
 
-        for (research in TridentClient.playerState.research.researchTypes) {
+        for (research in Trident.playerState.research.researchTypes) {
             ResearchWidget(research, this@ResearchDialog).atBottom(0, settings = LayoutConstants.LEFT)
         }
     }

@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.client
 
-import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
+import cc.pe3epwithyou.trident.Trident.Companion.playerState
 import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.config.Config
@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.debug.StateDialog
 import cc.pe3epwithyou.trident.interfaces.experiment.TabbedDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.ResearchDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
@@ -23,6 +24,7 @@ import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import com.mojang.brigadier.CommandDispatcher
+import com.noxcrew.sheeplib.DialogContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -275,6 +277,12 @@ object TridentCommand {
             literal("send_current_spot") {
                 executes {
                     ChatUtils.sendMessage("${FishingSpotListener.currentSpot}")
+                }
+            }
+
+            literal("open_state_dialog") {
+                executes {
+                    DialogContainer += StateDialog(10, 10, "state")
                 }
             }
         }.register(dispatcher)

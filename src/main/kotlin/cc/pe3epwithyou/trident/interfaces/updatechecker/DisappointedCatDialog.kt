@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.updatechecker
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
@@ -49,7 +49,7 @@ class DisappointedCatDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, k
                 style = this@DisappointedCatDialog.theme.buttonStyles.negative,
                 width = font.width(hater) + 8,
                 clickHandler = {
-                    TridentClient.playerState.hatesUpdates = true
+                    Trident.playerState.hatesUpdates = true
                     PlayerStateIO.save()
                     close()
                 }

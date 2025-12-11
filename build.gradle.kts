@@ -59,7 +59,7 @@ dependencies {
     include(modImplementation("com.noxcrew.sheeplib:api:1.4.2+1.21.8")!!)
     modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    modImplementation("com.noxcrew.noxesium:fabric:2.7.7")
+    modCompileOnly("com.noxcrew.noxesium:fabric-platform:3.0.0-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
 }

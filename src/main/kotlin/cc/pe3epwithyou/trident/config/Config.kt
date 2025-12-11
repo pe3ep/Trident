@@ -56,6 +56,7 @@ class Config {
     @SerialEntry
     var debugDrawSlotNumber: Boolean = false
 
+    @Deprecated("Option is no longer used")
     @SerialEntry
     var debugLogForScrapers: Boolean = false
 
@@ -134,6 +135,7 @@ class Config {
             get() = handler.instance().debugEnableLogging
         val drawSlotNumber: Boolean
             get() = handler.instance().debugDrawSlotNumber
+        @Deprecated("Option no longer exists")
         val logForScrapers: Boolean
             get() = handler.instance().debugLogForScrapers
         val bypassOnIsland: Boolean
@@ -493,22 +495,6 @@ class Config {
                 }
             }
 
-//            categories.register("mcci_api") {
-//                name(Component.translatable("config.trident.api.name"))
-//
-//                groups.register("api") {
-//                    name(Component.translatable("config.trident.api.name"))
-//                    description(OptionDescription.of(Component.translatable("config.trident.api.description")))
-//
-//                    options.register<String>("api_key") {
-//                        name(Component.translatable("config.trident.api.key.name"))
-//                        description(OptionDescription.of(Component.translatable("config.trident.api.key.description")))
-//                        binding(handler.instance()::apiKey, "")
-//                        controller(stringField())
-//                    }
-//                }
-//
-//            }
 
             categories.register("debug") {
                 name(Component.translatable("config.trident.debug"))
@@ -528,13 +514,6 @@ class Config {
                         name(Component.translatable("config.trident.debug.draw_slot_number.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.debug.draw_slot_number.description")))
                         binding(handler.instance()::debugDrawSlotNumber, false)
-                        controller(tickBox())
-                    }
-
-                    options.register<Boolean>("log_for_scrapers") {
-                        name(Component.translatable("config.trident.debug.log_for_scrapers.name"))
-                        description(OptionDescription.of(Component.translatable("config.trident.debug.log_for_scrapers.description")))
-                        binding(handler.instance()::debugLogForScrapers, false)
                         controller(tickBox())
                     }
 

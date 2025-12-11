@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.client.listeners
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.questing.Quest
@@ -111,14 +111,14 @@ object ChestScreenListener {
         if (!baitItemName.contains("Empty Bait Slot")) {
             val baitCount = baitSlot.item.safeGetLine(15)?.string?.split(" ")?.getOrNull(2)?.parseFormattedInt()
 
-            TridentClient.playerState.supplies.bait.amount = baitCount
-            ChatUtils.debugLog("Bait found - ${TridentClient.playerState.supplies.bait.amount}")
+            Trident.playerState.supplies.bait.amount = baitCount
+            ChatUtils.debugLog("Bait found - ${Trident.playerState.supplies.bait.amount}")
 
             val baitRarityName = baitItemName.split(" ").firstOrNull()
-            TridentClient.playerState.supplies.bait.type = parseRarity(baitRarityName ?: "")
+            Trident.playerState.supplies.bait.type = parseRarity(baitRarityName ?: "")
         } else {
-            TridentClient.playerState.supplies.bait.type = Rarity.COMMON
-            TridentClient.playerState.supplies.bait.amount = null
+            Trident.playerState.supplies.bait.type = Rarity.COMMON
+            Trident.playerState.supplies.bait.amount = null
         }
 
         // Process line slot (slot 37)
@@ -126,8 +126,8 @@ object ChestScreenListener {
         val lineItemName = lineSlot.item.displayName.string
 
         if (lineItemName.contains("Empty Line Slot")) {
-            TridentClient.playerState.supplies.line.uses = null
-            TridentClient.playerState.supplies.line.type = Rarity.COMMON
+            Trident.playerState.supplies.line.uses = null
+            Trident.playerState.supplies.line.type = Rarity.COMMON
         } else {
 //            val lineUses =
 //                lineLore.getOrNull(15)?.string?.split(" ")?.getOrNull(2)?.split("/")?.getOrNull(0)?.replace(",", "")
@@ -140,11 +140,11 @@ object ChestScreenListener {
                 lineAmount = it[2]?.value?.parseFormattedInt()
             }
 
-            TridentClient.playerState.supplies.line.uses = lineUses
-            TridentClient.playerState.supplies.line.amount = lineAmount
+            Trident.playerState.supplies.line.uses = lineUses
+            Trident.playerState.supplies.line.amount = lineAmount
 
             val lineRarityName = lineItemName.split(" ").firstOrNull()
-            TridentClient.playerState.supplies.line.type = parseRarity(lineRarityName ?: "")
+            Trident.playerState.supplies.line.type = parseRarity(lineRarityName ?: "")
         }
 
         // Process augments slots
@@ -152,7 +152,7 @@ object ChestScreenListener {
         val augmentsRaw = augmentSlotsIndices.map { screen.menu.slots[it].item.displayName.string } as MutableList
 
         var availableSlots = 10
-        TridentClient.playerState.supplies.augments = augmentsRaw.mapNotNull { rawName ->
+        Trident.playerState.supplies.augments = augmentsRaw.mapNotNull { rawName ->
             when {
                 rawName.contains("Locked Supply Slot") -> {
                     availableSlots--
@@ -168,36 +168,36 @@ object ChestScreenListener {
         } as MutableList<Augment>
         ChatUtils.debugLog(
             """
-            Augments: ${TridentClient.playerState.supplies.augments}
+            Augments: ${Trident.playerState.supplies.augments}
         """.trimIndent()
         )
-        TridentClient.playerState.supplies.augmentsAvailable = availableSlots
-        TridentClient.playerState.supplies.baitDesynced = false
-        TridentClient.playerState.supplies.needsUpdating = false
+        Trident.playerState.supplies.augmentsAvailable = availableSlots
+        Trident.playerState.supplies.baitDesynced = false
+        Trident.playerState.supplies.needsUpdating = false
 
         // Overclocks (slots 12-15)
         val hookOverclock = screen.menu.slots[12]
-        TridentClient.playerState.supplies.overclocks.hook = ItemParser.getActiveOverclock(hookOverclock.item)
+        Trident.playerState.supplies.overclocks.hook = ItemParser.getActiveOverclock(hookOverclock.item)
 
         val magnetOverclock = screen.menu.slots[13]
-        TridentClient.playerState.supplies.overclocks.magnet = ItemParser.getActiveOverclock(magnetOverclock.item)
+        Trident.playerState.supplies.overclocks.magnet = ItemParser.getActiveOverclock(magnetOverclock.item)
 
         val rodOverclock = screen.menu.slots[14]
-        TridentClient.playerState.supplies.overclocks.rod = ItemParser.getActiveOverclock(rodOverclock.item)
+        Trident.playerState.supplies.overclocks.rod = ItemParser.getActiveOverclock(rodOverclock.item)
 
         val unstableOverclock = screen.menu.slots[15]
         val unstableModel = unstableOverclock.item.components[DataComponents.ITEM_MODEL]
         if (unstableModel != null) {
-            TridentClient.playerState.supplies.overclocks.unstable.state.isAvailable =
+            Trident.playerState.supplies.overclocks.unstable.state.isAvailable =
                 !unstableModel.path.startsWith("island_interface/locked")
         }
-        TridentClient.playerState.supplies.overclocks.unstable.texture =
+        Trident.playerState.supplies.overclocks.unstable.texture =
             ItemParser.getUnstableOverclock(unstableOverclock.item)
 
         val supremeOverclock = screen.menu.slots[16]
         val supremeModel = supremeOverclock.item.components[DataComponents.ITEM_MODEL]
         if (supremeModel != null) {
-            TridentClient.playerState.supplies.overclocks.supreme.state.isAvailable =
+            Trident.playerState.supplies.overclocks.supreme.state.isAvailable =
                 !supremeModel.path.startsWith("island_interface/locked")
         }
         // Refresh supplies dialog if open
@@ -212,36 +212,36 @@ object ChestScreenListener {
         val temperateDataLine = screen.menu.slots[24].item.safeGetLine(13)?.string
         if (temperateDataLine != null && temperateDataLine.contains("Wayfinder Data: ")) {
             val temperateData = temperateDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
-            TridentClient.playerState.wayfinderData.temperate.data = temperateData
-            TridentClient.playerState.wayfinderData.temperate.unlocked = true
-            if (temperateData >= 2000) TridentClient.playerState.wayfinderData.temperate.hasGrotto = true
+            Trident.playerState.wayfinderData.temperate.data = temperateData
+            Trident.playerState.wayfinderData.temperate.unlocked = true
+            if (temperateData >= 2000) Trident.playerState.wayfinderData.temperate.hasGrotto = true
         } else {
-            TridentClient.playerState.wayfinderData.temperate.hasGrotto = true
+            Trident.playerState.wayfinderData.temperate.hasGrotto = true
         }
 
         // tropical
         val tropicalDataLine = screen.menu.slots[33].item.safeGetLine(13)?.string
         if (tropicalDataLine != null && tropicalDataLine.contains("Wayfinder Data: ")) {
             val tropicalData = tropicalDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
-            TridentClient.playerState.wayfinderData.tropical.data = tropicalData
-            TridentClient.playerState.wayfinderData.tropical.unlocked = true
-            if (tropicalData >= 2000) TridentClient.playerState.wayfinderData.tropical.hasGrotto = true
+            Trident.playerState.wayfinderData.tropical.data = tropicalData
+            Trident.playerState.wayfinderData.tropical.unlocked = true
+            if (tropicalData >= 2000) Trident.playerState.wayfinderData.tropical.hasGrotto = true
         } else {
-            TridentClient.playerState.wayfinderData.tropical.hasGrotto = true
+            Trident.playerState.wayfinderData.tropical.hasGrotto = true
         }
 
         // barren
         val barrenDataLine = screen.menu.slots[42].item.safeGetLine(13)?.string
         if (barrenDataLine != null && barrenDataLine.contains("Wayfinder Data: ")) {
             val barrenData = barrenDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
-            TridentClient.playerState.wayfinderData.barren.data = barrenData
-            TridentClient.playerState.wayfinderData.barren.unlocked = true
-            if (barrenData >= 2000) TridentClient.playerState.wayfinderData.barren.hasGrotto = true
+            Trident.playerState.wayfinderData.barren.data = barrenData
+            Trident.playerState.wayfinderData.barren.unlocked = true
+            if (barrenData >= 2000) Trident.playerState.wayfinderData.barren.hasGrotto = true
         } else {
-            TridentClient.playerState.wayfinderData.barren.hasGrotto = true
+            Trident.playerState.wayfinderData.barren.hasGrotto = true
         }
 
-        TridentClient.playerState.wayfinderData.needsUpdating = false
+        Trident.playerState.wayfinderData.needsUpdating = false
         DialogCollection.refreshDialog("wayfinder")
     }
 
@@ -249,7 +249,7 @@ object ChestScreenListener {
         if ("FISHING PROGRESS" !in screen.title.string) return
 
         // empty the list
-        TridentClient.playerState.research.researchTypes = mutableListOf()
+        Trident.playerState.research.researchTypes = mutableListOf()
 
         val researchSlots = listOf(12, 13, 14, 15, 16)
         val researchTypes = mapOf(12 to "Strong", 13 to "Wise", 14 to "Glimmering", 15 to "Greedy", 16 to "Lucky")
@@ -263,7 +263,7 @@ object ChestScreenListener {
                 val amount = progress.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
                 val total = progress.split(": ")[1].split("/")[1].replace(",", "").toIntOrNull()!!
 
-                TridentClient.playerState.research.researchTypes.add(
+                Trident.playerState.research.researchTypes.add(
                     researchSlots.indexOf(slot), Research(
                         researchTypes[slot] ?: "Strong", tier = tier, progressThroughTier = amount, totalForTier = total
                     )
@@ -271,7 +271,7 @@ object ChestScreenListener {
             }
         }
 
-        TridentClient.playerState.research.needsUpdating = false
+        Trident.playerState.research.needsUpdating = false
         DialogCollection.refreshDialog("research")
     }
 }

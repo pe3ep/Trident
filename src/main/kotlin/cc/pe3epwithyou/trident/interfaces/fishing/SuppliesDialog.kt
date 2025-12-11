@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.fishing
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.AugmentStackWidget
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.OverclockStackWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
@@ -39,7 +39,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
         val baseTitle = icon.append(text)
 
-        return if (TridentClient.playerState.supplies.baitDesynced) {
+        return if (Trident.playerState.supplies.baitDesynced) {
             val warn = Component.literal(" ⚠").defaultFont().withStyle(ChatFormatting.GOLD)
             val tooltip = Tooltip.create(
                 Component.literal("Module is not synced").withStyle(ChatFormatting.GOLD).append(
@@ -58,7 +58,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
-        val supplies = TridentClient.playerState.supplies
+        val supplies = Trident.playerState.supplies
         val isBaitDesynced = supplies.baitDesynced
 
         if (supplies.needsUpdating) {

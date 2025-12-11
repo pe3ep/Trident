@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.shared.widgets.ItemWidget
 import cc.pe3epwithyou.trident.state.OverclockState
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
@@ -33,7 +33,7 @@ class OverclockStackWidget(
             )
         }
 
-        val overclockState = TridentClient.playerState.supplies.overclocks
+        val overclockState = Trident.playerState.supplies.overclocks
 
 //        Get the needed overclock texture
         var unstableTexture = OverclockTexture.COOLDOWN
