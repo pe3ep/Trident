@@ -1,7 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.Trident;
-import cc.pe3epwithyou.trident.client.TridentClient;
 import cc.pe3epwithyou.trident.interfaces.DialogCollection;
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker;
 import cc.pe3epwithyou.trident.utils.ChatUtils;

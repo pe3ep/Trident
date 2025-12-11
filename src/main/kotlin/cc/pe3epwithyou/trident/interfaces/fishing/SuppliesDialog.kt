@@ -153,7 +153,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
         val augmentLine = supplies.augments.toMutableList()
         if (augmentLine.size < supplies.augmentsAvailable) {
-            for (i in 1..(supplies.augmentsAvailable - augmentLine.size)) {
+            repeat((1..(supplies.augmentsAvailable - augmentLine.size)).count()) {
                 augmentLine.add(Augment.EMPTY_AUGMENT)
             }
         }
