@@ -65,7 +65,7 @@ enum class QuestCriteria(val shortName: String, val regexPattern: Regex, val isT
         Regex("Win (\\d+) rounds of Battle Box")
     ),
     BATTLE_BOX_QUADS_TEAM_ROUNDS_PLAYED(
-        "Win Rounds",
+        "Play Rounds",
         Regex("Play (\\d+) rounds of Battle Box")
     ),
     BATTLE_BOX_QUADS_TEAM_FIRST_PLACE(
@@ -79,6 +79,10 @@ enum class QuestCriteria(val shortName: String, val regexPattern: Regex, val isT
     BATTLE_BOX_QUADS_PLAYERS_KILLED(
         "Kill players",
         Regex("Eliminate (\\d+) players in Battle Box")
+    ),
+    BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED(
+        "Kills or Assists",
+        Regex("Eliminate or assist in eliminating (\\d+) players in Battle Box")
     ),
     BATTLE_BOX_QUADS_RANGED_KILLS(
         "Ranged kills",

@@ -4,19 +4,19 @@ enum class DeathMessages(
     val regex: Regex, val method: KillMethod
 ) {
     SLAIN(
-        Regex("^\\[.] .+ (was slain by) .+"), KillMethod.MELEE
+        Regex("^\\[.] .+ was slain by .+"), KillMethod.MELEE
     ),
     SHOT(
-        Regex("^\\[.] .+ (was shot by) .+"), KillMethod.RANGE
+        Regex("^\\[.] .+ was shot by .+"), KillMethod.RANGE
     ),
     EXPLODED_KILL(
-        Regex("^\\[.] .+ (was blown up by) .+"), KillMethod.EXPLOSION
+        Regex("^\\[.] .+ was blown up by .+"), KillMethod.EXPLOSION
     ),
     EXPLODED_SELF(
         Regex("^\\[.] .+ blew up.+"), KillMethod.EXPLOSION
     ),
     LAVA_KILL(
-        Regex("^\\[.] .+ (tried to swim in lava to escape) .+"), KillMethod.LAVA
+        Regex("^\\[.] .+ tried to swim in lava to escape .+"), KillMethod.LAVA
     ),
     LAVA_SELF(
         Regex("^\\[.] .+ tried to swim in lava.+"), KillMethod.LAVA
@@ -77,5 +77,8 @@ enum class DeathMessages(
     ),
     SUFFOCATE_SELF(
         Regex("^\\[.] .+ suffocated in a wall.+"), KillMethod.GENERIC
+    ),
+    KNOCKED_BACK(
+        Regex("^\\[.] .+ was knocked back by .+"), KillMethod.GENERIC
     )
 }

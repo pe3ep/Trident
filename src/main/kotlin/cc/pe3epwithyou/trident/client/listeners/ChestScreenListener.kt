@@ -96,7 +96,7 @@ object ChestScreenListener {
         val scrollQuests = QuestingParser.parseQuestSlot(scrollSlot)
         quests.addAll(scrollQuests ?: emptyList())
 
-        QuestingDialog.isDesynced = false
+        QuestingDialog.dialogState = QuestingDialog.QuestingDialogState.NORMAL
         QuestStorage.loadQuests(quests)
     }
 

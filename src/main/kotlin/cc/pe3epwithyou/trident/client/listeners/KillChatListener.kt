@@ -79,12 +79,22 @@ object KillChatListener {
                 val ctx = EliminatedCriteria.get(game, sourceTag = "kill") ?: return true
                 QuestStorage.applyIncrement(ctx, true)
 
-                if (killMethod == KillMethod.RANGE && game == Game.BATTLE_BOX) {
-                    QuestStorage.applyIncrement(
-                        IncrementContext(
-                            Game.BATTLE_BOX, QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS, 1, "bb_ranged_kill"
-                        ), true
+                if (game == Game.BATTLE_BOX || game == Game.BATTLE_BOX_ARENA) {
+                    val ctx = IncrementContext(
+                        Game.BATTLE_BOX,
+                        QuestCriteria.BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED,
+                        1,
+                        "bb_kills_or_assists"
                     )
+                    QuestStorage.applyIncrement(ctx, true)
+                    if (killMethod == KillMethod.RANGE) {
+                        QuestStorage.applyIncrement(
+                            IncrementContext(
+                                Game.BATTLE_BOX, QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS, 1, "bb_ranged_kill"
+                            ), true
+                        )
+
+                    }
                 }
             }
 

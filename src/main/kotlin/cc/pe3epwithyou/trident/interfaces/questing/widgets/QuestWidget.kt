@@ -42,7 +42,7 @@ class QuestWidget(
     override val layout = GridLayout(themed.theme.dimensions.paddingInner) {
         val mcFont = Minecraft.getInstance().font
 
-        val c = Component.literal(quest.display_name.uppercase())
+        val c = Component.literal(quest.displayName.uppercase())
             .mccFont()
         if (Config.Questing.rarityColorName) {
             c.withColor(quest.rarity.color)

@@ -64,6 +64,7 @@ dependencies {
     compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
 }
 
+@Suppress("UnstableApiUsage")
 loom {
     mixin {
         defaultRefmapName.set("trident.refmap.json")

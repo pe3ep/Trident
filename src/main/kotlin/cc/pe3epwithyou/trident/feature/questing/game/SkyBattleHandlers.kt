@@ -50,8 +50,7 @@ object SkyBattleHandlers {
     }
 
     fun handle(m: Component) {
-        val eliminated = Regex("^\\[.] Game Over!").find(m.string)
-        if (eliminated != null) {
+        Regex("^\\[.] Game Over!").find(m.string)?.let {
             val subtitle = (Minecraft.getInstance().gui as GuiAccessor).subtitle ?: return
             val match = Regex("(\\d+)(st|nd|rd|th) survivor!").find(subtitle.string) ?: return
             val placement = match.groups[1]?.value?.toIntOrNull() ?: return

@@ -268,6 +268,14 @@ object TridentCommand {
                 }
             }
 
+            literal("dump_islandstate") {
+                executes {
+                    ChatUtils.sendMessage("—————— ISLAND BEGIN ——————", false)
+                    ChatUtils.sendMessage("CURRENT GAME: ${MCCIState.game}")
+                    ChatUtils.sendMessage("——————— ISLAND END ———————", false)
+                }
+            }
+
             literal("send_exchange_req") {
                 executes {
                     ExchangeLookup.lookup()
