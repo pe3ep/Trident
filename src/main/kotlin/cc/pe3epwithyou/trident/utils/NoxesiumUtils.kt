@@ -12,6 +12,7 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
+import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog.QuestingDialogState
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import com.noxcrew.noxesium.NoxesiumFabricMod
@@ -47,15 +48,18 @@ object NoxesiumUtils {
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
         }
         if (currentGame != Game.HUB && currentGame != Game.FISHING) {
+            QuestingDialog.dialogState = QuestingDialogState.LOADING
+            if (!Config.Questing.enabled) return
+            val k = "questing"
+            DialogCollection.open(k, QuestingDialog(10, 10, k))
             DelayedAction.delayTicks(20L) {
-                val k = "questing"
                 if (QuestListener.checkIfPlobby()) return@delayTicks
-                if (!Config.Questing.enabled) return@delayTicks
                 QuestingDialog.currentGame = currentGame
+                QuestingDialog.dialogState = QuestingDialogState.NORMAL
                 if (QuestStorage.getActiveQuests(currentGame)
                         .isEmpty() && Config.Questing.hideIfNoQuests
                 ) return@delayTicks
-                DialogCollection.open(k, QuestingDialog(10, 10, k))
+                DialogCollection.refreshDialog(k)
             }
         }
         if (currentGame == Game.HUB && game != "" && Config.Questing.showInLobby) {

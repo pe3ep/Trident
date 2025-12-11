@@ -85,7 +85,7 @@ object QuestListener {
             Regex("\\(.\\) (Quest Scroll|Quest) Completed! Check your Quest Log for rewards\\.").matches(m.string)
         if (!match) return
         if (isAQuestCompleted()) return
-        QuestingDialog.isDesynced = true
+        QuestingDialog.dialogState = QuestingDialog.QuestingDialogState.DESYNCED
     }
 
     fun isAQuestCompleted(): Boolean {
