@@ -22,7 +22,7 @@ class Quest(
             return Resources.mcc("textures/$directory$raritySuffix.png")
         }
 
-    val display_name: String = criteria.shortName
+    val displayName: String = criteria.shortName
 
     val isCompleted: Boolean
         get() = progress >= totalProgress
@@ -89,9 +89,11 @@ enum class GameQuests(
         listOf(
             BATTLE_BOX_QUADS_GAMES_PLAYED,
             BATTLE_BOX_QUADS_TEAM_ROUNDS_WON,
+            BATTLE_BOX_QUADS_TEAM_ROUNDS_PLAYED,
             BATTLE_BOX_QUADS_TEAM_FIRST_PLACE,
             BATTLE_BOX_QUADS_TEAM_SECOND_PLACE,
             BATTLE_BOX_QUADS_PLAYERS_KILLED,
+            BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED,
             BATTLE_BOX_QUADS_RANGED_KILLS
         )
     ),
