@@ -8,7 +8,7 @@ enum class Game(
     val icon: String
 ) {
     HUB("Hub", "lobby", icon = "_fonts/icon/game_icons/island_main_small.png", primaryColor = 0xFF8F4E),
-    FISHING("Fishing", "lobby", icon = HUB.icon, primaryColor = 0xFF8F4E),
+    FISHING("Fishing", "fishing", icon = HUB.icon, primaryColor = 0xFF8F4E),
     SKY_BATTLE(
         "Sky Battle",
         "sky_battle",

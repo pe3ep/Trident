@@ -35,14 +35,13 @@ object RSRHandlers {
     }
 
     fun handle(m: Component) {
-        val elimination = Regex("^\\[.] ((.+) was (eliminated|spleefed) by (.+)|(.+) died) \\[.+]").find(m.string)
-        if (elimination != null) {
+        Regex("^\\[.] ((.+) was (eliminated|spleefed) by (.+)|(.+) died) \\[.+]").find(m.string)?.let {
             inc(QuestCriteria.ROCKET_SPLEEF_PLAYERS_OUTLIVED, "rsr_players_outlived", true)
         }
 
-        val death = Regex("^\\[.] .+, you were eliminated in (\\d+)(st|nd|rd|th)").find(m.string)
-        if (death != null) {
-            val placement = death.groups[1]?.value?.toInt() ?: return
+
+        Regex("^\\[.] .+, you were eliminated in (\\d+)(st|nd|rd|th)").find(m.string)?.let {
+            val placement = it.groups[1]?.value?.toIntOrNull() ?: return
 
             if (placement <= 8) {
                 inc(QuestCriteria.ROCKET_SPLEEF_TOP_EIGHT, "rsr_top8")
