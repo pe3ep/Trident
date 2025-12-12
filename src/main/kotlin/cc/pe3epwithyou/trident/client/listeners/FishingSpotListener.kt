@@ -41,7 +41,7 @@ object FishingSpotListener {
         val level = client.level ?: return null
         val entities = level.getEntities(null, box).filter { entity -> entity is Display.TextDisplay }
         if (entities.isEmpty()) return null
-        val display: Display.TextDisplay = entities.first() as Display.TextDisplay
+        val display: Display.TextDisplay = (entities.first()) as Display.TextDisplay
 
         // Temporary fake perk list due to display parser not existing yet
         val perks = FishingSpotParser.parse(display.text)

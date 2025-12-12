@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Mixin(BossHealthOverlay.class)
+@SuppressWarnings("unused")
 public interface BossHealthOverlayAccessor {
     @Accessor
     @Final

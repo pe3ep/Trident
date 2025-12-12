@@ -10,10 +10,8 @@ import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
-import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
-import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.grid
@@ -83,7 +81,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 0,
                 settings = LayoutConstants.CENTRE
             )
-            StringWidget(Component.literal("Loading your Quests...").withSwatch(TridentFont.TRIDENT_COLOR), font).atBottom(
+            StringWidget(Component.literal("Loading your Quests...").withStyle(ChatFormatting.GRAY), font).atBottom(
                 0,
                 settings = LayoutConstants.CENTRE
             )

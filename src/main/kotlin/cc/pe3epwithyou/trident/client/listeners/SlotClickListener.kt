@@ -40,7 +40,7 @@ object SlotClickListener {
         if (Config.Global.exchangeImprovements && "ISLAND EXCHANGE" in screen.title.string) {
             val item = slot.item
             if ((clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE) && "Refresh Listings" in item.hoverName.string) {
-                if ("Click to Refresh" in item.getLore().last().string) {
+                if (item.getLore().lastOrNull()?.string?.contains("Click to Refresh") == true) {
                     ExchangeLookup.clearCache()
                     ExchangeHandler.handleScreen(screen)
                 }
