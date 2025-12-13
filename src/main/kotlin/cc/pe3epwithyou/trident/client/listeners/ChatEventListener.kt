@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
+import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentionIfInactive
@@ -49,70 +50,73 @@ object ChatEventListener {
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowMessage@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowMessage true
-//            PKW messages
-            if (message.isPKWLeapFinished() && Config.Games.autoFocus) {
-                Minecraft.getInstance().window.focusWindowIfInactive()
-            }
+            try {
+                //            PKW messages
+                if (message.isPKWLeapFinished() && Config.Games.autoFocus) {
+                    Minecraft.getInstance().window.focusWindowIfInactive()
+                }
 
 //            Fishing messages
-            if (message.isDepletedSpot() && Config.Fishing.flashIfDepleted) {
-                Minecraft.getInstance().window.requestAttentionIfInactive()
-                Minecraft.getInstance().player?.playSound(
-                    SoundEvent(
-                        Resources.mcc("games.fishing.stock_depleted"),
-                        Optional.empty()
+                if (message.isDepletedSpot() && Config.Fishing.flashIfDepleted) {
+                    Minecraft.getInstance().window.requestAttentionIfInactive()
+                    Minecraft.getInstance().player?.playSound(
+                        SoundEvent(
+                            Resources.mcc("games.fishing.stock_depleted"),
+                            Optional.empty()
+                        )
                     )
-                )
-                DepletedDisplay.showDepletedTitle()
-            }
-
-            if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
-                Minecraft.getInstance().window.requestAttentionIfInactive()
-            }
-
-            // Check if player received bait and mark supplies as desynced
-            if (message.isReceivedItem() && "Bait" in message.string) {
-                if (!Trident.playerState.supplies.baitDesynced) {
-                    Trident.playerState.supplies.baitDesynced = true
-                    DialogCollection.refreshDialog("supplies")
-                }
-            }
-
-            if (message.isStockReplenished() && Config.Fishing.flashIfDepleted) {
-                DepletedDisplay.DepletedTimer.stopLoop()
-            }
-
-            if (message.isCaughtMessage() && catchFinished) {
-                catchFinished = false
-                isSupplyPreserve = false
-                triggerBait = !checkJunk(message)
-            }
-
-            if (message.isIconMessage() && message.string.contains("Supply Preserve", ignoreCase = true)) {
-                isSupplyPreserve = true
-            }
-
-            if (message.isXPMessage()) {
-                if (isSupplyPreserve) {
-                    isSupplyPreserve = false
-                    catchFinished = true
-                    return@allowMessage true
+                    DepletedDisplay.showDepletedTitle()
                 }
 
-                Trident.playerState.supplies.line.uses?.let {
-                    if (it != 0) Trident.playerState.supplies.line.uses = it - 1
+                if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
+                    Minecraft.getInstance().window.requestAttentionIfInactive()
                 }
 
-                if (triggerBait) {
-                    Trident.playerState.supplies.bait.amount?.let {
-                        if (it != 0) Trident.playerState.supplies.bait.amount = it - 1
+                // Check if player received bait and mark supplies as desynced
+                if (message.isReceivedItem() && "Bait" in message.string) {
+                    if (!Trident.playerState.supplies.baitDesynced) {
+                        Trident.playerState.supplies.baitDesynced = true
+                        DialogCollection.refreshDialog("supplies")
                     }
                 }
 
-                catchFinished = true
-                DialogCollection.refreshDialog("supplies")
-            }
+                if (message.isStockReplenished() && Config.Fishing.flashIfDepleted) {
+                    DepletedDisplay.DepletedTimer.stopLoop()
+                }
 
+                if (message.isCaughtMessage() && catchFinished) {
+                    catchFinished = false
+                    isSupplyPreserve = false
+                    triggerBait = !checkJunk(message)
+                }
+
+                if (message.isIconMessage() && message.string.contains("Supply Preserve", ignoreCase = true)) {
+                    isSupplyPreserve = true
+                }
+
+                if (message.isXPMessage()) {
+                    if (isSupplyPreserve) {
+                        isSupplyPreserve = false
+                        catchFinished = true
+                        return@allowMessage true
+                    }
+
+                    Trident.playerState.supplies.line.uses?.let {
+                        if (it != 0) Trident.playerState.supplies.line.uses = it - 1
+                    }
+
+                    if (triggerBait) {
+                        Trident.playerState.supplies.bait.amount?.let {
+                            if (it != 0) Trident.playerState.supplies.bait.amount = it - 1
+                        }
+                    }
+
+                    catchFinished = true
+                    DialogCollection.refreshDialog("supplies")
+                }
+            } catch (e: Exception) {
+                ChatUtils.error("Something went wrong when handling message ${message.string}: ${e.message}")
+            }
             true
         }
     }

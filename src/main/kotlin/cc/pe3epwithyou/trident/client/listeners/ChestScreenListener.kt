@@ -15,6 +15,8 @@ import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
+import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.safeGetLine
 import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
@@ -22,6 +24,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
 
 object ChestScreenListener {
 
@@ -68,7 +71,16 @@ object ChestScreenListener {
 
     fun register() {
         ScreenEvents.AFTER_INIT.register { _, screen: Screen, _, _ ->
-            if (screen is ContainerScreen) handleScreen(screen)
+            try {
+                if (screen is ContainerScreen) handleScreen(screen)
+            } catch (e: Exception) {
+                ChatUtils.sendMessage(
+                    Component.literal("Something went wrong when opening screen, please contact developers about this issue")
+                        .withSwatch(TridentFont.ERROR)
+                )
+
+                ChatUtils.error("Something went wrong when opening screen, ${e.message}")
+            }
         }
     }
 
