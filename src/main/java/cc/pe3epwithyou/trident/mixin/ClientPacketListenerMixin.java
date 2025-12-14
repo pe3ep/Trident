@@ -17,13 +17,11 @@ public class ClientPacketListenerMixin {
     @Inject(method = "setSubtitleText", at = @At("TAIL"))
     private void subtitleText(ClientboundSetSubtitleTextPacket clientboundSetSubtitleTextPacket, CallbackInfo ci) {
         FocusGame.INSTANCE.handleSubtitle(clientboundSetSubtitleTextPacket.text().getString());
-        QuestListener.INSTANCE.handleSubtitle(clientboundSetSubtitleTextPacket.text());
     }
 
     @Inject(method = "handlePlayerCombatKill", at = @At("TAIL"))
     private void playerCombatKill(ClientboundPlayerCombatKillPacket clientboundPlayerCombatKillPacket, CallbackInfo ci) {
         ChatUtils.INSTANCE.debugLog("Received death event for id: " + clientboundPlayerCombatKillPacket.playerId());
-        QuestListener.INSTANCE.interruptTasks();
     }
 
     @Inject(method = "handleContainerSetSlot", at = @At("TAIL"))

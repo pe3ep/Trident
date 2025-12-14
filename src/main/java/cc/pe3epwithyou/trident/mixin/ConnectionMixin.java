@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.feature.questing.QuestListener;
 import cc.pe3epwithyou.trident.interfaces.DialogCollection;
 import cc.pe3epwithyou.trident.state.PlayerStateIO;
 import cc.pe3epwithyou.trident.utils.ChatUtils;
@@ -17,7 +16,6 @@ public class ConnectionMixin {
     @Inject(method = "disconnect(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"))
     private void onDisconnect(Component component, CallbackInfo ci) {
         ChatUtils.INSTANCE.info("Disconnected from a server, cancelling all pending tasks");
-        QuestListener.INSTANCE.interruptTasks();
         DelayedAction.INSTANCE.closeAllPendingTasks();
         PlayerStateIO.INSTANCE.save();
         DialogCollection.INSTANCE.saveAllDialogs();

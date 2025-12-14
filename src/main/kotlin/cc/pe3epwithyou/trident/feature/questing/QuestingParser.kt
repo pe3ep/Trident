@@ -33,7 +33,6 @@ object QuestingParser {
             return null
         }
         ChatUtils.debugLog("Quest found: Slot ${slot.index}")
-        ChatUtils.debugLog("Model: ${model.path}")
         if (model.path == FINISHED_MAPS ||
             model.path == ADD_SCROLL ||
             model.path == COMPLETED_QUEST
@@ -117,13 +116,9 @@ object QuestingParser {
 
                 tempGame = null
                 tempCriteria = null
-                ChatUtils.debugLog("Cleared temp data")
-                ChatUtils.debugLog("--------------------")
                 return@forEachIndexed
             } else if ("%" in l.string) {
-                ChatUtils.debugLog("Hit the %, trying to detect game quest")
                 tempGame = getQuestGame(tempQuestString) ?: return@forEachIndexed
-                ChatUtils.debugLog("Detected game quest -> ${tempGame.title}: $tempQuestString")
                 val criteriaList = GameQuests.valueOf(tempGame.name).list
                 ChatUtils.debugLog("Criteria list -> $criteriaList")
                 for (crit in criteriaList) {
@@ -135,7 +130,6 @@ object QuestingParser {
             } else {
                 val suffix = if (l.string.endsWith(" ")) "" else " "
                 tempQuestString += (l.string + suffix).replace(",", "")
-                ChatUtils.debugLog("New tempQuestString: $tempQuestString")
             }
         }
 

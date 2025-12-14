@@ -2,11 +2,9 @@ package cc.pe3epwithyou.trident.utils
 
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.questing.GameQuests
+import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
-import cc.pe3epwithyou.trident.feature.questing.game.DynaballHandlers
-import cc.pe3epwithyou.trident.feature.questing.game.HITWHandlers
-import cc.pe3epwithyou.trident.feature.questing.game.RSRHandlers
-import cc.pe3epwithyou.trident.feature.questing.game.SkyBattleHandlers
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
@@ -53,9 +51,7 @@ object NoxesiumUtils {
                 DialogCollection.close(k)
                 return
             }
-            if (QuestStorage.getActiveQuests(currentGame)
-                    .isEmpty() && Config.Questing.hideIfNoQuests
-            ) {
+            if (QuestStorage.getActiveQuests(currentGame).isEmpty() && Config.Questing.hideIfNoQuests) {
                 DialogCollection.close(k)
                 return
             }
@@ -64,43 +60,18 @@ object NoxesiumUtils {
             DialogCollection.open(k, QuestingDialog(10, 10, k))
             DialogCollection.refreshDialog(k)
         }
-//        if (currentGame == Game.HUB && Config.Questing.showInLobby) {
-//            val k = "questing"
-//            if (!Config.Questing.enabled) return
-//            QuestingDialog.currentGame = Game.entries.filter { g -> g == currentGame }.getOrNull(0) ?: return
-//            DialogCollection.open(k, QuestingDialog(10, 10, k))
-//        }
     }
 
     private fun removeKillsIfNeeded(packet: ClientboundMccGameStatePacket) {
         if (MCCIState.game !in KillChatListener.killfeedGames) return
         KillChatListener.resetStreaks()
         if (Config.KillFeed.enabled && Config.KillFeed.clearAfterRound) {
-            if (packet.phaseType == "INTERMISSION" && (packet.stage == "countdownphase" || packet.stage == "preparationphase")) {
+            if (packet.phaseType == "intermission" && (packet.stage == "countdownphase" || packet.stage == "preparationphase")) {
                 KillFeedDialog.clearKills()
             }
         }
     }
 
-    private fun handleTimedQuests() {
-        if (MCCIState.game == Game.HITW) {
-            HITWHandlers.scheduleSurvivedMinute()
-            HITWHandlers.scheduleSurvivedTwoMinutes()
-        }
-
-        if (MCCIState.game == Game.SKY_BATTLE) {
-            SkyBattleHandlers.scheduleSurvivedMinute()
-            SkyBattleHandlers.scheduleSurvivedTwoMinutes()
-        }
-
-        if (MCCIState.game == Game.ROCKET_SPLEEF_RUSH) {
-            RSRHandlers.scheduleSurvivedMinute()
-        }
-
-        if (MCCIState.game == Game.DYNABALL) {
-            DynaballHandlers.scheduleDynaball()
-        }
-    }
 
     fun registerListeners() {
         MccPackets.CLIENTBOUND_MCC_SERVER.addListener(this, ClientboundMccServerPacket::class.java) { _, packet, _ ->
@@ -130,13 +101,9 @@ object NoxesiumUtils {
         }
 
         MccPackets.CLIENTBOUND_MCC_GAME_STATE.addListener(
-            this,
-            ClientboundMccGameStatePacket::class.java
+            this, ClientboundMccGameStatePacket::class.java
         ) { _, packet, _ ->
             removeKillsIfNeeded(packet)
-            if (packet.phaseType == "PLAY" || packet.stage == "inround") {
-                handleTimedQuests()
-            }
             ChatUtils.debugLog(
                 """
                 NOX GAME_STATE Packet Received:
@@ -151,19 +118,35 @@ object NoxesiumUtils {
         }
 
         MccPackets.CLIENTBOUND_MCC_STATISTIC.addListener(
-            this,
-            ClientboundMccStatisticPacket::class.java
+            this, ClientboundMccStatisticPacket::class.java
         ) { _, packet, _ ->
-            if (Config.Debug.enableLogging) {
-                ChatUtils.sendMessage(
-                    """
-                    CLIENTBOUND_MCC_STATISTIC:
-                    stat: ${packet.statistic}
-                    value: ${packet.value}
-                    record: ${packet.record}
-                """.trimIndent()
+            ChatUtils.debugLog(
+                """
+                CLIENTBOUND_MCC_STATISTIC:
+                stat: ${packet.statistic}
+                value: ${packet.value}
+                record: ${packet.record}
+            """.trimIndent()
+            )
+
+            handleQuests(packet.statistic, packet.value)
+        }
+    }
+
+    private fun handleQuests(stat: String, value: Int) {
+        val currentGame = MCCIState.game
+        try {
+            val criteria = GameQuests.valueOf(currentGame.toString()).list
+            criteria.filter { stat in it.statisticKeys }.forEach {
+                val game = if (currentGame == Game.BATTLE_BOX_ARENA) Game.BATTLE_BOX else currentGame
+                val ctx = IncrementContext(
+                    game, it, value, stat
                 )
+                QuestStorage.applyIncrement(ctx)
             }
+            DialogCollection.refreshDialog("questing")
+        } catch (e: Exception) {
+            ChatUtils.error("Something went wrong when handling quest for stat $stat: ${e.message}")
         }
     }
 
@@ -209,9 +192,7 @@ object NoxesiumUtils {
                     if (!bool) return@forEach
 
                     // BB Arena edge case
-                    if (game == Game.BATTLE_BOX_ARENA ||
-                        game == Game.BATTLE_BOX
-                    ) {
+                    if (game == Game.BATTLE_BOX_ARENA || game == Game.BATTLE_BOX) {
                         if ("arena" in types) {
                             return Game.BATTLE_BOX_ARENA
                         }

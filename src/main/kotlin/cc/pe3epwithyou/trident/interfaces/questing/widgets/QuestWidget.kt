@@ -20,7 +20,6 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.StringWidget
-import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -79,26 +78,6 @@ class QuestWidget(
             5
         )
 
-        if (!quest.criteria.isTracked) {
-            val progress = Component.literal(" ${quest.progress}/${quest.totalProgress} ℹ")
-                .defaultFont()
-                .withStyle(ChatFormatting.GRAY)
-            val w = StringWidget(progressComponent.append(progress), mcFont)
-            w.setTooltip(
-                Tooltip.create(
-                    Component.literal(
-                        """
-                 Due to this quest's objective, Trident is unable to live-update the progress.
-                 You can open the Journal to update it
-            """.trimIndent()
-                    )
-                        .withStyle(ChatFormatting.RESET)
-                        .withStyle(ChatFormatting.GRAY)
-                )
-            )
-            w.atBottom(0, settings = LayoutConstants.LEFT)
-            return@GridLayout
-        }
         val progress = Component.literal(" ${quest.progress}/${quest.totalProgress}")
             .defaultFont()
         if (quest.isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)

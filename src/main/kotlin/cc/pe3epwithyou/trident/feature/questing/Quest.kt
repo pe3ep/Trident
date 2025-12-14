@@ -89,7 +89,7 @@ enum class GameQuests(
         listOf(
             BATTLE_BOX_QUADS_GAMES_PLAYED,
             BATTLE_BOX_QUADS_TEAM_ROUNDS_WON,
-            BATTLE_BOX_QUADS_TEAM_ROUNDS_PLAYED,
+            BATTLE_BOX_QUADS_ROUNDS_PLAYED,
             BATTLE_BOX_QUADS_TEAM_FIRST_PLACE,
             BATTLE_BOX_QUADS_TEAM_SECOND_PLACE,
             BATTLE_BOX_QUADS_PLAYERS_KILLED,
@@ -98,7 +98,16 @@ enum class GameQuests(
         )
     ),
     BATTLE_BOX_ARENA(
-        BATTLE_BOX.list
+        listOf(
+            BATTLE_BOX_QUADS_GAMES_PLAYED,
+            BATTLE_BOX_QUADS_TEAM_ROUNDS_WON,
+            BATTLE_BOX_QUADS_ROUNDS_PLAYED,
+            BATTLE_BOX_QUADS_TEAM_FIRST_PLACE,
+            BATTLE_BOX_QUADS_TEAM_SECOND_PLACE,
+            BATTLE_BOX_QUADS_PLAYERS_KILLED,
+            BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED,
+            BATTLE_BOX_QUADS_RANGED_KILLS
+        )
     ),
     SKY_BATTLE(
         listOf(
@@ -152,5 +161,5 @@ enum class GameQuests(
             ROCKET_SPLEEF_SURVIVE_60S,
             ROCKET_SPLEEF_DIRECT_HITS
         )
-    )
+    );
 }
