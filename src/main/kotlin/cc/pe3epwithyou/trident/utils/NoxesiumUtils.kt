@@ -18,6 +18,7 @@ import cc.pe3epwithyou.trident.state.MCCIState
 import com.noxcrew.noxesium.core.fabric.feature.skull.SkullContents
 import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccServerPacket
+import com.noxcrew.noxesium.core.mcc.ClientboundMccStatisticPacket
 import com.noxcrew.noxesium.core.mcc.MccPackets
 import net.minecraft.network.chat.MutableComponent
 import java.util.*
@@ -48,7 +49,7 @@ object NoxesiumUtils {
         if (currentGame != Game.HUB && currentGame != Game.FISHING) {
             if (!Config.Questing.enabled) return
             val k = "questing"
-            if (!Config.Questing.showInLobby && isPlobby) {
+            if (isPlobby) {
                 DialogCollection.close(k)
                 return
             }
@@ -113,7 +114,7 @@ object NoxesiumUtils {
             val currentGame = getCurrentGame(server, types)
             var isPlobby = false
 
-            if (types.contains("session")) {
+            if ("session" in types) {
                 isPlobby = true
             }
 
@@ -147,6 +148,22 @@ object NoxesiumUtils {
                 totalRounds: ${packet.totalRounds}
                 """.trimIndent()
             )
+        }
+
+        MccPackets.CLIENTBOUND_MCC_STATISTIC.addListener(
+            this,
+            ClientboundMccStatisticPacket::class.java
+        ) { _, packet, _ ->
+            if (Config.Debug.enableLogging) {
+                ChatUtils.sendMessage(
+                    """
+                    CLIENTBOUND_MCC_STATISTIC:
+                    stat: ${packet.statistic}
+                    value: ${packet.value}
+                    record: ${packet.record}
+                """.trimIndent()
+                )
+            }
         }
     }
 
