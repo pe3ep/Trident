@@ -13,6 +13,7 @@ import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog.QuestingDialogState
+import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import com.noxcrew.noxesium.core.fabric.feature.skull.SkullContents
@@ -33,7 +34,7 @@ object NoxesiumUtils {
         )
     }
 
-    fun updateGameDialogs(currentGame: Game) {
+    fun updateGameDialogs(currentGame: Game, isPlobby: Boolean) {
         DialogCollection.clear()
         KillFeedDialog.clearKills()
 
@@ -46,36 +47,36 @@ object NoxesiumUtils {
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
         }
         if (currentGame != Game.HUB && currentGame != Game.FISHING) {
-            QuestingDialog.dialogState = QuestingDialogState.LOADING
             if (!Config.Questing.enabled) return
             val k = "questing"
-            DialogCollection.open(k, QuestingDialog(10, 10, k))
-            DelayedAction.delayTicks(20L) {
-                if (QuestListener.checkIfPlobby()) return@delayTicks
-                QuestingDialog.currentGame = currentGame
-                QuestingDialog.dialogState = QuestingDialogState.NORMAL
-                if (QuestStorage.getActiveQuests(currentGame)
-                        .isEmpty() && Config.Questing.hideIfNoQuests
-                ) return@delayTicks
-                DialogCollection.refreshDialog(k)
+            if (!Config.Questing.showInLobby && isPlobby) {
+                DialogCollection.close(k)
+                return
             }
-        }
-        if (currentGame == Game.HUB && Config.Questing.showInLobby) {
-            val k = "questing"
-            if (!Config.Questing.enabled) return
-            QuestingDialog.currentGame = Game.entries.filter { g -> g == currentGame }.getOrNull(0) ?: return
+            if (QuestStorage.getActiveQuests(currentGame)
+                    .isEmpty() && Config.Questing.hideIfNoQuests
+            ) {
+                DialogCollection.close(k)
+                return
+            }
+            QuestingDialog.currentGame = currentGame
+            QuestingDialog.dialogState = QuestingDialogState.NORMAL
             DialogCollection.open(k, QuestingDialog(10, 10, k))
+            DialogCollection.refreshDialog(k)
         }
+//        if (currentGame == Game.HUB && Config.Questing.showInLobby) {
+//            val k = "questing"
+//            if (!Config.Questing.enabled) return
+//            QuestingDialog.currentGame = Game.entries.filter { g -> g == currentGame }.getOrNull(0) ?: return
+//            DialogCollection.open(k, QuestingDialog(10, 10, k))
+//        }
     }
 
     private fun removeKillsIfNeeded(packet: ClientboundMccGameStatePacket) {
         if (MCCIState.game !in KillChatListener.killfeedGames) return
         KillChatListener.resetStreaks()
         if (Config.KillFeed.enabled && Config.KillFeed.clearAfterRound) {
-            if (packet.phaseType == "INTERMISSION" && packet.stage == "countdownphase") {
-                KillFeedDialog.clearKills()
-            }
-            if (packet.phaseType == "INTERMISSION" && packet.stage == "preparationphase") {
+            if (packet.phaseType == "INTERMISSION" && (packet.stage == "countdownphase" || packet.stage == "preparationphase")) {
                 KillFeedDialog.clearKills()
             }
         }
@@ -110,10 +111,15 @@ object NoxesiumUtils {
                 "NOX Packet received:\nserver: $server\ntypes: $types"
             )
 
-            updateFishingState(types.last())
+            val currentGame = getCurrentGame(server, types)
+            var isPlobby = false
 
-            val currentGame = getCurrentGame(types)
-            updateGameDialogs(currentGame)
+            if (types.contains("session")) {
+                isPlobby = true
+            }
+
+            updateGameDialogs(currentGame, isPlobby)
+
             if (currentGame in KillChatListener.killfeedGames) {
                 KillFeedDialog.clearKills()
             }
@@ -123,7 +129,10 @@ object NoxesiumUtils {
             }
         }
 
-        MccPackets.CLIENTBOUND_MCC_GAME_STATE.addListener(this, ClientboundMccGameStatePacket::class.java) { _, packet, _ ->
+        MccPackets.CLIENTBOUND_MCC_GAME_STATE.addListener(
+            this,
+            ClientboundMccGameStatePacket::class.java
+        ) { _, packet, _ ->
             removeKillsIfNeeded(packet)
             if (packet.phaseType == "PLAY" || packet.stage == "inround") {
                 handleTimedQuests()
@@ -153,32 +162,58 @@ object NoxesiumUtils {
         }
     }
 
-    private fun getCurrentGame(types: List<String>): Game {
+    private fun getCurrentGame(server: String, types: List<String>): Game {
         if (types.size < 2) {
             ChatUtils.error("Returned server types were too short")
             return Game.HUB
         }
 
-        if (types[0] == "lobby" && types[1] == "game_lobbies") {
-            return parseGameString(types[2])
+        // Fishing
+        if (server == "fishing") {
+            val island = types.getOrNull(2) ?: "temperate_1"
+            updateFishingState(island)
+            return Game.FISHING
+        }
+
+        // Lobby servers
+        if (server == "lobby") {
+            val game = types.getOrNull(2) ?: "lobby"
+            return parseGameString(game)
+        }
+
+        // Dojo
+        if (server == "dojo") {
+            return Game.PARKOUR_WARRIOR_DOJO
+        }
+
+        // Games
+        if (server == "game") {
+            Game.entries.forEach { game ->
+                game.types?.all { it in types }?.let { bool ->
+                    if (!bool) return@forEach
+
+                    // BB Arena edge case
+                    if (game == Game.BATTLE_BOX_ARENA ||
+                        game == Game.BATTLE_BOX
+                    ) {
+                        if ("arena" in types) {
+                            return Game.BATTLE_BOX_ARENA
+                        }
+                        return Game.BATTLE_BOX
+                    }
+
+                    return game
+                }
+            }
         }
 
         return Game.HUB
     }
 
+
     private fun parseGameString(game: String): Game {
         Game.entries.forEach {
-            if (it in listOf(
-                    Game.HUB,
-                    Game.FISHING,
-                    Game.PARKOUR_WARRIOR_DOJO,
-                    Game.PARKOUR_WARRIOR_SURVIVOR,
-                    Game.BATTLE_BOX,
-                    Game.BATTLE_BOX_ARENA
-                )
-            ) return@forEach
-
-            if (it.server == game) {
+            if (it.gameID == game) {
                 return it
             }
         }

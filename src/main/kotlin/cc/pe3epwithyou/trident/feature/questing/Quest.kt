@@ -97,6 +97,9 @@ enum class GameQuests(
             BATTLE_BOX_QUADS_RANGED_KILLS
         )
     ),
+    BATTLE_BOX_ARENA(
+        BATTLE_BOX.list
+    ),
     SKY_BATTLE(
         listOf(
             SKY_BATTLE_QUADS_SURVIVED_TWO_MINUTE,
