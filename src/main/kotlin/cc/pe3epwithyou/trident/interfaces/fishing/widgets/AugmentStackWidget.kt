@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
-import cc.pe3epwithyou.trident.interfaces.shared.widgets.ItemWidget
+import cc.pe3epwithyou.trident.interfaces.shared.widgets.ModelWidget
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.Model
 import com.noxcrew.sheeplib.CompoundWidget
@@ -14,7 +14,7 @@ class AugmentStackWidget(width: Int, height: Int, entries: List<Augment>) : Comp
         0,
     ) {
         entries.forEachIndexed { i, augment ->
-            +ItemWidget(
+            +ModelWidget(
                 Model(
                     augment.texturePath,
                     width,

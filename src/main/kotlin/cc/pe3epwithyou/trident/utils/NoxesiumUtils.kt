@@ -2,7 +2,6 @@ package cc.pe3epwithyou.trident.utils
 
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.game.DynaballHandlers
 import cc.pe3epwithyou.trident.feature.questing.game.HITWHandlers

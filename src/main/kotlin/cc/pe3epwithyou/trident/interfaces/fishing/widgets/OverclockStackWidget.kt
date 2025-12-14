@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
 import cc.pe3epwithyou.trident.Trident
-import cc.pe3epwithyou.trident.interfaces.shared.widgets.ItemWidget
+import cc.pe3epwithyou.trident.interfaces.shared.widgets.ModelWidget
 import cc.pe3epwithyou.trident.state.OverclockState
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.Model
@@ -24,7 +24,7 @@ class OverclockStackWidget(
         LinearLayout.Orientation.HORIZONTAL, 0
     ) {
         stableClocks.forEachIndexed { index, overclock ->
-            +ItemWidget(
+            +ModelWidget(
                 Model(
                     overclock.texturePath,
                     width,
