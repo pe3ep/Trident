@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.state
 import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.state.fishing.Augment
+import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import kotlinx.serialization.Serializable
@@ -20,16 +21,31 @@ data class Bait(var type: Rarity = Rarity.COMMON, var amount: Int? = null)
 data class Line(var type: Rarity = Rarity.COMMON, var uses: Int? = null, var amount: Int? = null)
 
 @Serializable
+data class AugmentContainer(
+    var augment: Augment,
+    var status: AugmentStatus,
+    var durability: Int = augment.uses
+)
+
+@Serializable
 data class UnstableOverclock(
     var texture: OverclockTexture? = null, var state: OverclockState = OverclockState(
-        isAvailable = false, duration = 60 * 5, cooldownDuration = 60 * 45, isActive = false, isCooldown = false
+        isAvailable = false,
+        duration = 60 * 5,
+        cooldownDuration = 60 * 45,
+        isActive = false,
+        isCooldown = false
     )
 )
 
 @Serializable
 data class SupremeOverclock(
     var state: OverclockState = OverclockState(
-        isAvailable = false, duration = 60 * 10, cooldownDuration = 60 * 60, isCooldown = false, isActive = false
+        isAvailable = false,
+        duration = 60 * 10,
+        cooldownDuration = 60 * 60,
+        isCooldown = false,
+        isActive = false
     )
 )
 
@@ -57,7 +73,7 @@ data class Overclocks(
 data class Supplies(
     var bait: Bait = Bait(),
     var line: Line = Line(),
-    var augments: MutableList<Augment> = mutableListOf(),
+    var augments: MutableList<AugmentContainer> = mutableListOf(),
     var augmentsAvailable: Int = 0,
     var overclocks: Overclocks = Overclocks(),
     var baitDesynced: Boolean = true,
@@ -83,7 +99,10 @@ data class WayfinderData(
 
 @Serializable
 data class Research(
-    var type: String, var tier: Int = 1, var progressThroughTier: Int = 0, var totalForTier: Int = 1000
+    var type: String,
+    var tier: Int = 1,
+    var progressThroughTier: Int = 0,
+    var totalForTier: Int = 1000
 )
 
 @Serializable
@@ -102,7 +121,8 @@ data class PlayerState(
 
 object PlayerStateIO {
     // configDir/trident/playerstate.json
-    private val path: Path = FabricLoader.getInstance().configDir.resolve("trident").resolve("playerstate.json")
+    private val path: Path =
+        FabricLoader.getInstance().configDir.resolve("trident").resolve("playerstate.json")
 
     private val json = Json {
         prettyPrint = true
@@ -119,7 +139,11 @@ object PlayerStateIO {
 
         val tmp = path.resolveSibling("${path.fileName}.tmp")
         Files.writeString(
-            tmp, text, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
+            tmp,
+            text,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.WRITE
         )
         Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
     }
@@ -139,12 +163,16 @@ object PlayerStateIO {
 
         if (serializable.supplies.overclocks.unstable.state.isActive || serializable.supplies.overclocks.unstable.state.isCooldown) {
             OverclockClock.registerHandler(
-                OverclockClock.ClockHandler("Unstable", serializable.supplies.overclocks.unstable.state)
+                OverclockClock.ClockHandler(
+                    "Unstable", serializable.supplies.overclocks.unstable.state
+                )
             )
         }
         if (serializable.supplies.overclocks.supreme.state.isActive || serializable.supplies.overclocks.supreme.state.isCooldown) {
             OverclockClock.registerHandler(
-                OverclockClock.ClockHandler("Supreme", serializable.supplies.overclocks.supreme.state)
+                OverclockClock.ClockHandler(
+                    "Supreme", serializable.supplies.overclocks.supreme.state
+                )
             )
         }
         return serializable

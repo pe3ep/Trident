@@ -126,9 +126,9 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         StringWidget(Component.literal("Overclocks".uppercase()).mccFont(), mcFont).atBottom(0, 2, LayoutConstants.LEFT)
 
         val stableOverclocks = listOfNotNull(
-            supplies.overclocks.hook?.asociatedOverclockTexture,
-            supplies.overclocks.magnet?.asociatedOverclockTexture,
-            supplies.overclocks.rod?.asociatedOverclockTexture
+            supplies.overclocks.hook?.texture,
+            supplies.overclocks.magnet?.texture,
+            supplies.overclocks.rod?.texture
         )
         if (stableOverclocks.isEmpty()) {
             StringWidget(
