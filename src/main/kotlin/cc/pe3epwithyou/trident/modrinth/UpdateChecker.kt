@@ -47,7 +47,8 @@ object UpdateChecker {
         val background = Util.backgroundExecutor().asCoroutineDispatcher()
         CoroutineScope(background).launch {
             val req =
-                HttpRequest.newBuilder().uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version"))
+                HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version"))
                     .GET().setHeader("User-Agent", "trident-mc-mod").build()
             val body = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
             Minecraft.getInstance().execute {
@@ -91,11 +92,16 @@ object UpdateChecker {
     }
 
     private fun sendUpdateAvailableMessage(new: String) {
-        val component = Component.literal("New Trident version available: ").withSwatch(TridentFont.TRIDENT_COLOR)
-            .append(Component.literal(currentVersion?.friendlyString ?: "Unknown").withSwatch(TridentFont.TRIDENT_COLOR))
+        val component = Component.literal("New Trident version available: ")
+            .withSwatch(TridentFont.TRIDENT_COLOR)
+            .append(
+                Component.literal(currentVersion?.friendlyString ?: "Unknown")
+                    .withSwatch(TridentFont.TRIDENT_COLOR)
+            )
             .append(Component.literal(" -> ").withSwatch(TridentFont.TRIDENT_COLOR))
             .append(Component.literal(new).withSwatch(TridentFont.TRIDENT_ACCENT)).append(
-                Component.literal("\nClick here to download the latest version").withSwatch(TridentFont.TRIDENT_ACCENT).withStyle(
+                Component.literal("\nClick here to download the latest version")
+                    .withSwatch(TridentFont.TRIDENT_ACCENT).withStyle(
                     Style.EMPTY.withUnderlined(true)
                         .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
                 )

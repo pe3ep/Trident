@@ -46,20 +46,28 @@ class WayfinderWidget(
         )
 
         if (wayfinderStatus.hasGrotto) {
-            val progress = Component.literal(" ${wayfinderStatus.grottoStability}% Stability").defaultFont()
-                .withStyle(
-                    if (wayfinderStatus.grottoStability >= 50) {
-                        ChatFormatting.GREEN
-                    } else if (wayfinderStatus.grottoStability >= 20) {
-                        ChatFormatting.YELLOW
-                    } else {
-                        ChatFormatting.RED
-                    }
-                )
+            val progress =
+                Component.literal(" ${wayfinderStatus.grottoStability}% Stability").defaultFont()
+                    .withStyle(
+                        if (wayfinderStatus.grottoStability >= 50) {
+                            ChatFormatting.GREEN
+                        } else if (wayfinderStatus.grottoStability >= 20) {
+                            ChatFormatting.YELLOW
+                        } else {
+                            ChatFormatting.RED
+                        }
+                    )
             val progressBarComponent =
-                ProgressBar.progressComponent(wayfinderStatus.grottoStability.toFloat() / 100f, 20, 5)
+                ProgressBar.progressComponent(
+                    wayfinderStatus.grottoStability.toFloat() / 100f,
+                    20,
+                    5
+                )
 
-            StringWidget(progressBarComponent.append(progress), mcFont).atBottom(0, settings = LayoutConstants.LEFT)
+            StringWidget(progressBarComponent.append(progress), mcFont).atBottom(
+                0,
+                settings = LayoutConstants.LEFT
+            )
         } else {
             val progressPercentage = (wayfinderStatus.data.toDouble() / 2000) * 100
             val progress =
@@ -70,13 +78,23 @@ class WayfinderWidget(
                             .withStyle(if (progressPercentage >= 100) ChatFormatting.GREEN else ChatFormatting.GRAY)
                     )
                     .append(
-                        Component.literal(if (wayfinderStatus.hasGrotto) "DONE" else "(${round(progressPercentage * 10) / 10.0}%)")
+                        Component.literal(
+                            if (wayfinderStatus.hasGrotto) "DONE" else "(${
+                                round(
+                                    progressPercentage * 10
+                                ) / 10.0
+                            }%)"
+                        )
                             .withStyle(if (progressPercentage >= 100) ChatFormatting.GREEN else ChatFormatting.GRAY)
                     )
                     .defaultFont()
-            val progressBarComponent = ProgressBar.progressComponent((wayfinderStatus.data.toFloat() / 2000f), 25, 5)
+            val progressBarComponent =
+                ProgressBar.progressComponent((wayfinderStatus.data.toFloat() / 2000f), 25, 5)
 
-            StringWidget(progressBarComponent.append(progress), mcFont).atBottom(0, settings = LayoutConstants.LEFT)
+            StringWidget(progressBarComponent.append(progress), mcFont).atBottom(
+                0,
+                settings = LayoutConstants.LEFT
+            )
         }
     }
 
@@ -106,7 +124,13 @@ class WayfinderWidget(
                 ICON_WIDTH,
                 ICON_WIDTH
             ).blit(guiGraphics, x, y)
-            guiGraphics.drawString(font, text, x + ICON_WIDTH + SPACE_ADVANCE, y, 0xFFFFFF.opaqueColor())
+            guiGraphics.drawString(
+                font,
+                text,
+                x + ICON_WIDTH + SPACE_ADVANCE,
+                y,
+                0xFFFFFF.opaqueColor()
+            )
         }
 
         override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit

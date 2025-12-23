@@ -13,7 +13,8 @@ import com.noxcrew.sheeplib.theme.Themed
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.layouts.GridLayout
 
-class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TransparentTheme {
+class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
+    Themed by TransparentTheme {
     override fun getX(): Int = positionKillFeed()
     override fun getY(): Int = TOP_OFFSET
 

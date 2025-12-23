@@ -4,7 +4,9 @@ import cc.pe3epwithyou.trident.utils.Resources
 import net.minecraft.resources.ResourceLocation
 
 enum class OverclockTexture(
-    val texturePath: ResourceLocation, val textureWidth: Int = 16, val textureHeight: Int = textureWidth
+    val texturePath: ResourceLocation,
+    val textureWidth: Int = 16,
+    val textureHeight: Int = textureWidth
 ) {
     //    Hook Overclock
     WISE_HOOK(

@@ -38,7 +38,8 @@ import java.util.concurrent.CompletableFuture
 class Command(
     name: String, block: Builder.() -> Unit
 ) {
-    private val root: LiteralArgumentBuilder<FabricClientCommandSource> = ClientCommandManager.literal(name)
+    private val root: LiteralArgumentBuilder<FabricClientCommandSource> =
+        ClientCommandManager.literal(name)
 
     init {
         Builder(root).block()

@@ -8,7 +8,11 @@ import cc.pe3epwithyou.trident.state.Game
 import net.minecraft.network.chat.Component
 
 object RSRHandlers {
-    private fun inc(criteria: QuestCriteria, tagSuffix: String? = null, canBeDuplicated: Boolean = false) {
+    private fun inc(
+        criteria: QuestCriteria,
+        tagSuffix: String? = null,
+        canBeDuplicated: Boolean = false
+    ) {
         val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
         QuestStorage.applyIncrement(
             IncrementContext(
@@ -35,9 +39,10 @@ object RSRHandlers {
     }
 
     fun handle(m: Component) {
-        Regex("^\\[.] ((.+) was (eliminated|spleefed) by (.+)|(.+) died) \\[.+]").find(m.string)?.let {
-            inc(QuestCriteria.ROCKET_SPLEEF_PLAYERS_OUTLIVED, "rsr_players_outlived", true)
-        }
+        Regex("^\\[.] ((.+) was (eliminated|spleefed) by (.+)|(.+) died) \\[.+]").find(m.string)
+            ?.let {
+                inc(QuestCriteria.ROCKET_SPLEEF_PLAYERS_OUTLIVED, "rsr_players_outlived", true)
+            }
 
 
         Regex("^\\[.] .+, you were eliminated in (\\d+)(st|nd|rd|th)").find(m.string)?.let {

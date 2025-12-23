@@ -7,7 +7,8 @@ import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import net.minecraft.client.gui.layouts.LinearLayout
 
-class AugmentStackWidget(width: Int, height: Int, entries: List<Augment>) : CompoundWidget(0, 0, width, height) {
+class AugmentStackWidget(width: Int, height: Int, entries: List<Augment>) :
+    CompoundWidget(0, 0, width, height) {
 
     override val layout: LinearLayout = LinearLayout(
         LinearLayout.Orientation.HORIZONTAL,

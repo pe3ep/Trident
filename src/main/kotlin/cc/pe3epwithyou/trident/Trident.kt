@@ -11,6 +11,7 @@ class Trident : ModInitializer {
     companion object {
         val LOGGER: Logger = LoggerFactory.getLogger(this.toString())
     }
+
     override fun onInitialize() {
         LOGGER.info("[Trident] Initializing Client...")
         Config.init()

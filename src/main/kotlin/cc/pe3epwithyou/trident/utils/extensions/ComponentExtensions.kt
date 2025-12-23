@@ -19,7 +19,10 @@ object ComponentExtensions {
     fun MutableComponent.withTridentFont(font: String = "icon", offest: Int = 0): MutableComponent =
         this.withFont(TridentFont.getTridentFont(font, offest))
 
-    fun MutableComponent.withSwatch(swatch: TridentFont.Swatch, type: SwatchType = SwatchType.BASE): MutableComponent =
+    fun MutableComponent.withSwatch(
+        swatch: TridentFont.Swatch,
+        type: SwatchType = SwatchType.BASE
+    ): MutableComponent =
         this.withStyle(type.getStyle(swatch))
 
 }

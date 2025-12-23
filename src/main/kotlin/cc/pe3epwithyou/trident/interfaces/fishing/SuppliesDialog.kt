@@ -26,7 +26,8 @@ import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
-class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
+class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
+    Themed by TridentThemed {
     private companion object {
         private val TITLE_COLOR: Int = 0xeb0e30 opacity 127
     }
@@ -63,7 +64,8 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
         if (supplies.needsUpdating) {
             StringWidget(
-                Component.literal("Fishing data missing".uppercase()).mccFont().withStyle(ChatFormatting.GOLD), mcFont
+                Component.literal("Fishing data missing".uppercase()).mccFont()
+                    .withStyle(ChatFormatting.GOLD), mcFont
             ).atBottom(0, settings = LayoutConstants.CENTRE)
             MultiLineTextWidget(
                 Component.literal(
@@ -91,7 +93,8 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         }
 
         val baitComponent =
-            Component.literal(baitIcon).withTridentFont().append(Component.empty().withStyle(ChatFormatting.RESET))
+            Component.literal(baitIcon).withTridentFont()
+                .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(
                     Component.literal(" $baitAmount").mccFont()
                         .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
@@ -114,16 +117,22 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val lineAmount = supplies.line.amount ?: 0
 
         val lineComponent =
-            Component.literal(lineIcon).withTridentFont().append(Component.empty().withStyle(ChatFormatting.RESET))
+            Component.literal(lineIcon).withTridentFont()
+                .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(
-                    Component.literal(" $lineDurability/$lineAmount").mccFont().withColor(supplies.line.type.color)
+                    Component.literal(" $lineDurability/$lineAmount").mccFont()
+                        .withColor(supplies.line.type.color)
                 )
         StringWidget(lineComponent, mcFont).at(0, 1, settings = LayoutConstants.LEFT).apply {
             alignLeft()
         }
 
         // Overclocks
-        StringWidget(Component.literal("Overclocks".uppercase()).mccFont(), mcFont).atBottom(0, 2, LayoutConstants.LEFT)
+        StringWidget(Component.literal("Overclocks".uppercase()).mccFont(), mcFont).atBottom(
+            0,
+            2,
+            LayoutConstants.LEFT
+        )
 
         val stableOverclocks = listOfNotNull(
             supplies.overclocks.hook?.texture,
@@ -147,7 +156,8 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
         val augmentsTotal = supplies.augmentsAvailable
         StringWidget(
             Component.literal("AUGMENTS ").mccFont().append(
-                Component.literal("($augmentsEquipped/$augmentsTotal)").mccFont().withStyle(ChatFormatting.GRAY)
+                Component.literal("($augmentsEquipped/$augmentsTotal)").mccFont()
+                    .withStyle(ChatFormatting.GRAY)
             ), mcFont
         ).atBottom(0, 2, settings = LayoutConstants.LEFT)
 

@@ -19,11 +19,17 @@ class TabButtonGroup(
         tabs.forEach { tab ->
             if (tab == currentTab) {
                 TabLong(
-                    themed = this@TabButtonGroup, tab = tab, style = theme.buttonStyles.positive, view = view
+                    themed = this@TabButtonGroup,
+                    tab = tab,
+                    style = theme.buttonStyles.positive,
+                    view = view
                 ).at(0, col)
             } else {
                 TabShort(
-                    theme = this@TabButtonGroup, tab = tab, view = view, style = theme.buttonStyles.standard
+                    theme = this@TabButtonGroup,
+                    tab = tab,
+                    view = view,
+                    style = theme.buttonStyles.standard
                 ).at(0, col)
             }
             col++

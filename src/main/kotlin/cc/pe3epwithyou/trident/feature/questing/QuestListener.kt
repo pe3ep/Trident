@@ -69,7 +69,9 @@ object QuestListener {
             checkDesynced(message)
             if (MCCIState.game == Game.PARKOUR_WARRIOR_SURVIVOR) PKWSurvivorHandlers.handle(message)
             // BB Arena and BB quests are shared
-            if (MCCIState.game == Game.BATTLE_BOX || MCCIState.game == Game.BATTLE_BOX_ARENA) BattleBoxHandlers.handle(message)
+            if (MCCIState.game == Game.BATTLE_BOX || MCCIState.game == Game.BATTLE_BOX_ARENA) BattleBoxHandlers.handle(
+                message
+            )
 
             if (MCCIState.game == Game.TGTTOS) TGTTOSHandlers.handle(message)
             if (MCCIState.game == Game.SKY_BATTLE) SkyBattleHandlers.handle(message)
@@ -82,7 +84,9 @@ object QuestListener {
 
     fun checkDesynced(m: Component) {
         val match =
-            Regex("\\(.\\) (Quest Scroll|Quest) Completed! Check your Quest Log for rewards\\.").matches(m.string)
+            Regex("\\(.\\) (Quest Scroll|Quest) Completed! Check your Quest Log for rewards\\.").matches(
+                m.string
+            )
         if (!match) return
         if (isAQuestCompleted()) return
         QuestingDialog.dialogState = QuestingDialog.QuestingDialogState.DESYNCED

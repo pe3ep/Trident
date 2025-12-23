@@ -41,9 +41,9 @@ object ExchangeLookup {
         if (key.isBlank()) {
             ChatUtils.sendMessage(
                 Component.literal("Your API key is not set. ").withSwatch(TridentFont.ERROR).append(
-                        Component.literal("Set it using /trident api setToken <TOKEN>")
-                            .withSwatch(TridentFont.ERROR, TridentFont.SwatchType.MUTED)
-                    )
+                    Component.literal("Set it using /trident api setToken <TOKEN>")
+                        .withSwatch(TridentFont.ERROR, TridentFont.SwatchType.MUTED)
+                )
             )
             ChatUtils.sendMessage(
                 Component.literal("Click here to visit Gateway to create a token")
@@ -80,17 +80,20 @@ object ExchangeLookup {
         """.trimIndent()
 
         CoroutineScope(context).launch {
-            val req = HttpRequest.newBuilder().uri(URI.create("https://api.mccisland.net/graphql")).POST(
-                HttpRequest.BodyPublishers.ofString(
-                    """
+            val req =
+                HttpRequest.newBuilder().uri(URI.create("https://api.mccisland.net/graphql")).POST(
+                    HttpRequest.BodyPublishers.ofString(
+                        """
                         {"query":"$graphQLString"}
                     """.trimIndent()
-                )
-            ).setHeader("Content-Type", "application/json").setHeader("User-Agent", "trident-mc-mod/${player.name}")
-                .setHeader("X-API-Key", key).build()
+                    )
+                ).setHeader("Content-Type", "application/json")
+                    .setHeader("User-Agent", "trident-mc-mod/${player.name}")
+                    .setHeader("X-API-Key", key).build()
 
             try {
-                val responseText = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
+                val responseText =
+                    client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
                 val listingsResponse = json.decodeFromString<ExchangeListingsResponse>(responseText)
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.COMPLETED
                 Minecraft.getInstance().execute {

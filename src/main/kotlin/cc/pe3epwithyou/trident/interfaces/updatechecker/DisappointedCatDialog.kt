@@ -19,7 +19,8 @@ import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 
-class DisappointedCatDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
+class DisappointedCatDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
+    Themed by TridentThemed {
     override fun layout(): GridLayout = grid {
         val font = Minecraft.getInstance().font
         CatImageWidget().atBottom(0, 2)
@@ -59,7 +60,7 @@ class DisappointedCatDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, k
         }
     }
 
-    private class CatImageWidget : AbstractWidget(0, 0, 201 ,110, Component.empty()) {
+    private class CatImageWidget : AbstractWidget(0, 0, 201, 110, Component.empty()) {
         override fun renderWidget(
             guiGraphics: GuiGraphics,
             i: Int,
@@ -79,7 +80,8 @@ class DisappointedCatDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, k
             )
         }
 
-        override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput): Unit = Unit
+        override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput): Unit =
+            Unit
 
     }
 }

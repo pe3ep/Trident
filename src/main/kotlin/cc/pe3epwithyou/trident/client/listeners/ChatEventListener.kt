@@ -33,19 +33,27 @@ object ChatEventListener {
 
     // Regex matchers for fishing messages taken from the amazing Jamboree mod <3
     // https://github.com/JamesMCo/jamboree
-    private fun Component.isCaughtMessage() = Regex("^\\(.\\) You caught: \\[.+].*").matches(this.string)
-    private fun Component.isIconMessage() = Regex("^\\s*. (Triggered|Special): .+").matches(this.string)
+    private fun Component.isCaughtMessage() =
+        Regex("^\\(.\\) You caught: \\[.+].*").matches(this.string)
+
+    private fun Component.isIconMessage() =
+        Regex("^\\s*. (Triggered|Special): .+").matches(this.string)
+
     private fun Component.isXPMessage() = Regex("^\\s*. You earned: .+").matches(this.string)
     private fun Component.isReceivedItem() = Regex("^\\(.\\) You receive: .+").matches(this.string)
     private fun Component.isDepletedSpot() =
         Regex("^\\[.] This spot is Depleted, so you can no longer fish here\\.").matches(this.string)
 
     private fun Component.isOutOfGrotto() =
-        Regex("^\\[.] Your Grotto has become unstable, teleporting you back to safety\\.\\.\\.").matches(this.string)
+        Regex("^\\[.] Your Grotto has become unstable, teleporting you back to safety\\.\\.\\.").matches(
+            this.string
+        )
 
-    private fun Component.isStockReplenished() = Regex("^\\[.] Fishing Spot Stock replenished!").matches(this.string)
+    private fun Component.isStockReplenished() =
+        Regex("^\\[.] Fishing Spot Stock replenished!").matches(this.string)
 
-    private fun Component.isPKWLeapFinished() = Regex("^\\[.] Leap \\d ended! .+").matches(this.string)
+    private fun Component.isPKWLeapFinished() =
+        Regex("^\\[.] Leap \\d ended! .+").matches(this.string)
 
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowMessage@{ message, _ ->
@@ -90,7 +98,11 @@ object ChatEventListener {
                     triggerBait = !checkJunk(message)
                 }
 
-                if (message.isIconMessage() && message.string.contains("Supply Preserve", ignoreCase = true)) {
+                if (message.isIconMessage() && message.string.contains(
+                        "Supply Preserve",
+                        ignoreCase = true
+                    )
+                ) {
                     isSupplyPreserve = true
                 }
 

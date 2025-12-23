@@ -116,7 +116,8 @@ object TridentCommand {
                     DialogCollection.refreshOpenedDialogs()
 
                     val c =
-                        Component.literal("Player state has been successfully ").withSwatch(TridentFont.TRIDENT_COLOR)
+                        Component.literal("Player state has been successfully ")
+                            .withSwatch(TridentFont.TRIDENT_COLOR)
                             .append(
                                 Component.literal("reset").withSwatch(TridentFont.ERROR)
                             )
@@ -159,14 +160,16 @@ object TridentCommand {
                         delay(3000)
                         main {
                             ChatUtils.sendMessage(
-                                Component.literal("Are we serious right meow bro?").withStyle(ChatFormatting.AQUA)
+                                Component.literal("Are we serious right meow bro?")
+                                    .withStyle(ChatFormatting.AQUA)
                             )
                         }
 
                         delay(3000)
                         main {
                             ChatUtils.sendMessage(
-                                Component.literal("This incident will be reported.").withSwatch(TridentFont.ERROR)
+                                Component.literal("This incident will be reported.")
+                                    .withSwatch(TridentFont.ERROR)
                                     .withStyle(ChatFormatting.BOLD)
                             )
                             jokeCooldown = false
@@ -198,7 +201,8 @@ object TridentCommand {
                         Config.handler.instance().apiKey = ""
                         Config.handler.save()
                         ChatUtils.sendMessage(
-                            Component.literal("Your API token has been ").withSwatch(TridentFont.TRIDENT_COLOR)
+                            Component.literal("Your API token has been ")
+                                .withSwatch(TridentFont.TRIDENT_COLOR)
                                 .append(Component.literal("reset").withSwatch(TridentFont.ERROR))
                         )
                     }

@@ -40,7 +40,8 @@ object DialogCollection {
     private fun positionDialog(dialog: TridentDialog, position: TridentDialog.Position) {
         var distances = position.distances
         if (distances == null) {
-            distances = TridentDialog.getDistances(position.x, position.y, dialog.width, dialog.height)
+            distances =
+                TridentDialog.getDistances(position.x, position.y, dialog.width, dialog.height)
         }
         val quad = TridentDialog.getQuadrant(distances)
         dialog.applyQuadrantPositioning(quad, distances)
@@ -167,9 +168,19 @@ object DialogCollection {
 
         for (dialog in existingDialogs) {
             candidates.add(Pair(dialog.x + dialog.width + DIALOG_GAP, dialog.y)) // Right
-            candidates.add(Pair(maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP), dialog.y)) // Left
+            candidates.add(
+                Pair(
+                    maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP),
+                    dialog.y
+                )
+            ) // Left
             candidates.add(Pair(dialog.x, dialog.y + dialog.height + DIALOG_GAP)) // Below
-            candidates.add(Pair(dialog.x, maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP))) // Above
+            candidates.add(
+                Pair(
+                    dialog.x,
+                    maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP)
+                )
+            ) // Above
             candidates.add(
                 Pair(
                     dialog.x + dialog.width + DIALOG_GAP, dialog.y + dialog.height + DIALOG_GAP
@@ -177,12 +188,14 @@ object DialogCollection {
             ) // Bottom-right
             candidates.add(
                 Pair(
-                    maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP), dialog.y + dialog.height + DIALOG_GAP
+                    maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP),
+                    dialog.y + dialog.height + DIALOG_GAP
                 )
             ) // Bottom-left
             candidates.add(
                 Pair(
-                    dialog.x + dialog.width + DIALOG_GAP, maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP)
+                    dialog.x + dialog.width + DIALOG_GAP,
+                    maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP)
                 )
             ) // Top-right
         }
@@ -226,7 +239,17 @@ object DialogCollection {
         existingDialogs: List<Dialog>, x: Int, y: Int, width: Int, height: Int
     ): Boolean {
         for (dialog in existingDialogs) {
-            if (rectanglesOverlap(dialog.x, dialog.y, dialog.width, dialog.height, x, y, width, height)) {
+            if (rectanglesOverlap(
+                    dialog.x,
+                    dialog.y,
+                    dialog.width,
+                    dialog.height,
+                    x,
+                    y,
+                    width,
+                    height
+                )
+            ) {
                 return true
             }
         }
