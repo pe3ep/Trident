@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.DyedItemColor
 import org.joml.Matrix3x2f
 
 
@@ -17,7 +18,8 @@ data class Model(
     val modelPath: ResourceLocation,
     val width: Int,
     val height: Int,
-    val damagePercent: Int = 100
+    val damagePercent: Int = 100,
+    val dyedColor: DyedItemColor? = null,
 ) {
     private val item = ItemStack(Items.ECHO_SHARD)
 
@@ -26,6 +28,9 @@ data class Model(
         item.set(DataComponents.MAX_STACK_SIZE, 1)
         item.set(DataComponents.MAX_DAMAGE, 100)
         item.set(DataComponents.DAMAGE, 100 - damagePercent)
+        if (dyedColor != null) {
+            item.set(DataComponents.DYED_COLOR, dyedColor)
+        }
     }
 
     /**

@@ -11,10 +11,11 @@
   "client": [
     "AbstractContainerScreenMixin",
     "BossHealthOverlayAccessor",
+    "ClientPacketListenerMixin",
     "FontLoaderMixin",
     "GuiAccessor",
-    "JoinIslandMixin",
-    "ClientPacketListenerMixin"
+    "GuiMixin",
+    "JoinIslandMixin"
   ],
   "injectors": {
     "defaultRequire": 1
