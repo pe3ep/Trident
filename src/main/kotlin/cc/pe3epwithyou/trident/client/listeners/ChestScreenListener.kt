@@ -8,16 +8,17 @@ import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestingParser
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
+import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.Research
-import cc.pe3epwithyou.trident.state.fishing.Augment
-import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
+import cc.pe3epwithyou.trident.state.fishing.getAugmentContainer
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
+import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.safeGetLine
 import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
@@ -164,24 +165,25 @@ object ChestScreenListener {
         // Process augments slots
         val augmentSlotsIndices = listOf(30, 31, 32, 33, 34, 39, 40, 41, 42, 43)
         val augmentsRaw =
-            augmentSlotsIndices.map { screen.menu.slots[it].item.displayName.string } as MutableList
+            augmentSlotsIndices.map { screen.menu.slots[it].item } as MutableList
 
         var availableSlots = 10
         TridentClient.playerState.supplies.augments = augmentsRaw.mapNotNull { rawName ->
             when {
-                rawName.contains("Locked Supply Slot") -> {
+                rawName.hoverName.string.contains("Locked Supply Slot") -> {
                     availableSlots--
                     null
                 }
 
-                rawName.contains("Empty Supply Slot") -> null
+                rawName.hoverName.string.contains("Empty Supply Slot") -> null
+
                 else -> {
                     val cleanedName =
-                        rawName.replace(Regex("""(A\.N\.G\.L\.R\.|\[|]|Augment)"""), "").trim()
-                    getAugmentByName(cleanedName)
+                        rawName.hoverName.string.replace(Regex("""(A\.N\.G\.L\.R\.|\[|]|Augment)"""), "").trim()
+                    getAugmentContainer(cleanedName, rawName.getLore().map { it.string })
                 }
             }
-        } as MutableList<Augment>
+        } as MutableList<AugmentContainer>
         ChatUtils.debugLog(
             """
             Augments: ${TridentClient.playerState.supplies.augments}

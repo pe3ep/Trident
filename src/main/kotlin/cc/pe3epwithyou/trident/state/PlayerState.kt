@@ -23,8 +23,8 @@ data class Line(var type: Rarity = Rarity.COMMON, var uses: Int? = null, var amo
 @Serializable
 data class AugmentContainer(
     var augment: Augment,
-    var status: AugmentStatus,
-    var durability: Int = augment.uses
+    var status: AugmentStatus = AugmentStatus.NEW,
+    var durability: Int = augment.uses,
 )
 
 @Serializable

@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.interfaces.fishing.widgets.OverclockStackWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
+import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
@@ -164,7 +165,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
         val augmentLine = supplies.augments.toMutableList()
         if (augmentLine.size < supplies.augmentsAvailable) {
             for (i in 1..(supplies.augmentsAvailable - augmentLine.size)) {
-                augmentLine.add(Augment.EMPTY_AUGMENT)
+                augmentLine.add(AugmentContainer(Augment.EMPTY_AUGMENT))
             }
         }
         if (augmentLine.isEmpty()) {

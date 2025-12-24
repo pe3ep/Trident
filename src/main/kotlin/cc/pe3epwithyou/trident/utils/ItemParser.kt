@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.client.TridentClient
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
+import cc.pe3epwithyou.trident.state.fishing.getAugmentContainer
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.world.item.ItemStack
 

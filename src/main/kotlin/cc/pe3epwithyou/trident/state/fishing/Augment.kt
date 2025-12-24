@@ -1,12 +1,14 @@
 package cc.pe3epwithyou.trident.state.fishing
 
+import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
 import net.minecraft.resources.ResourceLocation
 
 @Suppress("unused")
 enum class Augment(
     val augmentName: String,
-    val texturePath: ResourceLocation,
+    val modelPath: ResourceLocation,
     val uses: Int,
     val useTrigger: AugmentTrigger,
     val textureWidth: Int = 16,
@@ -294,7 +296,7 @@ enum class Augment(
         "Empty Augment",
         Resources.trident("interface/empty_augment"),
         1,
-        AugmentTrigger.ANYTHING,
+        AugmentTrigger.NONE,
     )
 
 }
@@ -306,8 +308,31 @@ fun getAugmentByName(name: String): Augment? {
     return null
 }
 
+fun getAugmentContainer(name: String, lore: List<String>): AugmentContainer? {
+    Augment.entries.forEach { augment ->
+        if (augment.augmentName == name) {
+            val status = when {
+                "This item has previously been repaired." in lore -> AugmentStatus.REPAIRED
+                lore.find { "This item is out of uses! You can Repair" in it } != null -> AugmentStatus.NEEDS_REPAIRING
+                lore.find { "This item is out of uses! You've already" in it } != null -> AugmentStatus.BROKEN
+                else -> AugmentStatus.NEW
+            }
+            var durability: Int? = null
+            lore.forEach { s ->
+                Regex("""Uses Remaining: (.+)/(.+)""").matchEntire(s)?.let {
+                    durability = it.groups[1]?.value?.parseFormattedInt()
+                    return@forEach
+                }
+            }
+            return AugmentContainer(augment, status, durability ?: augment.uses)
+        }
+    }
+    return null
+}
+
 enum class AugmentStatus {
     NEW,
+    NEEDS_REPAIRING,
     REPAIRED,
     BROKEN
 }
