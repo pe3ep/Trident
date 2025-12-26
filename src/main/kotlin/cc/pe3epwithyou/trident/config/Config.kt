@@ -42,6 +42,9 @@ class Config {
     var fishingSuppliesModule: Boolean = true
 
     @SerialEntry
+    var fishingSuppliesModuleShowAugmentDurability: Boolean = false
+
+    @SerialEntry
     var fishingWayfinderModule: Boolean = true
 
     @SerialEntry
@@ -143,6 +146,8 @@ class Config {
     object Fishing {
         val suppliesModule: Boolean
             get() = handler.instance().fishingSuppliesModule
+        val suppliesModuleShowAugmentDurability: Boolean
+            get() = handler.instance().fishingSuppliesModuleShowAugmentDurability
         val wayfinderModule: Boolean
             get() = handler.instance().fishingWayfinderModule
         val flashIfDepleted: Boolean
@@ -473,6 +478,13 @@ class Config {
                                 ).build()
                         )
                         binding(handler.instance()::fishingSuppliesModule, true)
+                        controller(tickBox())
+                    }
+
+                    options.register<Boolean>("supplies_module_durability") {
+                        name(Component.translatable("config.trident.fishing.supplies_module.durability.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.fishing.supplies_module.durability.description")))
+                        binding(handler.instance()::fishingSuppliesModuleShowAugmentDurability, false)
                         controller(tickBox())
                     }
 

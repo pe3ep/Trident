@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
@@ -15,7 +16,7 @@ import net.minecraft.network.chat.Component
 
 class AugmentWidget(
     val textureWidth: Int, textureHeight: Int, val container: AugmentContainer, marginRight: Int
-) : AbstractWidget(0, 0, textureWidth + marginRight, textureHeight + 8, Component.empty()) {
+) : AbstractWidget(0, 0, textureWidth + marginRight, textureHeight + getExtraHeight(), Component.empty()) {
     private companion object {
         val REPAIR_AUGMENT = Resources.trident("textures/interface/repair_augment.png")
         val BROKEN_AUGMENT = Resources.trident("textures/interface/broken_augment.png")
@@ -23,6 +24,8 @@ class AugmentWidget(
         val NORMAL_COLOR = 0x93ea2c.opaqueColor()
         val REPAIRED_COLOR = 0xffc900.opaqueColor()
         val BROKEN_COLOR = 0xea2c2c.opaqueColor()
+
+        fun getExtraHeight() = if (Config.Fishing.suppliesModuleShowAugmentDurability) 8 else 0
     }
 
     init {
@@ -54,6 +57,12 @@ class AugmentWidget(
                 .withColor(0xFFFFFF.opaqueColor())
         )
 
+        val grotto =
+            if (container.augment.worksInGrotto) Component.empty() else Component.literal(" ▪ ")
+                .withColor(0x505050.opaqueColor()).append(
+                    Component.literal("Does not work in Grottos.").withColor(0xA8B0B0.opaqueColor())
+                )
+
         val useProgress = when (container.status) {
             AugmentStatus.BROKEN -> {
                 Component.literal("This item is out of uses! You've already repaired it once, so cannot do so again.")
@@ -76,8 +85,7 @@ class AugmentWidget(
                             .withColor(0xffffff.opaqueColor()).append(
                                 Component.literal("/${container.augment.uses}\n")
                                     .withColor(0x505050.opaqueColor())
-                            )
-                            .append(
+                            ).append(
                                 ProgressBar.progressComponent(
                                     container.durability / container.augment.uses.toFloat(), 50, 10
                                 )
@@ -88,13 +96,13 @@ class AugmentWidget(
                         Component.literal("\n\nThis item has previously been repaired.")
                             .withColor(0xA8B0B0.opaqueColor())
                     )
-
                 }
                 c
             }
         }
 
-        val c = name.append(supplyInfo).append(uses).append(trigger).append(useProgress)
+        val c =
+            name.append(supplyInfo).append(uses).append(trigger).append(grotto).append(useProgress)
         setTooltip(Tooltip.create(c))
     }
 
@@ -126,7 +134,7 @@ class AugmentWidget(
             container.durability / container.augment.uses.toFloat()
         )
 
-        renderRemainingUses(graphics)
+        if (Config.Fishing.suppliesModuleShowAugmentDurability) renderRemainingUses(graphics)
 
         when (container.status) {
             AugmentStatus.NEEDS_REPAIRING -> {
@@ -150,7 +158,8 @@ class AugmentWidget(
         graphics.pose().pushMatrix()
         val pose = graphics.pose()
 
-        val durability = if (container.status == AugmentStatus.BROKEN || container.status == AugmentStatus.NEEDS_REPAIRING) 0 else container.durability
+        val durability =
+            if (container.status == AugmentStatus.BROKEN || container.status == AugmentStatus.NEEDS_REPAIRING) 0 else container.durability
         val factor = 0.65f
         val posX = when {
             durability >= 100 -> x
@@ -166,7 +175,11 @@ class AugmentWidget(
         }
         pose.scaleAround(factor, factor, posX.toFloat(), posY.toFloat(), pose)
         graphics.drawString(
-            Minecraft.getInstance().font, Component.literal("$durability").withColor(color), posX, posY, 0xFFFFFF.opaqueColor()
+            Minecraft.getInstance().font,
+            Component.literal("$durability").withColor(color),
+            posX,
+            posY,
+            0xFFFFFF.opaqueColor()
         )
         graphics.pose().popMatrix()
     }
@@ -184,11 +197,7 @@ class AugmentWidget(
             color.lighten(-0.7f)
         )
         graphics.fill(
-            x + 1,
-            y + textureWidth - 2,
-            x + filledWidth + 1,
-            y + textureWidth - 1,
-            color
+            x + 1, y + textureWidth - 2, x + filledWidth + 1, y + textureWidth - 1, color
         )
     }
 

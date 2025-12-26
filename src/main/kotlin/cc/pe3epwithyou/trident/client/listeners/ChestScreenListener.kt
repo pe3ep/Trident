@@ -26,7 +26,10 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemStack
 
+
+// TODO: Refactor this whole object
 object ChestScreenListener {
 
     private fun parseRarity(name: String): Rarity = when {
@@ -225,15 +228,11 @@ object ChestScreenListener {
         DialogCollection.refreshDialog("supplies")
     }
 
-    // TODO: Use safer methods to get data from a slot
-    fun findWayfinderData(screen: ContainerScreen) {
-        if ("FISHING ISLANDS" !in screen.title.string) return
-
-        // temperate
-        val temperateDataLine = screen.menu.slots[24].item.safeGetLine(13)?.string
-        if (temperateDataLine != null && temperateDataLine.contains("Wayfinder Data: ")) {
+    private fun handleWfdItemLine(item: ItemStack) {
+        val line = item.safeGetLine(13)?.string
+        if (line != null && line.contains("Wayfinder Data: ")) {
             val temperateData =
-                temperateDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
+                line.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
             TridentClient.playerState.wayfinderData.temperate.data = temperateData
             TridentClient.playerState.wayfinderData.temperate.unlocked = true
             if (temperateData >= 2000) TridentClient.playerState.wayfinderData.temperate.hasGrotto =
@@ -241,31 +240,18 @@ object ChestScreenListener {
         } else {
             TridentClient.playerState.wayfinderData.temperate.hasGrotto = true
         }
+    }
 
+    // TODO: Use safer methods to get data from a slot
+    fun findWayfinderData(screen: ContainerScreen) {
+        if ("FISHING ISLANDS" !in screen.title.string) return
+
+        // temperate
+        handleWfdItemLine(screen.menu.slots[24].item)
         // tropical
-        val tropicalDataLine = screen.menu.slots[33].item.safeGetLine(13)?.string
-        if (tropicalDataLine != null && tropicalDataLine.contains("Wayfinder Data: ")) {
-            val tropicalData =
-                tropicalDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
-            TridentClient.playerState.wayfinderData.tropical.data = tropicalData
-            TridentClient.playerState.wayfinderData.tropical.unlocked = true
-            if (tropicalData >= 2000) TridentClient.playerState.wayfinderData.tropical.hasGrotto =
-                true
-        } else {
-            TridentClient.playerState.wayfinderData.tropical.hasGrotto = true
-        }
-
+        handleWfdItemLine(screen.menu.slots[33].item)
         // barren
-        val barrenDataLine = screen.menu.slots[42].item.safeGetLine(13)?.string
-        if (barrenDataLine != null && barrenDataLine.contains("Wayfinder Data: ")) {
-            val barrenData =
-                barrenDataLine.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
-            TridentClient.playerState.wayfinderData.barren.data = barrenData
-            TridentClient.playerState.wayfinderData.barren.unlocked = true
-            if (barrenData >= 2000) TridentClient.playerState.wayfinderData.barren.hasGrotto = true
-        } else {
-            TridentClient.playerState.wayfinderData.barren.hasGrotto = true
-        }
+        handleWfdItemLine(screen.menu.slots[42].item)
 
         TridentClient.playerState.wayfinderData.needsUpdating = false
         DialogCollection.refreshDialog("wayfinder")
