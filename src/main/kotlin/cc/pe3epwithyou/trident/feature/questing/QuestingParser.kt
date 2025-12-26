@@ -41,7 +41,7 @@ object QuestingParser {
             return null
         }
 
-        val rarity = when (model.path.split("/").last()) {
+        val rarity = when (model.path.split("/").lastOrNull()) {
             "common" -> Rarity.COMMON
             "uncommon" -> Rarity.UNCOMMON
             "rare" -> Rarity.RARE

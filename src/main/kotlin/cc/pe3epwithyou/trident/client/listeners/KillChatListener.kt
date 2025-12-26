@@ -12,6 +12,7 @@ import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
+import cc.pe3epwithyou.trident.utils.ChatUtils
 import com.noxcrew.sheeplib.util.opacity
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.Util
@@ -34,18 +35,20 @@ object KillChatListener {
     fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowGame true
-
-            val killAssistMatch = Regex("""^\[.] You assisted in eliminating (.+)!""").matches(message.string)
-            if (killAssistMatch) {
-                KillFeedDialog.applyKillAssist()
-            }
-
-            DeathMessages.entries.forEach { deathMessage ->
-                if (deathMessage.regex.matches(message.string)) {
-                    return@allowGame handleKill(message, deathMessage.method)
+            try {
+                val killAssistMatch = Regex("""^\[.] You assisted in eliminating (.+)!""").matches(message.string)
+                if (killAssistMatch) {
+                    KillFeedDialog.applyKillAssist()
                 }
-            }
 
+                DeathMessages.entries.forEach { deathMessage ->
+                    if (deathMessage.regex.matches(message.string)) {
+                        return@allowGame handleKill(message, deathMessage.method)
+                    }
+                }
+            } catch (e: Exception) {
+                ChatUtils.error("Something went wrong when handling message ${message.string}: ${e.message}")
+            }
             return@allowGame true
         }
     }
@@ -79,12 +82,22 @@ object KillChatListener {
                 val ctx = EliminatedCriteria.get(game, sourceTag = "kill") ?: return true
                 QuestStorage.applyIncrement(ctx, true)
 
-                if (killMethod == KillMethod.RANGE && game == Game.BATTLE_BOX) {
-                    QuestStorage.applyIncrement(
-                        IncrementContext(
-                            Game.BATTLE_BOX, QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS, 1, "bb_ranged_kill"
-                        ), true
+                if (game == Game.BATTLE_BOX || game == Game.BATTLE_BOX_ARENA) {
+                    val ctx = IncrementContext(
+                        Game.BATTLE_BOX,
+                        QuestCriteria.BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED,
+                        1,
+                        "bb_kills_or_assists"
                     )
+                    QuestStorage.applyIncrement(ctx, true)
+                    if (killMethod == KillMethod.RANGE) {
+                        QuestStorage.applyIncrement(
+                            IncrementContext(
+                                Game.BATTLE_BOX, QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS, 1, "bb_ranged_kill"
+                            ), true
+                        )
+
+                    }
                 }
             }
 

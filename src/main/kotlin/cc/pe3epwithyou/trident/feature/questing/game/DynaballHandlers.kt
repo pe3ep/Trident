@@ -44,8 +44,7 @@ object DynaballHandlers {
     }
 
     fun handle(m: Component) {
-        val eliminated = Regex("^\\[.] Game Over!").find(m.string)
-        if (eliminated != null) {
+        Regex("^\\[.] Game Over!").find(m.string)?.let {
             val title = (Minecraft.getInstance().gui as GuiAccessor).title ?: return
             if (title.string != "Victory!") return
 
@@ -58,5 +57,6 @@ object DynaballHandlers {
                 )
             )
         }
+
     }
 }

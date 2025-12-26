@@ -25,8 +25,7 @@ object TGTTOSHandlers {
 
     fun handle(m: Component) {
         handleRoundPlacement(m)
-        val gameOver = Regex("^\\[.] Game Over!").find(m.string)
-        if (gameOver != null) {
+        Regex("^\\[.] Game Over!").find(m.string)?.let {
             val subtitle = (Minecraft.getInstance().gui as GuiAccessor).subtitle ?: return
             val match = Regex("(\\d+)(st|nd|rd|th) Place!").find(subtitle.string) ?: return
             val placement = match.groups[1]?.value?.toIntOrNull() ?: return
@@ -41,13 +40,14 @@ object TGTTOSHandlers {
                 inc(QuestCriteria.TGTTOS_TOP_THREE, "tgttos_top3")
             }
         }
+
     }
 
     private fun handleRoundPlacement(m: Component) {
         val match =
             Regex("^\\[.] .+, you finished the round and came in (\\d+)(st|nd|rd|th) place!")
                 .find(m.string) ?: return
-        val placement = match.groups[1]?.value?.toInt() ?: return
+        val placement = match.groups[1]?.value?.toIntOrNull() ?: return
 
         inc(QuestCriteria.TGTTOS_CHICKENS_PUNCHED, "tgttos_chickens_punched", true)
 

@@ -3,20 +3,26 @@ package cc.pe3epwithyou.trident.feature.rarityslot
 import cc.pe3epwithyou.trident.config.Config
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.TextColor
 import net.minecraft.world.inventory.Slot
 
 object RaritySlot {
+    private val ALLOWED_COLORS = listOf<TextColor>(
+        TextColor.fromRgb(0xF94242),
+        TextColor.fromRgb(0xFF8000),
+        TextColor.fromRgb(0xA335EE),
+        TextColor.fromRgb(0x0070DD),
+        TextColor.fromRgb(0x1EFF00),
+    )
+
     fun render(graphics: GuiGraphics, slot: Slot) {
         if (!Config.RaritySlot.enabled) return
 
-
         if (slot.item.isEmpty) return
-//        Don't show the background for common items to reduce visual clutter
-        val color = slot.item.hoverName.style.color ?: return
-        if (color == TextColor.fromLegacyFormat(ChatFormatting.WHITE)) return
+        val color = slot.item.hoverName.toFlatList().firstOrNull()?.style?.color ?: return
+
+        if (color !in ALLOWED_COLORS) return
         renderOutline(graphics, slot, color)
     }
 

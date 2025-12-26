@@ -13,17 +13,25 @@ import cc.pe3epwithyou.trident.state.Research
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
 import cc.pe3epwithyou.trident.utils.ChatUtils
-import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.ItemParser
+import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.safeGetLine
 import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
+import net.minecraft.Util
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
 
 object ChestScreenListener {
+    var isWaitingForItems = false
 
     private fun parseRarity(name: String): Rarity = when {
         "Common" in name -> Rarity.COMMON
@@ -37,38 +45,56 @@ object ChestScreenListener {
 
     private fun handleScreen(screen: ContainerScreen) {
         if ("FISHING SUPPLIES" in screen.title.string) {
-            DelayedAction.delayTicks(1L) {
-                findAugments(screen)
-            }
+            waitForItems { findAugments(screen) }
         }
         if ("ISLAND REWARDS" in screen.title.string) {
-            DelayedAction.delayTicks(1L) {
-                findQuests(screen)
-            }
+            waitForItems { findQuests(screen) }
         }
         if ("FISHING ISLANDS" in screen.title.string) {
-            DelayedAction.delayTicks(1L) {
-                findWayfinderData(screen)
-            }
+            waitForItems { findWayfinderData(screen) }
         }
         if ("FISHING PROGRESS" in screen.title.string) {
-            DelayedAction.delayTicks(1L) {
-                findFishingResearch(screen)
-            }
+            waitForItems { findFishingResearch(screen) }
         }
-
         if ("ISLAND EXCHANGE" in screen.title.string) {
-            DelayedAction.delayTicks(1L) {
-                ExchangeHandler.handleScreen(screen)
-            }
+            waitForItems { ExchangeHandler.handleScreen(screen) }
         }
 
         ChatUtils.debugLog("Screen title: " + screen.title.string)
     }
 
+    fun waitForItems(block: () -> Unit) {
+        val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
+        isWaitingForItems = true
+        CoroutineScope(ctx).launch {
+            var time = 0
+            // timeout of 3 seconds
+            while (time < 60) {
+                if (!isWaitingForItems) {
+                    delay(50) // Extra 1 tick wait due to some items not arriving together
+                    block()
+                    return@launch
+                }
+                delay(50)
+                time++
+            }
+            ChatUtils.sendMessage(Component.literal("Timed out waiting for items to arrive, waited for 3 seconds").withSwatch(TridentFont.ERROR))
+            ChatUtils.error("Timed out waiting for items")
+        }
+    }
+
     fun register() {
         ScreenEvents.AFTER_INIT.register { _, screen: Screen, _, _ ->
-            if (screen is ContainerScreen) handleScreen(screen)
+            try {
+                if (screen is ContainerScreen) handleScreen(screen)
+            } catch (e: Exception) {
+                ChatUtils.sendMessage(
+                    Component.literal("Something went wrong when opening screen, please contact developers about this issue")
+                        .withSwatch(TridentFont.ERROR)
+                )
+
+                ChatUtils.error("Something went wrong when opening screen, ${e.message}")
+            }
         }
     }
 
@@ -96,7 +122,7 @@ object ChestScreenListener {
         val scrollQuests = QuestingParser.parseQuestSlot(scrollSlot)
         quests.addAll(scrollQuests ?: emptyList())
 
-        QuestingDialog.isDesynced = false
+        QuestingDialog.dialogState = QuestingDialog.QuestingDialogState.NORMAL
         QuestStorage.loadQuests(quests)
     }
 

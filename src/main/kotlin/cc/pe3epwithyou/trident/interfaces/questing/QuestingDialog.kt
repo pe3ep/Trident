@@ -3,10 +3,13 @@ package cc.pe3epwithyou.trident.interfaces.questing
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.questing.widgets.QuestWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
+import cc.pe3epwithyou.trident.interfaces.shared.widgets.ItemWidget
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
+import cc.pe3epwithyou.trident.utils.Model
+import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
@@ -27,25 +30,29 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     companion object {
         var currentGame = MCCIState.game
 
-        /** If true, the UI will display a warning sign in the title indicating that the progress might be inaccurate */
-        var isDesynced = false
+        var dialogState = QuestingDialogState.LOADING
     }
 
     private fun getTitleWidget(): QuestDialogTitle {
         val icon = FontCollection.get("_fonts/icon/quest_log.png").withStyle(
-                Style.EMPTY.withShadowColor(0x0 opacity 0)
-            )
-        val titleText = if (isDesynced) " DESYNCED" else " QUESTS"
+            Style.EMPTY.withShadowColor(0x0 opacity 0)
+        )
+        val titleText = if (dialogState == QuestingDialogState.DESYNCED) " DESYNCED" else " QUESTS"
         val title = Component.literal(titleText).withTridentFont("hud_title")
-        if (isDesynced) {
+        if (dialogState == QuestingDialogState.DESYNCED) {
             title.append(Component.literal(" ⚠").defaultFont())
             title.withStyle(ChatFormatting.GOLD)
         }
 
         val backgroundColor = 0x38AFF opacity 127
-        val gameIcon = FontCollection.get(currentGame.icon).withStyle(
-                Style.EMPTY.withShadowColor(0x0 opacity 0).withColor(ChatFormatting.WHITE)
-            )
+        val gameIcon = FontCollection.get(
+            if (dialogState == QuestingDialogState.LOADING) Game.HUB.icon else currentGame.icon
+        ).withStyle(
+            Style.EMPTY.withShadowColor(0x0 opacity 0).withColor(ChatFormatting.WHITE)
+        )
+
+        val gameColor =
+            if (dialogState == QuestingDialogState.LOADING) Game.HUB.primaryColor opacity 127 else currentGame.primaryColor opacity 127
 
         return QuestDialogTitle(
             this,
@@ -53,8 +60,8 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
             backgroundColor,
             true,
             game = gameIcon,
-            gameColor = currentGame.primaryColor opacity 127,
-            tooltip = if (!isDesynced) null else Tooltip.create(
+            gameColor = gameColor,
+            tooltip = if (dialogState != QuestingDialogState.DESYNCED) null else Tooltip.create(
                 Component.literal(
                     """
                     Module is not synced.
@@ -69,7 +76,18 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
 
     override fun layout(): GridLayout = grid {
         val font = Minecraft.getInstance().font
+        if (dialogState == QuestingDialogState.LOADING) {
+            ItemWidget(Model(modelPath = Resources.trident("interface/loading"), width = 8, height = 8)).atBottom(
+                0,
+                settings = LayoutConstants.CENTRE
+            )
+            StringWidget(Component.literal("Loading your Quests...").withStyle(ChatFormatting.GRAY), font).atBottom(
+                0,
+                settings = LayoutConstants.CENTRE
+            )
 
+            return@grid
+        }
         val quests = QuestStorage.getActiveQuests(currentGame)
 
         if (currentGame == Game.HUB || currentGame == Game.FISHING) {
@@ -94,5 +112,11 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     override fun refresh() {
         title = getTitleWidget()
         super.refresh()
+    }
+
+    enum class QuestingDialogState {
+        NORMAL,
+        DESYNCED,
+        LOADING
     }
 }

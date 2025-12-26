@@ -11,8 +11,7 @@ import net.minecraft.network.chat.Component
 
 object BattleBoxHandlers {
     fun handle(m: Component) {
-        val roundWon = Regex("\\[.] . .+ Team, you won Round \\d! \\[.+]").find(m.string)
-        if (roundWon != null) {
+        Regex("\\[.] . .+ Team, you won Round \\d! \\[.+]").find(m.string)?.let {
             val ctx = IncrementContext(
                 Game.BATTLE_BOX,
                 QuestCriteria.BATTLE_BOX_QUADS_TEAM_ROUNDS_WON,
@@ -22,19 +21,27 @@ object BattleBoxHandlers {
             QuestStorage.applyIncrement(ctx, true)
         }
 
-        val round3started = Regex("^\\[.] Round 3 started!").find(m.string)
-        if (round3started != null) {
+        Regex("^\\[.] Round \\d started!").find(m.string)?.let {
             val ctx = IncrementContext(
                 Game.BATTLE_BOX,
-                QuestCriteria.BATTLE_BOX_QUADS_GAMES_PLAYED,
+                QuestCriteria.BATTLE_BOX_QUADS_TEAM_ROUNDS_PLAYED,
                 1,
-                "bb_games_played"
+                "bb_rounds_played"
             )
-            QuestStorage.applyIncrement(ctx)
+            QuestStorage.applyIncrement(ctx, true)
         }
 
-        val gameOver = Regex("^\\[.] Game Over!").find(m.string)
-        if (gameOver != null) {
+        Regex("""^\[.] You assisted in eliminating (.+)!""").find(m.string)?.let {
+            val ctx = IncrementContext(
+                Game.BATTLE_BOX,
+                QuestCriteria.BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED,
+                1,
+                "bb_kills_or_assists"
+            )
+            QuestStorage.applyIncrement(ctx, true)
+        }
+
+        Regex("^\\[.] Game Over!").find(m.string)?.let {
             val subtitle = (Minecraft.getInstance().gui as GuiAccessor).subtitle
             if (subtitle == null) {
                 ChatUtils.error("Unable to access the subtitle")
@@ -45,6 +52,14 @@ object BattleBoxHandlers {
             val placement = match.groups[1]?.value?.toIntOrNull() ?: return
 
             if (placement > 2) return
+
+            val ctx = IncrementContext(
+                Game.BATTLE_BOX,
+                QuestCriteria.BATTLE_BOX_QUADS_GAMES_PLAYED,
+                1,
+                "bb_games_played"
+            )
+            QuestStorage.applyIncrement(ctx)
 
             val secondPlaceContext = IncrementContext(
                 Game.BATTLE_BOX,
