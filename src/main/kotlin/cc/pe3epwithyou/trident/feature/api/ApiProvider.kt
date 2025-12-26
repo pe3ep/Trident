@@ -11,8 +11,7 @@ enum class ApiProvider : NameableEnum {
 
     val fetchUrl: String
         get() = when (this) {
-//            TRIDENT -> "https://trident.pe3epwithyou.cc/api/query"
-            TRIDENT -> "http://localhost:3000/api/query"
+            TRIDENT -> "https://trident.pe3epwithyou.cc/api/query"
             SELF_TOKEN -> "https://api.mccisland.net/graphql"
         }
 }
