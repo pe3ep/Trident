@@ -35,7 +35,6 @@ object FontCollection {
     }
 
     fun loadDefinition(location: ResourceLocation, char: String, ascent: Int, height: Int) {
-        ChatUtils.debugLog("Received a character definition: ${location.path} $char $ascent $height")
         val i = Icon(location, ascent, height)
         collection[i] = char
     }

@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.client
 import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
 import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
+import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
@@ -188,6 +189,7 @@ object TridentCommand {
                         executes {
                             val arg = it.getArgument("token", String::class.java)
                             Config.handler.instance().apiKey = arg
+                            Config.handler.instance().globalApiProvider = ApiProvider.SELF_TOKEN
                             Config.handler.save()
                             ChatUtils.sendMessage("Successfully set the token. You can now use API features")
                         }
@@ -196,6 +198,7 @@ object TridentCommand {
                 literal("resetToken") {
                     executes {
                         Config.handler.instance().apiKey = ""
+                        Config.handler.instance().globalApiProvider = ApiProvider.TRIDENT
                         Config.handler.save()
                         ChatUtils.sendMessage(
                             Component.literal("Your API token has been ").withSwatch(TridentFont.TRIDENT_COLOR)

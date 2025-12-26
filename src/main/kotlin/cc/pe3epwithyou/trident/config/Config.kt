@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.config
 
+import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
@@ -19,6 +20,9 @@ class Config {
     @Deprecated("This option has been moved to a separate group")
     @SerialEntry
     var globalRarityOverlay: Boolean? = null
+
+    @SerialEntry
+    var globalApiProvider: ApiProvider = ApiProvider.TRIDENT
 
     @SerialEntry
     var globalBlueprintIndicators: Boolean = true
@@ -112,6 +116,8 @@ class Config {
     var apiKey: String = ""
 
     object Global {
+        val apiProvider: ApiProvider
+            get() = handler.instance().globalApiProvider
         val blueprintIndicators: Boolean
             get() = handler.instance().globalBlueprintIndicators
         val currentTheme: TridentThemes
@@ -231,8 +237,15 @@ class Config {
                 name(Component.translatable("config.trident"))
 
                 groups.register("global") {
+                    options.register("api_provider") {
+                        name(Component.translatable("config.trident.global.api_provider.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.global.api_provider.description")))
+                        binding(handler.instance()::globalApiProvider, ApiProvider.TRIDENT)
+                        controller(enumSwitch<ApiProvider> { v -> v.displayName })
+                    }
                     name(Component.translatable("config.trident.global.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.global.description")))
+
 
                     options.register<Boolean>("blueprint_indicators") {
                         name(Component.translatable("config.trident.global.blueprint_indicators.name"))
