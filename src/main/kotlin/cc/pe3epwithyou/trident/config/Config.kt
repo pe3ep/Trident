@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.config
 
+import cc.pe3epwithyou.trident.config.crosshair.CrosshairImage
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
@@ -64,6 +65,9 @@ class Config {
 
     @SerialEntry
     var gamesAutoFocus: Boolean = false
+
+    @SerialEntry
+    var gamesCrosshairHud: Boolean = false
 
 
     @SerialEntry
@@ -154,6 +158,8 @@ class Config {
     object Games {
         val autoFocus: Boolean
             get() = handler.instance().gamesAutoFocus
+        val crosshairHud: Boolean
+            get() = handler.instance().gamesCrosshairHud
     }
 
     object KillFeed {
@@ -197,10 +203,12 @@ class Config {
 
     companion object {
         val handler: ConfigClassHandler<Config> by lazy {
-            ConfigClassHandler.createBuilder(Config::class.java).id(Resources.trident("config")).serializer { config ->
-                GsonConfigSerializerBuilder.create(config)
-                    .setPath(FabricLoader.getInstance().configDir.resolve("trident.json")).build()
-            }.build()
+            ConfigClassHandler.createBuilder(Config::class.java).id(Resources.trident("config"))
+                .serializer { config ->
+                    GsonConfigSerializerBuilder.create(config)
+                        .setPath(FabricLoader.getInstance().configDir.resolve("trident.json"))
+                        .build()
+                }.build()
         }
 
         @Suppress("DEPRECATION")
@@ -209,7 +217,8 @@ class Config {
             if (rarityOverlayPrev != null) {
                 ChatUtils.warn("Detected a deprecated config value for rarity overlay, converting it")
 
-                handler.instance().raritySlotEnabled = rarityOverlayPrev/* Reset the old value to null */
+                handler.instance().raritySlotEnabled =
+                    rarityOverlayPrev/* Reset the old value to null */
                 handler.instance().globalRarityOverlay = null
             }
 
@@ -253,7 +262,8 @@ class Config {
                         name(Component.translatable("config.trident.global.theme.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.global.theme.description")).image(
+                                .text(Component.translatable("config.trident.global.theme.description"))
+                                .image(
                                     Resources.trident("textures/config/theme.png"), 497, 329
                                 ).build()
                         )
@@ -276,7 +286,8 @@ class Config {
                         name(Component.translatable("config.trident.global.exchange_improvements.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.global.exchange_improvements.description")).image(
+                                .text(Component.translatable("config.trident.global.exchange_improvements.description"))
+                                .image(
                                     Resources.trident(
                                         "textures/config/exchange_improvements.png"
                                     ), 185, 194
@@ -299,7 +310,8 @@ class Config {
                         name(Component.translatable("config.trident.rarity_slot.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.rarity_slot.description")).image(
+                                .text(Component.translatable("config.trident.rarity_slot.description"))
+                                .image(
                                     Resources.trident(
                                         "textures/config/rarity_overlay.png"
                                     ), 120, 88
@@ -331,6 +343,18 @@ class Config {
                         binding(handler.instance()::gamesAutoFocus, false)
                         controller(tickBox())
                     }
+
+                    options.register<Boolean>("crosshair_hud") {
+                        name(Component.translatable("config.trident.games.crosshair_hud.name"))
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.games.crosshair_hud.description"))
+                                .customImage(CrosshairImage())
+                                .build()
+                        )
+                        binding(handler.instance()::gamesCrosshairHud, false)
+                        controller(tickBox())
+                    }
                 }
 
                 groups.register("killfeed") {
@@ -341,7 +365,8 @@ class Config {
                         name(Component.translatable("config.trident.killfeed.enabled.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.killfeed.enabled.description")).image(
+                                .text(Component.translatable("config.trident.killfeed.enabled.description"))
+                                .image(
                                     Resources.trident("textures/config/killfeed.png"), 618, 332
                                 ).build()
                         )
@@ -414,7 +439,8 @@ class Config {
                         name(Component.translatable("config.trident.questing.enabled.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.questing.enabled.description")).image(
+                                .text(Component.translatable("config.trident.questing.enabled.description"))
+                                .image(
                                     Resources.trident("textures/config/questing.png"), 414, 338
                                 ).build()
                         )

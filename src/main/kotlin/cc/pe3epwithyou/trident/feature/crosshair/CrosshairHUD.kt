@@ -1,27 +1,27 @@
 package cc.pe3epwithyou.trident.feature.crosshair
 
+import cc.pe3epwithyou.trident.config.crosshair.CrosshairImage
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
 import com.noxcrew.sheeplib.util.opaqueColor
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.world.item.component.DyedItemColor
 
 object CrosshairHUD {
-    const val DISTANCE_X = 28
-    const val OFFSET_Y = 8
-    const val SPRITE_SIZE = 8
-    val SPRITE = Resources.mcc("island_items/battle_box/long_timed_ball")
+    const val OFFSET_X = 56
+    const val OFFSET_Y = -4
+    const val SPRITE_SIZE = 9
 
     fun render(graphics: GuiGraphics) {
         if (!MCCIState.isOnIsland()) return
-        val width = graphics.guiWidth()
-        val height = graphics.guiHeight()
-
-        val centerX = (width - SPRITE_SIZE) / 2
-        val centerY = (height - SPRITE_SIZE) / 2 + OFFSET_Y
-
+        val SPRITE = Resources.minecraft("spectral_arrow")
         val dyedItemColor = DyedItemColor(0xff0000.opaqueColor())
+
+        val client = Minecraft.getInstance()
+        val width = client.window.guiScaledWidth
+        val height = client.window.guiScaledHeight
 
         val texture = Model(
             SPRITE,
@@ -29,11 +29,68 @@ object CrosshairHUD {
             SPRITE_SIZE,
             dyedColor = dyedItemColor,
         )
-//        texture.render(graphics, centerX - DISTANCE_X, centerY)
-//        texture.render(graphics, -1 + centerX + DISTANCE_X, centerY)
-//
-//        texture.render(graphics, centerX - DISTANCE_X + SPRITE_SIZE / 2 + 1, centerY + SPRITE_SIZE + 4)
-//        texture.render(graphics, -1 + centerX + DISTANCE_X - SPRITE_SIZE / 2 - 1, centerY + SPRITE_SIZE + 4)
+        repeat(6) {
+            val (x, y) = getSlotPosition(it, width, height)
+            texture.render(graphics, x, y)
+            graphics.drawString(Minecraft.getInstance().font, "$it", x, y, 0xffffff.opaqueColor())
+        }
+    }
+
+    fun getSlotPosition(index: Int, width: Int, height: Int, originX: Int = 0, originY: Int = 0): Pair<Int, Int> {
+        val i = index.coerceIn(0, 5)
+
+        val centerX = (width - SPRITE_SIZE) / 2
+        val centerY = (height - SPRITE_SIZE) / 2 + OFFSET_Y
+
+        val customOffsetX = CrosshairImage.offsetX // max ±24
+        val customOffsetY = CrosshairImage.offsetY
+
+        val half = SPRITE_SIZE / 2
+        val staggerX = SPRITE_SIZE + 2
+        val staggerY = SPRITE_SIZE + 3
+        return when (i) {
+            0 -> {
+                val x = originX + centerX - (OFFSET_X + customOffsetX) + staggerX * 2 + half
+                val y = originY + centerY + (OFFSET_Y + customOffsetY) - half
+
+                Pair(x, y)
+            }
+
+            1 -> {
+                val x = originX + centerX + (OFFSET_X + customOffsetX) - staggerX * 2 - half + 1
+                val y = originY + centerY + (OFFSET_Y + customOffsetY) - half
+
+                Pair(x, y)
+            }
+
+            2 -> {
+                val x = originX + centerX - (OFFSET_X + customOffsetX) + staggerX + half
+                val y = originY + centerY + (OFFSET_Y + customOffsetY) + staggerY - half
+
+                Pair(x, y)
+            }
+
+            3 -> {
+                val x = originX + centerX + (OFFSET_X + customOffsetX) - staggerX - half + 1
+                val y = originY + centerY + (OFFSET_Y + customOffsetY) + staggerY - half
+
+                Pair(x, y)
+            }
+
+            4 -> {
+                val x = originX + centerX - (OFFSET_X + customOffsetX) + staggerX * 2 + half
+                val y = originY + centerY + (OFFSET_Y + customOffsetY) + staggerY * 2 - half
+
+                Pair(x, y)
+            }
+
+            else -> {
+                val x = originX + centerX + (OFFSET_X + customOffsetX) - staggerX * 2 - half + 1
+                val y = originY + centerY + (OFFSET_Y + customOffsetY) + staggerY * 2 - half
+
+                Pair(x, y)
+            }
+        }
     }
 
 
