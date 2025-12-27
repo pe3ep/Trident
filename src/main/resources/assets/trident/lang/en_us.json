@@ -58,7 +58,7 @@
   "config.trident.questing.hide_if_no_quests.description": "When enabled, hides the Questing Module in games if there are no quests.",
   "config.trident.killfeed.name": "Kill Feed",
   "config.trident.killfeed.description": "Options that apply to the in-game Kill Feed",
-  "config.trident.killfeed.enabled.name": "Enable",
+  "config.trident.killfeed.enabled.name": "Enabled",
   "config.trident.killfeed.enabled.description": "Turns on the Kill Feed to be shown in games.\n\nCurrently shown in Battle Box, Sky Battle and Dynaball.",
   "config.trident.killfeed.hide_kills.name": "Hide kill messages in chat",
   "config.trident.killfeed.hide_kills.description": "When enabled, hides kill messages in the chat.",

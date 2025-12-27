@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.feature.crosshair
 
-import cc.pe3epwithyou.trident.config.crosshair.CrosshairImage
+import cc.pe3epwithyou.trident.config.Config.Companion.handler
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
@@ -30,63 +30,62 @@ object CrosshairHUD {
             dyedColor = dyedItemColor,
         )
         repeat(6) {
-            val (x, y) = getSlotPosition(it, width, height)
+            val distanceX = handler.instance().crosshairHudDistanceX
+            val distanceY = handler.instance().crosshairHudDistanceY
+            val (x, y) = getSlotPosition(it, width, height, distanceX = distanceX, distanceY = distanceY)
             texture.render(graphics, x, y)
             graphics.drawString(Minecraft.getInstance().font, "$it", x, y, 0xffffff.opaqueColor())
         }
     }
 
-    fun getSlotPosition(index: Int, width: Int, height: Int, originX: Int = 0, originY: Int = 0): Pair<Int, Int> {
+    fun getSlotPosition(index: Int, width: Int, height: Int, originX: Int = 0, originY: Int = 0, distanceX: Int, distanceY: Int): Pair<Int, Int> {
         val i = index.coerceIn(0, 5)
 
         val centerX = (width - SPRITE_SIZE) / 2
         val centerY = (height - SPRITE_SIZE) / 2 + OFFSET_Y
-
-        val customOffsetX = CrosshairImage.offsetX // max ±24
-        val customOffsetY = CrosshairImage.offsetY
 
         val half = SPRITE_SIZE / 2
         val staggerX = SPRITE_SIZE + 2
         val staggerY = SPRITE_SIZE + 3
         return when (i) {
             0 -> {
-                val x = originX + centerX - (OFFSET_X + customOffsetX) + staggerX * 2 + half
-                val y = originY + centerY + (OFFSET_Y + customOffsetY) - half
+                val x = originX + centerX - (OFFSET_X + distanceX) + staggerX * 2 + half
+                val y = originY + centerY + (OFFSET_Y + distanceY) - half
 
                 Pair(x, y)
             }
 
             1 -> {
-                val x = originX + centerX + (OFFSET_X + customOffsetX) - staggerX * 2 - half + 1
-                val y = originY + centerY + (OFFSET_Y + customOffsetY) - half
+                val x = originX + centerX + (OFFSET_X + distanceX) - staggerX * 2 - half + 1
+                val y = originY + centerY + (OFFSET_Y + distanceY) - half
 
                 Pair(x, y)
             }
 
             2 -> {
-                val x = originX + centerX - (OFFSET_X + customOffsetX) + staggerX + half
-                val y = originY + centerY + (OFFSET_Y + customOffsetY) + staggerY - half
+                val x = originX + centerX - (OFFSET_X + distanceX) + staggerX + half
+                val y = originY + centerY + (OFFSET_Y + distanceY) + staggerY - half
 
                 Pair(x, y)
             }
 
             3 -> {
-                val x = originX + centerX + (OFFSET_X + customOffsetX) - staggerX - half + 1
-                val y = originY + centerY + (OFFSET_Y + customOffsetY) + staggerY - half
+                val x = originX + centerX + (OFFSET_X + distanceX) - staggerX - half + 1
+                val y = originY + centerY + (OFFSET_Y + distanceY) + staggerY - half
 
                 Pair(x, y)
             }
 
             4 -> {
-                val x = originX + centerX - (OFFSET_X + customOffsetX) + staggerX * 2 + half
-                val y = originY + centerY + (OFFSET_Y + customOffsetY) + staggerY * 2 - half
+                val x = originX + centerX - (OFFSET_X + distanceX) + staggerX * 2 + half
+                val y = originY + centerY + (OFFSET_Y + distanceY) + staggerY * 2 - half
 
                 Pair(x, y)
             }
 
             else -> {
-                val x = originX + centerX + (OFFSET_X + customOffsetX) - staggerX * 2 - half + 1
-                val y = originY + centerY + (OFFSET_Y + customOffsetY) + staggerY * 2 - half
+                val x = originX + centerX + (OFFSET_X + distanceX) - staggerX * 2 - half + 1
+                val y = originY + centerY + (OFFSET_Y + distanceY) + staggerY * 2 - half
 
                 Pair(x, y)
             }

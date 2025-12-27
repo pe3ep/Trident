@@ -9,6 +9,7 @@ import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Resources
 import dev.isxander.yacl3.api.OptionDescription
+import dev.isxander.yacl3.api.OptionEventListener
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder
@@ -70,8 +71,15 @@ class Config {
     @SerialEntry
     var gamesAutoFocus: Boolean = false
 
+
     @SerialEntry
-    var gamesCrosshairHud: Boolean = false
+    var crosshairHudEnabled: Boolean = false
+
+    @SerialEntry
+    var crosshairHudDistanceX: Int = 0
+
+    @SerialEntry
+    var crosshairHudDistanceY: Int = 0
 
 
     @SerialEntry
@@ -164,8 +172,15 @@ class Config {
     object Games {
         val autoFocus: Boolean
             get() = handler.instance().gamesAutoFocus
-        val crosshairHud: Boolean
-            get() = handler.instance().gamesCrosshairHud
+    }
+
+    object CrosshairHud {
+        val enabled: Boolean
+            get() = handler.instance().crosshairHudEnabled
+        val distanceX: Boolean
+            get() = handler.instance().crosshairHudEnabled
+        val distanceY: Boolean
+            get() = handler.instance().crosshairHudEnabled
     }
 
     object KillFeed {
@@ -356,17 +371,61 @@ class Config {
                         binding(handler.instance()::gamesAutoFocus, false)
                         controller(tickBox())
                     }
+                }
 
-                    options.register<Boolean>("crosshair_hud") {
-                        name(Component.translatable("config.trident.games.crosshair_hud.name"))
+                groups.register("crosshair_hud") {
+                    name(Component.translatable("config.trident.crosshair_hud.name"))
+                    description(OptionDescription.of(Component.translatable("config.trident.crosshair_hud.description")))
+
+                    options.register<Boolean>("crosshair_hud_enabled") {
+                        name(Component.translatable("config.trident.crosshair_hud.enabled.name"))
                         description(
                             OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.games.crosshair_hud.description"))
-                                .customImage(CrosshairImage())
-                                .build()
+                                .text(Component.translatable("config.trident.crosshair_hud.enabled.description"))
+                                .customImage(CrosshairImage()).build()
                         )
-                        binding(handler.instance()::gamesCrosshairHud, false)
+                        binding(handler.instance()::crosshairHudEnabled, false)
                         controller(tickBox())
+                    }
+
+                    options.register<Int>("crosshair_hud_distance_x") {
+                        name(Component.translatable("config.trident.crosshair_hud.distance_x.name"))
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.crosshair_hud.distance_x.description"))
+                                .customImage(CrosshairImage()).build()
+                        )
+                        binding(
+                            handler.instance()::crosshairHudDistanceX, 0
+                        )
+                        controller(slider(IntRange(-24, 24), 1) { value ->
+                            Component.literal("${value}px")
+                        })
+                        addListener { option, event ->
+                            if (event == OptionEventListener.Event.STATE_CHANGE) {
+                                CrosshairImage.offsetX = option.pendingValue()
+                            }
+                        }
+                    }
+
+                    options.register<Int>("crosshair_hud_distance_y") {
+                        name(Component.translatable("config.trident.crosshair_hud.distance_y.name"))
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.crosshair_hud.distance_y.description"))
+                                .customImage(CrosshairImage()).build()
+                        )
+                        binding(
+                            handler.instance()::crosshairHudDistanceY, 0
+                        )
+                        controller(slider(IntRange(-24, 24), 1) { value ->
+                            Component.literal("${value}px")
+                        })
+                        addListener { option, event ->
+                            if (event == OptionEventListener.Event.STATE_CHANGE) {
+                                CrosshairImage.offsetY = option.pendingValue()
+                            }
+                        }
                     }
                 }
 
