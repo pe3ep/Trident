@@ -1,13 +1,16 @@
 package cc.pe3epwithyou.trident.feature.exchange
 
+import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
+import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
@@ -25,8 +28,19 @@ object ExchangeLookup {
     var exchangeLookupCache: ExchangeListingsResponse? = null
     var exchangeLookupCacheExpiresIn: Long? = null
 
-    private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()
-    private val json = Json { ignoreUnknownKeys = true }
+    private val client = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(10))
+        .version(HttpClient.Version.HTTP_1_1)
+        .build()
+    private val JSON = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = true
+    }
+
+    @Serializable
+    data class GraphQLRequest(
+        val query: String
+    )
 
     fun clearCache() {
         exchangeLookupCache = null
@@ -37,8 +51,10 @@ object ExchangeLookup {
         if (!Config.Global.exchangeImprovements) return
         val context = Util.backgroundExecutor().asCoroutineDispatcher()
         val player = Minecraft.getInstance().gameProfile
+        val provider = Config.Global.apiProvider
         val key = Config.Api.key
-        if (key.isBlank()) {
+
+        if (key.isBlank() && provider == ApiProvider.SELF_TOKEN) {
             ChatUtils.sendMessage(
                 Component.literal("Your API key is not set. ").withSwatch(TridentFont.ERROR).append(
                         Component.literal("Set it using /trident api setToken <TOKEN>")
@@ -46,11 +62,11 @@ object ExchangeLookup {
                     )
             )
             ChatUtils.sendMessage(
-                Component.literal("Click here to visit Gateway to create a token")
+                Component.literal("Click here to visit Trident Docs learn how to get your API key")
                     .withSwatch(TridentFont.TRIDENT_ACCENT)
                     .withStyle(
                         Style.EMPTY.withUnderlined(true)
-                            .withClickEvent(ClickEvent.OpenUrl(URI.create("https://gateway.noxcrew.com/")))
+                            .withClickEvent(ClickEvent.OpenUrl(URI.create("https://trident.pe3epwithyou.cc/docs/setting-up-api#bringing-your-own-token")))
                     )
             )
             ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
@@ -59,7 +75,7 @@ object ExchangeLookup {
 
         val graphQLString = """
             query activeExchangeListings {
-              player(uuid: \"${player.id}\") {
+              player(uuid: "${player.id}") {
                 collections {
                   cosmetics {
                     owned
@@ -80,18 +96,22 @@ object ExchangeLookup {
         """.trimIndent()
 
         CoroutineScope(context).launch {
-            val req = HttpRequest.newBuilder().uri(URI.create("https://api.mccisland.net/graphql")).POST(
-                HttpRequest.BodyPublishers.ofString(
-                    """
-                        {"query":"$graphQLString"}
-                    """.trimIndent()
-                )
+            val payload = GraphQLRequest(query = graphQLString)
+            val jsonPayload = JSON.encodeToString(GraphQLRequest.serializer(), payload)
+
+            val req = HttpRequest.newBuilder().uri(URI.create(provider.fetchUrl)).POST(
+                HttpRequest.BodyPublishers.ofString(jsonPayload)
             ).setHeader("Content-Type", "application/json").setHeader("User-Agent", "trident-mc-mod/${player.name}")
-                .setHeader("X-API-Key", key).build()
+
+
+            when (provider) {
+                ApiProvider.TRIDENT -> req.setHeader("x-mc-uuid", player.id.toString())
+                ApiProvider.SELF_TOKEN -> req.setHeader("X-API-Key", key)
+            }
 
             try {
-                val responseText = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
-                val listingsResponse = json.decodeFromString<ExchangeListingsResponse>(responseText)
+                val responseText = client.sendAsync(req.build(), HttpResponse.BodyHandlers.ofString()).await().body()
+                val listingsResponse = JSON.decodeFromString<ExchangeListingsResponse>(responseText)
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.COMPLETED
                 Minecraft.getInstance().execute {
                     exchangeLookupCache = listingsResponse
@@ -102,11 +122,12 @@ object ExchangeLookup {
                 }
             } catch (e: Exception) {
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
-                Minecraft.getInstance().execute {
-                    ChatUtils.error("Failed to fetch exchange API: ${e.message}")
+                main {
+                    ChatUtils.error("Failed to fetch exchange API on url ${provider.fetchUrl}: ${e.message}")
+
                     ChatUtils.sendMessage(
                         Component.literal("Something went wrong when fetching Exchange API. Please contact developers to fix this issue")
-                            .withStyle(TridentFont.ERROR.baseStyle)
+                            .withSwatch(TridentFont.ERROR)
                     )
                 }
             }
