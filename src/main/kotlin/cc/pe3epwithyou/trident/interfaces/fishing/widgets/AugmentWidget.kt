@@ -196,6 +196,7 @@ class AugmentWidget(
         val posY = y + 15
         val percent = durability / container.augment.uses.toFloat()
         val color = when {
+            container.status == AugmentStatus.PAUSED -> WARNING_COLOR.opaqueColor()
             durability == 0 -> 0xA8B0B0.opaqueColor()
             percent <= 0.25f -> TridentFont.ERROR.baseColor
             else -> 0xFFFFFF.opaqueColor()
