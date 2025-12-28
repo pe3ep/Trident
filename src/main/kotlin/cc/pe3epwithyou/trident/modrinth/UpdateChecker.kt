@@ -32,7 +32,9 @@ object UpdateChecker {
     private const val MOD_ID = "trident"
 
     private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()
-    private val JSON = Json.Default
+    private val JSON = Json {
+        ignoreUnknownKeys = true
+    }
 
     var latestVersion: Version? = null
 
@@ -46,10 +48,9 @@ object UpdateChecker {
     fun checkForUpdates() {
         val background = Util.backgroundExecutor().asCoroutineDispatcher()
         CoroutineScope(background).launch {
-            val req =
-                HttpRequest.newBuilder()
-                    .uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version"))
-                    .GET().setHeader("User-Agent", "trident-mc-mod").build()
+            val req = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version")).GET()
+                .setHeader("User-Agent", "trident-mc-mod").build()
             val body = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
             Minecraft.getInstance().execute {
                 handleResponse(body)
@@ -93,18 +94,16 @@ object UpdateChecker {
 
     private fun sendUpdateAvailableMessage(new: String) {
         val component = Component.literal("New Trident version available: ")
-            .withSwatch(TridentFont.TRIDENT_COLOR)
-            .append(
+            .withSwatch(TridentFont.TRIDENT_COLOR).append(
                 Component.literal(currentVersion?.friendlyString ?: "Unknown")
                     .withSwatch(TridentFont.TRIDENT_COLOR)
-            )
-            .append(Component.literal(" -> ").withSwatch(TridentFont.TRIDENT_COLOR))
+            ).append(Component.literal(" -> ").withSwatch(TridentFont.TRIDENT_COLOR))
             .append(Component.literal(new).withSwatch(TridentFont.TRIDENT_ACCENT)).append(
                 Component.literal("\nClick here to download the latest version")
                     .withSwatch(TridentFont.TRIDENT_ACCENT).withStyle(
-                    Style.EMPTY.withUnderlined(true)
-                        .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
-                )
+                        Style.EMPTY.withUnderlined(true)
+                            .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
+                    )
             )
         ChatUtils.sendMessage(component, true)
     }
