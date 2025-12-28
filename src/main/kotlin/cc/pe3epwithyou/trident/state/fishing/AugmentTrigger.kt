@@ -20,7 +20,7 @@ enum class AugmentTrigger(
 }
 
 fun updateDurability(trigger: AugmentTrigger) {
-    val augmentContainers = TridentClient.playerState.supplies.augments
+    val augmentContainers = TridentClient.playerState.supplies.augmentContainers
     augmentContainers.filter {
         val hasTrigger = it.augment.useTrigger == trigger
         val hasRightStatus = it.status != AugmentStatus.NEEDS_REPAIRING || it.status != AugmentStatus.BROKEN || it.status != AugmentStatus.PAUSED

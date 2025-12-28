@@ -73,7 +73,9 @@ data class Overclocks(
 data class Supplies(
     var bait: Bait = Bait(),
     var line: Line = Line(),
-    var augments: MutableList<AugmentContainer> = mutableListOf(),
+    @Deprecated("Moved to use AugmentContainer")
+    var augments: MutableList<Augment> = mutableListOf(),
+    var augmentContainers: MutableList<AugmentContainer> = mutableListOf(),
     var augmentsAvailable: Int = 0,
     var overclocks: Overclocks = Overclocks(),
     var baitDesynced: Boolean = true,
@@ -148,6 +150,7 @@ object PlayerStateIO {
         Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
     }
 
+    @Suppress("DEPRECATION")
     fun load(): PlayerState {
         ChatUtils.info("Loading player state from $path")
         if (!Files.exists(path)) return PlayerState()
@@ -160,6 +163,18 @@ object PlayerStateIO {
 
         serializable.supplies.overclocks.unstable.state.cooldownDuration = 60 * 45
         serializable.supplies.overclocks.supreme.state.cooldownDuration = 60 * 60
+
+        // Migration from 1.0.8.1 -> 1.0.9
+        if (!serializable.supplies.augments.isEmpty()) {
+            serializable.supplies.augmentContainers.clear()
+
+            serializable.supplies.augments.forEach {
+                serializable.supplies.augmentContainers.add(AugmentContainer(it))
+            }
+
+            serializable.supplies.needsUpdating = true
+            serializable.supplies.augments.clear()
+        }
 
         if (serializable.supplies.overclocks.unstable.state.isActive || serializable.supplies.overclocks.unstable.state.isCooldown) {
             OverclockClock.registerHandler(

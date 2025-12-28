@@ -48,23 +48,25 @@ object ChestScreenListener {
     }
 
     private fun handleScreen(screen: ContainerScreen) {
-        if ("FISHING SUPPLIES" in screen.title.string) {
+        val title = screen.title.string
+
+        if ("FISHING SUPPLIES" in title) {
             waitForItems { findAugments(screen) }
         }
-        if ("ISLAND REWARDS" in screen.title.string) {
+        if ("ISLAND REWARDS" in title) {
             waitForItems { findQuests(screen) }
         }
-        if ("FISHING ISLANDS" in screen.title.string) {
+        if ("FISHING ISLANDS" in title) {
             waitForItems { findWayfinderData(screen) }
         }
-        if ("FISHING PROGRESS" in screen.title.string) {
+        if ("FISHING PROGRESS" in title) {
             waitForItems { findFishingResearch(screen) }
         }
-        if ("ISLAND EXCHANGE" in screen.title.string) {
+        if ("ISLAND EXCHANGE" in title) {
             waitForItems { ExchangeHandler.handleScreen(screen) }
         }
 
-        ChatUtils.debugLog("Screen title: " + screen.title.string)
+        ChatUtils.debugLog("Screen title: $title")
     }
 
     fun waitForItems(block: () -> Unit) {
@@ -82,7 +84,11 @@ object ChestScreenListener {
                 delay(50)
                 time++
             }
-            ChatUtils.sendMessage(Component.literal("Timed out waiting for items to arrive, waited for 3 seconds").withSwatch(TridentFont.ERROR))
+            isWaitingForItems = false
+            ChatUtils.sendMessage(
+                Component.literal("Timed out waiting for items to arrive, waited for 3 seconds")
+                    .withSwatch(TridentFont.ERROR)
+            )
             ChatUtils.error("Timed out waiting for items")
         }
     }
@@ -108,7 +114,7 @@ object ChestScreenListener {
          * 39 - weekly
          * 41 - scroll
          */
-//        if (!Config.Fishing.suppliesModule) return
+        if (!Config.Questing.enabled) return
         if ("ISLAND REWARDS" !in screen.title.string) return
         val quests = mutableListOf<Quest>()
 
@@ -185,7 +191,7 @@ object ChestScreenListener {
             augmentSlotsIndices.map { screen.menu.slots[it].item } as MutableList
 
         var availableSlots = 10
-        TridentClient.playerState.supplies.augments = augmentsRaw.mapNotNull { rawName ->
+        TridentClient.playerState.supplies.augmentContainers = augmentsRaw.mapNotNull { rawName ->
             when {
                 rawName.hoverName.string.contains("Locked Supply Slot") -> {
                     availableSlots--
@@ -196,16 +202,15 @@ object ChestScreenListener {
 
                 else -> {
                     val cleanedName =
-                        rawName.hoverName.string.replace(Regex("""(A\.N\.G\.L\.R\.|\[|]|Augment)"""), "").trim()
+                        rawName.hoverName.string.replace(
+                            Regex("""(A\.N\.G\.L\.R\.|\[|]|Augment)"""),
+                            ""
+                        ).trim()
                     getAugmentContainer(cleanedName, rawName.getLore().map { it.string })
                 }
             }
         } as MutableList<AugmentContainer>
-        ChatUtils.debugLog(
-            """
-            Augments: ${TridentClient.playerState.supplies.augments}
-        """.trimIndent()
-        )
+        ChatUtils.debugLog("Augments: ${TridentClient.playerState.supplies.augmentContainers}")
         TridentClient.playerState.supplies.augmentsAvailable = availableSlots
         TridentClient.playerState.supplies.baitDesynced = false
         TridentClient.playerState.supplies.needsUpdating = false

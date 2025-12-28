@@ -153,7 +153,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
         }
 
         // Augments
-        val augmentsEquipped = supplies.augments.size
+        val augmentsEquipped = supplies.augmentContainers.size
         val augmentsTotal = supplies.augmentsAvailable
         StringWidget(
             Component.literal("AUGMENTS ").mccFont().append(
@@ -162,9 +162,9 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
             ), mcFont
         ).atBottom(0, 2, settings = LayoutConstants.LEFT)
 
-        val augmentLine = supplies.augments.toMutableList()
+        val augmentLine = supplies.augmentContainers.toMutableList()
         if (augmentLine.size < supplies.augmentsAvailable) {
-            for (i in 1..(supplies.augmentsAvailable - augmentLine.size)) {
+            repeat((1..(supplies.augmentsAvailable - augmentLine.size)).count()) {
                 augmentLine.add(AugmentContainer(Augment.EMPTY_AUGMENT))
             }
         }

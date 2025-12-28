@@ -302,17 +302,25 @@ object TridentCommand {
                         Augment.entries.forEach { builder.suggest(it.name) }
                         builder.buildFuture()
                     }
-                    executes {
-                        val augmentString = it.getArgument("augment", String::class.java)
-                        val augment = Augment.valueOf(augmentString)
-                        playerState.supplies.augments.add(
-                            AugmentContainer(
-                                augment,
-                                AugmentStatus.PAUSED
+                    argument("status") {
+                        suggests { _, builder ->
+                            AugmentStatus.entries.forEach { builder.suggest(it.name) }
+                            builder.buildFuture()
+                        }
+                        executes {
+                            val augmentString = it.getArgument("augment", String::class.java)
+                            val statusString = it.getArgument("status", String::class.java)
+                            val augment = Augment.valueOf(augmentString)
+                            val status = AugmentStatus.valueOf(statusString)
+                            playerState.supplies.augmentContainers.add(
+                                AugmentContainer(
+                                    augment,
+                                    status
+                                )
                             )
-                        )
-                        ChatUtils.sendMessage("Fake augment created: ${augment.name}", false)
-                        DialogCollection.refreshOpenedDialogs()
+                            ChatUtils.sendMessage("Fake augment created: ${augment.name}", false)
+                            DialogCollection.refreshOpenedDialogs()
+                        }
                     }
                 }
             }
