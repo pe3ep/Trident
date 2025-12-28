@@ -14,9 +14,12 @@ import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
+import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
+import cc.pe3epwithyou.trident.state.fishing.Augment
+import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Command
 import cc.pe3epwithyou.trident.utils.TridentFont
@@ -287,6 +290,27 @@ object TridentCommand {
             literal("send_current_spot") {
                 executes {
                     ChatUtils.sendMessage("${FishingSpotListener.currentSpot}")
+                }
+            }
+
+            literal("fake_augment") {
+                argument("augment") {
+                    suggests { _, builder ->
+                        Augment.entries.forEach { builder.suggest(it.name) }
+                        builder.buildFuture()
+                    }
+                    executes {
+                        val augmentString = it.getArgument("augment", String::class.java)
+                        val augment = Augment.valueOf(augmentString)
+                        playerState.supplies.augments.add(
+                            AugmentContainer(
+                                augment,
+                                AugmentStatus.PAUSED
+                            )
+                        )
+                        ChatUtils.sendMessage("Fake augment created: ${augment.name}", false)
+                        DialogCollection.refreshOpenedDialogs()
+                    }
                 }
             }
         }.register(dispatcher)

@@ -315,6 +315,7 @@ fun getAugmentContainer(name: String, lore: List<String>): AugmentContainer? {
                 "This item has previously been repaired." in lore -> AugmentStatus.REPAIRED
                 lore.find { "This item is out of uses! You can Repair" in it } != null -> AugmentStatus.NEEDS_REPAIRING
                 lore.find { "This item is out of uses! You've already" in it } != null -> AugmentStatus.BROKEN
+                lore.find { "Paused: This item will not consume uses" in it } != null -> AugmentStatus.PAUSED
                 else -> AugmentStatus.NEW
             }
             var durability: Int? = null
@@ -334,5 +335,6 @@ enum class AugmentStatus {
     NEW,
     NEEDS_REPAIRING,
     REPAIRED,
+    PAUSED,
     BROKEN
 }

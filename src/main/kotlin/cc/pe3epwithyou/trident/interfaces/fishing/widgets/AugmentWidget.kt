@@ -16,14 +16,24 @@ import net.minecraft.network.chat.Component
 
 class AugmentWidget(
     val textureWidth: Int, textureHeight: Int, val container: AugmentContainer, marginRight: Int
-) : AbstractWidget(0, 0, textureWidth + marginRight, textureHeight + getExtraHeight(), Component.empty()) {
+) : AbstractWidget(
+    0,
+    0,
+    textureWidth + marginRight,
+    textureHeight + getExtraHeight(),
+    Component.empty()
+) {
     private companion object {
         val REPAIR_AUGMENT = Resources.trident("textures/interface/repair_augment.png")
         val BROKEN_AUGMENT = Resources.trident("textures/interface/broken_augment.png")
+        val PAUSED_AUGMENT = Resources.trident("textures/interface/paused_augment.png")
 
         val NORMAL_COLOR = 0x93ea2c.opaqueColor()
         val REPAIRED_COLOR = 0xffc900.opaqueColor()
         val BROKEN_COLOR = 0xea2c2c.opaqueColor()
+
+        private const val WARNING_COLOR = 0xfca600
+        private const val WARNING_COLOR_ALT = 0xf27500
 
         fun getExtraHeight() = if (Config.Fishing.suppliesModuleShowAugmentDurability) 8 else 0
     }
@@ -97,6 +107,16 @@ class AugmentWidget(
                             .withColor(0xA8B0B0.opaqueColor())
                     )
                 }
+                if (container.status == AugmentStatus.PAUSED) {
+                    c.append(
+                        Component.literal("\n\nPaused")
+                            .withColor(WARNING_COLOR_ALT.opaqueColor())
+                            .append(
+                                Component.literal(" This item will not consume uses or apply it's effects until unpaused.")
+                                    .withColor(WARNING_COLOR.opaqueColor())
+                            )
+                    )
+                }
                 c
             }
         }
@@ -114,6 +134,7 @@ class AugmentWidget(
         val isSmall = when (container.status) {
             AugmentStatus.NEEDS_REPAIRING -> true
             AugmentStatus.BROKEN -> true
+            AugmentStatus.PAUSED -> true
             else -> false
         }
 
@@ -146,6 +167,12 @@ class AugmentWidget(
             AugmentStatus.BROKEN -> {
                 Texture(
                     BROKEN_AUGMENT, 12, 12
+                ).blit(graphics, x, y)
+            }
+
+            AugmentStatus.PAUSED -> {
+                Texture(
+                    PAUSED_AUGMENT, 12, 12
                 ).blit(graphics, x, y)
             }
 
