@@ -14,6 +14,15 @@ class CrosshairImage : ImageRenderer {
     companion object {
         var offsetX = 0
         var offsetY = 0
+
+        val sprites: List<UsableItem> = listOf(
+            UsableItem.ARROW,
+            UsableItem.SPEED_SPARK,
+            UsableItem.HARMING_LONG_TIMED_BALL,
+            UsableItem.COBWEB,
+            UsableItem.BLINDNESS_SHORT_TIMED_ORB,
+            UsableItem.GLOWING_BALL,
+        )
     }
 
     override fun render(
@@ -25,17 +34,7 @@ class CrosshairImage : ImageRenderer {
     ): Int {
         val height = 128
 
-        graphics.fill(x, y, x + width, y + height, 0x000000.opaqueColor())
-
-//        val SPRITE = Resources.minecraft("spectral_arrow")
-        val sprites: List<UsableItem> = listOf(
-            UsableItem.ARROW,
-            UsableItem.SPEED_SPARK,
-            UsableItem.HARMING_LONG_TIMED_BALL,
-            UsableItem.COBWEB,
-            UsableItem.BLINDNESS_SHORT_TIMED_ORB,
-            UsableItem.GLOWING_BALL,
-        )
+        graphics.fill(x, y, x + width, y + height, 0x202020.opaqueColor())
 
         graphics.blitSprite(
             RenderPipelines.CROSSHAIR,

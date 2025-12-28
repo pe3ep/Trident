@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.utils
 
+import com.mojang.blaze3d.pipeline.RenderPipeline
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.resources.ResourceLocation
@@ -11,6 +12,7 @@ data class Texture(
     val textureWidth: Int = width,
     val textureHeight: Int = height,
     val hoverLocation: ResourceLocation = location,
+    val pipeline: RenderPipeline = RenderPipelines.GUI_TEXTURED
 ) {
 
     /**
@@ -23,7 +25,7 @@ data class Texture(
      */
     fun blit(guiGraphics: GuiGraphics, x: Int, y: Int, scale: Int = 1) {
         guiGraphics.blit(
-            RenderPipelines.GUI_TEXTURED,
+            pipeline,
             location,
             x,
             y,
