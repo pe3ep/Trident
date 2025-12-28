@@ -254,22 +254,6 @@ class Config {
                     name(Component.translatable("config.trident.global.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.global.description")))
 
-
-                    options.register("blueprint_indicators") {
-                        name(Component.translatable("config.trident.global.blueprint_indicators.name"))
-                        description(
-                            OptionDescription.createBuilder()
-                                .text(Component.translatable("config.trident.global.blueprint_indicators.description"))
-                                .image(
-                                    Resources.trident(
-                                        "textures/config/blueprint_indicators.png"
-                                    ), 405, 316
-                                ).build()
-                        )
-                        binding(handler.instance()::globalBlueprintIndicators, true)
-                        controller(tickBox())
-                    }
-
                     options.register("theme") {
                         name(Component.translatable("config.trident.global.theme.name"))
                         description(
@@ -281,17 +265,6 @@ class Config {
                         )
                         binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
                         controller(enumSwitch<TridentThemes> { v -> v.displayName })
-                    }
-
-                    options.register("craftable_indicators") {
-                        name(Component.translatable("config.trident.global.craftable_indicators.name"))
-                        description(
-                            OptionDescription.of(
-                                Component.translatable("config.trident.global.craftable_indicators.description")
-                            )
-                        )
-                        binding(handler.instance()::globalCraftableIndicators, true)
-                        controller(tickBox())
                     }
 
                     options.register("exchange_improvements") {
@@ -306,6 +279,37 @@ class Config {
                                 ).build()
                         )
                         binding(handler.instance()::globalExchangeImprovements, true)
+                        controller(tickBox())
+                    }
+                }
+
+                groups.register("indicators") {
+                    name(Component.translatable("config.trident.indicators.name"))
+                    description(OptionDescription.of(Component.translatable("config.trident.indicators.description")))
+
+                    options.register("blueprint_indicators") {
+                        name(Component.translatable("config.trident.indicators.blueprint_indicators.name"))
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.indicators.blueprint_indicators.description"))
+                                .image(
+                                    Resources.trident(
+                                        "textures/config/blueprint_indicators.png"
+                                    ), 405, 316
+                                ).build()
+                        )
+                        binding(handler.instance()::globalBlueprintIndicators, true)
+                        controller(tickBox())
+                    }
+
+                    options.register("craftable_indicators") {
+                        name(Component.translatable("config.trident.indicators.craftable_indicators.name"))
+                        description(
+                            OptionDescription.of(
+                                Component.translatable("config.trident.indicators.craftable_indicators.description")
+                            )
+                        )
+                        binding(handler.instance()::globalCraftableIndicators, true)
                         controller(tickBox())
                     }
                 }
