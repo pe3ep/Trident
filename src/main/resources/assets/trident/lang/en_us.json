@@ -14,7 +14,7 @@
   "config.trident.global.description": "Universal non-game specific settings that apply across MCC Island.",
   "config.trident.global.api_provider.name": "API Provider",
   "config.trident.global.api_provider.description": "Provider of the API used by Trident. \n\nCurrently supported providers: Trident (default), Token. \n\nToken provider requires you to provide your own API key using the \"/trident api\" command.",
-  "config.trident.global.api_provider.provider.trident": "Trident",
+  "config.trident.global.api_provider.provider.trident": "Trident Web",
   "config.trident.global.api_provider.provider.self_token": "Token",
   "config.trident.global.blueprint_indicators.name": "Blueprint Indicators",
   "config.trident.global.blueprint_indicators.description": "Displays icons based on blueprint's ownership status.\n\nTick Icon - Blueprint has maxed royal donations\nDiamond icon - Blueprint is not owned by player",

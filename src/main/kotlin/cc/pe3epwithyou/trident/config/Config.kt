@@ -247,7 +247,7 @@ class Config {
                     description(OptionDescription.of(Component.translatable("config.trident.global.description")))
 
 
-                    options.register<Boolean>("blueprint_indicators") {
+                    options.register("blueprint_indicators") {
                         name(Component.translatable("config.trident.global.blueprint_indicators.name"))
                         description(
                             OptionDescription.createBuilder()
@@ -262,7 +262,7 @@ class Config {
                         controller(tickBox())
                     }
 
-                    options.register<TridentThemes>("theme") {
+                    options.register("theme") {
                         name(Component.translatable("config.trident.global.theme.name"))
                         description(
                             OptionDescription.createBuilder()
@@ -274,7 +274,7 @@ class Config {
                         controller(enumSwitch<TridentThemes> { v -> v.displayName })
                     }
 
-                    options.register<Boolean>("craftable_indicators") {
+                    options.register("craftable_indicators") {
                         name(Component.translatable("config.trident.global.craftable_indicators.name"))
                         description(
                             OptionDescription.of(
@@ -285,7 +285,7 @@ class Config {
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("exchange_improvements") {
+                    options.register("exchange_improvements") {
                         name(Component.translatable("config.trident.global.exchange_improvements.name"))
                         description(
                             OptionDescription.createBuilder()
@@ -308,7 +308,7 @@ class Config {
                         )
                     )
 
-                    options.register<Boolean>("rarity_slot_enabled") {
+                    options.register("rarity_slot_enabled") {
                         name(Component.translatable("config.trident.rarity_slot.name"))
                         description(
                             OptionDescription.createBuilder()
@@ -322,7 +322,7 @@ class Config {
                         controller(tickBox())
                     }
 
-                    options.register<DisplayType>("rarity_slot_display_type") {
+                    options.register("rarity_slot_display_type") {
                         name(Component.translatable("config.trident.rarity_slot.display_type.name"))
                         description(
                             OptionDescription.of(
@@ -338,7 +338,7 @@ class Config {
                     name(Component.translatable("config.trident.games.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.games.description")))
 
-                    options.register<Boolean>("auto_focus") {
+                    options.register("auto_focus") {
                         name(Component.translatable("config.trident.games.auto_focus.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.games.auto_focus.description")))
                         binding(handler.instance()::gamesAutoFocus, false)
@@ -350,7 +350,7 @@ class Config {
                     name(Component.translatable("config.trident.killfeed.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.killfeed.description")))
 
-                    options.register<Boolean>("killfeed_enabled") {
+                    options.register("killfeed_enabled") {
                         name(Component.translatable("config.trident.killfeed.enabled.name"))
                         description(
                             OptionDescription.createBuilder()
@@ -362,56 +362,56 @@ class Config {
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("killfeed_hide_kills") {
+                    options.register("killfeed_hide_kills") {
                         name(Component.translatable("config.trident.killfeed.hide_kills.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.hide_kills.description")))
                         binding(handler.instance()::killfeedHideKills, false)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("killfeed_show_kill_streaks") {
+                    options.register("killfeed_show_kill_streaks") {
                         name(Component.translatable("config.trident.killfeed.show_kill_streaks.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.show_kill_streaks.description")))
                         binding(handler.instance()::killfeedShowKillStreaks, true)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("killfeed_clear_after_round") {
+                    options.register("killfeed_clear_after_round") {
                         name(Component.translatable("config.trident.killfeed.clear_after_round.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.clear_after_round.description")))
                         binding(handler.instance()::killfeedClearAfterRound, true)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("killfeed_show_you_in_kill") {
+                    options.register("killfeed_show_you_in_kill") {
                         name(Component.translatable("config.trident.killfeed.show_you_in_kill.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.show_you_in_kill.description")))
                         binding(handler.instance()::killfeedShowYouInKill, true)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("killfeed_reverse_order") {
+                    options.register("killfeed_reverse_order") {
                         name(Component.translatable("config.trident.killfeed.reverse_order.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.reverse_order.description")))
                         binding(handler.instance()::killfeedReverseOrder, false)
                         controller(tickBox())
                     }
 
-                    options.register<KillfeedPosition>("killfeed_position_side") {
+                    options.register("killfeed_position_side") {
                         name(Component.translatable("config.trident.killfeed.position_side.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.position_side.description")))
                         binding(handler.instance()::killfeedPositionSide, KillfeedPosition.RIGHT)
                         controller(enumSwitch<KillfeedPosition> { v -> v.displayName })
                     }
 
-                    options.register<Int>("killfeed_remove_kill_time") {
+                    options.register("killfeed_remove_kill_time") {
                         name(Component.translatable("config.trident.killfeed.remove_kill_time.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.remove_kill_time.description")))
                         binding(handler.instance()::killfeedRemoveKillTime, 10)
                         controller(slider(IntRange(0, 30), 1))
                     }
 
-                    options.register<Int>("killfeed_max_kills") {
+                    options.register("killfeed_max_kills") {
                         name(Component.translatable("config.trident.killfeed.max_kills.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.max_kills.description")))
                         binding(handler.instance()::killfeedMaxKills, 5)
@@ -423,7 +423,7 @@ class Config {
                     name(Component.translatable("config.trident.questing.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.questing.description")))
 
-                    options.register<Boolean>("questing_enabled") {
+                    options.register("questing_enabled") {
                         name(Component.translatable("config.trident.questing.enabled.name"))
                         description(
                             OptionDescription.createBuilder()
@@ -435,28 +435,28 @@ class Config {
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("questing_rarity_color_name") {
+                    options.register("questing_rarity_color_name") {
                         name(Component.translatable("config.trident.questing.rarity_color_name.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.rarity_color_name.description")))
                         binding(handler.instance()::questingRarityColorName, false)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("questing_show_in_lobby") {
+                    options.register("questing_show_in_lobby") {
                         name(Component.translatable("config.trident.questing.show_in_lobby.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.show_in_lobby.description")))
                         binding(handler.instance()::questingShowInLobby, true)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("questing_show_left") {
+                    options.register("questing_show_left") {
                         name(Component.translatable("config.trident.questing.show_left.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.show_left.description")))
                         binding(handler.instance()::questingShowLeft, true)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("questing_hide_if_no_quests") {
+                    options.register("questing_hide_if_no_quests") {
                         name(Component.translatable("config.trident.questing.hide_if_no_quests.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.hide_if_no_quests.description")))
                         binding(handler.instance()::questingHideIfNoQuests, false)
@@ -468,7 +468,7 @@ class Config {
                     name(Component.translatable("config.trident.fishing.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.fishing.description")))
 
-                    options.register<Boolean>("supplies_module") {
+                    options.register("supplies_module") {
                         name(Component.translatable("config.trident.fishing.supplies_module.name"))
                         description(
                             OptionDescription.createBuilder()
@@ -481,47 +481,21 @@ class Config {
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("flash_if_depleted") {
+                    options.register("flash_if_depleted") {
                         name(Component.translatable("config.trident.fishing.flash_if_depleted.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.fishing.flash_if_depleted.description")))
                         binding(handler.instance()::fishingFlashIfDepleted, true)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("island_indicators") {
+                    options.register("island_indicators") {
                         name(Component.translatable("config.trident.fishing.island_indicators.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.fishing.island_indicators.description")))
                         binding(handler.instance()::fishingIslandIndicators, true)
                         controller(tickBox())
                     }
-//                    options.register<Boolean>("wayfinder_module") {
-//                        name(Component.translatable("config.trident.fishing.wayfinder_module.name"))
-//                        description(OptionDescription.createBuilder()
-//                            .text(Component.translatable("config.trident.fishing.wayfinder_module.description"))
-//                            .build()
-//                        )
-//                        binding(handler.instance()::fishingWayfinderModule, true)
-//                        controller(tickBox())
-//                    }
                 }
             }
-
-//            categories.register("mcci_api") {
-//                name(Component.translatable("config.trident.api.name"))
-//
-//                groups.register("api") {
-//                    name(Component.translatable("config.trident.api.name"))
-//                    description(OptionDescription.of(Component.translatable("config.trident.api.description")))
-//
-//                    options.register<String>("api_key") {
-//                        name(Component.translatable("config.trident.api.key.name"))
-//                        description(OptionDescription.of(Component.translatable("config.trident.api.key.description")))
-//                        binding(handler.instance()::apiKey, "")
-//                        controller(stringField())
-//                    }
-//                }
-//
-//            }
 
             categories.register("debug") {
                 name(Component.translatable("config.trident.debug"))
@@ -530,28 +504,28 @@ class Config {
                     name(Component.translatable("config.trident.debug"))
                     description(OptionDescription.of(Component.translatable("config.trident.debug.description")))
 
-                    options.register<Boolean>("logging") {
+                    options.register("logging") {
                         name(Component.translatable("config.trident.debug.enable_logging.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.debug.enable_logging.description")))
                         binding(handler.instance()::debugEnableLogging, false)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("draw_slot_number") {
+                    options.register("draw_slot_number") {
                         name(Component.translatable("config.trident.debug.draw_slot_number.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.debug.draw_slot_number.description")))
                         binding(handler.instance()::debugDrawSlotNumber, false)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("log_for_scrapers") {
+                    options.register("log_for_scrapers") {
                         name(Component.translatable("config.trident.debug.log_for_scrapers.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.debug.log_for_scrapers.description")))
                         binding(handler.instance()::debugLogForScrapers, false)
                         controller(tickBox())
                     }
 
-                    options.register<Boolean>("bypass_on_island") {
+                    options.register("bypass_on_island") {
                         name(Component.translatable("config.trident.debug.bypass_on_island.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.debug.bypass_on_island.description")))
                         binding(handler.instance()::debugBypassOnIsland, false)
