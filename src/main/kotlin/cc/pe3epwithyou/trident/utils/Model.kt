@@ -10,8 +10,10 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.alchemy.PotionContents
 import net.minecraft.world.item.component.DyedItemColor
 import org.joml.Matrix3x2f
+import java.util.Optional
 
 
 data class Model(
@@ -30,6 +32,12 @@ data class Model(
         item.set(DataComponents.DAMAGE, 100 - damagePercent)
         if (dyedColor != null) {
             item.set(DataComponents.DYED_COLOR, dyedColor)
+            item.set(DataComponents.POTION_CONTENTS, PotionContents(
+                Optional.empty(),
+                Optional.of(dyedColor.rgb),
+                emptyList(),
+                Optional.empty(),
+            ))
         }
     }
 

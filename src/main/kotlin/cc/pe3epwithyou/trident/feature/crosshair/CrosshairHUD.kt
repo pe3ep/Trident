@@ -5,50 +5,67 @@ import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
-import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.Items
-import net.minecraft.world.item.component.DyedItemColor
 
 object CrosshairHUD {
     const val OFFSET_X = 56
     const val OFFSET_Y = -4
     const val SPRITE_SIZE = 9
 
+    data class CrosshairItem(
+        val model: Model,
+        val amount: Int
+    )
+
     fun render(graphics: GuiGraphics) {
         if (!MCCIState.isOnIsland()) return
-        val SPRITE = Resources.minecraft("spectral_arrow")
-        val dyedItemColor = DyedItemColor(0xff0000.opaqueColor())
 
         val client = Minecraft.getInstance()
         val width = client.window.guiScaledWidth
         val height = client.window.guiScaledHeight
 
-        val texture = Model(
-            SPRITE,
-            SPRITE_SIZE,
-            SPRITE_SIZE,
-            dyedColor = dyedItemColor,
-        )
-
+        val items = getPlayableItems(SPRITE_SIZE, SPRITE_SIZE)
         renderCrossbowDisplay(graphics)
 
-        repeat(6) {
+        items.forEachIndexed { index, item ->
+            if (index >= 5) return@forEachIndexed
             val distanceX = handler.instance().crosshairHudDistanceX
             val distanceY = handler.instance().crosshairHudDistanceY
             val (x, y) = getSlotPosition(
-                it,
+                index,
                 width,
                 height,
                 distanceX = distanceX,
                 distanceY = distanceY
             )
-            texture.render(graphics, x, y)
+            item.model.render(graphics, x, y)
 //            graphics.drawString(Minecraft.getInstance().font, "$it", x, y, 0xffffff.opaqueColor())
         }
+    }
+
+    private fun getPlayableItems(modelWidth: Int, modelHeight: Int): List<CrosshairItem> {
+        val player = Minecraft.getInstance().player ?: return emptyList()
+        val items = mutableListOf<CrosshairItem>()
+        for (item in player.inventory) {
+            val itemModel = item.get(DataComponents.ITEM_MODEL) ?: continue
+
+            val playerItems = UsableItem.entries.map { it.sprite }
+            if (!playerItems.contains(itemModel)) continue
+            val dyedColor = item.get(DataComponents.DYED_COLOR)
+
+            val model = Model(
+                modelPath = itemModel,
+                width = modelWidth,
+                height = modelHeight,
+                dyedColor = dyedColor
+            )
+            items.add(CrosshairItem(model, item.count))
+        }
+        return items
     }
 
     fun renderCrossbowDisplay(
