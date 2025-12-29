@@ -9,7 +9,7 @@ object WindowExtensions {
         get() = Minecraft.getInstance().isWindowActive
 
     val Window.isMaximized: Boolean
-        get() = GLFW.glfwGetWindowAttrib(window, GLFW.GLFW_MAXIMIZED) != 0
+        get() = GLFW.glfwGetWindowAttrib(handle(), GLFW.GLFW_MAXIMIZED) != 0
 
     fun Window.focusWindowIfInactive() {
         if (!isActive) {
@@ -23,7 +23,7 @@ object WindowExtensions {
     }
 
     fun Window.requestAttention() {
-        GLFW.glfwRequestWindowAttention(window)
+        GLFW.glfwRequestWindowAttention(handle())
     }
 
     fun Window.requestAttentionIfInactive() {
@@ -31,7 +31,7 @@ object WindowExtensions {
     }
 
     fun Window.focusWindow() {
-        if (isIconified) GLFW.glfwRestoreWindow(window)
-        GLFW.glfwFocusWindow(window)
+        if (isIconified) GLFW.glfwRestoreWindow(handle())
+        GLFW.glfwFocusWindow(handle())
     }
 }

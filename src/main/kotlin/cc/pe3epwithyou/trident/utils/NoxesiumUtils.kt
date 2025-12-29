@@ -13,23 +13,22 @@ import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog.QuestingDialog
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
-import com.noxcrew.noxesium.core.fabric.feature.skull.SkullContents
+import com.noxcrew.noxesium.core.fabric.feature.sprite.SkullSprite
 import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccServerPacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccStatisticPacket
 import com.noxcrew.noxesium.core.mcc.MccPackets
+import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import java.util.*
 
 object NoxesiumUtils {
     fun skullComponent(
-        uuid: UUID, grayscale: Boolean = false, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F
+        uuid: UUID, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F, hat: Boolean = true
     ): MutableComponent {
-        return MutableComponent.create(
-            SkullContents(
-                Optional.of(uuid), Optional.empty(), grayscale, advance, ascent, scale
-            )
-        )
+        return Component.`object`(SkullSprite(
+            Optional.of(uuid), Optional.empty(), advance, ascent, scale, hat
+        ))
     }
 
     fun updateGameDialogs(currentGame: Game, isPlobby: Boolean) {

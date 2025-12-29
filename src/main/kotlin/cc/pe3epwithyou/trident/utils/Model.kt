@@ -6,7 +6,7 @@ import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.state.GuiItemRenderState
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState
 import net.minecraft.core.component.DataComponents
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -14,7 +14,7 @@ import org.joml.Matrix3x2f
 
 
 data class Model(
-    val modelPath: ResourceLocation,
+    val modelPath: Identifier,
     val width: Int,
     val height: Int,
     val damagePercent: Int = 100

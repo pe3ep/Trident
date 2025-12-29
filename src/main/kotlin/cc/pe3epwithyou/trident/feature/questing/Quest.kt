@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestCriteria.*
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.utils.Resources
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class Quest(
     val game: Game,
@@ -15,7 +15,7 @@ class Quest(
     var progress: Int,
     val totalProgress: Int,
 ) {
-    val sprite: ResourceLocation
+    val sprite: Identifier
         get() {
             val directory = type.directoryPath
             val raritySuffix = rarity.name.lowercase()

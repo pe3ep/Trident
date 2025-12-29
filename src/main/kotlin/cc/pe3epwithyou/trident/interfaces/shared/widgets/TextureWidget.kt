@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.utils.Texture
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 
 class TextureWidget(
@@ -18,7 +19,7 @@ class TextureWidget(
         texture.blit(guiGraphics, x, y)
     }
 
-    override fun onClick(d: Double, e: Double) = Unit
+    override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) = Unit
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
 }

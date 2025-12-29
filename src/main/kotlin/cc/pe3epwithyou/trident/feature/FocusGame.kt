@@ -23,13 +23,13 @@ object FocusGame {
                         
                         IconifiedValue: ${
                         GLFW.glfwGetWindowAttrib(
-                            Minecraft.getInstance().window.window,
+                            Minecraft.getInstance().window.handle(),
                             GLFW.GLFW_ICONIFIED
                         )
                     }
                         MaximizedValue: ${
                         GLFW.glfwGetWindowAttrib(
-                            Minecraft.getInstance().window.window,
+                            Minecraft.getInstance().window.handle(),
                             GLFW.GLFW_MAXIMIZED
                         )
                     }

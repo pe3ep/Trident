@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.scores.DisplaySlot
 
 object QuestListener {
     var isWaitingRefresh: Boolean = false
@@ -27,14 +26,7 @@ object QuestListener {
     fun register() {
         ClientReceiveMessageEvents.GAME.register eventHandler@{ message, _ ->
             if (!Config.Questing.enabled) return@eventHandler
-            if (checkIfPlobby()) return@eventHandler
             handleRefreshTasksChat(message)
         }
-    }
-
-    fun checkIfPlobby(): Boolean {
-        val scoreboard = Minecraft.getInstance().player?.scoreboard ?: return false
-        val obj = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR) ?: return false
-        return obj.displayName.string.contains("Plobby", true)
     }
 }

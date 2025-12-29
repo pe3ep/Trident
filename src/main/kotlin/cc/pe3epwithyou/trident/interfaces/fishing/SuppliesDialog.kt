@@ -96,9 +96,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                     Component.literal(" $baitAmount").mccFont()
                         .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
                 )
-        StringWidget(baitComponent, mcFont).at(0, 0, settings = LayoutConstants.LEFT).apply {
-            alignLeft()
-        }
+        StringWidget(baitComponent, mcFont).at(0, 0, settings = LayoutConstants.LEFT)
 
         // Line component
         val lineDurability = supplies.line.uses ?: 0
@@ -118,9 +116,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 .append(
                     Component.literal(" $lineDurability/$lineAmount").mccFont().withColor(supplies.line.type.color)
                 )
-        StringWidget(lineComponent, mcFont).at(0, 1, settings = LayoutConstants.LEFT).apply {
-            alignLeft()
-        }
+        StringWidget(lineComponent, mcFont).at(0, 1, settings = LayoutConstants.LEFT)
 
         // Overclocks
         StringWidget(Component.literal("Overclocks".uppercase()).mccFont(), mcFont).atBottom(0, 2, LayoutConstants.LEFT)

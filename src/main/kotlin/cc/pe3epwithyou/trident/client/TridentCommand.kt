@@ -33,8 +33,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
-import net.minecraft.Util
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 
 object TridentCommand {
     private val debugDialogs = mutableMapOf(

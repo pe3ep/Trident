@@ -14,11 +14,11 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.Version
-import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import net.minecraft.util.Util
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest

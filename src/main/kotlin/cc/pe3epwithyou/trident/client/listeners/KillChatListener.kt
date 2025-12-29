@@ -11,9 +11,9 @@ import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import com.noxcrew.sheeplib.util.opacity
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
-import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 
 object KillChatListener {
     val killfeedGames = listOf(

@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.utils
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import kotlinx.coroutines.*
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
-import net.minecraft.Util
+import net.minecraft.util.Util
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 

@@ -6,7 +6,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import java.util.concurrent.ConcurrentHashMap
 
 object FontCollection {
@@ -34,12 +34,12 @@ object FontCollection {
         collection.clear()
     }
 
-    fun loadDefinition(location: ResourceLocation, char: String, ascent: Int, height: Int) {
+    fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) {
         val i = Icon(location, ascent, height)
         collection[i] = char
     }
 
     data class Icon(
-        val path: ResourceLocation, val ascent: Int, val height: Int
+        val path: Identifier, val ascent: Int, val height: Int
     )
 }

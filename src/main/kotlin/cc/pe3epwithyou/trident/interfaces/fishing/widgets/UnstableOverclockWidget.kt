@@ -30,7 +30,7 @@ class UnstableOverclockWidget(
             ),
             marginRight = 2
         )
-        +StringWidget(timeComponent, font).alignLeft()
+        +StringWidget(timeComponent, font)
     }
 
     override fun getHeight(): Int = layout.height

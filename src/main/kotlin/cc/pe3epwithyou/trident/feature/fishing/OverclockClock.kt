@@ -30,7 +30,7 @@ object OverclockClock : ClientTickEvents.EndTick {
         handlers.remove(key)
     }
 
-    override fun onEndTick(client: Minecraft?) {
+    override fun onEndTick(client: Minecraft) {
         handlers.values.forEach { handler ->
             handler.tick()
         }

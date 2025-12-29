@@ -23,14 +23,14 @@ import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class QuestWidget(
     quest: Quest,
     themed: Themed
 ) : CompoundWidget(0, 0, 0, 0) {
     companion object {
-        private val COMPLETED_QUEST_SPRITE: ResourceLocation =
+        private val COMPLETED_QUEST_SPRITE: Identifier =
             Resources.mcc("textures/island_interface/quest_log/quest_complete.png")
         private const val COMPLETED_QUEST_COLOR: Int = 0x1EFC00
     }
@@ -81,9 +81,10 @@ class QuestWidget(
         val progress = Component.literal(" ${quest.progress}/${quest.totalProgress}")
             .defaultFont()
         if (quest.isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
-        val w = StringWidget(progressComponent.append(progress), mcFont)
-        w.alignLeft()
-        w.atBottom(0, settings = LayoutConstants.LEFT)
+        StringWidget(progressComponent.append(progress), mcFont).atBottom(
+            0,
+            settings = LayoutConstants.LEFT
+        )
     }
 
     init {
@@ -92,7 +93,7 @@ class QuestWidget(
     }
 
     class QuestNameWidget(
-        private val sprite: ResourceLocation,
+        private val sprite: Identifier,
         private val text: Component,
         val font: Font
     ) : AbstractWidget(
@@ -112,7 +113,13 @@ class QuestWidget(
                 ICON_WIDTH,
                 ICON_WIDTH
             ).blit(guiGraphics, x, y)
-            guiGraphics.drawString(font, text, x + ICON_WIDTH + SPACE_ADVANCE, y, 0xFFFFFF.opaqueColor())
+            guiGraphics.drawString(
+                font,
+                text,
+                x + ICON_WIDTH + SPACE_ADVANCE,
+                y,
+                0xFFFFFF.opaqueColor()
+            )
         }
 
         override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit

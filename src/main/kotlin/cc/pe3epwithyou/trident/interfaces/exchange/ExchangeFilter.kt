@@ -6,11 +6,12 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
-import java.util.Optional
+import java.util.*
 
 class ExchangeFilter(x: Int, y: Int) : AbstractWidget(x, y, 63, 15, Component.empty()) {
     companion object {
@@ -33,7 +34,7 @@ class ExchangeFilter(x: Int, y: Int) : AbstractWidget(x, y, 63, 15, Component.em
         )
     }
 
-    override fun onClick(d: Double, e: Double) {
+    override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
         showOwnedItems = !showOwnedItems
     }
 

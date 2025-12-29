@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.inventory.Slot
 
 object BlueprintIndicators {
@@ -40,7 +40,7 @@ object BlueprintIndicators {
         texture.blit(graphics, x + 8, y - 2)
     }
 
-    private enum class Icons(val texturePath: ResourceLocation) {
+    private enum class Icons(val texturePath: Identifier) {
         NEW_COSMETIC(
             Resources.trident("textures/interface/blueprint_indicators/new.png")
         ),

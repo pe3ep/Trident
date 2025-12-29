@@ -7,7 +7,7 @@ import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.inventory.Slot
 
 object TideWindIndicator {
@@ -70,7 +70,7 @@ object TideWindIndicator {
     }
 
     private enum class Tide(
-        val path: ResourceLocation
+        val path: Identifier
     ) {
         STRONG(
             Resources.mcc("textures/_fonts/icon/fishing/tide_strong.png"),
@@ -90,7 +90,7 @@ object TideWindIndicator {
     }
 
     private enum class Winds(
-        val texture: ResourceLocation
+        val texture: Identifier
     ) {
         STRONG(
             Resources.mcc("textures/_fonts/icon/fishing/winds_strong.png"),

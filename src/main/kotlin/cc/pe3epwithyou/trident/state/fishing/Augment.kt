@@ -1,11 +1,12 @@
 package cc.pe3epwithyou.trident.state.fishing
 
 import cc.pe3epwithyou.trident.utils.Resources
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
+@Suppress("unused")
 enum class Augment(
     val augmentName: String,
-    val texturePath: ResourceLocation,
+    val texturePath: Identifier,
     val textureWidth: Int = 16,
     val textureHeight: Int = textureWidth,
     val asociatedOverclockTexture: OverclockTexture? = null

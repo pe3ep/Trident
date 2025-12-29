@@ -44,7 +44,6 @@ object QuestStorage {
      */
     fun applyIncrement(ctx: IncrementContext): Boolean {
         ChatUtils.debugLog("Received increment from context ${ctx.sourceTag}, criteria: ${ctx.criteria}: amount: ${ctx.amount}")
-        if (QuestListener.checkIfPlobby()) return false
         val quests = store[ctx.game] ?: return false
         var updated = false
         for (q in quests) {

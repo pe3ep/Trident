@@ -4,6 +4,7 @@ import com.noxcrew.sheeplib.theme.Themed
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 
 class DetachIconWidget(
@@ -31,7 +32,7 @@ class DetachIconWidget(
         )
     }
 
-    override fun onClick(d: Double, e: Double) {
+    override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
         if (tab.isDetached) {
             view.attachTab(tab)
             return
