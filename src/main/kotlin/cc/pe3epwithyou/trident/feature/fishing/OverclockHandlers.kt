@@ -13,7 +13,8 @@ object OverclockHandlers {
         val now = Instant.now().toEpochMilli()
         val activeUntil = now + Duration.ofSeconds(overclock.duration).toMillis()
         val availableIn =
-            now + Duration.ofSeconds(overclock.duration).toMillis() + Duration.ofSeconds(overclock.cooldownDuration)
+            now + Duration.ofSeconds(overclock.duration)
+                .toMillis() + Duration.ofSeconds(overclock.cooldownDuration)
                 .toMillis()
 
         overclock.activeUntil = activeUntil

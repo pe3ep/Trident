@@ -61,7 +61,8 @@ enum class DeathMessages(
         Regex("^\\[.] .+ burned to death.+"), KillMethod.FIRE
     ),
     NOT_REJOINED(
-        Regex("^\\[.] .+ hasn't rejoined the game and is automatically eliminated.+"), KillMethod.DISCONNECT
+        Regex("^\\[.] .+ hasn't rejoined the game and is automatically eliminated.+"),
+        KillMethod.DISCONNECT
     ),
     DISCONNECTED(
         Regex("^\\[.] .+ disconnected.+"), KillMethod.DISCONNECT

@@ -126,6 +126,7 @@ class OverclockStackWidget(
                 val secondsStr = if (seconds < 10) "0${seconds}s" else "${seconds}s"
                 if (seconds == 0L) "${minutes}m" else "${minutes}m $secondsStr"
             }
+
             totalSeconds < 10 -> "0${totalSeconds}s"
             else -> "${totalSeconds}s"
         }

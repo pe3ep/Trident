@@ -14,6 +14,7 @@ class TridentColor(
         get() = TextColor.fromRgb(color)
     val opaqueColor: Int
         get() = color.opaqueColor()
+
     fun opacity(v: Int): Int = color.opacity(v)
 
     fun lighten(f: Float): TridentColor {

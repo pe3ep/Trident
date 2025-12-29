@@ -66,7 +66,8 @@ object OverclockClock : ClientTickEvents.EndTick {
 
         companion object {
             fun sendReadyMessage(oc: String) {
-                val component = Component.literal("Your ").withSwatch(TridentFont.TRIDENT_COLOR).append(
+                val component =
+                    Component.literal("Your ").withSwatch(TridentFont.TRIDENT_COLOR).append(
                         Component.literal("$oc Overclock").withSwatch(TridentFont.TRIDENT_ACCENT)
                     ).append(
                         Component.literal(" is no longer on cooldown and is ready to be used")

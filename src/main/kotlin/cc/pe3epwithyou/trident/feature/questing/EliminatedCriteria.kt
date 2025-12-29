@@ -7,7 +7,14 @@ object EliminatedCriteria {
     fun get(game: Game, amount: Int = 1, sourceTag: String? = null): IncrementContext? {
         val keywords = listOf("PLAYERS_KILLED", "PLAYERS_ELIMINATED", "KILLED", "ELIMINATE")
         val criteria = findForGame(game, keywords)
-        return criteria?.let { IncrementContext(game = game, criteria = it, amount = amount, sourceTag = sourceTag) }
+        return criteria?.let {
+            IncrementContext(
+                game = game,
+                criteria = it,
+                amount = amount,
+                sourceTag = sourceTag
+            )
+        }
     }
 
     private fun findForGame(game: Game, keywords: List<String>): QuestCriteria? {

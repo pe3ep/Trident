@@ -59,7 +59,8 @@ object TridentFont {
         } else {
             // Use color from the component to match!
             style = style.withColor(compColor)
-            if (compStyle?.shadowColor != null) style = style.withShadowColor(compStyle.shadowColor!!)
+            if (compStyle?.shadowColor != null) style =
+                style.withShadowColor(compStyle.shadowColor!!)
         }
 
         return tridentPrefix.withStyle(style).append(c)

@@ -61,7 +61,8 @@ class ResearchWidget(
             settings = LayoutConstants.LEFT
         )
 
-        val progressPercentage = (research.progressThroughTier.toDouble() / research.totalForTier.toDouble()) * 100
+        val progressPercentage =
+            (research.progressThroughTier.toDouble() / research.totalForTier.toDouble()) * 100
         val progressBarComponent = ProgressBar.progressComponent(
             research.progressThroughTier.toFloat() / research.totalForTier.toFloat(),
             20,
@@ -71,7 +72,10 @@ class ResearchWidget(
         StringWidget(
             Component.literal("${research.tier - 1} ").defaultFont()
                 .append(progressBarComponent)
-                .append(Component.literal(" ${research.tier}").defaultFont().withStyle(ChatFormatting.WHITE))
+                .append(
+                    Component.literal(" ${research.tier}").defaultFont()
+                        .withStyle(ChatFormatting.WHITE)
+                )
                 .append(
                     Component.literal(" (${round(progressPercentage * 10) / 10.0}%)").defaultFont()
                         .withStyle(ChatFormatting.GRAY)
@@ -106,7 +110,13 @@ class ResearchWidget(
                 ICON_WIDTH,
                 ICON_WIDTH
             ).blit(guiGraphics, x, y)
-            guiGraphics.drawString(font, text, x + ICON_WIDTH + SPACE_ADVANCE, y, 0xFFFFFF.opaqueColor())
+            guiGraphics.drawString(
+                font,
+                text,
+                x + ICON_WIDTH + SPACE_ADVANCE,
+                y,
+                0xFFFFFF.opaqueColor()
+            )
         }
 
         override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit

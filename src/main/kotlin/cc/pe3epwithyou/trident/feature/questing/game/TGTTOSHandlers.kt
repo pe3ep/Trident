@@ -10,7 +10,11 @@ import net.minecraft.network.chat.Component
 
 object TGTTOSHandlers {
     // helper to apply increments
-    private fun inc(criteria: QuestCriteria, tagSuffix: String? = null, canBeDuplicated: Boolean = false) {
+    private fun inc(
+        criteria: QuestCriteria,
+        tagSuffix: String? = null,
+        canBeDuplicated: Boolean = false
+    ) {
         val tag = tagSuffix ?: "increment_${criteria.name.lowercase()}"
         QuestStorage.applyIncrement(
             IncrementContext(

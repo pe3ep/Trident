@@ -15,7 +15,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.network.chat.Component
 
-class TabbedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
+class TabbedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
+    Themed by TridentThemed {
     private companion object {
         private val ICE_CREAM_ICON: Texture
             get() = Texture(Resources.mcc("textures/_fonts/icon/quest_log.png"), 8, 8)
@@ -27,18 +28,25 @@ class TabbedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Them
 
     private var tabs: List<Tab> = listOf(
         Tab(
-            title = Component.literal("Ice Cream".uppercase()).mccFont(), icon = ICE_CREAM_ICON, layout = ::iceCreamTab,
+            title = Component.literal("Ice Cream".uppercase()).mccFont(),
+            icon = ICE_CREAM_ICON,
+            layout = ::iceCreamTab,
             id = "ice_cream",
         ), Tab(
-            title = Component.literal("Burger".uppercase()).mccFont(), icon = BURGER_ICON, layout = ::burgerTab,
+            title = Component.literal("Burger".uppercase()).mccFont(),
+            icon = BURGER_ICON,
+            layout = ::burgerTab,
             id = "burger",
         ), Tab(
-            title = Component.literal("Fries".uppercase()).mccFont(), icon = FRIES_ICON, layout = ::friesTab,
+            title = Component.literal("Fries".uppercase()).mccFont(),
+            icon = FRIES_ICON,
+            layout = ::friesTab,
             id = "fries",
         )
     )
 
-    override val title: DialogTitleWidget = DialogTitle(this@TabbedDialog, Component.literal("Tabbed"))
+    override val title: DialogTitleWidget =
+        DialogTitle(this@TabbedDialog, Component.literal("Tabbed"))
 
     private var currentTab: Tab = tabs.first()
     fun setTab(t: Tab) {

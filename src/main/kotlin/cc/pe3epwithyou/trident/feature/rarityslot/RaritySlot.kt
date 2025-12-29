@@ -41,7 +41,14 @@ object RaritySlot {
 
         if (Config.RaritySlot.displayType == DisplayType.U_SHAPED) {
             graphics.fillGradient(x, y, x + 1, y + 16, transparentColor, opaqueColor) // Left side
-            graphics.fillGradient(x + 15, y, x + 16, y + 16, transparentColor, opaqueColor) // Right side
+            graphics.fillGradient(
+                x + 15,
+                y,
+                x + 16,
+                y + 16,
+                transparentColor,
+                opaqueColor
+            ) // Right side
             graphics.fill(x, y + 15, x + 16, y + 16, opaqueColor) // Bottom side
         }
 

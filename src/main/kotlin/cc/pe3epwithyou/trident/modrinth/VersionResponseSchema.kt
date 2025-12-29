@@ -45,6 +45,9 @@ object VersionResponseSchema {
     @Suppress("PropertyName")
     @Serializable
     data class ModrinthDependency(
-        val version_id: String?, val project_id: String?, val file_name: String?, val dependency_type: String
+        val version_id: String?,
+        val project_id: String?,
+        val file_name: String?,
+        val dependency_type: String
     )
 }

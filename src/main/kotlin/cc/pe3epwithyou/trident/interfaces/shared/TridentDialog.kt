@@ -38,7 +38,8 @@ abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x
     data class SideDistances(val top: Int, val left: Int, val right: Int, val bottom: Int)
 
     override fun renderBackground(graphics: GuiGraphics) {
-        val color = if (parent == null) theme.colors.dialogBackgroundAlt else theme.colors.dialogBackground
+        val color =
+            if (parent == null) theme.colors.dialogBackgroundAlt else theme.colors.dialogBackground
         graphics.fillRoundedAll(
             x, y, getWidth(), getHeight(), color
         )

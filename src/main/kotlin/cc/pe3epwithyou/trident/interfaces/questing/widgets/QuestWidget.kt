@@ -133,7 +133,13 @@ class QuestWidget(
                 ICON_WIDTH,
                 ICON_WIDTH
             ).blit(guiGraphics, x, y)
-            guiGraphics.drawString(font, text, x + ICON_WIDTH + SPACE_ADVANCE, y, 0xFFFFFF.opaqueColor())
+            guiGraphics.drawString(
+                font,
+                text,
+                x + ICON_WIDTH + SPACE_ADVANCE,
+                y,
+                0xFFFFFF.opaqueColor()
+            )
         }
 
         override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit

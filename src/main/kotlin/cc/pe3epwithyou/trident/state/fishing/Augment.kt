@@ -1,175 +1,302 @@
 package cc.pe3epwithyou.trident.state.fishing
 
+import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
 import net.minecraft.resources.ResourceLocation
 
+@Suppress("unused")
 enum class Augment(
     val augmentName: String,
-    val texturePath: ResourceLocation,
+    val modelPath: ResourceLocation,
+    val uses: Int,
+    val useTrigger: AugmentTrigger,
     val textureWidth: Int = 16,
     val textureHeight: Int = textureWidth,
-    val asociatedOverclockTexture: OverclockTexture? = null
+    val texture: OverclockTexture? = null,
+    val worksInGrotto: Boolean = true
 ) {
     // Hook Augments (can be used by the hook overclock)
     STRONG_HOOK(
         "Strong Hook",
         Resources.mcc("island_interface/fishing/perk_icon/strong_hook"),
-        asociatedOverclockTexture = OverclockTexture.STRONG_HOOK
+        100,
+        AugmentTrigger.FISH,
+        texture = OverclockTexture.STRONG_HOOK
     ),
     WISE_HOOK(
         "Wise Hook",
         Resources.mcc("island_interface/fishing/perk_icon/wise_hook"),
-        asociatedOverclockTexture = OverclockTexture.WISE_HOOK
+        100,
+        AugmentTrigger.FISH,
+        texture = OverclockTexture.WISE_HOOK
     ),
     GLIMMERING_HOOK(
         "Glimmering Hook",
         Resources.mcc("island_interface/fishing/perk_icon/glimmering_hook"),
-        asociatedOverclockTexture = OverclockTexture.GLIMMERING_HOOK
+        20,
+        AugmentTrigger.PEARL,
+        texture = OverclockTexture.GLIMMERING_HOOK
     ),
     GREEDY_HOOK(
         "Greedy Hook",
         Resources.mcc("island_interface/fishing/perk_icon/greedy_hook"),
-        asociatedOverclockTexture = OverclockTexture.GREEDY_HOOK
+        5,
+        AugmentTrigger.TREASURE,
+        texture = OverclockTexture.GREEDY_HOOK
     ),
     LUCKY_HOOK(
         "Lucky Hook",
         Resources.mcc("island_interface/fishing/perk_icon/lucky_hook"),
-        asociatedOverclockTexture = OverclockTexture.LUCKY_HOOK
+        10,
+        AugmentTrigger.SPIRIT,
+        texture = OverclockTexture.LUCKY_HOOK
     ),
 
     // Magnet Augments (can be used by the magnet overclock)
     XP_MAGNET(
         "XP Magnet",
         Resources.mcc("island_interface/fishing/perk_icon/xp_magnet"),
-        asociatedOverclockTexture = OverclockTexture.XP_MAGNET
+        100,
+        AugmentTrigger.ANYTHING,
+        texture = OverclockTexture.XP_MAGNET
     ),
     FISH_MAGNET(
         "Fish Magnet",
         Resources.mcc("island_interface/fishing/perk_icon/fish_magnet"),
-        asociatedOverclockTexture = OverclockTexture.FISH_MAGNET
+        100,
+        AugmentTrigger.FISH,
+        texture = OverclockTexture.FISH_MAGNET
     ),
     PEARL_MAGNET(
         "Pearl Magnet",
         Resources.mcc("island_interface/fishing/perk_icon/pearl_magnet"),
-        asociatedOverclockTexture = OverclockTexture.PEARL_MAGNET
+        20,
+        AugmentTrigger.PEARL,
+        texture = OverclockTexture.PEARL_MAGNET
     ),
     TREASURE_MAGNET(
         "Treasure Magnet",
         Resources.mcc("island_interface/fishing/perk_icon/treasure_magnet"),
-        asociatedOverclockTexture = OverclockTexture.TREASURE_MAGNET
+        5,
+        AugmentTrigger.TREASURE,
+        texture = OverclockTexture.TREASURE_MAGNET
     ),
     SPIRIT_MAGNET(
         "Spirit Magnet",
         Resources.mcc("island_interface/fishing/perk_icon/spirit_magnet"),
-        asociatedOverclockTexture = OverclockTexture.SPIRIT_MAGNET
+        10,
+        AugmentTrigger.SPIRIT,
+        texture = OverclockTexture.SPIRIT_MAGNET
     ),
 
     // Rod Augments (can be used by the rod overclock)
     BOOSTED_ROD(
         "Boosted Rod",
         Resources.mcc("island_interface/fishing/perk_icon/boosted_rod"),
-        asociatedOverclockTexture = OverclockTexture.BOOSTED_ROD
+        50,
+        AugmentTrigger.ANYTHING,
+        texture = OverclockTexture.BOOSTED_ROD
     ),
     SPEEDY_ROD(
         "Speedy Rod",
         Resources.mcc("island_interface/fishing/perk_icon/speedy_rod"),
-        asociatedOverclockTexture = OverclockTexture.SPEEDY_ROD
+        100,
+        AugmentTrigger.ANYTHING,
+        texture = OverclockTexture.SPEEDY_ROD
     ),
     GRACEFUL_ROD(
         "Graceful Rod",
         Resources.mcc("island_interface/fishing/perk_icon/graceful_rod"),
-        asociatedOverclockTexture = OverclockTexture.GRACEFUL_ROD
+        100,
+        AugmentTrigger.ANYTHING,
+        texture = OverclockTexture.GRACEFUL_ROD
     ),
     GLITCHED_ROD(
         "Glitched Rod",
         Resources.mcc("island_interface/fishing/perk_icon/glitched_rod"),
-        asociatedOverclockTexture = OverclockTexture.GLITCHED_ROD
+        100,
+        AugmentTrigger.ANYTHING,
+        texture = OverclockTexture.GLITCHED_ROD
     ),
     STABLE_ROD(
         "Stable Rod",
         Resources.mcc("island_interface/fishing/perk_icon/stable_rod"),
-        asociatedOverclockTexture = OverclockTexture.STABLE_ROD
+        50,
+        AugmentTrigger.ANYTHING_GROTTO,
+        texture = OverclockTexture.STABLE_ROD
     ),
 
     // Lure Augments (can be used by the unstable overclock)
     ELUSUVE_LURE(
-        "Elusive Lure", Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_strong")
+        "Elusive Lure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_strong"),
+        3,
+        AugmentTrigger.ELUSIVE
     ),
     WAYFINDER_LURE(
-        "Wayfinder Lure", Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_wise")
+        "Wayfinder Lure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_wise"),
+        100,
+        AugmentTrigger.ANYTHING,
+        worksInGrotto = false
     ),
     PEARL_LURE(
-        "Pearl Lure", Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_glimmering")
+        "Pearl Lure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_glimmering"),
+        15,
+        AugmentTrigger.PEARL,
+        worksInGrotto = false
     ),
     TREASURE_LURE(
-        "Treasure Lure", Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_greedy")
+        "Treasure Lure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_greedy"),
+        2,
+        AugmentTrigger.TREASURE,
+        worksInGrotto = false
     ),
     SPIRIT_LURE(
-        "Spirit Lure", Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_lucky")
+        "Spirit Lure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_lucky"),
+        5,
+        AugmentTrigger.SPIRIT,
+        worksInGrotto = false
     ),
 
     // Ultralure Augments
     ELUSUVE_ULTRALURE(
-        "Elusive Ultralure", Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_strong"), 16, 256
+        "Elusive Ultralure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_strong"),
+        30,
+        AugmentTrigger.ELUSIVE,
+        16,
+        256
     ),
     WAYFINDER_ULTRALURE(
-        "Wayfinder Ultralure", Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_wise"), 16, 256
+        "Wayfinder Ultralure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_wise"),
+        500,
+        AugmentTrigger.ANYTHING,
+        16,
+        256,
+        worksInGrotto = false
     ),
     PEARL_ULTRALURE(
-        "Pearl Ultralure", Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_glimmering"), 16, 256
+        "Pearl Ultralure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_glimmering"),
+        150,
+        AugmentTrigger.PEARL,
+        16,
+        256,
+        worksInGrotto = false
     ),
     TREASURE_ULTRALURE(
-        "Treasure Ultralure", Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_greedy"), 16, 256
+        "Treasure Ultralure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_greedy"),
+        20,
+        AugmentTrigger.TREASURE,
+        16,
+        256,
+        worksInGrotto = false
     ),
     SPIRIT_ULTRALURE(
-        "Spirit Ultralure", Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_lucky"), 16, 256
+        "Spirit Ultralure",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_ultralure_lucky"),
+        50,
+        AugmentTrigger.SPIRIT,
+        16,
+        256,
+        worksInGrotto = false
     ),
 
     // Other Augments (cannot be used by ANY overclocks)
     ELUSIVE_SODA(
         "Elusive Soda",
         Resources.mcc("island_items/infinibag/fishing_item/anglr_elusive_pop"),
+        100,
+        AugmentTrigger.FISH
     ),
     RARITY_ROD(
-        "Rarity Rod", Resources.mcc("island_items/infinibag/fishing_item/anglr_rarity_rod"), 16, 240
+        "Rarity Rod",
+        Resources.mcc("island_items/infinibag/fishing_item/anglr_rarity_rod"),
+        100,
+        AugmentTrigger.FISH,
+        16,
+        240
     ),
     PURE_BEACON(
         "Pure Beacon",
         Resources.mcc("island_items/infinibag/fishing_item/anglr_pure_beacon"),
+        100,
+        AugmentTrigger.SPIRIT,
     ),
     LURE_BATTERY(
         "Lure Battery",
         Resources.mcc("island_items/infinibag/fishing_item/anglr_lure_battery"),
+        100,
+        AugmentTrigger.ANYTHING,
     ),
     STOCK_REPLENISHER(
         "Stock Replenisher",
         Resources.mcc("island_items/infinibag/fishing_item/anglr_stock_replenisher"),
+        1,
+        AugmentTrigger.SPOT
     ),
     AUTO_ROD(
         "Auto Rod",
         Resources.mcc("island_items/infinibag/fishing_item/anglr_auto_rod"),
+        150,
+        AugmentTrigger.ANYTHING
     ),
 
 
     // Amulets Augments
     STRONG_AMULET(
-        "Strong Amulet", Resources.mcc("island_items/infinibag/fishing_item/amulet_strong"), 16, 208
+        "Strong Amulet",
+        Resources.mcc("island_items/infinibag/fishing_item/amulet_strong"),
+        10,
+        AugmentTrigger.SPIRIT,
+        16,
+        208
     ),
     WISE_AMULET(
-        "Wise Amulet", Resources.mcc("island_items/infinibag/fishing_item/amulet_wise"), 16, 208
+        "Wise Amulet",
+        Resources.mcc("island_items/infinibag/fishing_item/amulet_wise"),
+        10,
+        AugmentTrigger.SPIRIT,
+        16,
+        208
     ),
     GLIMMERING_AMULET(
-        "Glimmering Amulet", Resources.mcc("island_items/infinibag/fishing_item/amulet_glimmering"), 16, 208
+        "Glimmering Amulet",
+        Resources.mcc("island_items/infinibag/fishing_item/amulet_glimmering"),
+        10,
+        AugmentTrigger.SPIRIT,
+        16,
+        208
     ),
     GREEDY_AMULET(
-        "Greedy Amulet", Resources.mcc("island_items/infinibag/fishing_item/amulet_greedy"), 16, 208
+        "Greedy Amulet",
+        Resources.mcc("island_items/infinibag/fishing_item/amulet_greedy"),
+        10,
+        AugmentTrigger.SPIRIT,
+        16,
+        208
     ),
     LUCKY_AMULET(
-        "Lucky Amulet", Resources.mcc("island_items/infinibag/fishing_item/amulet_lucky"), 16, 208
+        "Lucky Amulet",
+        Resources.mcc("island_items/infinibag/fishing_item/amulet_lucky"),
+        10,
+        AugmentTrigger.SPIRIT,
+        16,
+        208
     ),
 
     EMPTY_AUGMENT(
-        "Empty Augment", Resources.trident("interface/empty_augment")
+        "Empty Augment",
+        Resources.trident("interface/empty_augment"),
+        1,
+        AugmentTrigger.NONE,
     )
 
 }
@@ -179,4 +306,35 @@ fun getAugmentByName(name: String): Augment? {
         if (augment.augmentName == name) return augment
     }
     return null
+}
+
+fun getAugmentContainer(name: String, lore: List<String>): AugmentContainer? {
+    Augment.entries.forEach { augment ->
+        if (augment.augmentName == name) {
+            val status = when {
+                "This item has previously been repaired." in lore -> AugmentStatus.REPAIRED
+                lore.find { "This item is out of uses! You can Repair" in it } != null -> AugmentStatus.NEEDS_REPAIRING
+                lore.find { "This item is out of uses! You've already" in it } != null -> AugmentStatus.BROKEN
+                lore.find { "Paused: This item will not consume uses" in it } != null -> AugmentStatus.PAUSED
+                else -> AugmentStatus.NEW
+            }
+            var durability: Int? = null
+            lore.forEach { s ->
+                Regex("""Uses Remaining: (.+)/(.+)""").matchEntire(s)?.let {
+                    durability = it.groups[1]?.value?.parseFormattedInt()
+                    return@forEach
+                }
+            }
+            return AugmentContainer(augment, status, durability ?: augment.uses)
+        }
+    }
+    return null
+}
+
+enum class AugmentStatus {
+    NEW,
+    NEEDS_REPAIRING,
+    REPAIRED,
+    PAUSED,
+    BROKEN
 }

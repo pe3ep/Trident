@@ -21,7 +21,11 @@ import net.minecraft.network.chat.Component
 
 object KillChatListener {
     val killfeedGames = listOf(
-        Game.BATTLE_BOX, Game.BATTLE_BOX_ARENA, Game.DYNABALL, Game.SKY_BATTLE, Game.ROCKET_SPLEEF_RUSH
+        Game.BATTLE_BOX,
+        Game.BATTLE_BOX_ARENA,
+        Game.DYNABALL,
+        Game.SKY_BATTLE,
+        Game.ROCKET_SPLEEF_RUSH
     )
 
     private val fallbackColor = 0xFFFFFF opacity 128
@@ -36,7 +40,8 @@ object KillChatListener {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowGame true
             try {
-                val killAssistMatch = Regex("""^\[.] You assisted in eliminating (.+)!""").matches(message.string)
+                val killAssistMatch =
+                    Regex("""^\[.] You assisted in eliminating (.+)!""").matches(message.string)
                 if (killAssistMatch) {
                     KillFeedDialog.applyKillAssist()
                 }
@@ -93,7 +98,10 @@ object KillChatListener {
                     if (killMethod == KillMethod.RANGE) {
                         QuestStorage.applyIncrement(
                             IncrementContext(
-                                Game.BATTLE_BOX, QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS, 1, "bb_ranged_kill"
+                                Game.BATTLE_BOX,
+                                QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS,
+                                1,
+                                "bb_ranged_kill"
                             ), true
                         )
 

@@ -26,7 +26,11 @@ import java.util.*
 object NoxesiumUtils {
 
     fun skullComponent(
-        uuid: UUID, grayscale: Boolean = false, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F
+        uuid: UUID,
+        grayscale: Boolean = false,
+        advance: Int = 0,
+        ascent: Int = 0,
+        scale: Float = 1.0F
     ): MutableComponent {
         return MutableComponent.create(
             SkullContents(
@@ -65,7 +69,8 @@ object NoxesiumUtils {
         if (currentGame == Game.HUB && game != "" && Config.Questing.showInLobby) {
             val k = "questing"
             if (!Config.Questing.enabled) return
-            QuestingDialog.currentGame = Game.entries.filter { g -> g.server == game }.getOrNull(0) ?: return
+            QuestingDialog.currentGame =
+                Game.entries.filter { g -> g.server == game }.getOrNull(0) ?: return
             DialogCollection.open(k, QuestingDialog(10, 10, k))
         }
     }
