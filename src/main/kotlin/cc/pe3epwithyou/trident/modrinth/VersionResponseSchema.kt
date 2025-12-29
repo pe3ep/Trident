@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.modrinth
 import kotlinx.serialization.Serializable
 
 object VersionResponseSchema {
+    @Suppress("PropertyName")
     @Serializable
     data class ModrinthVersion(
         val game_versions: List<String>,
@@ -24,8 +25,10 @@ object VersionResponseSchema {
         val dependencies: List<ModrinthDependency>
     )
 
+    @Suppress("PropertyName")
     @Serializable
     data class ModrinthFile(
+        val id: String,
         val hashes: ModrinthHashes,
         val url: String,
         val filename: String,
@@ -39,6 +42,7 @@ object VersionResponseSchema {
         val sha512: String, val sha1: String
     )
 
+    @Suppress("PropertyName")
     @Serializable
     data class ModrinthDependency(
         val version_id: String?, val project_id: String?, val file_name: String?, val dependency_type: String
