@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.feature.questing
 
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.Rarity
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.inventory.Slot
@@ -29,10 +29,10 @@ object QuestingParser {
         val item = slot.item
         val model = item.get(DataComponents.ITEM_MODEL)
         if (model == null) {
-            ChatUtils.error("Failed to parse questing item in slot ${slot.index}: Missing model")
+            Logger.error("Failed to parse questing item in slot ${slot.index}: Missing model")
             return null
         }
-        ChatUtils.debugLog("Quest found: Slot ${slot.index}")
+        Logger.debugLog("Quest found: Slot ${slot.index}")
         if (model.path == FINISHED_MAPS ||
             model.path == ADD_SCROLL ||
             model.path == COMPLETED_QUEST
@@ -49,7 +49,7 @@ object QuestingParser {
             "mythic" -> Rarity.MYTHIC
             else -> Rarity.COMMON
         }
-        ChatUtils.debugLog("Got rarity - $rarity")
+        Logger.debugLog("Got rarity - $rarity")
 
         var type = QuestType.DEFAULT
         for (t in QuestType.entries) {
@@ -58,7 +58,7 @@ object QuestingParser {
                 break
             }
         }
-        ChatUtils.debugLog("Got type - $type")
+        Logger.debugLog("Got type - $type")
 
         val subtype = when {
             "Daily" in item.hoverName.string -> QuestSubtype.DAILY
@@ -66,11 +66,11 @@ object QuestingParser {
             "Scroll" in item.hoverName.string -> QuestSubtype.SCROLL
             else -> return null
         }
-        ChatUtils.debugLog("Got subtype - $subtype")
+        Logger.debugLog("Got subtype - $subtype")
 
         val quests = mutableListOf<Quest>()
         val loreResult = parseLore(slot.item)
-        ChatUtils.debugLog("Got parsed quests - $loreResult")
+        Logger.debugLog("Got parsed quests - $loreResult")
         if (loreResult.isEmpty()) return null
         loreResult.forEach { parsedQuest ->
             quests.add(
@@ -106,7 +106,7 @@ object QuestingParser {
                 val current = t.split("/")[0].replace(",", "").toInt()
                 val total = t.split("/")[1].replace(",", "").toInt()
                 tempProgress = Pair(current, total)
-                ChatUtils.debugLog("Got progress -> $tempProgress")
+                Logger.debugLog("Got progress -> $tempProgress")
                 val q = ParsedQuest(
                     tempGame ?: return@forEachIndexed,
                     tempCriteria ?: return@forEachIndexed,
@@ -120,10 +120,10 @@ object QuestingParser {
             } else if ("%" in l.string) {
                 tempGame = getQuestGame(tempQuestString) ?: return@forEachIndexed
                 val criteriaList = GameQuests.valueOf(tempGame.name).list
-                ChatUtils.debugLog("Criteria list -> $criteriaList")
+                Logger.debugLog("Criteria list -> $criteriaList")
                 for (crit in criteriaList) {
                     if (!tempQuestString.contains(crit.regexPattern)) continue
-                    ChatUtils.debugLog("Detected game criteria -> $crit")
+                    Logger.debugLog("Detected game criteria -> $crit")
                     tempCriteria = crit
                 }
                 tempQuestString = ""

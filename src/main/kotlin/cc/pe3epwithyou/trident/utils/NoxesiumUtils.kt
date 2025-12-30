@@ -77,7 +77,7 @@ object NoxesiumUtils {
             val server = packet.server
             val types = packet.types
 
-            ChatUtils.debugLog(
+            Logger.debugLog(
                 "NOX Packet received:\nserver: $server\ntypes: $types"
             )
 
@@ -95,7 +95,7 @@ object NoxesiumUtils {
             }
             if (currentGame != MCCIState.game) {
                 MCCIState.game = currentGame
-                ChatUtils.debugLog("Current game: ${MCCIState.game.title}")
+                Logger.debugLog("Current game: ${MCCIState.game.title}")
             }
         }
 
@@ -103,7 +103,7 @@ object NoxesiumUtils {
             this, ClientboundMccGameStatePacket::class.java
         ) { _, packet, _ ->
             removeKillsIfNeeded(packet)
-            ChatUtils.debugLog(
+            Logger.debugLog(
                 """
                 NOX GAME_STATE Packet Received:
                 mapID: ${packet.mapId}
@@ -119,7 +119,7 @@ object NoxesiumUtils {
         MccPackets.CLIENTBOUND_MCC_STATISTIC.addListener(
             this, ClientboundMccStatisticPacket::class.java
         ) { _, packet, _ ->
-            ChatUtils.debugLog(
+            Logger.debugLog(
                 """
                 CLIENTBOUND_MCC_STATISTIC:
                 stat: ${packet.statistic}
@@ -146,7 +146,7 @@ object NoxesiumUtils {
             }
             DialogCollection.refreshDialog("questing")
         } catch (e: Exception) {
-            ChatUtils.error("Something went wrong when handling quest for stat $stat: ${e.message}")
+            Logger.error("Something went wrong when handling quest for stat $stat: ${e.message}")
         }
     }
 
@@ -163,7 +163,7 @@ object NoxesiumUtils {
 
     private fun getCurrentGame(server: String, types: List<String>): Game {
         if (types.size < 2) {
-            ChatUtils.error("Returned server types were too short")
+            Logger.error("Returned server types were too short")
             return Game.HUB
         }
 

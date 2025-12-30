@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.feature.fishing
 
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.OverclockState
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
@@ -73,7 +73,7 @@ object OverclockClock : ClientTickEvents.EndTick {
                         Component.literal(" is no longer on cooldown and is ready to be used")
                             .withSwatch(TridentFont.TRIDENT_COLOR)
                     )
-                ChatUtils.sendMessage(component, true)
+                Logger.sendMessage(component, true)
                 Minecraft.getInstance().player?.playSound(
                     SoundEvent(Resources.mcc("games.fishing.overclock_ready"), Optional.empty())
                 )

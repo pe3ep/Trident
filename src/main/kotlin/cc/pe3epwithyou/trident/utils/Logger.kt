@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.config.Config
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
-object ChatUtils {
+object Logger {
     private const val PREFIX = "[Trident]"
 
     fun info(s: String) {

@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.utils.extensions
 
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
@@ -21,7 +21,7 @@ object ItemStackExtensions {
     fun ItemStack.safeGetLine(index: Int): Component? {
         val c = this.getLore().getOrNull(index)
         if (c == null) {
-            ChatUtils.warn("Failed to get line $index on item " + this.hoverName.string)
+            Logger.warn("Failed to get line $index on item " + this.hoverName.string)
         }
         return c
     }
@@ -31,7 +31,7 @@ object ItemStackExtensions {
             predicate.containsMatchIn(component.string)
         }
         if (c == null) {
-            ChatUtils.warn("Failed to find predicate $predicate in item ${this.hoverName.string}")
+            Logger.warn("Failed to find predicate $predicate in item ${this.hoverName.string}")
             return null
         }
         return predicate.find(c.string)

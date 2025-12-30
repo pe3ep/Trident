@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.feature.questing
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -44,7 +44,7 @@ object QuestStorage {
      * Returns true if any quest was updated.
      */
     fun applyIncrement(ctx: IncrementContext): Boolean {
-        ChatUtils.debugLog("Received increment from context ${ctx.sourceTag}, criteria: ${ctx.criteria}: amount: ${ctx.amount}")
+        Logger.debugLog("Received increment from context ${ctx.sourceTag}, criteria: ${ctx.criteria}: amount: ${ctx.amount}")
         val quests = store[ctx.game] ?: return false
         if (MCCIState.isPlobby) return false
         var updated = false

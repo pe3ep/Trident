@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.state
 
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
@@ -23,7 +23,7 @@ object FontCollection {
     fun get(icon: Icon): MutableComponent {
         val char = collection[icon]
         if (char == null) {
-            ChatUtils.error("Failed to get a char ${icon.path} from the font collection")
+            Logger.error("Failed to get a char ${icon.path} from the font collection")
             return Component.literal("?").defaultFont()
         }
         val comp = Component.literal(char).mccFont("icon")

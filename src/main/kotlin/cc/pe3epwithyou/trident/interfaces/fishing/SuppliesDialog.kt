@@ -27,6 +27,7 @@ import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
+// TODO: Rewrite this dialog to be much cleaner
 class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
     Themed by TridentThemed {
     private companion object {

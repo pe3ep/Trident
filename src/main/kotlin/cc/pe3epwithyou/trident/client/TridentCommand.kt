@@ -3,8 +3,8 @@ package cc.pe3epwithyou.trident.client
 import cc.pe3epwithyou.trident.Trident.Companion.playerState
 import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
-import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
@@ -22,7 +22,7 @@ import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Command
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
@@ -48,7 +48,7 @@ object TridentCommand {
 
     private fun notOnIsland(): Boolean {
         if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
-            ChatUtils.sendMessage(
+            Logger.sendMessage(
                 Component.translatable("trident.not_island").withSwatch(TridentFont.TRIDENT_COLOR)
             )
             return true
@@ -109,7 +109,7 @@ object TridentCommand {
                         .withSwatch(TridentFont.TRIDENT_COLOR).append(
                             Component.literal("reset").withSwatch(TridentFont.ERROR)
                         )
-                    ChatUtils.sendMessage(c)
+                    Logger.sendMessage(c)
                 }
             }
 
@@ -128,7 +128,7 @@ object TridentCommand {
                             .append(
                                 Component.literal("reset").withSwatch(TridentFont.ERROR)
                             )
-                    ChatUtils.sendMessage(c)
+                    Logger.sendMessage(c)
                 }
             }
 
@@ -143,22 +143,22 @@ object TridentCommand {
                     val scope = Util.backgroundExecutor().asCoroutineDispatcher()
                     CoroutineScope(scope).launch {
                         main {
-                            ChatUtils.sendMessage("Requesting autofish.jar...")
+                            Logger.sendMessage("Requesting autofish.jar...")
                         }
 
                         delay(4000)
                         main {
-                            ChatUtils.sendMessage("Received a response from the server")
+                            Logger.sendMessage("Received a response from the server")
                         }
 
                         delay(2000)
                         main {
-                            ChatUtils.sendMessage("It says the following:")
+                            Logger.sendMessage("It says the following:")
                         }
 
                         delay(3000)
                         main {
-                            ChatUtils.sendMessage(
+                            Logger.sendMessage(
                                 Component.literal("Did you really just try to enable autofishing?")
                                     .withStyle(ChatFormatting.AQUA)
                             )
@@ -166,7 +166,7 @@ object TridentCommand {
 
                         delay(3000)
                         main {
-                            ChatUtils.sendMessage(
+                            Logger.sendMessage(
                                 Component.literal("Are we serious right meow bro?")
                                     .withStyle(ChatFormatting.AQUA)
                             )
@@ -174,7 +174,7 @@ object TridentCommand {
 
                         delay(3000)
                         main {
-                            ChatUtils.sendMessage(
+                            Logger.sendMessage(
                                 Component.literal("This incident will be reported.")
                                     .withSwatch(TridentFont.ERROR)
                                     .withStyle(ChatFormatting.BOLD)
@@ -200,7 +200,7 @@ object TridentCommand {
                             Config.handler.instance().apiKey = arg
                             Config.handler.instance().globalApiProvider = ApiProvider.SELF_TOKEN
                             Config.handler.save()
-                            ChatUtils.sendMessage("Successfully set the token. You can now use API features")
+                            Logger.sendMessage("Successfully set the token. You can now use API features")
                         }
                     }
                 }
@@ -209,7 +209,7 @@ object TridentCommand {
                         Config.handler.instance().apiKey = ""
                         Config.handler.instance().globalApiProvider = ApiProvider.TRIDENT
                         Config.handler.save()
-                        ChatUtils.sendMessage(
+                        Logger.sendMessage(
                             Component.literal("Your API token has been ")
                                 .withSwatch(TridentFont.TRIDENT_COLOR)
                                 .append(Component.literal("reset").withSwatch(TridentFont.ERROR))
@@ -241,7 +241,7 @@ object TridentCommand {
                     }
                     executes {
                         val key = it.getArgument("overclock", String::class.java)
-                        ChatUtils.sendMessage("Starting fake overclock $key")
+                        Logger.sendMessage("Starting fake overclock $key")
                         if (key == "unstable") {
                             playerState.supplies.overclocks.unstable.state.isAvailable = true
                             OverclockHandlers.startTimedOverclock(
@@ -263,27 +263,27 @@ object TridentCommand {
                     val json = Json { prettyPrint = true }
                     val serializable = playerState
                     val text = json.encodeToString(serializable)
-                    ChatUtils.sendMessage("——————— PLAYERSTATE BEGIN ———————", false)
-                    ChatUtils.sendMessage(text, false)
-                    ChatUtils.sendMessage("———————— PLAYERSTATE END ————————", false)
+                    Logger.sendMessage("——————— PLAYERSTATE BEGIN ———————", false)
+                    Logger.sendMessage(text, false)
+                    Logger.sendMessage("———————— PLAYERSTATE END ————————", false)
                 }
             }
 
             literal("dump_lowest_prices") {
                 executes {
-                    ChatUtils.sendMessage("—————— LOWEST PRICE BEGIN ——————", false)
+                    Logger.sendMessage("—————— LOWEST PRICE BEGIN ——————", false)
                     ExchangeHandler.exchangeDeals.forEach { (key, value) ->
-                        ChatUtils.sendMessage("$key costs $value", false)
+                        Logger.sendMessage("$key costs $value", false)
                     }
-                    ChatUtils.sendMessage("——————— LOWEST PRICE END ———————", false)
+                    Logger.sendMessage("——————— LOWEST PRICE END ———————", false)
                 }
             }
 
             literal("dump_islandstate") {
                 executes {
-                    ChatUtils.sendMessage("—————— ISLAND BEGIN ——————", false)
-                    ChatUtils.sendMessage("CURRENT GAME: ${MCCIState.game}")
-                    ChatUtils.sendMessage("——————— ISLAND END ———————", false)
+                    Logger.sendMessage("—————— ISLAND BEGIN ——————", false)
+                    Logger.sendMessage("CURRENT GAME: ${MCCIState.game}")
+                    Logger.sendMessage("——————— ISLAND END ———————", false)
                 }
             }
 
@@ -295,7 +295,7 @@ object TridentCommand {
 
             literal("send_current_spot") {
                 executes {
-                    ChatUtils.sendMessage("${FishingSpotListener.currentSpot}")
+                    Logger.sendMessage("${FishingSpotListener.currentSpot}")
                 }
             }
 
@@ -321,7 +321,7 @@ object TridentCommand {
                                     status
                                 )
                             )
-                            ChatUtils.sendMessage("Fake augment created: ${augment.name}", false)
+                            Logger.sendMessage("Fake augment created: ${augment.name}", false)
                             DialogCollection.refreshOpenedDialogs()
                         }
                     }

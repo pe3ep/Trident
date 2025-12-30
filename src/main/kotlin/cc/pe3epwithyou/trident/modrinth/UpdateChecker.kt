@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.modrinth
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
@@ -62,7 +62,7 @@ object UpdateChecker {
         val versions = JSON.decodeFromString<List<VersionResponseSchema.ModrinthVersion>>(response)
         var fetchedVersionModrinth: VersionResponseSchema.ModrinthVersion? = null
         if (currentVersion == null) {
-            ChatUtils.error("Missing current version")
+            Logger.error("Missing current version")
             return
         }
 
@@ -73,8 +73,8 @@ object UpdateChecker {
             break
         }
         if (latestVersion == null) return
-        ChatUtils.info("Current version: ${currentVersion?.friendlyString}")
-        ChatUtils.info("Fetched version: ${latestVersion!!.friendlyString}")
+        Logger.info("Current version: ${currentVersion?.friendlyString}")
+        Logger.info("Fetched version: ${latestVersion!!.friendlyString}")
         if (latestVersion!! > currentVersion) {
             // New version available, notify the user
             sendUpdateAvailableMessage(latestVersion!!.friendlyString)
@@ -105,7 +105,7 @@ object UpdateChecker {
                             .withClickEvent(ClickEvent.OpenUrl(URI.create("https://modrinth.com/mod/$PROJECT_ID/version/$new")))
                     )
             )
-        ChatUtils.sendMessage(component, true)
+        Logger.sendMessage(component, true)
     }
 
 }

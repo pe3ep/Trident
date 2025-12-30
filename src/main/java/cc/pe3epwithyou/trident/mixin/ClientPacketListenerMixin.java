@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.mixin;
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.feature.FocusGame;
 import cc.pe3epwithyou.trident.feature.questing.QuestListener;
-import cc.pe3epwithyou.trident.utils.ChatUtils;
+import cc.pe3epwithyou.trident.utils.Logger;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerCombatKillPacket;
@@ -22,7 +22,7 @@ public class ClientPacketListenerMixin {
 
     @Inject(method = "handlePlayerCombatKill", at = @At("TAIL"))
     private void playerCombatKill(ClientboundPlayerCombatKillPacket clientboundPlayerCombatKillPacket, CallbackInfo ci) {
-        ChatUtils.INSTANCE.debugLog("Received death event for id: " + clientboundPlayerCombatKillPacket.playerId());
+        Logger.INSTANCE.debugLog("Received death event for id: " + clientboundPlayerCombatKillPacket.playerId());
     }
 
     @Inject(method = "handleContainerSetSlot", at = @At("TAIL"))

@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.feature.api
 
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
@@ -33,7 +33,7 @@ object ApiChecker {
             val ping = pingApi()
             if (!ping && Config.Global.apiProvider == ApiProvider.TRIDENT) {
                 main {
-                    ChatUtils.sendMessage(
+                    Logger.sendMessage(
                         Component.literal("Trident API is down. Switching to self-hosted token.")
                             .withSwatch(
                                 TridentFont.ERROR

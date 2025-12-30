@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.client.listeners.SlotClickListener;
 import cc.pe3epwithyou.trident.state.MCCIState;
-import cc.pe3epwithyou.trident.utils.ChatUtils;
+import cc.pe3epwithyou.trident.utils.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +29,7 @@ public class AbstractContainerMenuMixin {
             try {
                 SlotClickListener.INSTANCE.handleClick(slot, clickType, isLeftClick);
             } catch (Exception e) {
-                ChatUtils.INSTANCE.error("Something went wrong when handling click: " + e.getMessage());
+                Logger.INSTANCE.error("Something went wrong when handling click: " + e.getMessage());
             }
         }
     }

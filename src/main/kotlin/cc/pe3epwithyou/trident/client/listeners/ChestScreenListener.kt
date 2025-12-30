@@ -12,7 +12,7 @@ import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.Research
 import cc.pe3epwithyou.trident.state.fishing.getAugmentContainer
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.ItemParser
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
@@ -66,7 +66,7 @@ object ChestScreenListener {
             waitForItems { ExchangeHandler.handleScreen(screen) }
         }
 
-        ChatUtils.debugLog("Screen title: $title")
+        Logger.debugLog("Screen title: $title")
     }
 
     fun waitForItems(block: () -> Unit) {
@@ -85,11 +85,11 @@ object ChestScreenListener {
                 time++
             }
             isWaitingForItems = false
-            ChatUtils.sendMessage(
+            Logger.sendMessage(
                 Component.literal("Timed out waiting for items to arrive, waited for 3 seconds")
                     .withSwatch(TridentFont.ERROR)
             )
-            ChatUtils.error("Timed out waiting for items")
+            Logger.error("Timed out waiting for items")
         }
     }
 
@@ -98,12 +98,12 @@ object ChestScreenListener {
             try {
                 if (screen is ContainerScreen) handleScreen(screen)
             } catch (e: Exception) {
-                ChatUtils.sendMessage(
+                Logger.sendMessage(
                     Component.literal("Something went wrong when opening screen, please contact developers about this issue")
                         .withSwatch(TridentFont.ERROR)
                 )
 
-                ChatUtils.error("Something went wrong when opening screen, ${e.message}")
+                Logger.error("Something went wrong when opening screen, ${e.message}")
             }
         }
     }
@@ -149,7 +149,7 @@ object ChestScreenListener {
                 baitSlot.item.safeGetLine(15)?.string?.split(" ")?.getOrNull(2)?.parseFormattedInt()
 
             Trident.playerState.supplies.bait.amount = baitCount
-            ChatUtils.debugLog("Bait found - ${Trident.playerState.supplies.bait.amount}")
+            Logger.debugLog("Bait found - ${Trident.playerState.supplies.bait.amount}")
 
             val baitRarityName = baitItemName.split(" ").firstOrNull()
             Trident.playerState.supplies.bait.type = parseRarity(baitRarityName ?: "")
@@ -210,7 +210,7 @@ object ChestScreenListener {
                 }
             }
         } as MutableList<AugmentContainer>
-        ChatUtils.debugLog("Augments: ${Trident.playerState.supplies.augmentContainers}")
+        Logger.debugLog("Augments: ${Trident.playerState.supplies.augmentContainers}")
         Trident.playerState.supplies.augmentsAvailable = availableSlots
         Trident.playerState.supplies.baitDesynced = false
         Trident.playerState.supplies.needsUpdating = false

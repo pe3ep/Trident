@@ -8,7 +8,7 @@ import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import com.noxcrew.sheeplib.util.opacity
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.client.Minecraft
@@ -48,7 +48,7 @@ object KillChatListener {
                     }
                 }
             } catch (e: Exception) {
-                ChatUtils.error("Something went wrong when handling message ${message.string}: ${e.message}")
+                Logger.error("Something went wrong when handling message ${message.string}: ${e.message}")
             }
             return@allowGame true
         }

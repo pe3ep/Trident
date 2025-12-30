@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.Trident;
 import cc.pe3epwithyou.trident.feature.api.ApiChecker;
 import cc.pe3epwithyou.trident.interfaces.DialogCollection;
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker;
-import cc.pe3epwithyou.trident.utils.ChatUtils;
+import cc.pe3epwithyou.trident.utils.Logger;
 import cc.pe3epwithyou.trident.utils.TridentFont;
 import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
 import net.minecraft.client.multiplayer.ServerData;
@@ -34,7 +34,7 @@ public class JoinIslandMixin {
         ApiChecker.INSTANCE.joinCheck();
         if (Trident.Companion.getHasFailedToLoadConfig()) {
             Component component = Component.translatable("trident.failed_config").withStyle(TridentFont.INSTANCE.getERROR().getBaseStyle());
-            ChatUtils.INSTANCE.sendMessage(component, true);
+            Logger.INSTANCE.sendMessage(component, true);
         }
     }
 }

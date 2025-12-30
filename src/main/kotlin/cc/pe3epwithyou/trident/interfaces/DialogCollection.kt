@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.interfaces
 
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import com.noxcrew.sheeplib.DialogContainer
 import net.minecraft.client.Minecraft
 
@@ -89,7 +89,7 @@ object DialogCollection {
         try {
             DialogIO.save(dialogPositions)
         } catch (e: Exception) {
-            ChatUtils.error("Failed to save dialogs: ${e.message}")
+            Logger.error("Failed to save dialogs: ${e.message}")
         }
     }
 
@@ -125,7 +125,7 @@ object DialogCollection {
     fun clear() {
         val keys = openedDialogs.keys.toList()
         keys.forEach { key ->
-            ChatUtils.debugLog("Attempting to clear $key")
+            Logger.debugLog("Attempting to clear $key")
             openedDialogs[key]?.close()
         }
     }

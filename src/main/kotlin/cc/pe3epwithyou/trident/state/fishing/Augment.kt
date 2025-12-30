@@ -2,8 +2,8 @@ package cc.pe3epwithyou.trident.state.fishing
 
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.utils.Resources
-import net.minecraft.resources.Identifier
 import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
+import net.minecraft.resources.Identifier
 
 @Suppress("unused")
 enum class Augment(

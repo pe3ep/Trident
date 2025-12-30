@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState.game
 import cc.pe3epwithyou.trident.state.MCCIState.isOnIsland
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.isMaximized
@@ -16,7 +16,7 @@ object FocusGame {
         if (!Config.Games.autoFocus) return
         if (isOnIsland() && (game != Game.HUB || game != Game.FISHING)) {
             if (subtitle.contains("►5◄") || subtitle.contains("►3◄")) {
-                ChatUtils.debugLog(
+                Logger.debugLog(
                     """
                         isActive: ${WindowExtensions.isActive}
                         isMaximized: ${Minecraft.getInstance().window.isMaximized}

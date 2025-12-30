@@ -16,7 +16,7 @@ import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Resources
 import com.mojang.blaze3d.platform.InputConstants
@@ -28,12 +28,11 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class Trident : ModInitializer {
     companion object {
-        val LOGGER: Logger = LoggerFactory.getLogger(this.toString())
+        val LOGGER: org.slf4j.Logger = LoggerFactory.getLogger(this.toString())
         lateinit var settingsKeymapping: KeyMapping
         var playerState = PlayerState()
         var hasFailedToLoadConfig: Boolean = false
@@ -86,15 +85,15 @@ class Trident : ModInitializer {
             playerState = PlayerStateIO.load()
         } catch (e: Exception) {
             hasFailedToLoadConfig = true
-            ChatUtils.error("FATAL ERROR OCCURRED WHEN LOADING CONFIGS")
-            ChatUtils.error(e.message ?: "No error message")
+            Logger.error("FATAL ERROR OCCURRED WHEN LOADING CONFIGS")
+            Logger.error(e.message ?: "No error message")
         }
 
         ClientLifecycleEvents.CLIENT_STOPPING.register { onShutdownClient() }
 
         FishingSpotEvents.CAST.register {
             if (Config.Debug.enableLogging) {
-                ChatUtils.sendMessage("Cast into spot $it")
+                Logger.sendMessage("Cast into spot $it")
             }
         }
     }
@@ -104,7 +103,7 @@ class Trident : ModInitializer {
         try {
             if (!hasFailedToLoadConfig) PlayerStateIO.save()
         } catch (e: Exception) {
-            ChatUtils.error("Failed to save data on shutdown: ${e.message}")
+            Logger.error("Failed to save data on shutdown: ${e.message}")
         }
     }
 }

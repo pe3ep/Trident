@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import net.fabricmc.loader.api.FabricLoader
@@ -152,7 +152,7 @@ object PlayerStateIO {
 
     @Suppress("DEPRECATION")
     fun load(): PlayerState {
-        ChatUtils.info("Loading player state from $path")
+        Logger.info("Loading player state from $path")
         if (!Files.exists(path)) return PlayerState()
         val text = Files.readString(path)
         val serializable = json.decodeFromString<PlayerState>(text)

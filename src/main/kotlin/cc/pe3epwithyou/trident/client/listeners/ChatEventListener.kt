@@ -7,7 +7,7 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.fishing.AugmentTrigger
 import cc.pe3epwithyou.trident.state.fishing.updateDurability
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentionIfInactive
@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
 import java.util.*
 
+// TODO: Rewrite this listener to be much cleaner
 object ChatEventListener {
     private var isSupplyPreserve = false
     private var triggerBait = true
@@ -145,7 +146,7 @@ object ChatEventListener {
                             if (it != 0) Trident.playerState.supplies.bait.amount = it - 1
                         }
                     }
-                    ChatUtils.debugLog("Triggered augment events: ${triggeredAugmentEvents.joinToString(", ")}")
+                    Logger.debugLog("Triggered augment events: ${triggeredAugmentEvents.joinToString(", ")}")
                     triggeredAugmentEvents.forEach { updateDurability(it) }
                     triggeredAugmentEvents.clear()
 
@@ -153,7 +154,7 @@ object ChatEventListener {
                     DialogCollection.refreshDialog("supplies")
                 }
             } catch (e: Exception) {
-                ChatUtils.error("Something went wrong when handling message ${message.string}: ${e.message}")
+                Logger.error("Something went wrong when handling message ${message.string}: ${e.message}")
             }
             true
         }

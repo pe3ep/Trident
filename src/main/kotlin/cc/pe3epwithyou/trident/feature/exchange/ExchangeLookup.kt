@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.feature.exchange
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
@@ -55,13 +55,13 @@ object ExchangeLookup {
         val key = Config.Api.key
 
         if (key.isBlank() && provider == ApiProvider.SELF_TOKEN) {
-            ChatUtils.sendMessage(
+            Logger.sendMessage(
                 Component.literal("Your API key is not set. ").withSwatch(TridentFont.ERROR).append(
                         Component.literal("Set it using /trident api setToken <TOKEN>")
                             .withSwatch(TridentFont.ERROR, TridentFont.SwatchType.MUTED)
                     )
             )
-            ChatUtils.sendMessage(
+            Logger.sendMessage(
                 Component.literal("Click here to visit Trident Docs learn how to get your API key")
                     .withSwatch(TridentFont.TRIDENT_ACCENT)
                     .withStyle(
@@ -123,9 +123,9 @@ object ExchangeLookup {
             } catch (e: Exception) {
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
                 main {
-                    ChatUtils.error("Failed to fetch exchange API on url ${provider.fetchUrl}: ${e.message}")
+                    Logger.error("Failed to fetch exchange API on url ${provider.fetchUrl}: ${e.message}")
 
-                    ChatUtils.sendMessage(
+                    Logger.sendMessage(
                         Component.literal("Something went wrong when fetching Exchange API. Please contact developers to fix this issue")
                             .withSwatch(TridentFont.ERROR)
                     )

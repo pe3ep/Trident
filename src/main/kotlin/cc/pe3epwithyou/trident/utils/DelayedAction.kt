@@ -19,7 +19,7 @@ object DelayedAction {
         fun cancel(): Boolean {
             val future = tasks.remove(id) ?: return false
             future.cancel()
-            ChatUtils.debugLog("Task with id $id was cancelled")
+            Logger.debugLog("Task with id $id was cancelled")
             return true
         }
 

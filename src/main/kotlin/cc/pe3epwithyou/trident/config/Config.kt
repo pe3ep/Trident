@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
-import cc.pe3epwithyou.trident.utils.ChatUtils
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
@@ -217,7 +217,7 @@ class Config {
         fun convertDeprecated() {
             val rarityOverlayPrev = handler.instance().globalRarityOverlay
             if (rarityOverlayPrev != null) {
-                ChatUtils.warn("Detected a deprecated config value for rarity overlay, converting it")
+                Logger.warn("Detected a deprecated config value for rarity overlay, converting it")
 
                 handler.instance().raritySlotEnabled =
                     rarityOverlayPrev/* Reset the old value to null */
@@ -421,7 +421,7 @@ class Config {
                         name(Component.translatable("config.trident.killfeed.remove_kill_time.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.remove_kill_time.description")))
                         binding(handler.instance()::killfeedRemoveKillTime, 10)
-                        controller(slider(IntRange(0, 30), 1))
+                        controller(slider(IntRange(0, 30), 1) { v -> Component.literal(if (v != 0) v.toString() + "s" else "Permanent") })
                     }
 
                     options.register("killfeed_max_kills") {
