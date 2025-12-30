@@ -10,6 +10,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import net.minecraft.client.gui.layouts.LinearLayout
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import java.time.Duration
@@ -108,7 +109,7 @@ class OverclockStackWidget(
     override fun getWidth(): Int = layout.width
     override fun getHeight(): Int = layout.height
 
-    override fun mouseClicked(d: Double, e: Double, i: Int): Boolean = false
+    override fun mouseClicked(mouseButtonEvent: MouseButtonEvent, bl: Boolean): Boolean = false
 
     init {
         layout.arrangeElements()

@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.state.AugmentContainer
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import net.minecraft.client.gui.layouts.LinearLayout
+import net.minecraft.client.input.MouseButtonEvent
 
 class AugmentStackWidget(width: Int, height: Int, entries: List<AugmentContainer>) :
     CompoundWidget(0, 0, width, height) {
@@ -22,7 +23,7 @@ class AugmentStackWidget(width: Int, height: Int, entries: List<AugmentContainer
         }
     }
 
-    override fun mouseClicked(d: Double, e: Double, i: Int): Boolean = false
+    override fun mouseClicked(mouseButtonEvent: MouseButtonEvent, bl: Boolean): Boolean = false
     override fun getWidth(): Int = layout.width
     override fun getHeight(): Int = layout.height
 
