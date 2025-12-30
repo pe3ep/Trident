@@ -16,7 +16,8 @@ object ProgressBar {
     private val COMP_FULL
         get() = FontCollection.get("_fonts/icon/progress_counter/full.png", 7, 7)
 
-    private val COMP_SPACE: Component = Component.literal("\uE001").withFont(Resources.minecraft("padding"))
+    private val COMP_SPACE: Component =
+        Component.literal("\uE001").withFont(Resources.minecraft("padding"))
 
 
     /**

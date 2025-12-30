@@ -147,7 +147,8 @@ object ExchangeHandler {
         val priceLines = item.getLore().reversed()
         if (priceLines.isEmpty()) return null
         priceLines.forEach { priceLine ->
-            val match = Regex("""Listed Price: .((?:\d+|,)+)""").matchEntire(priceLine.string) ?: return@forEach
+            val match = Regex("""Listed Price: .((?:\d+|,)+)""").matchEntire(priceLine.string)
+                ?: return@forEach
             val price = match.groups[1]?.value?.replace(",", "")?.toLongOrNull() ?: return null
             return price
         }

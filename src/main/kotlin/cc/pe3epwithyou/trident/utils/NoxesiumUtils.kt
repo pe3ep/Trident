@@ -215,49 +215,4 @@ object NoxesiumUtils {
         }
         return Game.HUB
     }
-//
-//    private fun getCurrentGameOld(server: String, types: List<String>): Game {
-//        if (server == Game.HUB.server) {
-//            return when {
-//                type.contains("temperate", ignoreCase = true) -> Game.FISHING
-//                type.contains("tropical", ignoreCase = true) -> Game.FISHING
-//                type.contains("barren", ignoreCase = true) -> Game.FISHING
-//                else -> Game.HUB
-//            }
-//        }
-//
-//        if (game == "parkour_warrior") {
-//            return if (type == Game.PARKOUR_WARRIOR_SURVIVOR.subtype) {
-//                Game.PARKOUR_WARRIOR_SURVIVOR
-//            } else {
-//                Game.PARKOUR_WARRIOR_DOJO
-//            }
-//        }
-//
-//        if (game == "battle_box") {
-//            return if (type == Game.BATTLE_BOX_ARENA.subtype) {
-//                Game.BATTLE_BOX_ARENA
-//            } else {
-//                Game.BATTLE_BOX
-//            }
-//        }
-//
-//        Game.entries.forEach {
-//            if (it in listOf(
-//                    Game.HUB,
-//                    Game.FISHING,
-//                    Game.PARKOUR_WARRIOR_DOJO,
-//                    Game.PARKOUR_WARRIOR_SURVIVOR,
-//                    Game.BATTLE_BOX,
-//                    Game.BATTLE_BOX_ARENA
-//                )
-//            ) return@forEach
-//
-//            if (it.server == game) {
-//                return it
-//            }
-//        }
-//
-//        return Game.HUB
-//    }
 }

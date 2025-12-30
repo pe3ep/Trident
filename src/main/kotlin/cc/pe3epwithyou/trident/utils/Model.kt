@@ -17,7 +17,7 @@ data class Model(
     val modelPath: Identifier,
     val width: Int,
     val height: Int,
-    val damagePercent: Int = 100
+    val damage: Float = 1.0f,
 ) {
     private val item = ItemStack(Items.ECHO_SHARD)
 
@@ -25,7 +25,7 @@ data class Model(
         item.set(DataComponents.ITEM_MODEL, modelPath)
         item.set(DataComponents.MAX_STACK_SIZE, 1)
         item.set(DataComponents.MAX_DAMAGE, 100)
-        item.set(DataComponents.DAMAGE, 100 - damagePercent)
+        item.set(DataComponents.DAMAGE, (100 * (1 - damage)).toInt())
     }
 
     /**
@@ -54,6 +54,7 @@ data class Model(
         val scaleFactorY = height / 16F
         itemMatrix.scaleAround(scaleFactorX, scaleFactorY, x.toFloat(), y.toFloat(), itemMatrix)
         val matrix = Matrix3x2f(guiGraphics.pose())
+
         guiGraphics.guiRenderState.submitItem(
             GuiItemRenderState(
                 item.item.toString(),

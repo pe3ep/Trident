@@ -21,7 +21,8 @@ import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
-class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
+class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
+    Themed by TridentThemed {
     private companion object {
         private val TITLE_COLOR: Int = 0x2199f0 opacity 127
     }
@@ -45,7 +46,8 @@ class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
 
         if (wayfinderData.needsUpdating) {
             StringWidget(
-                Component.literal("Wayfinder data missing".uppercase()).mccFont().withStyle(ChatFormatting.GOLD), mcFont
+                Component.literal("Wayfinder data missing".uppercase()).mccFont()
+                    .withStyle(ChatFormatting.GOLD), mcFont
             ).atBottom(0, settings = LayoutConstants.CENTRE)
             MultiLineTextWidget(
                 Component.literal(
@@ -60,13 +62,22 @@ class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), T
             ).atBottom(0, settings = LayoutConstants.LEFT)
             return@grid
         }
-        if (wayfinderData.temperate.unlocked) WayfinderWidget(wayfinderData.temperate, this@WayfinderDialog).atBottom(
+        if (wayfinderData.temperate.unlocked) WayfinderWidget(
+            wayfinderData.temperate,
+            this@WayfinderDialog
+        ).atBottom(
             0, settings = LayoutConstants.LEFT
         )
-        if (wayfinderData.tropical.unlocked) WayfinderWidget(wayfinderData.tropical, this@WayfinderDialog).atBottom(
+        if (wayfinderData.tropical.unlocked) WayfinderWidget(
+            wayfinderData.tropical,
+            this@WayfinderDialog
+        ).atBottom(
             0, settings = LayoutConstants.LEFT
         )
-        if (wayfinderData.barren.unlocked) WayfinderWidget(wayfinderData.barren, this@WayfinderDialog).atBottom(
+        if (wayfinderData.barren.unlocked) WayfinderWidget(
+            wayfinderData.barren,
+            this@WayfinderDialog
+        ).atBottom(
             0, settings = LayoutConstants.LEFT
         )
     }

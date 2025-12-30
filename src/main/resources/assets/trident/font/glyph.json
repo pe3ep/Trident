@@ -5,7 +5,9 @@
       "file": "trident:_font/trident_glyph.png",
       "ascent": 7,
       "height": 8,
-      "chars": ["\uE000"]
+      "chars": [
+        "\uE000"
+      ]
     }
   ]
 }

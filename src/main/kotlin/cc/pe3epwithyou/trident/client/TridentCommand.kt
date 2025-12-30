@@ -16,9 +16,12 @@ import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
+import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
+import cc.pe3epwithyou.trident.state.fishing.Augment
+import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.Command
 import cc.pe3epwithyou.trident.utils.TridentFont
@@ -101,6 +104,7 @@ object TridentCommand {
              */
             literal("resetDialogPositions") {
                 executes {
+                    DialogCollection.resetDialogPositions()
                     val c = Component.literal("Saved dialog positions have been successfully ")
                         .withSwatch(TridentFont.TRIDENT_COLOR).append(
                             Component.literal("reset").withSwatch(TridentFont.ERROR)
@@ -119,7 +123,8 @@ object TridentCommand {
                     DialogCollection.refreshOpenedDialogs()
 
                     val c =
-                        Component.literal("Player state has been successfully ").withSwatch(TridentFont.TRIDENT_COLOR)
+                        Component.literal("Player state has been successfully ")
+                            .withSwatch(TridentFont.TRIDENT_COLOR)
                             .append(
                                 Component.literal("reset").withSwatch(TridentFont.ERROR)
                             )
@@ -162,14 +167,16 @@ object TridentCommand {
                         delay(3000)
                         main {
                             ChatUtils.sendMessage(
-                                Component.literal("Are we serious right meow bro?").withStyle(ChatFormatting.AQUA)
+                                Component.literal("Are we serious right meow bro?")
+                                    .withStyle(ChatFormatting.AQUA)
                             )
                         }
 
                         delay(3000)
                         main {
                             ChatUtils.sendMessage(
-                                Component.literal("This incident will be reported.").withSwatch(TridentFont.ERROR)
+                                Component.literal("This incident will be reported.")
+                                    .withSwatch(TridentFont.ERROR)
                                     .withStyle(ChatFormatting.BOLD)
                             )
                             jokeCooldown = false
@@ -203,7 +210,8 @@ object TridentCommand {
                         Config.handler.instance().globalApiProvider = ApiProvider.TRIDENT
                         Config.handler.save()
                         ChatUtils.sendMessage(
-                            Component.literal("Your API token has been ").withSwatch(TridentFont.TRIDENT_COLOR)
+                            Component.literal("Your API token has been ")
+                                .withSwatch(TridentFont.TRIDENT_COLOR)
                                 .append(Component.literal("reset").withSwatch(TridentFont.ERROR))
                         )
                     }
@@ -288,6 +296,35 @@ object TridentCommand {
             literal("send_current_spot") {
                 executes {
                     ChatUtils.sendMessage("${FishingSpotListener.currentSpot}")
+                }
+            }
+
+            literal("fake_augment") {
+                argument("augment") {
+                    suggests { _, builder ->
+                        Augment.entries.forEach { builder.suggest(it.name) }
+                        builder.buildFuture()
+                    }
+                    argument("status") {
+                        suggests { _, builder ->
+                            AugmentStatus.entries.forEach { builder.suggest(it.name) }
+                            builder.buildFuture()
+                        }
+                        executes {
+                            val augmentString = it.getArgument("augment", String::class.java)
+                            val statusString = it.getArgument("status", String::class.java)
+                            val augment = Augment.valueOf(augmentString)
+                            val status = AugmentStatus.valueOf(statusString)
+                            playerState.supplies.augmentContainers.add(
+                                AugmentContainer(
+                                    augment,
+                                    status
+                                )
+                            )
+                            ChatUtils.sendMessage("Fake augment created: ${augment.name}", false)
+                            DialogCollection.refreshOpenedDialogs()
+                        }
+                    }
                 }
             }
 

@@ -17,7 +17,11 @@ import net.minecraft.util.Util
 
 object KillChatListener {
     val killfeedGames = listOf(
-        Game.BATTLE_BOX, Game.BATTLE_BOX_ARENA, Game.DYNABALL, Game.SKY_BATTLE, Game.ROCKET_SPLEEF_RUSH
+        Game.BATTLE_BOX,
+        Game.BATTLE_BOX_ARENA,
+        Game.DYNABALL,
+        Game.SKY_BATTLE,
+        Game.ROCKET_SPLEEF_RUSH
     )
 
     private val fallbackColor = 0xFFFFFF opacity 128
@@ -32,7 +36,8 @@ object KillChatListener {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowGame true
             try {
-                val killAssistMatch = Regex("""^\[.] You assisted in eliminating (.+)!""").matches(message.string)
+                val killAssistMatch =
+                    Regex("""^\[.] You assisted in eliminating (.+)!""").matches(message.string)
                 if (killAssistMatch) {
                     KillFeedDialog.applyKillAssist()
                 }

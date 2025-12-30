@@ -136,7 +136,11 @@ object QuestingParser {
         return parsedQuests
     }
 
-    private data class ParsedQuest(val game: Game, val criteria: QuestCriteria, val progress: Pair<Int, Int>)
+    private data class ParsedQuest(
+        val game: Game,
+        val criteria: QuestCriteria,
+        val progress: Pair<Int, Int>
+    )
 
     private fun getQuestGame(text: String): Game? {
         Game.entries.forEach { g ->

@@ -5,7 +5,7 @@ import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.util.opaqueColor
 
 @Suppress("MagicNumber")
-object OpaqueTheme: Theme by DefaultTheme {
+object OpaqueTheme : Theme by DefaultTheme {
     override val theme: Theme = this
     override val dialogBorders: Boolean = false
     override val colors = object : Theme.Colors by DefaultTheme.colors {

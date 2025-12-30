@@ -20,8 +20,6 @@ java {
     toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
 }
 
-
-
 repositories {
     mavenCentral()
     maven {
@@ -37,6 +35,7 @@ repositories {
     maven("https://maven.enginehub.org/repo/") {
         name = "EngineHub"
     }
+    maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     exclusiveContent {
         forRepository {
             maven("https://api.modrinth.com/maven") {
@@ -62,6 +61,7 @@ dependencies {
     modCompileOnly("com.noxcrew.noxesium:fabric:3.0.0-rc.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
+    modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.2")
 }
 
 @Suppress("UnstableApiUsage")

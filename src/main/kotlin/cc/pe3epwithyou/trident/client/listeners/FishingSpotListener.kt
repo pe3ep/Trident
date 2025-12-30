@@ -39,7 +39,8 @@ object FishingSpotListener {
         val blockPos = hook.onPos
         val box = AABB.ofSize(blockPos.center, 3.5, 6.0, 3.5)
         val level = client.level ?: return null
-        val entities = level.getEntities(null, box).filter { entity -> entity is Display.TextDisplay }
+        val entities =
+            level.getEntities(null, box).filter { entity -> entity is Display.TextDisplay }
         if (entities.isEmpty()) return null
         val display: Display.TextDisplay = (entities.first()) as Display.TextDisplay
 

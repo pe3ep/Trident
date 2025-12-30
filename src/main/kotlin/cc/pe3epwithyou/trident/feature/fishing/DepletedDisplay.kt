@@ -41,7 +41,8 @@ object DepletedDisplay {
                 while (true) {
                     delay(ticks)
                     ticks = 100
-                    val currentPos = Minecraft.getInstance().player?.position() ?: Vec3(0.0, 0.0, 0.0)
+                    val currentPos =
+                        Minecraft.getInstance().player?.position() ?: Vec3(0.0, 0.0, 0.0)
                     if ((castAt != null && hasHourPassed(castAt!!)) || currentPos != playerPosition) {
                         stopLoop()
                         break
