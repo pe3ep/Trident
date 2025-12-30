@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import net.minecraft.Util
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest

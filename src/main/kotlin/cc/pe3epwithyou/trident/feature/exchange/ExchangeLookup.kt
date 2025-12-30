@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.feature.exchange
 
-import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
@@ -12,11 +12,11 @@ import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import net.minecraft.util.Util
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest

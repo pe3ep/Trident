@@ -35,6 +35,7 @@ import java.util.concurrent.CompletableFuture
  * }
  * ```
  */
+@Suppress("unused")
 class Command(
     name: String, block: Builder.() -> Unit
 ) {
@@ -71,10 +72,10 @@ class Command(
             node.then(literal)
         }
 
-        fun <T> argument(
+        fun <T : Any> argument(
             name: String, type: ArgumentType<T>, block: ArgumentBuilder<T>.() -> Unit
         ) {
-            val argNode = ClientCommandManager.argument(name, type)
+            val argNode = ClientCommandManager.argument<T>(name, type)
             ArgumentBuilder(argNode).block()
             node.then(argNode)
         }
@@ -111,10 +112,10 @@ class Command(
             node.then(literal)
         }
 
-        fun <U> argument(
+        fun <U : Any> argument(
             name: String, type: ArgumentType<U>, block: ArgumentBuilder<U>.() -> Unit
         ) {
-            val argNode = ClientCommandManager.argument(name, type)
+            val argNode = ClientCommandManager.argument<U>(name, type)
             ArgumentBuilder(argNode).block()
             node.then(argNode)
         }

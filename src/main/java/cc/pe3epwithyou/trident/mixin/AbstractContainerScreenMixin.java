@@ -41,14 +41,14 @@ public class AbstractContainerScreenMixin extends Screen {
     }
 
     @Inject(method = "renderSlot", at = @At(value = "HEAD"))
-    public void renderSlot(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci) {
+    public void renderSlot(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         RaritySlot.INSTANCE.render(guiGraphics, slot);
         TideWindIndicator.INSTANCE.renderOutline(guiGraphics, slot);
     }
 
     @Inject(method = "renderSlot", at = @At(value = "TAIL"))
-    public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci) {
+    public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
             BlueprintIndicators.INSTANCE.checkLore(guiGraphics, slot);

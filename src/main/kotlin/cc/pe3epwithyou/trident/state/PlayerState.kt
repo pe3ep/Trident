@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.state
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
@@ -133,7 +133,7 @@ object PlayerStateIO {
     }
 
     fun save() {
-        val serializable = TridentClient.playerState
+        val serializable = Trident.playerState
 
         Files.createDirectories(path.parent)
 

@@ -3,9 +3,9 @@ package cc.pe3epwithyou.trident.feature.fishing
 import cc.pe3epwithyou.trident.utils.Title
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import kotlinx.coroutines.*
-import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 import net.minecraft.world.phys.Vec3
 import java.time.Instant
 import java.time.ZoneId

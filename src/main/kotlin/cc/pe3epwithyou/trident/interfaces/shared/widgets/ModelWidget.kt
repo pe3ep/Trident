@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 
-class ItemWidget(
+class ModelWidget(
     private val model: Model,
     marginRight: Int = 0
 ) :

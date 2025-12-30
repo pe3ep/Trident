@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.modrinth
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
 import cc.pe3epwithyou.trident.utils.ChatUtils
@@ -14,11 +14,11 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.Version
-import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import net.minecraft.util.Util
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -79,7 +79,7 @@ object UpdateChecker {
             // New version available, notify the user
             sendUpdateAvailableMessage(latestVersion!!.friendlyString)
 
-            if (TridentClient.playerState.hatesUpdates) return
+            if (Trident.playerState.hatesUpdates) return
             val published = Instant.parse(fetchedVersionModrinth?.date_published ?: return)
             val now = Instant.now()
             val activateSillyDate = published.plus(Duration.ofDays(7L))

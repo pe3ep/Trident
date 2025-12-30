@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.fishing
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.ResearchWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
@@ -21,8 +21,7 @@ import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
-class ResearchDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
-    Themed by TridentThemed {
+class ResearchDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
     private companion object {
         private val TITLE_COLOR: Int = 0x2199f0 opacity 127
     }
@@ -46,7 +45,7 @@ class ResearchDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
-        val research = TridentClient.playerState.research
+        val research = Trident.playerState.research
 
         if (research.needsUpdating or research.researchTypes.isEmpty()) {
             StringWidget(
@@ -72,11 +71,8 @@ class ResearchDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
             return@grid
         }
 
-        for (research in TridentClient.playerState.research.researchTypes) {
-            ResearchWidget(research, this@ResearchDialog).atBottom(
-                0,
-                settings = LayoutConstants.LEFT
-            )
+        for (research in Trident.playerState.research.researchTypes) {
+            ResearchWidget(research, this@ResearchDialog).atBottom(0, settings = LayoutConstants.LEFT)
         }
     }
 

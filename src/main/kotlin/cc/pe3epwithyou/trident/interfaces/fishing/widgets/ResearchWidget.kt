@@ -18,7 +18,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import kotlin.math.round
 
 class ResearchWidget(
@@ -29,24 +29,24 @@ class ResearchWidget(
     override fun getHeight(): Int = layout.height
 
     companion object {
-        val RESEARCH_ICONS = hashMapOf<String, ResourceLocation>(
-            "Strong" to ResourceLocation.fromNamespaceAndPath(
+        val RESEARCH_ICONS = hashMapOf<String, Identifier>(
+            "Strong" to Identifier.fromNamespaceAndPath(
                 "mcc",
                 "textures/island_interface/fishing/strong_research.png"
             ),
-            "Wise" to ResourceLocation.fromNamespaceAndPath(
+            "Wise" to Identifier.fromNamespaceAndPath(
                 "mcc",
                 "textures/island_interface/fishing/wise_research.png"
             ),
-            "Glimmering" to ResourceLocation.fromNamespaceAndPath(
+            "Glimmering" to Identifier.fromNamespaceAndPath(
                 "mcc",
                 "textures/island_interface/fishing/glimmering_research.png"
             ),
-            "Greedy" to ResourceLocation.fromNamespaceAndPath(
+            "Greedy" to Identifier.fromNamespaceAndPath(
                 "mcc",
                 "textures/island_interface/fishing/greedy_research.png"
             ),
-            "Lucky" to ResourceLocation.fromNamespaceAndPath(
+            "Lucky" to Identifier.fromNamespaceAndPath(
                 "mcc",
                 "textures/island_interface/fishing/lucky_research.png"
             )
@@ -90,7 +90,7 @@ class ResearchWidget(
     }
 
     class WayfinderNameWidget(
-        private val sprite: ResourceLocation?,
+        private val sprite: Identifier?,
         private val text: Component,
         val font: Font
     ) : AbstractWidget(

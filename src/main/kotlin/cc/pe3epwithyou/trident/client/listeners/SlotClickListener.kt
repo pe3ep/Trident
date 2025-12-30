@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.client.listeners
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
@@ -22,10 +22,10 @@ object SlotClickListener {
         if (Config.Fishing.suppliesModule && "FISHING SUPPLIES" in screen.title.string) {
             val item = slot.item
             if (clickType == ClickType.QUICK_MOVE && isLeftClick && "Unstable Overclock" in item.hoverName.string) {
-                if (TridentClient.playerState.supplies.overclocks.unstable.state.isAvailable) startUnstableOverclock()
+                if (Trident.playerState.supplies.overclocks.unstable.state.isAvailable) startUnstableOverclock()
             }
             if ((clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE) && isLeftClick && "Supreme Overclock" in item.hoverName.string) {
-                if (TridentClient.playerState.supplies.overclocks.supreme.state.isAvailable) startSupremeOverclock()
+                if (Trident.playerState.supplies.overclocks.supreme.state.isAvailable) startSupremeOverclock()
             }
         }
 
@@ -49,13 +49,13 @@ object SlotClickListener {
     }
 
     private fun startUnstableOverclock() {
-        val overclock = TridentClient.playerState.supplies.overclocks.unstable
+        val overclock = Trident.playerState.supplies.overclocks.unstable
         if (overclock.state.isActive || overclock.state.isCooldown) return
         OverclockHandlers.startTimedOverclock("Unstable", overclock.state)
     }
 
     private fun startSupremeOverclock() {
-        val overclock = TridentClient.playerState.supplies.overclocks.supreme
+        val overclock = Trident.playerState.supplies.overclocks.supreme
         if (overclock.state.isActive || overclock.state.isCooldown) return
         OverclockHandlers.startTimedOverclock("Supreme", overclock.state)
     }

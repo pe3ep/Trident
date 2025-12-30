@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.fishing
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.AugmentStackWidget
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.OverclockStackWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
@@ -41,7 +41,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
         val baseTitle = icon.append(text)
 
-        return if (TridentClient.playerState.supplies.baitDesynced) {
+        return if (Trident.playerState.supplies.baitDesynced) {
             val warn = Component.literal(" ⚠").defaultFont().withStyle(ChatFormatting.GOLD)
             val tooltip = Tooltip.create(
                 Component.literal("Module is not synced").withStyle(ChatFormatting.GOLD).append(
@@ -60,7 +60,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
-        val supplies = TridentClient.playerState.supplies
+        val supplies = Trident.playerState.supplies
         val isBaitDesynced = supplies.baitDesynced
 
         if (supplies.needsUpdating) {
@@ -100,9 +100,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
                     Component.literal(" $baitAmount").mccFont()
                         .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
                 )
-        StringWidget(baitComponent, mcFont).at(0, 0, settings = LayoutConstants.LEFT).apply {
-            alignLeft()
-        }
+        StringWidget(baitComponent, mcFont).at(0, 0, settings = LayoutConstants.LEFT)
 
         // Line component
         val lineDurability = supplies.line.uses ?: 0
@@ -124,9 +122,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
                     Component.literal(" $lineDurability/$lineAmount").mccFont()
                         .withColor(supplies.line.type.color)
                 )
-        StringWidget(lineComponent, mcFont).at(0, 1, settings = LayoutConstants.LEFT).apply {
-            alignLeft()
-        }
+        StringWidget(lineComponent, mcFont).at(0, 1, settings = LayoutConstants.LEFT)
 
         // Overclocks
         StringWidget(Component.literal("Overclocks".uppercase()).mccFont(), mcFont).atBottom(

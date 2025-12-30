@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.state.fishing
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 
@@ -20,7 +20,7 @@ enum class AugmentTrigger(
 }
 
 fun updateDurability(trigger: AugmentTrigger) {
-    val augmentContainers = TridentClient.playerState.supplies.augmentContainers
+    val augmentContainers = Trident.playerState.supplies.augmentContainers
     augmentContainers.filter {
         val hasTrigger = it.augment.useTrigger == trigger
         val hasRightStatus = it.status != AugmentStatus.NEEDS_REPAIRING || it.status != AugmentStatus.BROKEN || it.status != AugmentStatus.PAUSED

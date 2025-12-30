@@ -2,15 +2,15 @@ package cc.pe3epwithyou.trident.utils
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.RenderPipelines
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 data class Texture(
-    val location: ResourceLocation,
+    val location: Identifier,
     val width: Int,
     val height: Int,
     val textureWidth: Int = width,
     val textureHeight: Int = height,
-    val hoverLocation: ResourceLocation = location,
+    val hoverLocation: Identifier = location,
 ) {
 
     /**

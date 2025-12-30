@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.network.chat.TextColor
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 
 object TridentFont {
@@ -25,14 +25,14 @@ object TridentFont {
         mutedShadow = 0x5c272b,
     )
 
-    fun getMCCFont(font: String = "hud", offset: Int = 0): ResourceLocation {
+    fun getMCCFont(font: String = "hud", offset: Int = 0): Identifier {
         if (offset == 0) {
             return Resources.mcc(font)
         }
         return Resources.mcc("${font}_offset_${offset}")
     }
 
-    fun getTridentFont(font: String = "icon", offset: Int = 0): ResourceLocation {
+    fun getTridentFont(font: String = "icon", offset: Int = 0): Identifier {
         if (offset == 0) {
             return Resources.trident(font)
         }

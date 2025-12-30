@@ -1,16 +1,16 @@
 package cc.pe3epwithyou.trident.utils
 
-import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import kotlinx.coroutines.*
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
-import net.minecraft.Util
+import net.minecraft.util.Util
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 object DelayedAction {
     private val tasks: ConcurrentHashMap<UUID, Job> = ConcurrentHashMap()
 
+    @Suppress("unused")
     data class DelayedTask(val id: UUID) {
         /**
          * Cancel the underlying scheduled task.
@@ -43,18 +43,10 @@ object DelayedAction {
      */
     fun delay(delayMs: Long, action: () -> Unit): DelayedTask {
         val id = UUID.randomUUID()
-//        val future: ScheduledFuture<*> = executorService.schedule({
-//            // Remove from map as it's about to run (or already running)
-//            tasks.remove(id)
-//            QuestListener.interruptibleTasks.remove(id)
-//            // enqueue back to Minecraft client (main) thread
-//            Minecraft.getInstance().execute(action)
-//        }, delay, TimeUnit.MILLISECONDS)
         val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
         val future = CoroutineScope(ctx).launch {
             delay(delayMs)
             tasks.remove(id)
-            QuestListener.interruptibleTasks.remove(id)
             main(action)
         }
         tasks[id] = future

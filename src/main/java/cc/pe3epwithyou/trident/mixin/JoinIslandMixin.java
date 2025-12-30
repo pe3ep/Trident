@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.client.TridentClient;
+import cc.pe3epwithyou.trident.Trident;
 import cc.pe3epwithyou.trident.feature.api.ApiChecker;
 import cc.pe3epwithyou.trident.interfaces.DialogCollection;
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker;
@@ -32,7 +32,7 @@ public class JoinIslandMixin {
         if (!this.serverData.ip.toLowerCase().contains("mccisland.net")) return;
         UpdateChecker.INSTANCE.checkForUpdates();
         ApiChecker.INSTANCE.joinCheck();
-        if (TridentClient.Companion.getHasFailedToLoadConfig()) {
+        if (Trident.Companion.getHasFailedToLoadConfig()) {
             Component component = Component.translatable("trident.failed_config").withStyle(TridentFont.INSTANCE.getERROR().getBaseStyle());
             ChatUtils.INSTANCE.sendMessage(component, true);
         }

@@ -19,7 +19,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import kotlin.math.round
 
 class WayfinderWidget(
@@ -30,7 +30,7 @@ class WayfinderWidget(
     override fun getHeight(): Int = layout.height
 
     companion object {
-        val ISLAND_ICONS = hashMapOf<String, ResourceLocation>(
+        val ISLAND_ICONS = hashMapOf<String, Identifier>(
             "Temperate" to Resources.mcc("textures/island_interface/fishing/island/grotto_temperate.png"),
             "Tropical" to Resources.mcc("textures/island_interface/fishing/island/grotto_tropical.png"),
             "Barren" to Resources.mcc("textures/island_interface/fishing/island/grotto_barren.png")
@@ -104,7 +104,7 @@ class WayfinderWidget(
     }
 
     class WayfinderNameWidget(
-        private val sprite: ResourceLocation?,
+        private val sprite: Identifier?,
         private val text: Component,
         val font: Font
     ) : AbstractWidget(

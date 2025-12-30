@@ -6,6 +6,7 @@ import com.noxcrew.sheeplib.theme.Themed
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.input.MouseButtonEvent
 
 class TabShort(
     val theme: Themed,
@@ -33,7 +34,7 @@ class TabShort(
         )
     }
 
-    override fun onClick(d: Double, e: Double) {
+    override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
         if (!tab.disabled) view.changeTab(tab)
     }
 

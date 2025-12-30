@@ -20,18 +20,17 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.StringWidget
-import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class QuestWidget(
     quest: Quest,
     themed: Themed
 ) : CompoundWidget(0, 0, 0, 0) {
     companion object {
-        private val COMPLETED_QUEST_SPRITE: ResourceLocation =
+        private val COMPLETED_QUEST_SPRITE: Identifier =
             Resources.mcc("textures/island_interface/quest_log/quest_complete.png")
         private const val COMPLETED_QUEST_COLOR: Int = 0x1EFC00
     }
@@ -79,32 +78,13 @@ class QuestWidget(
             5
         )
 
-        if (!quest.criteria.isTracked) {
-            val progress = Component.literal(" ${quest.progress}/${quest.totalProgress} ℹ")
-                .defaultFont()
-                .withStyle(ChatFormatting.GRAY)
-            val w = StringWidget(progressComponent.append(progress), mcFont)
-            w.setTooltip(
-                Tooltip.create(
-                    Component.literal(
-                        """
-                 Due to this quest's objective, Trident is unable to live-update the progress.
-                 You can open the Journal to update it
-            """.trimIndent()
-                    )
-                        .withStyle(ChatFormatting.RESET)
-                        .withStyle(ChatFormatting.GRAY)
-                )
-            )
-            w.atBottom(0, settings = LayoutConstants.LEFT)
-            return@GridLayout
-        }
         val progress = Component.literal(" ${quest.progress}/${quest.totalProgress}")
             .defaultFont()
         if (quest.isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
-        val w = StringWidget(progressComponent.append(progress), mcFont)
-        w.alignLeft()
-        w.atBottom(0, settings = LayoutConstants.LEFT)
+        StringWidget(progressComponent.append(progress), mcFont).atBottom(
+            0,
+            settings = LayoutConstants.LEFT
+        )
     }
 
     init {
@@ -113,7 +93,7 @@ class QuestWidget(
     }
 
     class QuestNameWidget(
-        private val sprite: ResourceLocation,
+        private val sprite: Identifier,
         private val text: Component,
         val font: Font
     ) : AbstractWidget(

@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestCriteria.*
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.utils.Resources
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class Quest(
     val game: Game,
@@ -15,7 +15,7 @@ class Quest(
     var progress: Int,
     val totalProgress: Int,
 ) {
-    val sprite: ResourceLocation
+    val sprite: Identifier
         get() {
             val directory = type.directoryPath
             val raritySuffix = rarity.name.lowercase()
@@ -89,7 +89,19 @@ enum class GameQuests(
         listOf(
             BATTLE_BOX_QUADS_GAMES_PLAYED,
             BATTLE_BOX_QUADS_TEAM_ROUNDS_WON,
-            BATTLE_BOX_QUADS_TEAM_ROUNDS_PLAYED,
+            BATTLE_BOX_QUADS_ROUNDS_PLAYED,
+            BATTLE_BOX_QUADS_TEAM_FIRST_PLACE,
+            BATTLE_BOX_QUADS_TEAM_SECOND_PLACE,
+            BATTLE_BOX_QUADS_PLAYERS_KILLED,
+            BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED,
+            BATTLE_BOX_QUADS_RANGED_KILLS
+        )
+    ),
+    BATTLE_BOX_ARENA(
+        listOf(
+            BATTLE_BOX_QUADS_GAMES_PLAYED,
+            BATTLE_BOX_QUADS_TEAM_ROUNDS_WON,
+            BATTLE_BOX_QUADS_ROUNDS_PLAYED,
             BATTLE_BOX_QUADS_TEAM_FIRST_PLACE,
             BATTLE_BOX_QUADS_TEAM_SECOND_PLACE,
             BATTLE_BOX_QUADS_PLAYERS_KILLED,
@@ -149,5 +161,5 @@ enum class GameQuests(
             ROCKET_SPLEEF_SURVIVE_60S,
             ROCKET_SPLEEF_DIRECT_HITS
         )
-    )
+    );
 }

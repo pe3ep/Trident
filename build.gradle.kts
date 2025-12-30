@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.0"
-    id("fabric-loom") version "1.11-SNAPSHOT"
+    kotlin("jvm") version "2.3.0"
+    id("fabric-loom") version "1.14-SNAPSHOT"
     kotlin("plugin.serialization") version "2.0.20"
     id("maven-publish")
 }
@@ -58,7 +58,7 @@ dependencies {
     include(modImplementation("com.noxcrew.sheeplib:api:1.4.2+1.21.8")!!)
     modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    modImplementation("com.noxcrew.noxesium:fabric:2.7.7")
+    modCompileOnly("com.noxcrew.noxesium:fabric:3.0.0-rc.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.2")
@@ -79,10 +79,10 @@ tasks.processResources {
 
     filesMatching("fabric.mod.json") {
         expand(
-            "version" to project.version,
-            "minecraft_version" to project.property("minecraft_version"),
-            "loader_version" to project.property("loader_version"),
-            "kotlin_loader_version" to project.property("kotlin_loader_version")
+            "version" to project.version as Any,
+            "minecraft_version" to project.property("minecraft_version") as Any,
+            "loader_version" to project.property("loader_version") as Any,
+            "kotlin_loader_version" to project.property("kotlin_loader_version") as Any
         )
     }
 }

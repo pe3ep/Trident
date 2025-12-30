@@ -63,6 +63,7 @@ class Config {
     @SerialEntry
     var debugDrawSlotNumber: Boolean = false
 
+    @Deprecated("Option is no longer used")
     @SerialEntry
     var debugLogForScrapers: Boolean = false
 
@@ -143,6 +144,7 @@ class Config {
             get() = handler.instance().debugEnableLogging
         val drawSlotNumber: Boolean
             get() = handler.instance().debugDrawSlotNumber
+        @Deprecated("Option no longer exists")
         val logForScrapers: Boolean
             get() = handler.instance().debugLogForScrapers
         val bypassOnIsland: Boolean
@@ -521,6 +523,7 @@ class Config {
                 }
             }
 
+
             categories.register("debug") {
                 name(Component.translatable("config.trident.debug"))
 
@@ -539,13 +542,6 @@ class Config {
                         name(Component.translatable("config.trident.debug.draw_slot_number.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.debug.draw_slot_number.description")))
                         binding(handler.instance()::debugDrawSlotNumber, false)
-                        controller(tickBox())
-                    }
-
-                    options.register("log_for_scrapers") {
-                        name(Component.translatable("config.trident.debug.log_for_scrapers.name"))
-                        description(OptionDescription.of(Component.translatable("config.trident.debug.log_for_scrapers.description")))
-                        binding(handler.instance()::debugLogForScrapers, false)
                         controller(tickBox())
                     }
 

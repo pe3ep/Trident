@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.fishing
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.WayfinderWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
@@ -42,7 +42,7 @@ class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
     override fun layout(): GridLayout = grid {
         val mcFont = Minecraft.getInstance().font
-        val wayfinderData = TridentClient.playerState.wayfinderData
+        val wayfinderData = Trident.playerState.wayfinderData
 
         if (wayfinderData.needsUpdating) {
             StringWidget(

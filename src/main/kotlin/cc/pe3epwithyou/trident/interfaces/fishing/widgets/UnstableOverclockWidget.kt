@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
-import cc.pe3epwithyou.trident.interfaces.shared.widgets.ItemWidget
+import cc.pe3epwithyou.trident.interfaces.shared.widgets.ModelWidget
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.Model
 import com.noxcrew.sheeplib.CompoundWidget
@@ -22,7 +22,7 @@ class UnstableOverclockWidget(
         0,
     ) {
         val font = Minecraft.getInstance().font
-        +ItemWidget(
+        +ModelWidget(
             Model(
                 overclockTexture.texturePath,
                 height,
@@ -30,7 +30,7 @@ class UnstableOverclockWidget(
             ),
             marginRight = 2
         )
-        +StringWidget(timeComponent, font).alignLeft()
+        +StringWidget(timeComponent, font)
     }
 
     override fun getHeight(): Int = layout.height

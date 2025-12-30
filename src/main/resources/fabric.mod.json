@@ -16,7 +16,7 @@
   "icon": "assets/trident/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": [
+    "noxesium": [
       "cc.pe3epwithyou.trident.client.TridentClient"
     ],
     "main": [
@@ -39,7 +39,7 @@
   },
   "depends": {
     "yet_another_config_lib_v3": ">=3.7.1+1.21.5-fabric",
-    "noxesium": ">=2.7",
+    "noxesium": ">=3.0.0-rc.1",
     "fabricloader": ">=${loader_version}",
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "fabric": "*",

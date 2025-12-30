@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.client
 
-import cc.pe3epwithyou.trident.client.TridentClient.Companion.playerState
+import cc.pe3epwithyou.trident.Trident.Companion.playerState
 import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
@@ -9,6 +9,7 @@ import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.debug.StateDialog
 import cc.pe3epwithyou.trident.interfaces.experiment.TabbedDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.ResearchDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
@@ -27,6 +28,7 @@ import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import com.mojang.brigadier.CommandDispatcher
+import com.noxcrew.sheeplib.DialogContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -34,8 +36,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
-import net.minecraft.Util
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 
 object TridentCommand {
     private val debugDialogs = mutableMapOf(
@@ -102,6 +104,7 @@ object TridentCommand {
              */
             literal("resetDialogPositions") {
                 executes {
+                    DialogCollection.resetDialogPositions()
                     val c = Component.literal("Saved dialog positions have been successfully ")
                         .withSwatch(TridentFont.TRIDENT_COLOR).append(
                             Component.literal("reset").withSwatch(TridentFont.ERROR)
@@ -322,6 +325,12 @@ object TridentCommand {
                             DialogCollection.refreshOpenedDialogs()
                         }
                     }
+                }
+            }
+
+            literal("open_state_dialog") {
+                executes {
+                    DialogContainer += StateDialog(10, 10, "state")
                 }
             }
         }.register(dispatcher)

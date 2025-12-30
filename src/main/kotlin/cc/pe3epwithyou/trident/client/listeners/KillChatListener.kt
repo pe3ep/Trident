@@ -4,10 +4,6 @@ import cc.pe3epwithyou.trident.client.events.KillEvents
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.killfeed.DeathMessages
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
-import cc.pe3epwithyou.trident.feature.questing.EliminatedCriteria
-import cc.pe3epwithyou.trident.feature.questing.IncrementContext
-import cc.pe3epwithyou.trident.feature.questing.QuestCriteria
-import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.state.Game
@@ -15,9 +11,9 @@ import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import com.noxcrew.sheeplib.util.opacity
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
-import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Util
 
 object KillChatListener {
     val killfeedGames = listOf(
@@ -80,35 +76,6 @@ object KillChatListener {
         if (MCCIState.game !in killfeedGames) return true
 
         if (attacker != null) {
-            //        Questing
-            val self = Minecraft.getInstance().player ?: return true
-            if (attacker.string == self.name.string) {
-                val game = MCCIState.game
-                val ctx = EliminatedCriteria.get(game, sourceTag = "kill") ?: return true
-                QuestStorage.applyIncrement(ctx, true)
-
-                if (game == Game.BATTLE_BOX || game == Game.BATTLE_BOX_ARENA) {
-                    val ctx = IncrementContext(
-                        Game.BATTLE_BOX,
-                        QuestCriteria.BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED,
-                        1,
-                        "bb_kills_or_assists"
-                    )
-                    QuestStorage.applyIncrement(ctx, true)
-                    if (killMethod == KillMethod.RANGE) {
-                        QuestStorage.applyIncrement(
-                            IncrementContext(
-                                Game.BATTLE_BOX,
-                                QuestCriteria.BATTLE_BOX_QUADS_RANGED_KILLS,
-                                1,
-                                "bb_ranged_kill"
-                            ), true
-                        )
-
-                    }
-                }
-            }
-
             // Streaks
             streaks[attacker.string] = (streaks[attacker.string] ?: 0) + 1
 

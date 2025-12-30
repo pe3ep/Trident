@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.utils
 
-import cc.pe3epwithyou.trident.client.TridentClient
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.state.fishing.getAugmentByName
@@ -36,11 +36,11 @@ object ItemParser {
                 val minutes = line.string.split(": ")[1]
                 if (minutes.split(" ").size == 1) {
                     val minuteInt = minutes.dropLast(1).toInt()
-                    TridentClient.playerState.supplies.overclocks.unstable.state.duration =
+                    Trident.playerState.supplies.overclocks.unstable.state.duration =
                         minuteInt * 60L
                 } else {
                     val minuteInt = minutes.split(" ")[1].dropLast(1).toInt()
-                    TridentClient.playerState.supplies.overclocks.unstable.state.duration =
+                    Trident.playerState.supplies.overclocks.unstable.state.duration =
                         minuteInt * 60L
                 }
             }
