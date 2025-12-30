@@ -134,6 +134,7 @@ object NoxesiumUtils {
 
     private fun handleQuests(stat: String, value: Int) {
         val currentGame = MCCIState.game
+        if (currentGame == Game.HUB || currentGame == Game.FISHING) return
         try {
             val criteria = GameQuests.valueOf(currentGame.toString()).list
             criteria.filter { stat in it.statisticKeys }.forEach {

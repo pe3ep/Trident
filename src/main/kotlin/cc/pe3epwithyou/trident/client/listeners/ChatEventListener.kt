@@ -84,19 +84,20 @@ object ChatEventListener {
                 }
 
                 if (message.isStockReplenished() && Config.Fishing.flashIfDepleted) {
+                    updateDurability(AugmentTrigger.SPOT)
                     DepletedDisplay.DepletedTimer.stopLoop()
                 }
 
 
 
                 Regex("^\\(.\\) You caught: \\[(.+)].*").matchEntire(message.string)?.let {
-                    if (!catchFinished) return@let
+                    if (!catchFinished) return@allowMessage true
 
                     catchFinished = false
                     isSupplyPreserve = false
                     val isJunk = checkJunk(message)
                     triggerBait = !isJunk
-                    val caught = it.groups[1]?.value ?: return@let
+                    val caught = it.groups[1]?.value ?: return@allowMessage true
                     when {
                         " Pearl" in caught -> triggeredAugmentEvents.add(AugmentTrigger.PEARL)
                         " Spirit" in caught -> triggeredAugmentEvents.add(AugmentTrigger.PEARL)
@@ -129,6 +130,9 @@ object ChatEventListener {
                     }
 
                     triggeredAugmentEvents.add(AugmentTrigger.ANYTHING)
+                    if (MCCIState.fishingState.isGrotto) {
+                        triggeredAugmentEvents.add(AugmentTrigger.ANYTHING_GROTTO)
+                    }
 
                     // TODO: Add grotto detection with nox v3
 
@@ -141,8 +145,9 @@ object ChatEventListener {
                             if (it != 0) Trident.playerState.supplies.bait.amount = it - 1
                         }
                     }
-
+                    ChatUtils.debugLog("Triggered augment events: ${triggeredAugmentEvents.joinToString(", ")}")
                     triggeredAugmentEvents.forEach { updateDurability(it) }
+                    triggeredAugmentEvents.clear()
 
                     catchFinished = true
                     DialogCollection.refreshDialog("supplies")
