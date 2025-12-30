@@ -17,7 +17,7 @@
   "environment": "client",
   "entrypoints": {
     "noxesium": [
-      "cc.pe3epwithyou.trident.client.TridentClient"
+      "cc.pe3epwithyou.trident.client.TridentEntrypoint"
     ],
     "main": [
       "cc.pe3epwithyou.trident.Trident"

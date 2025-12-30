@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.feature.questing
 
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.Game
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.ChatUtils
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -45,6 +46,7 @@ object QuestStorage {
     fun applyIncrement(ctx: IncrementContext): Boolean {
         ChatUtils.debugLog("Received increment from context ${ctx.sourceTag}, criteria: ${ctx.criteria}: amount: ${ctx.amount}")
         val quests = store[ctx.game] ?: return false
+        if (MCCIState.isPlobby) return false
         var updated = false
         for (q in quests) {
             if (q.criteria == ctx.criteria && !q.isCompleted) {

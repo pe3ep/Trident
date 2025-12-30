@@ -82,13 +82,13 @@ object NoxesiumUtils {
             )
 
             val currentGame = getCurrentGame(server, types)
-            var isPlobby = false
+            MCCIState.isPlobby = false
 
             if ("session" in types) {
-                isPlobby = true
+                MCCIState.isPlobby = true
             }
 
-            updateGameDialogs(currentGame, isPlobby)
+            updateGameDialogs(currentGame, MCCIState.isPlobby)
 
             if (currentGame in KillChatListener.killfeedGames) {
                 KillFeedDialog.clearKills()
