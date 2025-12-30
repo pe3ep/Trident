@@ -9,7 +9,7 @@ import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.client.gui.GuiGraphics
 
 class TabButtonGroup(
-    private val dialog: Themed, tabs: List<Tab>, currentTab: Tab, val view: TabView
+    tabs: List<Tab>, currentTab: Tab, val view: TabView
 ) : CompoundWidget(0, 0, 0, 0), Themed by TabbedDialogTheme {
     override fun getWidth() = layout.width
     override fun getHeight() = layout.height

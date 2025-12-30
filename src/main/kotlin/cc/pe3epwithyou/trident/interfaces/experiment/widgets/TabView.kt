@@ -24,7 +24,7 @@ class TabView(
     fun changeTab(new: Tab) = tabSetter(new)
 
     override val layout: Layout = grid {
-        TabButtonGroup(dialog, tabs, currentTab, this@TabView).atBottom(0)
+        TabButtonGroup(tabs, currentTab, this@TabView).atBottom(0)
         LayoutPortal(
             if (currentTab.isDetached) detachedLayout() else currentTab.layout()
         ).atBottom(0)

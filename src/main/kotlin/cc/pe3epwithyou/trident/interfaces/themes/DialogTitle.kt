@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.themes
 
-import DetachIconWidget
+import cc.pe3epwithyou.trident.interfaces.experiment.widgets.DetachIconWidget
 import cc.pe3epwithyou.trident.interfaces.experiment.widgets.Tab
 import cc.pe3epwithyou.trident.interfaces.experiment.widgets.TabView
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll

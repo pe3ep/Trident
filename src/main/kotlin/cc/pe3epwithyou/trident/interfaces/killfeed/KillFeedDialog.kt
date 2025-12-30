@@ -26,7 +26,7 @@ class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
             killWidgets.add(killWidget)
             val maxKills = Config.KillFeed.maxKills
             if (killWidgets.size > maxKills) {
-                // Remove elements from the start to keep only last 5
+                // Remove elements from the start to keep only the last 5
                 killWidgets.subList(0, killWidgets.size - maxKills).clear()
             }
             DialogCollection.refreshDialog("killfeed")

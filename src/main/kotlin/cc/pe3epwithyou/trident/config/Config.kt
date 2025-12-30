@@ -144,9 +144,6 @@ class Config {
             get() = handler.instance().debugEnableLogging
         val drawSlotNumber: Boolean
             get() = handler.instance().debugDrawSlotNumber
-        @Deprecated("Option no longer exists")
-        val logForScrapers: Boolean
-            get() = handler.instance().debugLogForScrapers
         val bypassOnIsland: Boolean
             get() = handler.instance().debugBypassOnIsland
     }
@@ -156,8 +153,6 @@ class Config {
             get() = handler.instance().fishingSuppliesModule
         val suppliesModuleShowAugmentDurability: Boolean
             get() = handler.instance().fishingSuppliesModuleShowAugmentDurability
-        val wayfinderModule: Boolean
-            get() = handler.instance().fishingWayfinderModule
         val flashIfDepleted: Boolean
             get() = handler.instance().fishingFlashIfDepleted
         val islandIndicators: Boolean

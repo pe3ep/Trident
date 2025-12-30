@@ -1,5 +1,5 @@
-import cc.pe3epwithyou.trident.interfaces.experiment.widgets.Tab
-import cc.pe3epwithyou.trident.interfaces.experiment.widgets.TabView
+package cc.pe3epwithyou.trident.interfaces.experiment.widgets
+
 import com.noxcrew.sheeplib.theme.Themed
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget

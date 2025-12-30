@@ -30,7 +30,7 @@ class WayfinderWidget(
     override fun getHeight(): Int = layout.height
 
     companion object {
-        val ISLAND_ICONS = hashMapOf<String, Identifier>(
+        val ISLAND_ICONS = hashMapOf(
             "Temperate" to Resources.mcc("textures/island_interface/fishing/island/grotto_temperate.png"),
             "Tropical" to Resources.mcc("textures/island_interface/fishing/island/grotto_tropical.png"),
             "Barren" to Resources.mcc("textures/island_interface/fishing/island/grotto_barren.png")

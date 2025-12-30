@@ -126,7 +126,7 @@ class AugmentWidget(
         setTooltip(Tooltip.create(c))
     }
 
-    // dont look too closely, this code stinks
+    // don't look too close, this code stinks
     override fun renderWidget(
         graphics: GuiGraphics, i: Int, j: Int, f: Float
     ) {

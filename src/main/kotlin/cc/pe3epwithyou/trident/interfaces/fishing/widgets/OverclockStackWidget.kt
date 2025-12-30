@@ -36,7 +36,7 @@ class OverclockStackWidget(
 
         val overclockState = Trident.playerState.supplies.overclocks
 
-//        Get the needed overclock texture
+//        Get the necessary overclock texture
         var unstableTexture = OverclockTexture.COOLDOWN
         when {
             overclockState.unstable.state.isCooldown -> unstableTexture = OverclockTexture.COOLDOWN

@@ -50,13 +50,13 @@ object ItemParser {
             if (beginSearch && ">" in line.string) {
                 // this is horrible but it works
                 val perk = line.string.split("> ")[1].split(" ")[1]
-                when {
-                    perk == "Elusive" -> return OverclockTexture.STRONG_UNSTABLE
-                    perk == "Wayfinder" -> return OverclockTexture.WISE_UNSTABLE
-                    perk == "Pearl" -> return OverclockTexture.GLIMMERING_UNSTABLE
-                    perk == "Treasure" -> return OverclockTexture.GREEDY_UNSTABLE
-                    perk == "Spirit" -> return OverclockTexture.LUCKY_UNSTABLE
-                    else -> return null
+                return when (perk) {
+                    "Elusive" -> OverclockTexture.STRONG_UNSTABLE
+                    "Wayfinder" -> OverclockTexture.WISE_UNSTABLE
+                    "Pearl" -> OverclockTexture.GLIMMERING_UNSTABLE
+                    "Treasure" -> OverclockTexture.GREEDY_UNSTABLE
+                    "Spirit" -> OverclockTexture.LUCKY_UNSTABLE
+                    else -> null
                 }
             }
         }

@@ -4,7 +4,6 @@ import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 
-@Suppress("unused")
 enum class AugmentTrigger(
     val lore: String
 ) {

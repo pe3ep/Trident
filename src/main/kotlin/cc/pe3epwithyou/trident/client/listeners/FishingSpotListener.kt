@@ -40,9 +40,9 @@ object FishingSpotListener {
         val box = AABB.ofSize(blockPos.center, 3.5, 6.0, 3.5)
         val level = client.level ?: return null
         val entities =
-            level.getEntities(null, box).filter { entity -> entity is Display.TextDisplay }
+            level.getEntities(null, box).filterIsInstance<Display.TextDisplay>()
         if (entities.isEmpty()) return null
-        val display: Display.TextDisplay = (entities.first()) as Display.TextDisplay
+        val display: Display.TextDisplay = (entities.first())
 
         // Temporary fake perk list due to display parser not existing yet
         val perks = FishingSpotParser.parse(display.text)

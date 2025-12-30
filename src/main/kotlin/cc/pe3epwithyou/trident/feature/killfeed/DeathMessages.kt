@@ -39,7 +39,7 @@ enum class DeathMessages(
     GENERIC_SELF(
         Regex("^\\[.] .+ died.+"), KillMethod.GENERIC
     ),
-    SPLEEFED_KILL(
+    SPLEEF_KILL(
         Regex("^\\[.] .+ was spleefed by .+"), KillMethod.MELEE
     ),
     PRICKED_KILL(

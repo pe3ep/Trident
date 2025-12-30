@@ -8,7 +8,7 @@ import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 
-class KillStreakFire() : AbstractWidget(0, 0, 22, 10, Component.empty()) {
+class KillStreakFire : AbstractWidget(0, 0, 22, 10, Component.empty()) {
     private companion object {
         val FIRE_MODEL: Model = Model(
             Resources.trident("interface/rampage_fire"),

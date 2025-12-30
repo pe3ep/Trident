@@ -222,7 +222,7 @@ object TridentCommand {
 
         if (!Config.Debug.enableLogging) return
 
-        // Debug dialogs, should only be enabled for cool people (devs)
+        // Debug dialogs should only be enabled for cool people (devs)
         debugDialogs["research"] = ::ResearchDialog
         debugDialogs["wayfinder"] = ::WayfinderDialog
         debugDialogs["experiment_tabbed"] = ::TabbedDialog

@@ -28,7 +28,7 @@ class Quest(
         get() = progress >= totalProgress
 
     /**
-     * Increment progress by amount, clamp to totalProgress and return true if
+     * Increment progress by amount, clamp to totalProgress, and return true if
      * this increment caused the quest to complete.
      */
     fun increment(amount: Int): Boolean {
