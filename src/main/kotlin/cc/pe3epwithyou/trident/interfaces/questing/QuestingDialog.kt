@@ -28,7 +28,8 @@ import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
-class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Themed by TridentThemed {
+class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
+    Themed by TridentThemed {
     companion object {
         var currentGame = MCCIState.game
 
@@ -79,11 +80,20 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
     override fun layout(): GridLayout = grid {
         val font = Minecraft.getInstance().font
         if (dialogState == QuestingDialogState.LOADING) {
-            ModelWidget(Model(modelPath = Resources.trident("interface/loading"), width = 8, height = 8)).atBottom(
+            ModelWidget(
+                Model(
+                    modelPath = Resources.trident("interface/loading"),
+                    width = 8,
+                    height = 8
+                )
+            ).atBottom(
                 0,
                 settings = LayoutConstants.CENTRE
             )
-            StringWidget(Component.literal("Loading your Quests...").withStyle(ChatFormatting.GRAY), font).atBottom(
+            StringWidget(
+                Component.literal("Loading your Quests...").withStyle(ChatFormatting.GRAY),
+                font
+            ).atBottom(
                 0,
                 settings = LayoutConstants.CENTRE
             )
@@ -115,7 +125,8 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key), Th
                 )
             ).atBottom(0, settings = LayoutConstants.CENTRE)
             StringWidget(
-                Component.literal("No quests found".uppercase()).mccFont().withStyle(ChatFormatting.GRAY), font
+                Component.literal("No quests found".uppercase()).mccFont()
+                    .withStyle(ChatFormatting.GRAY), font
             ).atBottom(0)
             return@grid
         }

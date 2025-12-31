@@ -26,9 +26,11 @@ object NoxesiumUtils {
     fun skullComponent(
         uuid: UUID, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F, hat: Boolean = true
     ): MutableComponent {
-        return Component.`object`(SkullSprite(
-            Optional.of(uuid), Optional.empty(), advance, ascent, scale, hat
-        ))
+        return Component.`object`(
+            SkullSprite(
+                Optional.of(uuid), Optional.empty(), advance, ascent, scale, hat
+            )
+        )
     }
 
     fun updateGameDialogs(currentGame: Game, isPlobby: Boolean) {
@@ -50,7 +52,9 @@ object NoxesiumUtils {
                 DialogCollection.close(k)
                 return
             }
-            if (QuestStorage.getActiveQuests(currentGame).isEmpty() && Config.Questing.hideIfNoQuests) {
+            if (QuestStorage.getActiveQuests(currentGame)
+                    .isEmpty() && Config.Questing.hideIfNoQuests
+            ) {
                 DialogCollection.close(k)
                 return
             }
@@ -73,7 +77,10 @@ object NoxesiumUtils {
 
 
     fun registerListeners() {
-        MccPackets.CLIENTBOUND_MCC_SERVER.addListener(this, ClientboundMccServerPacket::class.java) { _, packet, _ ->
+        MccPackets.CLIENTBOUND_MCC_SERVER.addListener(
+            this,
+            ClientboundMccServerPacket::class.java
+        ) { _, packet, _ ->
             val server = packet.server
             val types = packet.types
 
@@ -138,7 +145,8 @@ object NoxesiumUtils {
         try {
             val criteria = GameQuests.valueOf(currentGame.toString()).list
             criteria.filter { stat in it.statisticKeys }.forEach {
-                val game = if (currentGame == Game.BATTLE_BOX_ARENA) Game.BATTLE_BOX else currentGame
+                val game =
+                    if (currentGame == Game.BATTLE_BOX_ARENA) Game.BATTLE_BOX else currentGame
                 val ctx = IncrementContext(
                     game, it, value, stat
                 )

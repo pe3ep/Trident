@@ -146,7 +146,13 @@ object ChatEventListener {
                             if (it != 0) Trident.playerState.supplies.bait.amount = it - 1
                         }
                     }
-                    Logger.debugLog("Triggered augment events: ${triggeredAugmentEvents.joinToString(", ")}")
+                    Logger.debugLog(
+                        "Triggered augment events: ${
+                            triggeredAugmentEvents.joinToString(
+                                ", "
+                            )
+                        }"
+                    )
                     triggeredAugmentEvents.forEach { updateDurability(it) }
                     triggeredAugmentEvents.clear()
 

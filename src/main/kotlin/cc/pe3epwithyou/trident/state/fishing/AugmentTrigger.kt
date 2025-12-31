@@ -22,12 +22,15 @@ fun updateDurability(trigger: AugmentTrigger) {
     val augmentContainers = Trident.playerState.supplies.augmentContainers
     augmentContainers.filter {
         val hasTrigger = it.augment.useTrigger == trigger
-        val hasRightStatus = it.status != AugmentStatus.NEEDS_REPAIRING || it.status != AugmentStatus.BROKEN || it.status != AugmentStatus.PAUSED
+        val hasRightStatus =
+            it.status != AugmentStatus.NEEDS_REPAIRING || it.status != AugmentStatus.BROKEN || it.status != AugmentStatus.PAUSED
         return@filter hasTrigger && hasRightStatus
     }.forEach {
         it.durability -= 1
-        if (it.durability == 0 && it.status == AugmentStatus.NEW) it.status = AugmentStatus.NEEDS_REPAIRING
-        if (it.durability == 0 && it.status == AugmentStatus.REPAIRED) it.status = AugmentStatus.BROKEN
+        if (it.durability == 0 && it.status == AugmentStatus.NEW) it.status =
+            AugmentStatus.NEEDS_REPAIRING
+        if (it.durability == 0 && it.status == AugmentStatus.REPAIRED) it.status =
+            AugmentStatus.BROKEN
     }
     DialogCollection.refreshDialog("supplies")
     PlayerStateIO.save()

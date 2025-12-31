@@ -48,7 +48,13 @@ enum class Game(
         primaryColor = 0xEC9B33,
         icon = "_fonts/icon/game_icons/game_parkour_warrior_solo_small.png"
     ),
-    TGTTOS("TGTTOS", "tgttos", types = listOf("tgttos", "solo"), primaryColor = 0xC11D1D, icon = "_fonts/icon/game_icons/game_tgttos_small.png"),
+    TGTTOS(
+        "TGTTOS",
+        "tgttos",
+        types = listOf("tgttos", "solo"),
+        primaryColor = 0xC11D1D,
+        icon = "_fonts/icon/game_icons/game_tgttos_small.png"
+    ),
     ROCKET_SPLEEF_RUSH(
         "Rocket Spleef Rush",
         "rocket_spleef",
@@ -56,7 +62,13 @@ enum class Game(
         primaryColor = 0xC1CCFF,
         icon = "_fonts/icon/game_icons/game_rocket_spleef_small.png"
     ),
-    DYNABALL("Dynaball", "dynaball", types = listOf("dynaball", "team"), primaryColor = 0x4A42A0, icon = "_fonts/icon/game_icons/game_dynaball_small.png"),
+    DYNABALL(
+        "Dynaball",
+        "dynaball",
+        types = listOf("dynaball", "team"),
+        primaryColor = 0x4A42A0,
+        icon = "_fonts/icon/game_icons/game_dynaball_small.png"
+    ),
     HITW(
         "HITW",
         "hole_in_the_wall",

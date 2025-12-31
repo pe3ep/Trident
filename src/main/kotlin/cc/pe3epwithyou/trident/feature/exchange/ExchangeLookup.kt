@@ -57,9 +57,9 @@ object ExchangeLookup {
         if (key.isBlank() && provider == ApiProvider.SELF_TOKEN) {
             Logger.sendMessage(
                 Component.literal("Your API key is not set. ").withSwatch(TridentFont.ERROR).append(
-                        Component.literal("Set it using /trident api setToken <TOKEN>")
-                            .withSwatch(TridentFont.ERROR, TridentFont.SwatchType.MUTED)
-                    )
+                    Component.literal("Set it using /trident api setToken <TOKEN>")
+                        .withSwatch(TridentFont.ERROR, TridentFont.SwatchType.MUTED)
+                )
             )
             Logger.sendMessage(
                 Component.literal("Click here to visit Trident Docs learn how to get your API key")
@@ -101,7 +101,8 @@ object ExchangeLookup {
 
             val req = HttpRequest.newBuilder().uri(URI.create(provider.fetchUrl)).POST(
                 HttpRequest.BodyPublishers.ofString(jsonPayload)
-            ).setHeader("Content-Type", "application/json").setHeader("User-Agent", "trident-mc-mod/${player.name}")
+            ).setHeader("Content-Type", "application/json")
+                .setHeader("User-Agent", "trident-mc-mod/${player.name}")
 
 
             when (provider) {
@@ -110,7 +111,9 @@ object ExchangeLookup {
             }
 
             try {
-                val responseText = client.sendAsync(req.build(), HttpResponse.BodyHandlers.ofString()).await().body()
+                val responseText =
+                    client.sendAsync(req.build(), HttpResponse.BodyHandlers.ofString()).await()
+                        .body()
                 val listingsResponse = JSON.decodeFromString<ExchangeListingsResponse>(responseText)
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.COMPLETED
                 Minecraft.getInstance().execute {

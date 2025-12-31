@@ -45,6 +45,7 @@ object QuestStorage {
      */
     fun applyIncrement(ctx: IncrementContext): Boolean {
         Logger.debugLog("Received increment from context ${ctx.sourceTag}, criteria: ${ctx.criteria}: amount: ${ctx.amount}")
+        Logger.sendMessage("Received increment from context ${ctx.sourceTag}, criteria: ${ctx.criteria}: amount: ${ctx.amount}")
         val quests = store[ctx.game] ?: return false
         if (MCCIState.isPlobby) return false
         var updated = false

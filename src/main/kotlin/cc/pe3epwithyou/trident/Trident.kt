@@ -16,8 +16,8 @@ import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
-import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.DelayedAction
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import com.mojang.blaze3d.platform.InputConstants
 import net.fabricmc.api.ModInitializer
@@ -48,8 +48,12 @@ class Trident : ModInitializer {
 
         settingsKeymapping = KeyBindingHelper.registerKeyBinding(
             KeyMapping(
-                "key.trident.config", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, KeyMapping.Category.register(
-                    Resources.trident("keys"))
+                "key.trident.config",
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_U,
+                KeyMapping.Category.register(
+                    Resources.trident("keys")
+                )
             )
         )
 

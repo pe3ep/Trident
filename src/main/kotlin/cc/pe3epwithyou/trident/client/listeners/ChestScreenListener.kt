@@ -12,8 +12,8 @@ import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.Research
 import cc.pe3epwithyou.trident.state.fishing.getAugmentContainer
-import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.ItemParser
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore

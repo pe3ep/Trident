@@ -3,12 +3,12 @@ package cc.pe3epwithyou.trident.state
 import cc.pe3epwithyou.trident.config.Config
 import net.minecraft.client.Minecraft
 
-data class Climate (
+data class Climate(
     var climateType: ClimateType = ClimateType.TEMPERATE,
     var wayfinderData: Int = 0
 )
 
-data class FishingState (
+data class FishingState(
     var climate: Climate = Climate(),
     var isGrotto: Boolean = false
 )

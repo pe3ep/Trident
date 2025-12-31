@@ -421,7 +421,11 @@ class Config {
                         name(Component.translatable("config.trident.killfeed.remove_kill_time.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.remove_kill_time.description")))
                         binding(handler.instance()::killfeedRemoveKillTime, 10)
-                        controller(slider(IntRange(0, 30), 1) { v -> Component.literal(if (v != 0) v.toString() + "s" else "Permanent") })
+                        controller(
+                            slider(
+                                IntRange(0, 30),
+                                1
+                            ) { v -> Component.literal(if (v != 0) v.toString() + "s" else "Permanent") })
                     }
 
                     options.register("killfeed_max_kills") {
@@ -498,7 +502,10 @@ class Config {
                     options.register("supplies_module_durability") {
                         name(Component.translatable("config.trident.fishing.supplies_module.durability.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.fishing.supplies_module.durability.description")))
-                        binding(handler.instance()::fishingSuppliesModuleShowAugmentDurability, false)
+                        binding(
+                            handler.instance()::fishingSuppliesModuleShowAugmentDurability,
+                            false
+                        )
                         controller(tickBox())
                     }
 

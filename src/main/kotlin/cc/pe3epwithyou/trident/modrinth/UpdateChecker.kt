@@ -3,8 +3,8 @@ package cc.pe3epwithyou.trident.modrinth
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
-import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.DelayedAction
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import kotlinx.coroutines.CoroutineScope

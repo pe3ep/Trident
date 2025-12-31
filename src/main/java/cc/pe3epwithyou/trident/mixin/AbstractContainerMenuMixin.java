@@ -20,7 +20,7 @@ public class AbstractContainerMenuMixin {
     @Inject(method = "clicked", at = @At("HEAD"))
     public void clicked(int i, int j, ClickType clickType, Player player, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-//        When user clicks off-screen, the slot is negative. If we don't return here, the game will crash
+//        When a user clicks off-screen, the slot is negative. If we don't return here, the game will crash
         if (i < 0) return;
         Minecraft client = Minecraft.getInstance();
         if (client.screen instanceof ContainerScreen screen) {

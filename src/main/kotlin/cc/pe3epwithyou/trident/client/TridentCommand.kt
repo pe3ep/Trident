@@ -22,8 +22,8 @@ import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
-import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Command
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
