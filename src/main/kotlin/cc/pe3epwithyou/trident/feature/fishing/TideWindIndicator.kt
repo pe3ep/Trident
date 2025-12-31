@@ -20,7 +20,7 @@ object TideWindIndicator {
         item.getLore().forEach { l ->
             if ("Active Tide: " in l.string) {
                 val color = l.toFlatList().lastOrNull()?.style?.color ?: return
-                RaritySlot.renderOutline(graphics, slot, color)
+                RaritySlot.renderOutline(graphics, slot.x, slot.y, color)
             }
         }
     }

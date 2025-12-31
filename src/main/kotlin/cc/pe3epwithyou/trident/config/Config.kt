@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.config
 
+import cc.pe3epwithyou.trident.config.scren.RaritySlotPreview
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
@@ -8,6 +9,7 @@ import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import dev.isxander.yacl3.api.OptionDescription
+import dev.isxander.yacl3.api.OptionEventListener
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder
@@ -337,12 +339,17 @@ class Config {
                     options.register("rarity_slot_display_type") {
                         name(Component.translatable("config.trident.rarity_slot.display_type.name"))
                         description(
-                            OptionDescription.of(
-                                Component.translatable("config.trident.rarity_slot.display_type.description")
-                            )
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.rarity_slot.display_type.description"))
+                                .customImage(RaritySlotPreview())
+                                .build()
                         )
                         binding(handler.instance()::raritySlotDisplayType, DisplayType.OUTLINE)
                         controller(enumSwitch<DisplayType> { v -> v.displayName })
+                        addListener { option, event ->
+                            if (event != OptionEventListener.Event.STATE_CHANGE) return@addListener
+                            RaritySlotPreview.RARITY_DISPLAY_TYPE = option.pendingValue()
+                        }
                     }
                 }
 

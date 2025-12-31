@@ -8,7 +8,7 @@ import net.minecraft.network.chat.TextColor
 import net.minecraft.world.inventory.Slot
 
 object RaritySlot {
-    private val ALLOWED_COLORS = listOf<TextColor>(
+    val ALLOWED_COLORS = listOf<TextColor>(
         TextColor.fromRgb(0xF94242),
         TextColor.fromRgb(0xFF8000),
         TextColor.fromRgb(0xA335EE),
@@ -23,23 +23,21 @@ object RaritySlot {
         val color = slot.item.hoverName.toFlatList().firstOrNull()?.style?.color ?: return
 
         if (color !in ALLOWED_COLORS) return
-        renderOutline(graphics, slot, color)
+        renderOutline(graphics, slot.x, slot.y, color)
     }
 
-    fun renderOutline(graphics: GuiGraphics, slot: Slot, color: TextColor) {
+    fun renderOutline(graphics: GuiGraphics, x: Int, y: Int, color: TextColor, displayType: DisplayType = Config.RaritySlot.displayType) {
         val transparentColor = color.value opacity 0
         val opaqueColor = color.value.opaqueColor()
-        val x = slot.x
-        val y = slot.y
 
-        if (Config.RaritySlot.displayType == DisplayType.OUTLINE) {
+        if (displayType == DisplayType.OUTLINE) {
             graphics.fill(x, y, x + 1, y + 16, opaqueColor) // Left side
             graphics.fill(x, y, x + 16, y + 1, opaqueColor) // Top side
             graphics.fill(x + 15, y, x + 16, y + 16, opaqueColor) // Right side
             graphics.fill(x, y + 15, x + 16, y + 16, opaqueColor) // Bottom side
         }
 
-        if (Config.RaritySlot.displayType == DisplayType.U_SHAPED) {
+        if (displayType == DisplayType.U_SHAPED) {
             graphics.fillGradient(x, y, x + 1, y + 16, transparentColor, opaqueColor) // Left side
             graphics.fillGradient(
                 x + 15,
@@ -52,7 +50,7 @@ object RaritySlot {
             graphics.fill(x, y + 15, x + 16, y + 16, opaqueColor) // Bottom side
         }
 
-        if (Config.RaritySlot.displayType == DisplayType.FILL) {
+        if (displayType == DisplayType.FILL) {
             graphics.fill(x, y, x + 16, y + 16, opaqueColor)
         }
     }
