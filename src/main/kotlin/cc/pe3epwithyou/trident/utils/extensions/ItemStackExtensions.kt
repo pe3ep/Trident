@@ -9,7 +9,7 @@ import net.minecraft.world.item.TooltipFlag
 
 object ItemStackExtensions {
     fun ItemStack.getLore(): List<Component> {
-        val player = Minecraft.getInstance().player ?: return listOf(Component.empty())
+        val player = Minecraft.getInstance().player ?: return emptyList()
 
         return this.getTooltipLines(
             Item.TooltipContext.EMPTY,

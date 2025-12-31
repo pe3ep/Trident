@@ -23,14 +23,14 @@ class AugmentWidget(
     textureHeight + getExtraHeight(),
     Component.empty()
 ) {
-    private companion object {
+    companion object {
         val REPAIR_AUGMENT = Resources.trident("textures/interface/repair_augment.png")
         val BROKEN_AUGMENT = Resources.trident("textures/interface/broken_augment.png")
         val PAUSED_AUGMENT = Resources.trident("textures/interface/paused_augment.png")
 
-        val NORMAL_COLOR = 0x93ea2c.opaqueColor()
-        val REPAIRED_COLOR = 0xffc900.opaqueColor()
-        val BROKEN_COLOR = 0xea2c2c.opaqueColor()
+        private val NORMAL_COLOR = 0x93ea2c.opaqueColor()
+        private val REPAIRED_COLOR = 0xffc900.opaqueColor()
+        private val BROKEN_COLOR = 0xea2c2c.opaqueColor()
 
         private const val WARNING_COLOR = 0xfca600
         private const val WARNING_COLOR_ALT = 0xf27500

@@ -51,6 +51,9 @@ class Config {
     var fishingSuppliesModuleShowAugmentDurability: Boolean = false
 
     @SerialEntry
+    var fishingShowAugmentStatusInInterface: Boolean = true
+
+    @SerialEntry
     var fishingWayfinderModule: Boolean = true
 
     @SerialEntry
@@ -155,6 +158,8 @@ class Config {
             get() = handler.instance().fishingSuppliesModule
         val suppliesModuleShowAugmentDurability: Boolean
             get() = handler.instance().fishingSuppliesModuleShowAugmentDurability
+        val showAugmentStatusInInterface: Boolean
+            get() = handler.instance().fishingShowAugmentStatusInInterface
         val flashIfDepleted: Boolean
             get() = handler.instance().fishingFlashIfDepleted
         val islandIndicators: Boolean
@@ -503,6 +508,16 @@ class Config {
                                 ).build()
                         )
                         binding(handler.instance()::fishingSuppliesModule, true)
+                        controller(tickBox())
+                    }
+
+                    options.register("show_augment_status_in_interface") {
+                        name(Component.translatable("config.trident.fishing.show_augment_status_in_interface.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.fishing.show_augment_status_in_interface.description")))
+                        binding(
+                            handler.instance()::fishingShowAugmentStatusInInterface,
+                            true
+                        )
                         controller(tickBox())
                     }
 

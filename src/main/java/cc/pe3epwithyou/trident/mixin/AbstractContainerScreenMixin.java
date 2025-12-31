@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
 import cc.pe3epwithyou.trident.feature.fishing.TideWindIndicator;
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot;
 import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter;
+import cc.pe3epwithyou.trident.interfaces.fishing.AugmentStatusInterface;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.DebugDraw;
 import net.minecraft.client.Minecraft;
@@ -61,6 +62,7 @@ public class AbstractContainerScreenMixin extends Screen {
         if (Config.Global.INSTANCE.getExchangeImprovements()) {
             ExchangeHandler.INSTANCE.renderSlot(guiGraphics, slot);
         }
+        AugmentStatusInterface.INSTANCE.render(guiGraphics, slot);
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))
