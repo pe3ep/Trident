@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.config
 
-import cc.pe3epwithyou.trident.config.scren.RaritySlotPreview
+import cc.pe3epwithyou.trident.config.screen.RaritySlotPreview
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType

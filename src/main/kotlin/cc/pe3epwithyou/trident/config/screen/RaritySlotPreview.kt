@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.config.scren
+package cc.pe3epwithyou.trident.config.screen
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
