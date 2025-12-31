@@ -122,12 +122,10 @@ object TridentCommand {
                     PlayerStateIO.load()
                     DialogCollection.refreshOpenedDialogs()
 
-                    val c =
-                        Component.literal("Player state has been successfully ")
-                            .withSwatch(TridentFont.TRIDENT_COLOR)
-                            .append(
-                                Component.literal("reset").withSwatch(TridentFont.ERROR)
-                            )
+                    val c = Component.literal("Player state has been successfully ")
+                        .withSwatch(TridentFont.TRIDENT_COLOR).append(
+                            Component.literal("reset").withSwatch(TridentFont.ERROR)
+                        )
                     Logger.sendMessage(c)
                 }
             }
@@ -176,8 +174,7 @@ object TridentCommand {
                         main {
                             Logger.sendMessage(
                                 Component.literal("This incident will be reported.")
-                                    .withSwatch(TridentFont.ERROR)
-                                    .withStyle(ChatFormatting.BOLD)
+                                    .withSwatch(TridentFont.ERROR).withStyle(ChatFormatting.BOLD)
                             )
                             jokeCooldown = false
                         }
@@ -317,8 +314,7 @@ object TridentCommand {
                             val status = AugmentStatus.valueOf(statusString)
                             playerState.supplies.augmentContainers.add(
                                 AugmentContainer(
-                                    augment,
-                                    status
+                                    augment, status
                                 )
                             )
                             Logger.sendMessage("Fake augment created: ${augment.name}", false)

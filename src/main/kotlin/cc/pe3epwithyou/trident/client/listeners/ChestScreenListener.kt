@@ -20,23 +20,17 @@ import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.safeGetLine
 import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import cc.pe3epwithyou.trident.utils.useScreenWait
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
-import net.minecraft.util.Util
 import net.minecraft.world.item.ItemStack
 
 
 // TODO: Refactor this whole object
 object ChestScreenListener {
-    var isWaitingForItems = false
-
     private fun parseRarity(name: String): Rarity = when {
         "Common" in name -> Rarity.COMMON
         "Uncommon" in name -> Rarity.UNCOMMON
@@ -50,47 +44,15 @@ object ChestScreenListener {
     private fun handleScreen(screen: ContainerScreen) {
         val title = screen.title.string
 
-        if ("FISHING SUPPLIES" in title) {
-            waitForItems { findAugments(screen) }
-        }
-        if ("ISLAND REWARDS" in title) {
-            waitForItems { findQuests(screen) }
-        }
-        if ("FISHING ISLANDS" in title) {
-            waitForItems { findWayfinderData(screen) }
-        }
-        if ("FISHING PROGRESS" in title) {
-            waitForItems { findFishingResearch(screen) }
-        }
-        if ("ISLAND EXCHANGE" in title) {
-            waitForItems { ExchangeHandler.handleScreen(screen) }
+        useScreenWait(screen) {
+            checkName("FISHING SUPPLIES") { findAugments(it) }
+            checkName("ISLAND REWARDS") { findQuests(it) }
+            checkName("FISHING ISLANDS") { findWayfinderData(it) }
+            checkName("FISHING PROGRESS") { findFishingResearch(it) }
+            checkName("ISLAND EXCHANGE") { ExchangeHandler.handleScreen(it) }
         }
 
         Logger.debugLog("Screen title: $title")
-    }
-
-    fun waitForItems(block: () -> Unit) {
-        val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
-        isWaitingForItems = true
-        CoroutineScope(ctx).launch {
-            var time = 0
-            // timeout of 3 seconds
-            while (time < 60) {
-                if (!isWaitingForItems) {
-                    delay(50) // Extra 1 tick wait due to some items not arriving together
-                    block()
-                    return@launch
-                }
-                delay(50)
-                time++
-            }
-            isWaitingForItems = false
-            Logger.sendMessage(
-                Component.literal("Timed out waiting for items to arrive, waited for 3 seconds")
-                    .withSwatch(TridentFont.ERROR)
-            )
-            Logger.error("Timed out waiting for items")
-        }
     }
 
     fun register() {

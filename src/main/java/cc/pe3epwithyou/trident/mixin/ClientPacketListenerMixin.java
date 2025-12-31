@@ -1,9 +1,9 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.feature.FocusGame;
 import cc.pe3epwithyou.trident.feature.questing.QuestListener;
 import cc.pe3epwithyou.trident.utils.Logger;
+import cc.pe3epwithyou.trident.utils.ScreenManager;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerCombatKillPacket;
@@ -28,6 +28,6 @@ public class ClientPacketListenerMixin {
     @Inject(method = "handleContainerSetSlot", at = @At("TAIL"))
     private void containerSetSlot(ClientboundContainerSetSlotPacket clientboundContainerSetSlotPacket, CallbackInfo ci) {
         QuestListener.INSTANCE.handleRefreshTasksItem(clientboundContainerSetSlotPacket.getItem());
-        ChestScreenListener.INSTANCE.setWaitingForItems(false);
+        ScreenManager.Companion.setWaitingForItems(false);
     }
 }
