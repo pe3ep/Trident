@@ -9,10 +9,14 @@ enum class QuestCriteria(
         listOf("hole_in_the_wall_survived_two_minute")
     ),
     HOLE_IN_THE_WALL_SURVIVED_MINUTE(
-        "Survive 1m", Regex("Survive at least 60s in (\\d+) games of HITW"), listOf("hole_in_the_wall_survived_minute")
+        "Survive 1m",
+        Regex("Survive at least 60s in (\\d+) games of HITW"),
+        listOf("hole_in_the_wall_survived_minute")
     ),
     HOLE_IN_THE_WALL_WALLS_DODGED(
-        "Dodge walls", Regex("Survive (\\d+) walls in HITW"), listOf("hole_in_the_wall_walls_dodged")
+        "Dodge walls",
+        Regex("Survive (\\d+) walls in HITW"),
+        listOf("hole_in_the_wall_walls_dodged")
     ),
     HOLE_IN_THE_WALL_TOP_EIGHT(
         "Top 8", Regex("Place Top 8 in (\\d+) games of HITW"), listOf("hole_in_the_wall_top_eight")
@@ -25,7 +29,9 @@ enum class QuestCriteria(
     ),
 
     TGTTOS_CHICKENS_PUNCHED(
-        "Punch chickens", Regex("Punch (\\d+) chickens in TGTTOS"), listOf("tgttos_chickens_punched")
+        "Punch chickens",
+        Regex("Punch (\\d+) chickens in TGTTOS"),
+        listOf("tgttos_chickens_punched")
     ),
     TGTTOS_TOP_EIGHT(
         "Top 8", Regex("Place Top 8 in (\\d+) games of TGTTOS"), listOf("tgttos_top_eight")
@@ -37,13 +43,19 @@ enum class QuestCriteria(
         "Top 3", Regex("Place Top 3 in (\\d+) games of TGTTOS"), listOf("tgttos_top_three")
     ),
     TGTTOS_ROUND_TOP_EIGHT(
-        "Round top 8", Regex("Place Top 8 in (\\d+) rounds of TGTTOS"), listOf("tgttos_round_top_eight")
+        "Round top 8",
+        Regex("Place Top 8 in (\\d+) rounds of TGTTOS"),
+        listOf("tgttos_round_top_eight")
     ),
     TGTTOS_ROUND_TOP_FIVE(
-        "Round top 5", Regex("Place Top 5 in (\\d+) rounds of TGTTOS"), listOf("tgttos_round_top_five")
+        "Round top 5",
+        Regex("Place Top 5 in (\\d+) rounds of TGTTOS"),
+        listOf("tgttos_round_top_five")
     ),
     TGTTOS_ROUND_TOP_THREE(
-        "Round top 3", Regex("Place Top 3 in (\\d+) rounds of TGTTOS"), listOf("tgttos_round_top_three")
+        "Round top 3",
+        Regex("Place Top 3 in (\\d+) rounds of TGTTOS"),
+        listOf("tgttos_round_top_three")
     ),
 
     BATTLE_BOX_QUADS_GAMES_PLAYED(
@@ -74,33 +86,17 @@ enum class QuestCriteria(
     ),
     BATTLE_BOX_QUADS_PLAYERS_KILLED(
         "Kill players", Regex("Eliminate (\\d+) players in Battle Box"), listOf(
-            "battle_box_quads_players_eliminated",
             "battle_box_quads_players_killed",
-            "battle_box_quads_ranged_kills",
-            "battle_box_quads_melee_kills",
-            "battle_box_quads_explosive_kills",
-            "battle_box_arena_players_eliminated",
             "battle_box_arena_players_killed",
-            "battle_box_arena_ranged_kills",
-            "battle_box_arena_melee_kills",
-            "battle_box_arena_explosive_kills",
         )
     ),
     BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED(
         "Kills or Assists",
         Regex("Eliminate or assist in eliminating (\\d+) players in Battle Box"),
         listOf(
-            "battle_box_quads_players_eliminated",
             "battle_box_quads_players_killed",
-            "battle_box_quads_ranged_kills",
-            "battle_box_quads_melee_kills",
-            "battle_box_quads_explosive_kills",
             "battle_box_quads_player_kills_assisted",
-            "battle_box_arena_players_eliminated",
             "battle_box_arena_players_killed",
-            "battle_box_arena_ranged_kills",
-            "battle_box_arena_melee_kills",
-            "battle_box_arena_explosive_kills",
             "battle_box_arena_player_kills_assisted",
         )
     ),
@@ -136,13 +132,9 @@ enum class QuestCriteria(
         listOf("sky_battle_quads_survival_top_three")
     ),
     SKY_BATTLE_QUADS_PLAYERS_KILLED(
-        "Kill players", Regex("Eliminate (\\d+) players in Sky Battle"), listOf(
-            "sky_battle_quads_players_killed",
-            "sky_battle_quads_players_eliminated",
-            "sky_battle_quads_melee_kills",
-            "sky_battle_quads_ranged_kills",
-            "sky_battle_quads_explosive_kills",
-        )
+        "Kill players",
+        Regex("Eliminate (\\d+) players in Sky Battle"),
+        listOf("sky_battle_quads_players_killed")
     ),
 
     PW_SURVIVAL_OBSTACLES_COMPLETED(
@@ -213,16 +205,24 @@ enum class QuestCriteria(
     ),
 
     DYNABALL_SURVIVE_1M(
-        "Survive 1m", Regex("Survive at least 1m or win in (\\d+) games of Dynaball"), listOf("dynaball_survive_1m")
+        "Survive 1m",
+        Regex("Survive at least 1m or win in (\\d+) games of Dynaball"),
+        listOf("dynaball_survive_1m")
     ),
     DYNABALL_SURVIVE_2M(
-        "Survive 2m", Regex("Survive at least 2m or win in (\\d+) games of Dynaball"), listOf("dynaball_survive_2m")
+        "Survive 2m",
+        Regex("Survive at least 2m or win in (\\d+) games of Dynaball"),
+        listOf("dynaball_survive_2m")
     ),
     DYNABALL_SURVIVE_4M(
-        "Survive 4m", Regex("Survive at least 4m or win in (\\d+) games of Dynaball"), listOf("dynaball_survive_4m")
+        "Survive 4m",
+        Regex("Survive at least 4m or win in (\\d+) games of Dynaball"),
+        listOf("dynaball_survive_4m")
     ),
     DYNABALL_WINS(
-        "Wins", Regex("Win (\\d+) games of Dynaball while surviving until the end"), listOf("dynaball_wins")
+        "Wins",
+        Regex("Win (\\d+) games of Dynaball while surviving until the end"),
+        listOf("dynaball_wins")
     ),
     DYNABALL_PLAYERS_ELIMINATED(
         "Kill players",
@@ -235,10 +235,14 @@ enum class QuestCriteria(
         listOf("dynaball_players_stuck")
     ),
     DYNABALL_BLOCKS_DESTROYED(
-        "Destroy blocks", Regex("Destroy (\\d+) blocks during games of Dynaball"), listOf("dynaball_blocks_destroyed")
+        "Destroy blocks",
+        Regex("Destroy (\\d+) blocks during games of Dynaball"),
+        listOf("dynaball_blocks_destroyed")
     ),
     DYNABALL_BLOCKS_PLACED(
-        "Place blocks", Regex("Place (\\d+) repair blocks during games of Dynaball"), listOf("dynaball_blocks_placed")
+        "Place blocks",
+        Regex("Place (\\d+) repair blocks during games of Dynaball"),
+        listOf("dynaball_blocks_placed")
     ),
 
     ROCKET_SPLEEF_PLAYERS_OUTLIVED(
@@ -247,14 +251,20 @@ enum class QuestCriteria(
         listOf("rocket_spleef_players_outlived")
     ),
     ROCKET_SPLEEF_TOP_FIVE(
-        "Top 5", Regex("Place 5th or higher in (\\d+) games of Rocket Spleef Rush"), listOf("rocket_spleef_top_five")
+        "Top 5",
+        Regex("Place 5th or higher in (\\d+) games of Rocket Spleef Rush"),
+        listOf("rocket_spleef_top_five")
     ),
     ROCKET_SPLEEF_TOP_EIGHT(
-        "Top 8", Regex("Place 8th or higher in (\\d+) games of Rocket Spleef Rush"), listOf("rocket_spleef_top_eight")
+        "Top 8",
+        Regex("Place 8th or higher in (\\d+) games of Rocket Spleef Rush"),
+        listOf("rocket_spleef_top_eight")
 
     ),
     ROCKET_SPLEEF_TOP_THREE(
-        "Top 3", Regex("Place 3rd or higher in (\\d+) games of Rocket Spleef Rush"), listOf("rocket_spleef_top_three")
+        "Top 3",
+        Regex("Place 3rd or higher in (\\d+) games of Rocket Spleef Rush"),
+        listOf("rocket_spleef_top_three")
 
     ),
     ROCKET_SPLEEF_SURVIVE_60S(
