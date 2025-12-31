@@ -35,10 +35,12 @@ public abstract class ConnectionMixin {
             if (ip == null) return;
             Minecraft minecraft = Minecraft.getInstance();
             if (ip.contains("mccisland.net") && packetListener == minecraft.getConnection()) {
-                DelayedAction.INSTANCE.closeAllPendingTasks();
-                DialogCollection.INSTANCE.saveAllDialogs();
-                PlayerStateIO.INSTANCE.save();
-                Logger.INSTANCE.info("Disconnected from MCC Island at IP: " + ip);
+                minecraft.execute(() -> {
+                    DelayedAction.INSTANCE.closeAllPendingTasks();
+                    DialogCollection.INSTANCE.saveAllDialogs();
+                    PlayerStateIO.INSTANCE.save();
+                    Logger.INSTANCE.info("Disconnected from MCC Island at IP: " + ip);
+                });
             }
         }
     }
