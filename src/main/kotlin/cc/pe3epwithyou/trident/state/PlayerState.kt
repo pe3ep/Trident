@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.Trident
+import cc.pe3epwithyou.trident.config.ConfigUtil
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
@@ -11,8 +12,6 @@ import kotlinx.serialization.json.Json
 import net.fabricmc.loader.api.FabricLoader
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.StandardCopyOption
-import java.nio.file.StandardOpenOption
 
 @Serializable
 data class Bait(var type: Rarity = Rarity.COMMON, var amount: Int? = null)
@@ -134,27 +133,15 @@ object PlayerStateIO {
 
     fun save() {
         val serializable = Trident.playerState
-
-        Files.createDirectories(path.parent)
-
         val text = json.encodeToString(serializable)
-
-        val tmp = path.resolveSibling("${path.fileName}.tmp")
-        Files.writeString(
-            tmp,
-            text,
-            StandardOpenOption.CREATE,
-            StandardOpenOption.TRUNCATE_EXISTING,
-            StandardOpenOption.WRITE
-        )
-        Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+        ConfigUtil.writeToConfig(path, text)
     }
 
     @Suppress("DEPRECATION")
     fun load(): PlayerState {
         Logger.info("Loading player state from $path")
         if (!Files.exists(path)) return PlayerState()
-        val text = Files.readString(path)
+        val text = ConfigUtil.readFromConfig(path) ?: return PlayerState()
         val serializable = json.decodeFromString<PlayerState>(text)
 
         // Migration from 1.0.5 -> 1.0.6

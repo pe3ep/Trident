@@ -39,7 +39,7 @@ class Trident : ModInitializer {
     }
 
     override fun onInitialize() {
-        LOGGER.info("[Trident] Initializing Client...")
+        Logger.info("Initializing Trident...")
         Config.init()
         UpdateChecker.init()
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->

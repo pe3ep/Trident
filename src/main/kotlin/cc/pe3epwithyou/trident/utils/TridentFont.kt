@@ -41,10 +41,9 @@ object TridentFont {
 
     private val tridentPrefix: MutableComponent
         get() {
-            val a = Component.literal("‹")
-            val b = Component.literal("\uE000").withTridentFont("glyph")
-            val c = Component.literal("› ")
-            return a.append(b).append(c)
+            return Component.literal("‹")
+                .append(Component.literal("\uE000").withTridentFont("glyph"))
+                .append(Component.literal("› "))
         }
 
     fun withPrefix(c: Component): MutableComponent {

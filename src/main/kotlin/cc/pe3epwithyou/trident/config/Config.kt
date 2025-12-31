@@ -220,7 +220,7 @@ class Config {
                 Logger.warn("Detected a deprecated config value for rarity overlay, converting it")
 
                 handler.instance().raritySlotEnabled =
-                    rarityOverlayPrev/* Reset the old value to null */
+                    rarityOverlayPrev /* Reset the old value to null */
                 handler.instance().globalRarityOverlay = null
             }
 

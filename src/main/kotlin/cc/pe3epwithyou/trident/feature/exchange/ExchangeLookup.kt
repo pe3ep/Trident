@@ -75,23 +75,23 @@ object ExchangeLookup {
 
         val graphQLString = """
             query activeExchangeListings {
-              player(uuid: "${player.id}") {
-                collections {
-                  cosmetics {
-                    owned
-                    cosmetic {
-                      name
+                player(uuid: "${player.id}") {
+                    collections {
+                        cosmetics {
+                            owned
+                            cosmetic {
+                                name
+                            }
+                        }
                     }
-                  }
                 }
-              }
-              activeIslandExchangeListings {
-                asset {
-                  name
+                activeIslandExchangeListings {
+                    asset {
+                        name
+                    }
+                    cost
+                    amount
                 }
-                cost
-                amount
-              }
             }
         """.trimIndent()
 
