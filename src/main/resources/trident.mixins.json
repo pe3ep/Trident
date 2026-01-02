@@ -12,6 +12,7 @@
     "AbstractContainerScreenMixin",
     "BossHealthOverlayAccessor",
     "ClientPacketListenerMixin",
+    "DebugScreenMixin",
     "FontLoaderMixin",
     "GuiAccessor",
     "JoinIslandMixin"
