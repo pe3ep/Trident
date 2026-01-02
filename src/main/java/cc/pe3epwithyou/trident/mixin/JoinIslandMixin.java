@@ -1,14 +1,9 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.Trident;
-import cc.pe3epwithyou.trident.feature.api.ApiChecker;
 import cc.pe3epwithyou.trident.interfaces.DialogCollection;
-import cc.pe3epwithyou.trident.modrinth.UpdateChecker;
-import cc.pe3epwithyou.trident.utils.Logger;
-import cc.pe3epwithyou.trident.utils.TridentFont;
+import cc.pe3epwithyou.trident.state.MCCIState;
 import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.login.ClientboundLoginFinishedPacket;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -26,15 +21,10 @@ public class JoinIslandMixin {
 
     @Inject(method = "handleLoginFinished", at = @At("HEAD"))
     private void loginFinished(ClientboundLoginFinishedPacket clientboundLoginFinishedPacket, CallbackInfo ci) {
-//        Close all dialogs before joining the server
+//        Close all dialogs before joining a server
         DialogCollection.INSTANCE.clear();
         if (this.serverData == null) return;
         if (!this.serverData.ip.toLowerCase().contains("mccisland.net")) return;
-        UpdateChecker.INSTANCE.checkForUpdates();
-        ApiChecker.INSTANCE.joinCheck();
-        if (Trident.Companion.getHasFailedToLoadConfig()) {
-            Component component = Component.translatable("trident.failed_config").withStyle(TridentFont.INSTANCE.getERROR().getBaseStyle());
-            Logger.INSTANCE.sendMessage(component, true);
-        }
+        MCCIState.INSTANCE.onJoin();
     }
 }
