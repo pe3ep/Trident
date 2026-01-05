@@ -4,23 +4,19 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestSubtype
+import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.utils.ProgressBar
 import cc.pe3epwithyou.trident.utils.Resources
-import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.GridLayout
 import com.noxcrew.sheeplib.theme.Themed
-import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.StringWidget
-import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.Identifier
@@ -31,7 +27,7 @@ class QuestWidget(
 ) : CompoundWidget(0, 0, 0, 0) {
     companion object {
         private val COMPLETED_QUEST_SPRITE: Identifier =
-            Resources.mcc("textures/island_interface/quest_log/quest_complete.png")
+            Resources.mcc("island_interface/generic/accept")
         private const val COMPLETED_QUEST_COLOR: Int = 0x1EFC00
     }
 
@@ -40,15 +36,16 @@ class QuestWidget(
 
     override val layout = GridLayout(themed.theme.dimensions.paddingInner) {
         val mcFont = Minecraft.getInstance().font
+        val isCompleted = quest.isCompleted
 
-        val c = Component.literal(quest.displayName.uppercase())
+        val questName = Component.literal(quest.displayName.uppercase())
             .mccFont()
         if (Config.Questing.rarityColorName) {
-            c.withColor(quest.rarity.color)
+            questName.withColor(quest.rarity.color)
         }
-        if (quest.isCompleted) {
-            c.withColor(COMPLETED_QUEST_COLOR)
-            c.withStyle(ChatFormatting.ITALIC)
+        if (isCompleted) {
+            questName.withColor(COMPLETED_QUEST_COLOR)
+            questName.withStyle(ChatFormatting.ITALIC)
         }
         var suffixString = " "
         val dailyRemaining = QuestStorage.dailyRemaining
@@ -66,11 +63,15 @@ class QuestWidget(
         val suffix = Component.literal(suffixString)
             .withStyle(Style.EMPTY.withItalic(false))
             .withStyle(ChatFormatting.GRAY)
-        QuestNameWidget(
-            if (!quest.isCompleted) quest.sprite else COMPLETED_QUEST_SPRITE,
-            c.append(suffix),
-            mcFont
-        ).atBottom(0, settings = LayoutConstants.LEFT)
+            .mccFont()
+
+        val icon = if (!isCompleted) quest.sprite else COMPLETED_QUEST_SPRITE
+        val component = FontCollection.texture(icon)
+            .offset(y = 0.5f)
+            .append(Component.literal(" "))
+            .append(questName)
+            .append(suffix)
+        StringWidget(component, mcFont).atBottom(0, settings = LayoutConstants.LEFT)
 
         val progressComponent = ProgressBar.progressComponent(
             quest.progress.toFloat() / quest.totalProgress.toFloat(),
@@ -80,7 +81,7 @@ class QuestWidget(
 
         val progress = Component.literal(" ${quest.progress}/${quest.totalProgress}")
             .defaultFont()
-        if (quest.isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
+        if (isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
         StringWidget(progressComponent.append(progress), mcFont).atBottom(
             0,
             settings = LayoutConstants.LEFT
@@ -90,38 +91,5 @@ class QuestWidget(
     init {
         layout.arrangeElements()
         layout.visitWidgets(this::addChild)
-    }
-
-    class QuestNameWidget(
-        private val sprite: Identifier,
-        private val text: Component,
-        val font: Font
-    ) : AbstractWidget(
-        0, 0,
-        font.width(text.visualOrderText) + ICON_WIDTH + SPACE_ADVANCE,
-        9,
-        text
-    ) {
-        companion object {
-            private const val ICON_WIDTH = 8
-            private const val SPACE_ADVANCE = 4
-        }
-
-        override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-            Texture(
-                sprite,
-                ICON_WIDTH,
-                ICON_WIDTH
-            ).blit(guiGraphics, x, y)
-            guiGraphics.drawString(
-                font,
-                text,
-                x + ICON_WIDTH + SPACE_ADVANCE,
-                y,
-                0xFFFFFF.opaqueColor()
-            )
-        }
-
-        override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
     }
 }

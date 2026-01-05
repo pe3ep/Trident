@@ -19,7 +19,7 @@ class Quest(
         get() {
             val directory = type.directoryPath
             val raritySuffix = rarity.name.lowercase()
-            return Resources.mcc("textures/$directory$raritySuffix.png")
+            return Resources.mcc("$directory$raritySuffix")
         }
 
     val displayName: String = criteria.shortName
