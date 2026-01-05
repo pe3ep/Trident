@@ -28,7 +28,7 @@ object MCCIState {
         return server.ip.contains("mccisland.net", true)
     }
 
-    fun onJoin() {
+    fun onJoin() = Minecraft.getInstance().execute {
         UpdateChecker.checkForUpdates()
         ApiChecker.joinCheck()
         DebugScreen.fetchMessages()

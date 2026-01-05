@@ -17,18 +17,18 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
-import java.util.*
 
 object DebugScreen {
-    private var messages: Map<UUID, String> = emptyMap()
+    private var customMessage: String? = null
 
     private val JSON = Json {
         encodeDefaults = true
         ignoreUnknownKeys = true
+        explicitNulls = false
     }
 
     @Serializable
-    data class DebugResponse(val id: String, val message: String)
+    data class DebugResponse(val success: Boolean, val hasMessage: Boolean, val message: String? = null)
 
     private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10))
         .version(HttpClient.Version.HTTP_1_1).build()
@@ -37,19 +37,23 @@ object DebugScreen {
     fun fetchMessages() {
         val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
         CoroutineScope(ctx).launch {
-            val player = Minecraft.getInstance().gameProfile.name
+            val player = Minecraft.getInstance().gameProfile
             val req =
-                HttpRequest.newBuilder().uri(URI.create("${TRIDENT.fetchUrl}/debug-screen"))
+                HttpRequest.newBuilder().uri(URI.create("${TRIDENT.fetchUrl}/debug-screen?for=${player.id}"))
                     .GET().setHeader("Content-Type", "application/json")
-                    .setHeader("User-Agent", "trident-mc-mod/${player}")
+                    .setHeader("User-Agent", "trident-mc-mod/${player.name}")
 
             try {
                 val responseText =
                     client.sendAsync(req.build(), HttpResponse.BodyHandlers.ofString()).await()
                         .body()
-                val response = JSON.decodeFromString<List<DebugResponse>>(responseText)
+                val response = JSON.decodeFromString<DebugResponse>(responseText)
                 main {
-                    response.forEach { messages += UUID.fromString(it.id) to it.message }
+                    customMessage = if (response.success && response.hasMessage) {
+                        response.message
+                    } else {
+                        null
+                    }
                 }
             } catch (e: Exception) {
                 main {
@@ -60,10 +64,9 @@ object DebugScreen {
     }
 
     fun getMessage(): String {
-        val playerId = Minecraft.getInstance().gameProfile.id
         if (Trident.playerState.hatesUpdates) {
             return "i CANNOT BELIEVE you hate the cat..."
         }
-        return messages[playerId] ?: "Thank you for using Trident"
+        return customMessage ?: "Thank you for using Trident <3"
     }
 }
