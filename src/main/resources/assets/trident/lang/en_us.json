@@ -86,8 +86,12 @@
   "config.trident.api.description": "Set your API options here",
   "config.trident.api.key.name": "API Key",
   "config.trident.api.key.description": "Use this api key for bla bla bla TODO",
-  "trident.not_island": "You are not currently playing on MCC Island",
   "category.trident.keys": "Trident",
   "key.trident.config": "Open Trident settings",
-  "trident.failed_config": "Trident has failed to load the config. Your settings have been reset. Please contact developers to fix this issue."
+  "trident.not_island": "You are not currently playing on MCC Island",
+  "trident.failed_config": "Trident has failed to load the config. Your settings have been reset. Please contact developers to fix this issue.",
+  "trident.dialog.update_cat.description": "please update Trident. this cat represents developer's emotions when people are using outdated versions",
+  "trident.dialog.update_cat.buttons.ok": "ok, ill update",
+  "trident.dialog.update_cat.buttons.no": "ok, ill update",
+  "trident.dialog.update_cat.happy": "whats good big dawg"
 }
