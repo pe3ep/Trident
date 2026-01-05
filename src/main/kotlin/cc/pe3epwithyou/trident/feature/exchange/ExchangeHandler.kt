@@ -2,7 +2,6 @@ package cc.pe3epwithyou.trident.feature.exchange
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter
-import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
@@ -59,7 +58,6 @@ object ExchangeHandler {
             val listing = Listing(itemName, slot.item.count)
             val current = exchangeDeals[listing]
             if (current == null || price < current) {
-                Logger.debugLog("(SCREEN) Updating price for $listing -> $price")
                 exchangeDeals[listing] = price
             }
         }
@@ -71,7 +69,6 @@ object ExchangeHandler {
             val listing = Listing(name, amount)
             val current = exchangeDeals[listing]
             if (current == null || cost < current) {
-                Logger.debugLog("(API) Updating price for $listing -> $cost")
                 exchangeDeals[listing] = cost
             }
         }

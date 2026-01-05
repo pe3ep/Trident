@@ -32,7 +32,6 @@ object QuestingParser {
             Logger.error("Failed to parse questing item in slot ${slot.index}: Missing model")
             return null
         }
-        Logger.debugLog("Quest found: Slot ${slot.index}")
         if (model.path == FINISHED_MAPS ||
             model.path == ADD_SCROLL ||
             model.path == COMPLETED_QUEST
@@ -49,7 +48,6 @@ object QuestingParser {
             "mythic" -> Rarity.MYTHIC
             else -> Rarity.COMMON
         }
-        Logger.debugLog("Got rarity - $rarity")
 
         var type = QuestType.DEFAULT
         for (t in QuestType.entries) {
@@ -58,7 +56,6 @@ object QuestingParser {
                 break
             }
         }
-        Logger.debugLog("Got type - $type")
 
         val subtype = when {
             "Daily" in item.hoverName.string -> QuestSubtype.DAILY
@@ -66,7 +63,6 @@ object QuestingParser {
             "Scroll" in item.hoverName.string -> QuestSubtype.SCROLL
             else -> return null
         }
-        Logger.debugLog("Got subtype - $subtype")
 
         val quests = mutableListOf<Quest>()
         val loreResult = parseLore(slot.item)
@@ -100,13 +96,11 @@ object QuestingParser {
         lines.forEachIndexed { index, l ->
             if (index <= 4) return@forEachIndexed
             if (parsedQuests.size >= 3) return@forEachIndexed
-
             if ("Progress: " in l.string) {
                 val t = l.string.split(": ")[1]
                 val current = t.split("/")[0].replace(",", "").toInt()
                 val total = t.split("/")[1].replace(",", "").toInt()
                 tempProgress = Pair(current, total)
-                Logger.debugLog("Got progress -> $tempProgress")
                 val q = ParsedQuest(
                     tempGame ?: return@forEachIndexed,
                     tempCriteria ?: return@forEachIndexed,
@@ -120,10 +114,8 @@ object QuestingParser {
             } else if ("%" in l.string) {
                 tempGame = getQuestGame(tempQuestString) ?: return@forEachIndexed
                 val criteriaList = GameQuests.valueOf(tempGame.name).list
-                Logger.debugLog("Criteria list -> $criteriaList")
                 for (crit in criteriaList) {
                     if (!tempQuestString.contains(crit.regexPattern)) continue
-                    Logger.debugLog("Detected game criteria -> $crit")
                     tempCriteria = crit
                 }
                 tempQuestString = ""

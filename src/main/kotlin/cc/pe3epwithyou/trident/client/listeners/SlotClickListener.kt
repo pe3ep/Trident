@@ -6,7 +6,6 @@ import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
-import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -18,9 +17,9 @@ object SlotClickListener {
         val client = Minecraft.getInstance()
         if (client.screen !is ContainerScreen) return
         val screen = client.screen as ContainerScreen
-        Logger.debugLog("ct: ${clickType.name} isleftclick: $isLeftClick slotname: ${slot.item.hoverName.string}")
         if (Config.Fishing.suppliesModule && "FISHING SUPPLIES" in screen.title.string) {
             val item = slot.item
+            if (item.isEmpty) return
             if (clickType == ClickType.QUICK_MOVE && isLeftClick && "Unstable Overclock" in item.hoverName.string) {
                 if (Trident.playerState.supplies.overclocks.unstable.state.isAvailable) startUnstableOverclock()
             }
