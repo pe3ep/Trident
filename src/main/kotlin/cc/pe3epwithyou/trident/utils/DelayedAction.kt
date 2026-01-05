@@ -14,7 +14,7 @@ object DelayedAction {
     data class DelayedTask(val id: UUID) {
         /**
          * Cancel the underlying scheduled task.
-         * @return true if the task was cancelled; false otherwise (already run or already cancelled).
+         * @return true if the task was canceled; false otherwise (already run or already canceled).
          */
         fun cancel(): Boolean {
             val future = tasks.remove(id) ?: return false
@@ -24,7 +24,7 @@ object DelayedAction {
         }
 
         /**
-         * Returns true if the task was cancelled (or not present).
+         * Returns true if the task was canceled (or not present).
          */
         fun isCancelled(): Boolean {
             val future = tasks[id]
@@ -33,7 +33,7 @@ object DelayedAction {
     }
 
     fun init() {
-        // Clean up when client stops
+        // Clean up when the client stops
         ClientLifecycleEvents.CLIENT_STOPPING.register { shutdown() }
     }
 

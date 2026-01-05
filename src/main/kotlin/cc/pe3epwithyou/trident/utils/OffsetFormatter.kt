@@ -23,8 +23,7 @@ object OffsetFormatter {
                 val number = base.substring(0, commaIndex)
                 try {
                     return number.toFloat()
-                } catch (x: NumberFormatException) {
-                }
+                } catch (_: NumberFormatException) {}
             }
         }
         return null
@@ -41,8 +40,7 @@ object OffsetFormatter {
                 val number = base.substring(commaIndex + 1)
                 try {
                     return number.toFloat()
-                } catch (x: NumberFormatException) {
-                }
+                } catch (_: NumberFormatException) {}
             }
         }
         return null
