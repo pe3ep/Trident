@@ -41,7 +41,12 @@ object ConfigUtil {
             return true
         } catch (e: Exception) {
             Logger.error("Failed to write config file ${path.fileName}: ${e.message}")
-            tmp?.let { try { Files.deleteIfExists(it) } catch (_: Exception) {} }
+            tmp?.let {
+                try {
+                    Files.deleteIfExists(it)
+                } catch (_: Exception) {
+                }
+            }
             return false
         }
     }

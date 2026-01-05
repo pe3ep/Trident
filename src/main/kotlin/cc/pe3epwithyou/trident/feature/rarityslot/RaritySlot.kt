@@ -26,7 +26,13 @@ object RaritySlot {
         renderOutline(graphics, slot.x, slot.y, color)
     }
 
-    fun renderOutline(graphics: GuiGraphics, x: Int, y: Int, color: TextColor, displayType: DisplayType = Config.RaritySlot.displayType) {
+    fun renderOutline(
+        graphics: GuiGraphics,
+        x: Int,
+        y: Int,
+        color: TextColor,
+        displayType: DisplayType = Config.RaritySlot.displayType
+    ) {
         val transparentColor = color.value opacity 0
         val opaqueColor = color.value.opaqueColor()
 

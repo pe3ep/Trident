@@ -40,7 +40,13 @@ class RaritySlotPreview : ImageRenderer {
         graphics.fill(x, y, x + renderWidth, y + height, 0x202020.opaqueColor())
 
         colors.forEachIndexed { index, color ->
-            graphics.fill(startX, startY, startX + slotWidth, startY + slotWidth, 0x404040.opaqueColor())
+            graphics.fill(
+                startX,
+                startY,
+                startX + slotWidth,
+                startY + slotWidth,
+                0x404040.opaqueColor()
+            )
             RaritySlot.renderOutline(graphics, startX, startY, color, RARITY_DISPLAY_TYPE)
             Model(
                 models[index],

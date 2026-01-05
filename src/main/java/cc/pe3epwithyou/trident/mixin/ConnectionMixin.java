@@ -2,8 +2,8 @@ package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.interfaces.DialogCollection;
 import cc.pe3epwithyou.trident.state.PlayerStateIO;
-import cc.pe3epwithyou.trident.utils.Logger;
 import cc.pe3epwithyou.trident.utils.DelayedAction;
+import cc.pe3epwithyou.trident.utils.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketListener;

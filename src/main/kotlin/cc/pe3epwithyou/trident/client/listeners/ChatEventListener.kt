@@ -56,12 +56,12 @@ object ChatEventListener {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowMessage@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowMessage true
             try {
-                //            PKW messages
+                // PKW messages
                 if (message.isPKWLeapFinished() && Config.Games.autoFocus) {
                     Minecraft.getInstance().window.focusWindowIfInactive()
                 }
 
-//            Fishing messages
+                // Fishing messages
                 if (message.isDepletedSpot() && Config.Fishing.flashIfDepleted) {
                     Minecraft.getInstance().window.requestAttentionIfInactive()
                     Minecraft.getInstance().player?.playSound(
@@ -76,7 +76,7 @@ object ChatEventListener {
                     Minecraft.getInstance().window.requestAttentionIfInactive()
                 }
 
-                // Check if player received bait and mark supplies as desynced
+                // Check if the player received bait and mark supplies as desynced
                 if (message.isReceivedItem() && "Bait" in message.string) {
                     if (!Trident.playerState.supplies.baitDesynced) {
                         Trident.playerState.supplies.baitDesynced = true
