@@ -82,6 +82,7 @@ public class AbstractContainerScreenMixin extends Screen {
 
     @Inject(method = "renderTooltip", at = @At("HEAD"), cancellable = true)
     public void renderTooltip(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci) {
+        if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
             if (!ExchangeHandler.INSTANCE.shouldRenderTooltip(hoveredSlot)) ci.cancel();
         }
@@ -100,6 +101,7 @@ public class AbstractContainerScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     public void init(CallbackInfo ci) {
+        if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (!Config.Global.INSTANCE.getExchangeImprovements()) return;
         if (this.getTitle().getString().contains("ISLAND EXCHANGE")) {
             int x = this.leftPos + 32;

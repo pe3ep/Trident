@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
+import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.OffsetFormatter;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -38,6 +39,7 @@ public class OffsetMixin {
                     opcode = Opcodes.GETFIELD))
     public float redirectGetX(
             Font.PreparedTextBuilder instance, Operation<Float> original, @Local(argsOnly = true) Style style) {
+        if (!MCCIState.INSTANCE.isOnIsland()) return original.call(instance);
         var offset = OffsetFormatter.INSTANCE.parseX(style.getInsertion());
         if (offset != null) {
             return original.call(instance) + offset;
@@ -51,6 +53,7 @@ public class OffsetMixin {
     public void fixXValue(int ignoredX, Style style, BakedGlyph glyph, CallbackInfoReturnable<Boolean> cir) {
         // The last line is this.x += advance which calls the getX() redirect which adds the offset,
         // so we need to reduce it by the offset to compensate.
+        if (!MCCIState.INSTANCE.isOnIsland()) return;
         var offset = OffsetFormatter.INSTANCE.parseX(style.getInsertion());
         if (offset != null) {
             this.x -= offset;
@@ -66,6 +69,7 @@ public class OffsetMixin {
                     opcode = Opcodes.GETFIELD))
     public float redirectGetY(
             Font.PreparedTextBuilder instance, Operation<Float> original, @Local(argsOnly = true) Style style) {
+        if (!MCCIState.INSTANCE.isOnIsland()) return original.call(instance);
         var offset = OffsetFormatter.INSTANCE.parseY(style.getInsertion());
         if (offset != null) {
             return original.call(instance) + offset;
