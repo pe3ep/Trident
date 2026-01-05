@@ -16,7 +16,7 @@ class KillStreak(
     private fun getStreakTexture(): Texture {
         val coercedStreak = streak.coerceIn(1, 5)
         return Texture(
-            Resources.trident("textures/interface/killfeed/streaks/streak$coercedStreak.png"),
+            Resources.trident("textures/interface/streaks/streak$coercedStreak.png"),
             13,
             9
         )

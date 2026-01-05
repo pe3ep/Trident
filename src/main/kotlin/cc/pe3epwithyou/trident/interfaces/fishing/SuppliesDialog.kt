@@ -8,11 +8,10 @@ import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.FontCollection
-import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
-import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
@@ -25,7 +24,6 @@ import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.Style
 
 // TODO: Rewrite this dialog to be much cleaner
 class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
@@ -35,10 +33,9 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
     }
 
     private fun getWidgetTitle(): DialogTitleWidget {
-        val icon = FontCollection.get("_fonts/icon/fishing_perk/supply_preserve.png").withStyle(
-            Style.EMPTY.withShadowColor(0x0 opacity 0)
-        )
-        val text = Component.literal(" SUPPLIES".uppercase()).withTridentFont("hud_title")
+        val icon =
+            FontCollection.get("_fonts/icon/fishing_perk/supply_preserve.png").withoutShadow()
+        val text = Component.literal(" SUPPLIES".uppercase()).mccFont().offset(y = -0.5f)
 
         val baseTitle = icon.append(text)
 
@@ -47,7 +44,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
             val tooltip = Tooltip.create(
                 Component.literal("Module is not synced").withStyle(ChatFormatting.GOLD).append(
                     Component.literal(
-                        "\nTrident has detected that you've received bait, meaning your Supply Module is out of date. " + "\nPlease open your Supply menu to update it."
+                        "\nTrident has detected that you've received bait, meaning your Supply Module is out of date. Please open your Supply menu to update it."
                     ).withStyle(ChatFormatting.GRAY)
                 )
             )
@@ -85,18 +82,10 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
         // Bait component
         val baitAmount = supplies.bait.amount ?: 0
-        val baitIcon: String = when (supplies.bait.type) {
-            Rarity.COMMON -> "\uE007"
-            Rarity.UNCOMMON -> "\uE008"
-            Rarity.RARE -> "\uE009"
-            Rarity.EPIC -> "\uE00A"
-            Rarity.LEGENDARY -> "\uE00B"
-            Rarity.MYTHIC -> "\uE00C"
-        }
 
         val baitComponent =
-            Component.literal(baitIcon).withTridentFont()
-                .append(Component.empty().withStyle(ChatFormatting.RESET))
+            FontCollection.texture("island_items/infinibag/fishing_item/bait_${supplies.bait.type.name.lowercase()}")
+                .offset(y = 0.5f)
                 .append(
                     Component.literal(" $baitAmount").mccFont()
                         .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
@@ -105,19 +94,11 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
         // Line component
         val lineDurability = supplies.line.uses ?: 0
-        val lineIcon: String = when (supplies.line.type) {
-            Rarity.COMMON -> "\uE001"
-            Rarity.UNCOMMON -> "\uE002"
-            Rarity.RARE -> "\uE003"
-            Rarity.EPIC -> "\uE004"
-            Rarity.LEGENDARY -> "\uE005"
-            Rarity.MYTHIC -> "\uE006"
-        }
-
         val lineAmount = supplies.line.amount ?: 0
 
         val lineComponent =
-            Component.literal(lineIcon).withTridentFont()
+            FontCollection.texture("island_items/infinibag/fishing_item/line_${supplies.line.type.name.lowercase()}")
+                .offset(y = 0.5f)
                 .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(
                     Component.literal(" $lineDurability/$lineAmount").mccFont()

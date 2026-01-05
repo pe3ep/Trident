@@ -7,7 +7,7 @@ import cc.pe3epwithyou.trident.interfaces.themes.DialogTitle
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
-import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
@@ -31,7 +31,7 @@ class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
         val icon = Component.literal("\uE10C").mccFont("icon").withStyle(
             Style.EMPTY.withShadowColor(0x0 opacity 0)
         )
-        val text = Component.literal(" WAYFINDER DATA".uppercase()).withTridentFont("hud_title")
+        val text = Component.literal(" WAYFINDER DATA".uppercase()).mccFont().offset(y = -0.5f)
 
         val baseTitle = icon.append(text)
 

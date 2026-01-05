@@ -7,7 +7,6 @@ import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestingParser
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
-import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.Research
@@ -93,8 +92,6 @@ object ChestScreenListener {
         val scrollSlot = screen.menu.slots[41]
         val scrollQuests = QuestingParser.parseQuestSlot(scrollSlot)
         quests.addAll(scrollQuests ?: emptyList())
-
-        QuestingDialog.dialogState = QuestingDialog.QuestingDialogState.NORMAL
         QuestStorage.loadQuests(quests)
     }
 

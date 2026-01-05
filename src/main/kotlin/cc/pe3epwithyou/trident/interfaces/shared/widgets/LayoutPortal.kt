@@ -8,9 +8,8 @@ class LayoutPortal(override val layout: Layout) : CompoundWidget(0, 0, 0, 0) {
     override fun getWidth(): Int = layout.width
     override fun getHeight(): Int = layout.height
 
-    override fun getRectangle(): ScreenRectangle {
-        return ScreenRectangle(layout.x, layout.y, layout.width, layout.height)
-    }
+    override fun getRectangle(): ScreenRectangle =
+        ScreenRectangle(layout.x, layout.y, layout.width, layout.height)
 
     init {
         layout.arrangeElements()

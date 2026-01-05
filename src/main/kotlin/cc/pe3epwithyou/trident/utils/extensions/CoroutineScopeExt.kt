@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import net.minecraft.client.Minecraft
 
 object CoroutineScopeExt {
+    @Suppress("UnusedReceiverParameter")
     fun CoroutineScope.main(
         block: () -> Unit
     ) {

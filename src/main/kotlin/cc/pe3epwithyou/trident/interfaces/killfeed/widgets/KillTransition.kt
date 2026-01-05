@@ -12,8 +12,8 @@ class KillTransition(
     private val rightColor: Int,
 ) : AbstractWidget(0, 0, 8, 15, Component.empty()) {
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        val leftPath = Resources.trident("interface/killfeed/left")
-        val rightPath = Resources.trident("interface/killfeed/right")
+        val leftPath = Resources.trident("killfeed/left")
+        val rightPath = Resources.trident("killfeed/right")
         guiGraphics.blitSprite(
             RenderPipelines.GUI_TEXTURED,
             leftPath,

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "trident:interface/killfeed/streaks/rampage_fire"
+    "layer0": "trident:interface/streaks/rampage_fire"
   }
 }

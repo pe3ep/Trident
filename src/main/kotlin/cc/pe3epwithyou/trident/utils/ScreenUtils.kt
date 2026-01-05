@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Util
@@ -35,10 +36,10 @@ fun useScreen(
 fun useScreenWait(
     screen: ContainerScreen, block: ScreenManager.(ContainerScreen) -> Unit
 ) {
-    waitForItems { useScreen(screen, block) }
+    waitForItems(screen) { useScreen(screen, block) }
 }
 
-private fun waitForItems(block: () -> Unit) {
+private fun waitForItems(screen: ContainerScreen, block: () -> Unit) {
     val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
     ScreenManager.isWaitingForItems = true
     CoroutineScope(ctx).launch {
@@ -46,7 +47,8 @@ private fun waitForItems(block: () -> Unit) {
         // timeout of 3 seconds
         while (time < 60) {
             if (!ScreenManager.isWaitingForItems) {
-                delay(50) // Extra 1 tick wait due to some items not arriving together
+                val currentScreen = Minecraft.getInstance().screen
+                if (!(currentScreen?.equals(screen) ?: false)) return@launch
                 block()
                 return@launch
             }
@@ -55,7 +57,7 @@ private fun waitForItems(block: () -> Unit) {
         }
         ScreenManager.isWaitingForItems = false
         Logger.sendMessage(
-            Component.literal("Timed out waiting for items to arrive, waited for 3 seconds")
+            Component.literal("An error occurred while handling your current screen. Please try again.")
                 .withSwatch(TridentFont.ERROR)
         )
         Logger.error("Timed out waiting for items")

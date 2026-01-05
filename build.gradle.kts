@@ -66,6 +66,7 @@ dependencies {
 
 @Suppress("UnstableApiUsage")
 loom {
+    accessWidenerPath.set(file("src/main/resources/trident.accesswidener"))
     mixin {
         defaultRefmapName.set("trident.refmap.json")
     }

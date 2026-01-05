@@ -15,7 +15,8 @@
     "DebugScreenMixin",
     "FontLoaderMixin",
     "GuiAccessor",
-    "JoinIslandMixin"
+    "JoinIslandMixin",
+    "OffsetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

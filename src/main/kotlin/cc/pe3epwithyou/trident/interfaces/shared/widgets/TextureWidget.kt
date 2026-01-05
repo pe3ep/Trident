@@ -11,13 +11,8 @@ class TextureWidget(
     val texture: Texture
 ) : AbstractWidget(0, 0, texture.width, texture.height, Component.empty()) {
     override fun renderWidget(
-        guiGraphics: GuiGraphics,
-        i: Int,
-        j: Int,
-        f: Float
-    ) {
-        texture.blit(guiGraphics, x, y)
-    }
+        guiGraphics: GuiGraphics, i: Int, j: Int, f: Float
+    ) = texture.blit(guiGraphics, x, y)
 
     override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) = Unit
 

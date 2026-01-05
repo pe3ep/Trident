@@ -5,7 +5,6 @@ import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
 import cc.pe3epwithyou.trident.utils.NoxesiumUtils
 import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
-import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedLeft
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedRight
 import com.noxcrew.sheeplib.CompoundWidget
@@ -37,27 +36,22 @@ class KillBackground(
         val client = Minecraft.getInstance()
         val mcFont = client.font
         if (player == null && killMethod != null) {
-            val c = Component.literal("${killMethod.icon}")
-                .withTridentFont()
+            val c = killMethod.icon
             StringWidget(c, mcFont).add(LayoutSettings.defaults().apply {
                 padding(4, 3, if (isLeft) 2 else 4, 3)
             })
             return@LinearLayout
         }
         val playerUUID = client.playerSocialManager.getDiscoveredUUID(player!!)
-        val c = NoxesiumUtils.skullComponent(playerUUID)
-            .append(
-                Component.literal((if (isSelf && Config.KillFeed.showYouInKill) " (YOU) " else " ") + player.uppercase())
-                    .mccFont()
-                    .withStyle(
-                        Style.EMPTY
-                            .withColor(TridentColor(0xFFFFFF).textColor)
-                    )
-            )
+        val c = NoxesiumUtils.skullComponent(playerUUID).append(
+            Component.literal((if (isSelf && Config.KillFeed.showYouInKill) " (YOU) " else " ") + player.uppercase())
+                .mccFont().withStyle(
+                    Style.EMPTY.withColor(TridentColor(0xFFFFFF).textColor)
+                )
+        )
         if (killMethod != null) {
             c.append(
-                Component.literal(" ${killMethod.icon}")
-                    .withTridentFont()
+                Component.literal(" ").append(killMethod.icon)
             )
         }
         StringWidget(c, mcFont).add(LayoutSettings.defaults().apply {
@@ -73,19 +67,11 @@ class KillBackground(
     override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
         if (isLeft) {
             graphics.fillRoundedLeft(
-                x,
-                y,
-                layout.width,
-                layout.height,
-                color
+                x, y, layout.width, layout.height, color
             )
         } else {
             graphics.fillRoundedRight(
-                x,
-                y,
-                layout.width,
-                layout.height,
-                color
+                x, y, layout.width, layout.height, color
             )
 
         }

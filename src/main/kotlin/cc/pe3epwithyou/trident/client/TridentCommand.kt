@@ -8,12 +8,15 @@ import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
+import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.debug.StateDialog
 import cc.pe3epwithyou.trident.interfaces.experiment.TabbedDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.ResearchDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderDialog
+import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
+import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
 import cc.pe3epwithyou.trident.state.AugmentContainer
@@ -28,7 +31,10 @@ import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.arguments.BoolArgumentType
+import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.noxcrew.sheeplib.DialogContainer
+import com.noxcrew.sheeplib.util.opacity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -36,6 +42,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
+import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Util
 
@@ -223,6 +230,7 @@ object TridentCommand {
         debugDialogs["research"] = ::ResearchDialog
         debugDialogs["wayfinder"] = ::WayfinderDialog
         debugDialogs["experiment_tabbed"] = ::TabbedDialog
+        debugDialogs["killfeed"] = ::KillFeedDialog
 
         /**
          * Debug commands for trident. Registered only if logging is enabled.
@@ -328,6 +336,43 @@ object TridentCommand {
                 executes {
                     DialogContainer += StateDialog(10, 10, "state")
                 }
+            }
+
+            literal("add_fake_kill") {
+                argument("method") {
+                    suggests { _, builder ->
+                        KillMethod.entries.forEach { builder.suggest(it.name) }
+                        builder.buildFuture()
+                    }
+                    argument("streak", IntegerArgumentType.integer()) {
+                        suggests { _, builder ->
+                            (1..5).forEach { builder.suggest(it.toString()) }
+                            builder.buildFuture()
+                        }
+                        argument("hasAssist", BoolArgumentType.bool()) {
+                            executes {
+                                val self = Minecraft.getInstance().gameProfile
+                                val method =
+                                    KillMethod.valueOf(it.getArgument("method", String::class.java))
+                                KillFeedDialog.addKill(
+                                    KillWidget(
+                                        victim = self.name.toString(),
+                                        killMethod = method,
+                                        attacker = self.name.toString(),
+                                        killColors = Pair(
+                                            0x606060 opacity 128,
+                                            0x606060 opacity 100
+                                        ),
+                                        streak = it.getArgument("streak", Int::class.java),
+                                        hasAssist = it.getArgument("hasAssist", Boolean::class.java)
+                                    )
+                                )
+                            }
+                        }
+
+                    }
+                }
+
             }
         }.register(dispatcher)
     }

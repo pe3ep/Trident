@@ -9,7 +9,6 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
-import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog.QuestingDialogState
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -33,7 +32,7 @@ object NoxesiumUtils {
         )
     }
 
-    fun updateGameDialogs(currentGame: Game, isPlobby: Boolean) {
+    fun updateGameDialogs(currentGame: Game, isPlobby: Boolean, types: List<String>) {
         DialogCollection.clear()
         KillFeedDialog.clearKills()
 
@@ -58,8 +57,9 @@ object NoxesiumUtils {
                 DialogCollection.close(k)
                 return
             }
+
+            if ("lobby" in types && !Config.Questing.showInLobby) return
             QuestingDialog.currentGame = currentGame
-            QuestingDialog.dialogState = QuestingDialogState.NORMAL
             DialogCollection.open(k, QuestingDialog(10, 10, k))
             DialogCollection.refreshDialog(k)
         }
@@ -95,7 +95,7 @@ object NoxesiumUtils {
                 MCCIState.isPlobby = true
             }
 
-            updateGameDialogs(currentGame, MCCIState.isPlobby)
+            updateGameDialogs(currentGame, MCCIState.isPlobby, types)
 
             if (currentGame in KillChatListener.killfeedGames) {
                 KillFeedDialog.clearKills()

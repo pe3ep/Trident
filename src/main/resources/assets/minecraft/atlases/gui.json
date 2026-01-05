@@ -1,9 +1,12 @@
 {
   "sources": [
     {
-      "type": "directory",
-      "source": "interface",
-      "prefix": "interface/"
+      "type": "single",
+      "resource": "trident:killfeed/left"
+    },
+    {
+      "type": "single",
+      "resource": "trident:killfeed/right"
     }
   ]
 }

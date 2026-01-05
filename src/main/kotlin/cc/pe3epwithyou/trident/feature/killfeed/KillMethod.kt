@@ -1,17 +1,28 @@
 package cc.pe3epwithyou.trident.feature.killfeed
 
-enum class KillMethod(
-    val icon: Char
-) {
-    GENERIC(''),
-    MELEE('\uE00D'),
-    RANGE('\uE00E'),
-    ORB('\uE00F'),
-    POTION('\uE015'),
-    MAGIC(POTION.icon),
-    VOID(GENERIC.icon),
-    DISCONNECT('\uE010'),
-    EXPLOSION('\uE011'),
-    LAVA('\uE014'),
-    FIRE('\uE013')
+import cc.pe3epwithyou.trident.state.FontCollection
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+
+enum class KillMethod {
+    GENERIC, MELEE, RANGE, ORB, POTION, MAGIC, VOID, DISCONNECT, EXPLOSION, LAVA, FIRE;
+
+    val icon: MutableComponent
+        get() = when (this) {
+            GENERIC -> FontCollection.get("_fonts/icon/skull.png")
+            MELEE -> FontCollection.get("_fonts/icon/kills.png")
+            RANGE -> trident('\uE00E')
+            ORB -> trident('\uE00F')
+            POTION -> trident('\uE015')
+            MAGIC -> FontCollection.get("_fonts/icon/skull.png")
+            VOID -> trident('\uE015')
+            DISCONNECT -> trident('\uE010')
+            EXPLOSION -> trident('\uE011')
+            LAVA -> trident('\uE014')
+            FIRE -> trident('\uE013')
+        }
+
 }
+
+fun trident(c: Char) = Component.literal(c.toString()).withTridentFont()

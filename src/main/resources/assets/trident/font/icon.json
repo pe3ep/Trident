@@ -8,123 +8,6 @@
     },
     {
       "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/line_common.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE001"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/line_uncommon.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE002"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/line_rare.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE003"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/line_epic.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE004"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/line_legendary.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE005"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/line_mythic.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE006"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/bait_common.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE007"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/bait_uncommon.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE008"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/bait_rare.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE009"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/bait_epic.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE00A"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/bait_legendary.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE00B"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:island_items/infinibag/fishing_item/bait_mythic.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE00C"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:_fonts/icon/kills.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE00D"
-      ]
-    },
-    {
-      "type": "bitmap",
       "file": "trident:_font/range.png",
       "ascent": 7,
       "height": 8,
@@ -157,15 +40,6 @@
       "height": 8,
       "chars": [
         "\uE011"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "mcc:_fonts/icon/skull.png",
-      "ascent": 7,
-      "height": 8,
-      "chars": [
-        "\uE012"
       ]
     },
     {
