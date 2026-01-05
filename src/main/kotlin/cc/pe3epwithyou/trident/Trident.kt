@@ -1,7 +1,6 @@
 package cc.pe3epwithyou.trident
 
 import cc.pe3epwithyou.trident.client.TridentCommand
-import cc.pe3epwithyou.trident.client.events.FishingSpotEvents
 import cc.pe3epwithyou.trident.client.events.QuestingEvents
 import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
@@ -113,12 +112,6 @@ class Trident : ModInitializer {
         }
 
         ClientLifecycleEvents.CLIENT_STOPPING.register { onShutdownClient() }
-
-        FishingSpotEvents.CAST.register {
-            if (Config.Debug.developerMode) {
-                Logger.sendMessage("Cast into spot $it")
-            }
-        }
     }
 
 
