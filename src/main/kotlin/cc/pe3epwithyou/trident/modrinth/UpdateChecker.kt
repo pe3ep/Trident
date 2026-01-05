@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
+import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.future.await
@@ -14,7 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.Version
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -52,7 +52,7 @@ object UpdateChecker {
                 .uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version")).GET()
                 .setHeader("User-Agent", "trident-mc-mod").build()
             val body = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
-            Minecraft.getInstance().execute {
+            main {
                 handleResponse(body)
             }
         }

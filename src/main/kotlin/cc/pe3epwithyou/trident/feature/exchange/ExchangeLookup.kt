@@ -116,7 +116,7 @@ object ExchangeLookup {
                         .body()
                 val listingsResponse = JSON.decodeFromString<ExchangeListingsResponse>(responseText)
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.COMPLETED
-                Minecraft.getInstance().execute {
+                main {
                     exchangeLookupCache = listingsResponse
                     val expiresIn = Instant.now().toEpochMilli() + Duration.ofSeconds(60).toMillis()
                     exchangeLookupCacheExpiresIn = expiresIn

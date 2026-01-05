@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.utils
 
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
+import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -47,19 +48,23 @@ private fun waitForItems(screen: ContainerScreen, block: () -> Unit) {
         // timeout of 3 seconds
         while (time < 60) {
             if (!ScreenManager.isWaitingForItems) {
-                val currentScreen = Minecraft.getInstance().screen
-                if (!(currentScreen?.equals(screen) ?: false)) return@launch
-                block()
+                main {
+                    val currentScreen = Minecraft.getInstance().screen
+                    if (!(currentScreen?.equals(screen) ?: false)) return@main
+                    block()
+                }
                 return@launch
             }
             delay(50)
             time++
         }
         ScreenManager.isWaitingForItems = false
-        Logger.sendMessage(
-            Component.literal("An error occurred while handling your current screen. Please try again.")
-                .withSwatch(TridentFont.ERROR)
-        )
-        Logger.error("Timed out waiting for items")
+        main {
+            Logger.sendMessage(
+                Component.literal("An error occurred while handling your current screen. Please try again.")
+                    .withSwatch(TridentFont.ERROR)
+            )
+            Logger.error("Timed out waiting for items")
+        }
     }
 }
