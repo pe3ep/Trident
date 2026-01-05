@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.feature.DebugScreen;
+import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.Resources;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -27,8 +28,8 @@ public class DebugScreenMixin {
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Ljava/util/Map;values()Ljava/util/Collection;"))
     private Collection<String> addDebugMessage(Map<Identifier, Collection<String>> instance, Operation<Collection<String>> original) {
-
         if (this.minecraft.debugEntries.isOverlayVisible()) {
+            if (!MCCIState.INSTANCE.isOnIsland()) return List.of();
             if (minecraft.player == null) return List.of();
             String message = DebugScreen.INSTANCE.getMessage();
 
