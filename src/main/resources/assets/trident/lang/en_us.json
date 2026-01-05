@@ -18,6 +18,8 @@
   "config.trident.global.api_provider.provider.self_token": "Token",
   "config.trident.global.exchange_improvements.name": "Island Exchange improvements",
   "config.trident.global.exchange_improvements.description": "Shows an indicator on best priced listings and gives the ability to hide owned cosmetics. Requires API",
+  "config.trident.global.chat_channel_buttons.name": "Chat Channel Switcher Buttons",
+  "config.trident.global.chat_channel_buttons.description": "Shows buttons for switching between chat channels above the chat input.\n\nDisabled if Island Utils is installed",
   "config.trident.global.theme.name": "Module theme",
   "config.trident.global.theme.description": "Changes the current theme that Modules are using.",
   "config.trident.indicators.name": "Blueprint Indicators",

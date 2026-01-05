@@ -1,9 +1,9 @@
 package cc.pe3epwithyou.trident.mixin;
 
+import cc.pe3epwithyou.trident.utils.OffsetFormatter;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.noxcrew.noxesium.core.util.OffsetStringFormatter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
 import net.minecraft.network.chat.Style;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * This mixing is a copy of Noxesium's TextOffsetMixin.
+ * This mixin is a copy of Noxesium's TextOffsetMixin.
  * This was included because Trident needed to support custom offsets for text rendering.
  * <a href="https://github.com/Noxcrew/noxesium/blob/e9837bdb19239c25eb8d97cceba6aee4cdf98401/fabric/src/main/java/com/noxcrew/noxesium/core/fabric/mixin/feature/TextOffsetMixin.java">Link to source code</a>
  * </br>
@@ -38,7 +38,7 @@ public class OffsetMixin {
                     opcode = Opcodes.GETFIELD))
     public float redirectGetX(
             Font.PreparedTextBuilder instance, Operation<Float> original, @Local(argsOnly = true) Style style) {
-        var offset = OffsetStringFormatter.parseX(style.getInsertion());
+        var offset = OffsetFormatter.INSTANCE.parseX(style.getInsertion());
         if (offset != null) {
             return original.call(instance) + offset;
         }
@@ -51,7 +51,7 @@ public class OffsetMixin {
     public void fixXValue(int ignoredX, Style style, BakedGlyph glyph, CallbackInfoReturnable<Boolean> cir) {
         // The last line is this.x += advance which calls the getX() redirect which adds the offset,
         // so we need to reduce it by the offset to compensate.
-        var offset = OffsetStringFormatter.parseX(style.getInsertion());
+        var offset = OffsetFormatter.INSTANCE.parseX(style.getInsertion());
         if (offset != null) {
             this.x -= offset;
         }
@@ -66,7 +66,7 @@ public class OffsetMixin {
                     opcode = Opcodes.GETFIELD))
     public float redirectGetY(
             Font.PreparedTextBuilder instance, Operation<Float> original, @Local(argsOnly = true) Style style) {
-        var offset = OffsetStringFormatter.parseY(style.getInsertion());
+        var offset = OffsetFormatter.INSTANCE.parseY(style.getInsertion());
         if (offset != null) {
             return original.call(instance) + offset;
         }

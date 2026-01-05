@@ -44,8 +44,9 @@ object FontCollection {
         val path: Identifier, val ascent: Int, val height: Int
     )
 
-    fun texture(path: String): MutableComponent {
-        val resource = Resources.mcc(path)
+    fun texture(path: String): MutableComponent = texture(Resources.mcc(path))
+
+    fun texture(resource: Identifier): MutableComponent {
         if (!Identifier.isValidPath(resource.path)) return Component.literal("?").defaultFont()
         return Component.`object`(AtlasSprite(AtlasSprite.DEFAULT_ATLAS, resource))
     }

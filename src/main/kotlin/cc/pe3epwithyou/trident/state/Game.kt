@@ -5,7 +5,8 @@ enum class Game(
     val gameID: String,
     val types: List<String>? = null,
     val primaryColor: Int,
-    val icon: String
+    val icon: String,
+    val hasTeamChat: Boolean = false
 ) {
     HUB(
         "Hub",
@@ -19,21 +20,24 @@ enum class Game(
         "sky_battle",
         types = listOf("sky_battle", "team", "quad"),
         primaryColor = 0xEE2700,
-        icon = "_fonts/icon/game_icons/game_sky_battle_small.png"
+        icon = "_fonts/icon/game_icons/game_sky_battle_small.png",
+        hasTeamChat = true
     ),
     BATTLE_BOX(
         "Battle Box",
         "battle_box",
         types = listOf("battle_box", "team"),
         primaryColor = 0x88B932,
-        icon = "_fonts/icon/game_icons/game_battle_box_small.png"
+        icon = "_fonts/icon/game_icons/game_battle_box_small.png",
+        hasTeamChat = true
     ),
     BATTLE_BOX_ARENA(
         "Battle Box Arena",
         "battle_box",
         types = listOf("battle_box", "team", "arena"),
         primaryColor = 0xbf0023,
-        icon = "_fonts/icon/game_icons/game_battle_box_arena_small.png"
+        icon = "_fonts/icon/game_icons/game_battle_box_arena_small.png",
+        hasTeamChat = true
     ),
     PARKOUR_WARRIOR_SURVIVOR(
         "Parkour Warrior Survivor",
@@ -67,7 +71,8 @@ enum class Game(
         "dynaball",
         types = listOf("dynaball", "team"),
         primaryColor = 0x4A42A0,
-        icon = "_fonts/icon/game_icons/game_dynaball_small.png"
+        icon = "_fonts/icon/game_icons/game_dynaball_small.png",
+        hasTeamChat = true
     ),
     HITW(
         "HITW",

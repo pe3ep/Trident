@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.utils.extensions
 
+import cc.pe3epwithyou.trident.utils.OffsetFormatter
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.TridentFont.SwatchType
 import com.noxcrew.noxesium.core.util.OffsetStringFormatter
@@ -33,7 +34,7 @@ object ComponentExtensions {
         return root.append(styledChild)
     }
 
-    private fun getOffset(x: Float, y: Float) = OffsetStringFormatter.write(
+    private fun getOffset(x: Float, y: Float) = OffsetFormatter.write(
         OffsetStringFormatter.ComponentOffset(x, y)
     )
 }

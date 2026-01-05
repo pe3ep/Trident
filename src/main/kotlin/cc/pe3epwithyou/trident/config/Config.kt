@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.config
 
 import cc.pe3epwithyou.trident.config.screen.RaritySlotPreview
+import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
@@ -34,6 +35,9 @@ class Config {
 
     @SerialEntry
     var globalExchangeImprovements: Boolean = true
+
+    @SerialEntry
+    var globalChatChannelButtons: Boolean = false
 
     @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
@@ -129,6 +133,8 @@ class Config {
             get() = handler.instance().globalApiProvider
         val blueprintIndicators: Boolean
             get() = handler.instance().globalBlueprintIndicators
+        val chatChannelButtons: Boolean
+            get() = handler.instance().globalChatChannelButtons
         val currentTheme: TridentThemes
             get() = handler.instance().globalCurrentTheme
         val craftableIndicators: Boolean
@@ -231,6 +237,11 @@ class Config {
                 handler.instance().globalRarityOverlay = null
             }
 
+            // Check Island Utils compatibility
+            if (handler.instance().globalChatChannelButtons && !ChatSwitcherButtons.checkCompatibility()) {
+                handler.instance().globalChatChannelButtons = false
+            }
+
             handler.save()
         }
 
@@ -284,6 +295,16 @@ class Config {
                         )
                         binding(handler.instance()::globalExchangeImprovements, true)
                         controller(tickBox())
+                    }
+
+                    options.register("chat_channel_buttons") {
+                        name(Component.translatable("config.trident.global.chat_channel_buttons.name"))
+                        description(
+                            OptionDescription.of(Component.translatable("config.trident.global.chat_channel_buttons.description"))
+                        )
+                        binding(handler.instance()::globalChatChannelButtons, false)
+                        controller(tickBox())
+                        available(ChatSwitcherButtons.checkCompatibility())
                     }
                 }
 
