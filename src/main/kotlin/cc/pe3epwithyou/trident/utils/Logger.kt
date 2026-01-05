@@ -13,7 +13,7 @@ object Logger {
     }
 
     fun debugLog(s: String) {
-        if (Config.Debug.enableLogging) {
+        if (Config.Debug.developerMode) {
             info("[DEBUG] $s")
         }
     }

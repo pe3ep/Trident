@@ -34,6 +34,10 @@ class Trident : ModInitializer {
     companion object {
         val LOGGER: org.slf4j.Logger = LoggerFactory.getLogger(this.toString())
         lateinit var settingsKeymapping: KeyMapping
+        val keymappingCategory: KeyMapping.Category = KeyMapping.Category.register(
+            Resources.trident("keys")
+        )
+        var refreshDialogsKeymapping: KeyMapping? = null
         var playerState = PlayerState()
         var hasFailedToLoadConfig: Boolean = false
     }
@@ -51,11 +55,20 @@ class Trident : ModInitializer {
                 "key.trident.config",
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_U,
-                KeyMapping.Category.register(
-                    Resources.trident("keys")
-                )
+                keymappingCategory
             )
         )
+
+        if (Config.Debug.developerMode) {
+            refreshDialogsKeymapping = KeyBindingHelper.registerKeyBinding(
+                KeyMapping(
+                    "key.trident.refresh_dialogs",
+                    InputConstants.Type.KEYSYM,
+                    GLFW.GLFW_KEY_K,
+                    keymappingCategory
+                )
+            )
+        }
 
         /* Convert deprecated config entries to their new counterpart */
         Config.convertDeprecated()
@@ -70,8 +83,13 @@ class Trident : ModInitializer {
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->
             if (!MCCIState.isOnIsland()) return@EndTick
-            if (!settingsKeymapping.consumeClick() || client.player == null) return@EndTick
-            client.setScreen(Config.getScreen(client.screen))
+            if (client.player == null) return@EndTick
+            if (settingsKeymapping.consumeClick()) {
+                client.setScreen(Config.getScreen(client.screen))
+            }
+            if (refreshDialogsKeymapping?.consumeClick() ?: false) {
+                DialogCollection.refreshOpenedDialogs()
+            }
         })
 
         ClientTickEvents.END_CLIENT_TICK.register {
@@ -96,7 +114,7 @@ class Trident : ModInitializer {
         ClientLifecycleEvents.CLIENT_STOPPING.register { onShutdownClient() }
 
         FishingSpotEvents.CAST.register {
-            if (Config.Debug.enableLogging) {
+            if (Config.Debug.developerMode) {
                 Logger.sendMessage("Cast into spot $it")
             }
         }

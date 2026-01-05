@@ -54,7 +54,7 @@ object TridentCommand {
     )
 
     private fun notOnIsland(): Boolean {
-        if (!Config.Debug.enableLogging && !MCCIState.isOnIsland()) {
+        if (!Config.Debug.developerMode && !MCCIState.isOnIsland()) {
             Logger.sendMessage(
                 Component.translatable("trident.not_island").withSwatch(TridentFont.TRIDENT_COLOR)
             )
@@ -224,7 +224,7 @@ object TridentCommand {
 
         }.register(dispatcher)
 
-        if (!Config.Debug.enableLogging) return
+        if (!Config.Debug.developerMode) return
 
         // Debug dialogs should only be enabled for cool people (devs)
         debugDialogs["research"] = ::ResearchDialog

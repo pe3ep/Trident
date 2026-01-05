@@ -114,7 +114,7 @@ class Config {
     var questingEnabled: Boolean = true
 
     @SerialEntry
-    var questingRarityColorName: Boolean = false
+    var questingRarityColorName: Boolean = true
 
     @SerialEntry
     var questingShowInLobby: Boolean = true
@@ -151,7 +151,7 @@ class Config {
     }
 
     object Debug {
-        val enableLogging: Boolean
+        val developerMode: Boolean
             get() = handler.instance().debugEnableLogging
         val drawSlotNumber: Boolean
             get() = handler.instance().debugDrawSlotNumber
@@ -489,7 +489,7 @@ class Config {
                     options.register("questing_rarity_color_name") {
                         name(Component.translatable("config.trident.questing.rarity_color_name.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.rarity_color_name.description")))
-                        binding(handler.instance()::questingRarityColorName, false)
+                        binding(handler.instance()::questingRarityColorName, true)
                         controller(tickBox())
                     }
 
