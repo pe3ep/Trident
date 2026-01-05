@@ -59,5 +59,9 @@ object RaritySlot {
         if (displayType == DisplayType.FILL) {
             graphics.fill(x, y, x + 16, y + 16, opaqueColor)
         }
+
+        if (displayType == DisplayType.FILL_GRADIENT) {
+            graphics.fillGradient(x, y, x + 16, y + 16, transparentColor, opaqueColor)
+        }
     }
 }

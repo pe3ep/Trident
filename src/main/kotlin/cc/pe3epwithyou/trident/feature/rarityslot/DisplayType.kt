@@ -12,5 +12,8 @@ enum class DisplayType : NameableEnum {
     },
     FILL {
         override fun getDisplayName(): Component = Component.literal("Filled background")
-    }
+    },
+    FILL_GRADIENT {
+        override fun getDisplayName(): Component = Component.literal("Filled gradient")
+    },
 }

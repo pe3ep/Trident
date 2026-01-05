@@ -89,6 +89,7 @@ class Trident : ModInitializer {
             }
             if (refreshDialogsKeymapping?.consumeClick() ?: false) {
                 DialogCollection.refreshOpenedDialogs()
+                Logger.sendMessage("Refreshed active dialogs")
             }
         })
 
