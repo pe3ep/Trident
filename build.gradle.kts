@@ -58,7 +58,7 @@ dependencies {
     include(modImplementation("com.noxcrew.sheeplib:api:1.4.7+1.21.10")!!)
     modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    modCompileOnly("com.noxcrew.noxesium:fabric:3.0.0-rc.1")
+    modCompileOnly("com.noxcrew.noxesium:fabric:3.0.0-rc.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.2")
