@@ -20,6 +20,9 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 
 class Config {
+    @SerialEntry
+    var globalCallToHome: Boolean = true
+
     @Deprecated("This option has been moved to a separate group")
     @SerialEntry
     var globalRarityOverlay: Boolean? = null
@@ -128,7 +131,12 @@ class Config {
     @SerialEntry
     var apiKey: String = ""
 
+    @SerialEntry
+    var sawIntroduction: Boolean = false
+
     object Global {
+        val callToHome: Boolean
+            get() = handler.instance().globalCallToHome
         val apiProvider: ApiProvider
             get() = handler.instance().globalApiProvider
         val blueprintIndicators: Boolean
@@ -260,14 +268,23 @@ class Config {
                 name(Component.translatable("config.trident"))
 
                 groups.register("global") {
+                    name(Component.translatable("config.trident.global.name"))
+                    description(OptionDescription.of(Component.translatable("config.trident.global.description")))
+
+                    options.register("call_to_home") {
+                        name(Component.translatable("config.trident.global.call_to_home.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.global.call_to_home.description")))
+                        binding(handler.instance()::globalCallToHome, true)
+                        controller(tickBox())
+                    }
+
                     options.register("api_provider") {
                         name(Component.translatable("config.trident.global.api_provider.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.global.api_provider.description")))
                         binding(handler.instance()::globalApiProvider, ApiProvider.TRIDENT)
                         controller(enumSwitch<ApiProvider> { v -> v.displayName })
+                        available(handler.instance().globalCallToHome)
                     }
-                    name(Component.translatable("config.trident.global.name"))
-                    description(OptionDescription.of(Component.translatable("config.trident.global.description")))
 
                     options.register("theme") {
                         name(Component.translatable("config.trident.global.theme.name"))

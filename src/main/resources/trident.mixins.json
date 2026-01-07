@@ -13,6 +13,7 @@
     "BossHealthOverlayAccessor",
     "ChatScreenMixin",
     "ClientPacketListenerMixin",
+    "StartConnectToServerMixin",
     "DebugScreenMixin",
     "FontLoaderMixin",
     "GuiAccessor",

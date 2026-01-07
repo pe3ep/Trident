@@ -372,7 +372,13 @@ object TridentCommand {
 
                     }
                 }
+            }
 
+            literal("force_load_config") {
+                executes {
+                    Config.handler.load()
+                    Logger.sendMessage("Successfully reloaded config")
+                }
             }
         }.register(dispatcher)
     }
