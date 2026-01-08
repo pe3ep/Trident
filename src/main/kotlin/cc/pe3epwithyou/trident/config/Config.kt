@@ -9,6 +9,7 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
+import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionEventListener
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
@@ -271,20 +272,35 @@ class Config {
                     name(Component.translatable("config.trident.global.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.global.description")))
 
+                    lateinit var apiOption: Option<ApiProvider>
+
                     options.register("call_to_home") {
                         name(Component.translatable("config.trident.global.call_to_home.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.global.call_to_home.description")))
                         binding(handler.instance()::globalCallToHome, true)
                         controller(tickBox())
+                        addListener { option, event ->
+                            if (event == OptionEventListener.Event.STATE_CHANGE) {
+                                if (!option.pendingValue()) {
+                                    handler.instance().globalApiProvider = ApiProvider.SELF_TOKEN
+                                    apiOption.setAvailable(false)
+                                } else {
+                                    apiOption.setAvailable(true)
+                                    apiOption.requestSet(ApiProvider.TRIDENT)
+                                }
+                                handler.save()
+                            }
+                        }
                     }
 
-                    options.register("api_provider") {
+                    apiOption = options.register("api_provider") {
                         name(Component.translatable("config.trident.global.api_provider.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.global.api_provider.description")))
                         binding(handler.instance()::globalApiProvider, ApiProvider.TRIDENT)
                         controller(enumSwitch<ApiProvider> { v -> v.displayName })
-                        available(handler.instance().globalCallToHome)
+                        available { handler.instance().globalCallToHome }
                     }
+
 
                     options.register("theme") {
                         name(Component.translatable("config.trident.global.theme.name"))

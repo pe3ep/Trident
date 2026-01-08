@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature
 
 import cc.pe3epwithyou.trident.Trident
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider.TRIDENT
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
@@ -35,6 +36,7 @@ object DebugScreen {
 
 
     fun fetchMessages() {
+        if (!Config.Global.callToHome) return
         val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
         CoroutineScope(ctx).launch {
             val player = Minecraft.getInstance().gameProfile

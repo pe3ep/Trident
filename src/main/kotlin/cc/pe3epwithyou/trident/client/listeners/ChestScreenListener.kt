@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestingParser
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.AugmentContainer
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.Research
 import cc.pe3epwithyou.trident.state.fishing.getAugmentContainer
@@ -19,7 +20,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.safeGetLine
 import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
-import cc.pe3epwithyou.trident.utils.useScreenWait
+import cc.pe3epwithyou.trident.utils.useScreen
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -41,14 +42,15 @@ object ChestScreenListener {
     }
 
     private fun handleScreen(screen: ContainerScreen) {
+        if (!MCCIState.isOnIsland()) return
         val title = screen.title.string
 
-        useScreenWait(screen) {
-            checkName("FISHING SUPPLIES") { findAugments(it) }
-            checkName("ISLAND REWARDS") { findQuests(it) }
-            checkName("FISHING ISLANDS") { findWayfinderData(it) }
-            checkName("FISHING PROGRESS") { findFishingResearch(it) }
-            checkName("ISLAND EXCHANGE") { ExchangeHandler.handleScreen(it) }
+        useScreen(screen) {
+            checkName("FISHING SUPPLIES") { await { findAugments(it) } }
+            checkName("ISLAND REWARDS") { await { findQuests(it) } }
+            checkName("FISHING ISLANDS") { await { findWayfinderData(it) } }
+            checkName("FISHING PROGRESS") { await { findFishingResearch(it) } }
+            checkName("ISLAND EXCHANGE") { await { ExchangeHandler.handleScreen(it) } }
         }
 
         Logger.debugLog("Screen title: $title")

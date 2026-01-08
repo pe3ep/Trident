@@ -24,6 +24,10 @@ class ScreenManager(val screen: ContainerScreen) {
         this.apply { block(screen) }
     }
 
+    fun await(block: ScreenManager.(ContainerScreen) -> Unit) {
+        waitForItems(screen) { this.apply { block(screen) } }
+    }
+
     fun slot(index: Int): Slot = screen.menu.slots[index]
     fun getItem(index: Int): ItemStack = slot(index).item
 }

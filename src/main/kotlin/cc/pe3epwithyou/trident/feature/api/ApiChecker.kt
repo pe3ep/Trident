@@ -28,6 +28,7 @@ object ApiChecker {
     )
 
     fun joinCheck() {
+        if (!Config.Global.callToHome) return
         val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
         CoroutineScope(ctx).launch {
             val ping = pingApi()
