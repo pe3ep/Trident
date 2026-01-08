@@ -7,14 +7,10 @@ import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
-import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.future.await
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.Version
+import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -31,7 +27,10 @@ object UpdateChecker {
     private const val PROJECT_ID = "L6RCcsrd"
     private const val MOD_ID = "trident"
 
-    private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()
+    private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).executor(
+        Util.nonCriticalIoPool()
+    ).build()
+
     private val JSON = Json {
         ignoreUnknownKeys = true
     }
@@ -46,16 +45,18 @@ object UpdateChecker {
     }
 
     fun checkForUpdates() {
-        val background = Util.backgroundExecutor().asCoroutineDispatcher()
-        CoroutineScope(background).launch {
-            val req = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version")).GET()
-                .setHeader("User-Agent", "trident-mc-mod").build()
-            val body = client.sendAsync(req, HttpResponse.BodyHandlers.ofString()).await().body()
-            main {
-                handleResponse(body)
+        val req = HttpRequest.newBuilder()
+            .uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version")).GET()
+            .setHeader("User-Agent", "trident-mc-mod").build()
+
+        client.sendAsync(req, HttpResponse.BodyHandlers.ofString())
+            .thenAccept {
+                Minecraft.getInstance().execute { handleResponse(it.body()) }
             }
-        }
+            .exceptionally {
+                Trident.LOGGER.error("[Trident] Error occurred when checking for updates ", it)
+                return@exceptionally null
+            }
     }
 
     private fun handleResponse(response: String) {

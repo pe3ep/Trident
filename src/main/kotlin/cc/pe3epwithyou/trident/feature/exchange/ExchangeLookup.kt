@@ -5,11 +5,6 @@ import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
-import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.future.await
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import net.minecraft.client.Minecraft
@@ -31,7 +26,9 @@ object ExchangeLookup {
     private val client = HttpClient.newBuilder()
         .connectTimeout(Duration.ofSeconds(10))
         .version(HttpClient.Version.HTTP_1_1)
+        .executor(Util.nonCriticalIoPool())
         .build()
+
     private val JSON = Json {
         encodeDefaults = true
         ignoreUnknownKeys = true
@@ -49,7 +46,6 @@ object ExchangeLookup {
 
     fun lookup() {
         if (!Config.Global.exchangeImprovements) return
-        val context = Util.backgroundExecutor().asCoroutineDispatcher()
         val player = Minecraft.getInstance().gameProfile
         val provider = Config.Global.apiProvider
         val key = Config.Api.key
@@ -95,45 +91,42 @@ object ExchangeLookup {
             }
         """.trimIndent()
 
-        CoroutineScope(context).launch {
-            val payload = GraphQLRequest(query = graphQLString)
-            val jsonPayload = JSON.encodeToString(GraphQLRequest.serializer(), payload)
+        val payload = GraphQLRequest(query = graphQLString)
+        val jsonPayload = JSON.encodeToString(GraphQLRequest.serializer(), payload)
 
-            val req = HttpRequest.newBuilder().uri(URI.create(provider.fetchUrl)).POST(
-                HttpRequest.BodyPublishers.ofString(jsonPayload)
-            ).setHeader("Content-Type", "application/json")
-                .setHeader("User-Agent", "trident-mc-mod/${player.name}")
+        val req = HttpRequest.newBuilder().uri(URI.create(provider.fetchUrl)).POST(
+            HttpRequest.BodyPublishers.ofString(jsonPayload)
+        ).setHeader("Content-Type", "application/json")
+            .setHeader("User-Agent", "trident-mc-mod/${player.name}")
 
 
-            when (provider) {
-                ApiProvider.TRIDENT -> req.setHeader("x-mc-uuid", player.id.toString())
-                ApiProvider.SELF_TOKEN -> req.setHeader("X-API-Key", key)
-            }
-
-            try {
-                val responseText =
-                    client.sendAsync(req.build(), HttpResponse.BodyHandlers.ofString()).await()
-                        .body()
-                val listingsResponse = JSON.decodeFromString<ExchangeListingsResponse>(responseText)
-                ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.COMPLETED
-                main {
-                    exchangeLookupCache = listingsResponse
-                    val expiresIn = Instant.now().toEpochMilli() + Duration.ofSeconds(60).toMillis()
-                    exchangeLookupCacheExpiresIn = expiresIn
-                    ExchangeHandler.updatePrices()
-                    ExchangeHandler.updateCosmetics()
-                }
-            } catch (e: Exception) {
-                ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
-                main {
-                    Logger.error("Failed to fetch exchange API on url ${provider.fetchUrl}: ${e.message}")
-
-                    Logger.sendMessage(
-                        Component.literal("Something went wrong when fetching Exchange API. Please contact developers to fix this issue")
-                            .withSwatch(TridentFont.ERROR)
-                    )
-                }
-            }
+        when (provider) {
+            ApiProvider.TRIDENT -> req.setHeader("x-mc-uuid", player.id.toString())
+            ApiProvider.SELF_TOKEN -> req.setHeader("X-API-Key", key)
         }
+
+
+        client.sendAsync(req.build(), HttpResponse.BodyHandlers.ofString())
+            .thenAccept {
+                val listingsResponse = JSON.decodeFromString<ExchangeListingsResponse>(it.body())
+                ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.COMPLETED
+                exchangeLookupCache = listingsResponse
+                val expiresIn = Instant.now().toEpochMilli() + Duration.ofSeconds(60).toMillis()
+                exchangeLookupCacheExpiresIn = expiresIn
+                ExchangeHandler.updatePrices()
+                ExchangeHandler.updateCosmetics()
+            }
+            .exceptionally {
+                ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
+                Logger.error("Failed to fetch exchange API on url ${provider.fetchUrl}: ${it.message}")
+                Logger.sendMessage(
+                    Component.literal("Something went wrong when fetching Exchange API. Please contact developers to fix this issue")
+                        .withSwatch(TridentFont.ERROR)
+                )
+
+                return@exceptionally null
+            }
+
+
     }
 }

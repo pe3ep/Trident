@@ -3,12 +3,6 @@ package cc.pe3epwithyou.trident.feature
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider.TRIDENT
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.future.await
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import net.minecraft.client.Minecraft
@@ -29,40 +23,45 @@ object DebugScreen {
     }
 
     @Serializable
-    data class DebugResponse(val success: Boolean, val hasMessage: Boolean, val message: String? = null)
+    data class DebugResponse(
+        val success: Boolean,
+        val hasMessage: Boolean,
+        val message: String? = null
+    )
 
-    private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10))
-        .version(HttpClient.Version.HTTP_1_1).build()
+    private val client = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(10))
+        .version(HttpClient.Version.HTTP_1_1)
+        .executor(Util.nonCriticalIoPool())
+        .build()
 
 
     fun fetchMessages() {
         if (!Config.Global.callToHome) return
-        val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
-        CoroutineScope(ctx).launch {
-            val player = Minecraft.getInstance().gameProfile
-            val req =
-                HttpRequest.newBuilder().uri(URI.create("${TRIDENT.fetchUrl}/debug-screen?for=${player.id}"))
-                    .GET().setHeader("Content-Type", "application/json")
-                    .setHeader("User-Agent", "trident-mc-mod/${player.name}")
+        val player = Minecraft.getInstance().gameProfile
 
-            try {
-                val responseText =
-                    client.sendAsync(req.build(), HttpResponse.BodyHandlers.ofString()).await()
-                        .body()
-                val response = JSON.decodeFromString<DebugResponse>(responseText)
-                main {
-                    customMessage = if (response.success && response.hasMessage) {
-                        response.message
-                    } else {
-                        null
-                    }
-                }
-            } catch (e: Exception) {
-                main {
-                    Logger.error("Failed to fetch debug screen: ${e.message}")
+        val req =
+            HttpRequest.newBuilder()
+                .uri(URI.create("${TRIDENT.fetchUrl}/debug-screen?for=${player.id}"))
+                .GET().setHeader("Content-Type", "application/json")
+                .setHeader("User-Agent", "trident-mc-mod/${player.name}")
+
+        client.sendAsync(
+            req.build(),
+            HttpResponse.BodyHandlers.ofString()
+        )
+            .thenAccept {
+                val response = JSON.decodeFromString<DebugResponse>(it.body())
+                customMessage = if (response.success && response.hasMessage) {
+                    response.message
+                } else {
+                    null
                 }
             }
-        }
+            .exceptionally {
+                Trident.LOGGER.error("[Trident] Failed to fetch debug screen: ", it)
+                return@exceptionally null
+            }
     }
 
     fun getMessage(): String {

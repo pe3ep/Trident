@@ -21,7 +21,6 @@ public class JoinIslandMixin {
 
     @Inject(method = "handleLoginFinished", at = @At("HEAD"))
     private void loginFinished(ClientboundLoginFinishedPacket clientboundLoginFinishedPacket, CallbackInfo ci) {
-//        Close all dialogs before joining a server
         DialogCollection.INSTANCE.clear();
         if (this.serverData == null) return;
         if (!this.serverData.ip.toLowerCase().contains("mccisland.net")) return;
