@@ -179,6 +179,8 @@ class Config {
             get() = handler.instance().fishingFlashIfDepleted
         val islandIndicators: Boolean
             get() = handler.instance().fishingIslandIndicators
+        val wayfinderModule: Boolean
+            get() = handler.instance().fishingWayfinderModule
     }
 
     object Games {
@@ -596,6 +598,19 @@ class Config {
                         name(Component.translatable("config.trident.fishing.island_indicators.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.fishing.island_indicators.description")))
                         binding(handler.instance()::fishingIslandIndicators, true)
+                        controller(tickBox())
+                    }
+
+                    options.register("wayfinder_module") {
+                        name(Component.translatable("config.trident.fishing.wayfinder_module.name"))
+                        description(
+                            OptionDescription.createBuilder()
+                                .text(Component.translatable("config.trident.fishing.wayfinder_module.description"))
+                                .image(
+                                    Resources.trident("textures/config/wayfinder.png"), 444, 258
+                                ).build()
+                        )
+                        binding(handler.instance()::fishingWayfinderModule, true)
                         controller(tickBox())
                     }
                 }

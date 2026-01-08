@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.mixin.BossHealthOverlayAccessor
@@ -44,6 +45,10 @@ object NoxesiumUtils {
         if (currentGame == Game.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
+        }
+        if (currentGame == Game.FISHING && Config.Fishing.wayfinderModule) {
+            val k = "wayfinder"
+            DialogCollection.open(k, WayfinderDialog(10, 10, k))
         }
         if (KillChatListener.killfeedGames.contains(currentGame) && Config.KillFeed.enabled) {
             val k = "killfeed"
