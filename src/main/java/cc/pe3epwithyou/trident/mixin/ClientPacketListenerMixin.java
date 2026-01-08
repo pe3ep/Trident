@@ -1,10 +1,12 @@
 package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.feature.FocusGame;
+import cc.pe3epwithyou.trident.feature.fishing.WayfinderModule;
 import cc.pe3epwithyou.trident.feature.questing.QuestListener;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.ScreenManager;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,5 +27,11 @@ public class ClientPacketListenerMixin {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         QuestListener.INSTANCE.handleRefreshTasksItem(clientboundContainerSetSlotPacket.getItem());
         ScreenManager.Companion.setWaitingForItems(false);
+    }
+
+    @Inject(method = "handleBossUpdate", at = @At("TAIL"))
+    private void handleBossUpdate(ClientboundBossEventPacket clientboundBossEventPacket, CallbackInfo ci) {
+        if (!MCCIState.INSTANCE.isOnIsland()) return;
+        WayfinderModule.INSTANCE.handleBossbarEvent();
     }
 }

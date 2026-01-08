@@ -4,7 +4,6 @@ import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
-import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.fishing.AugmentTrigger
 import cc.pe3epwithyou.trident.state.fishing.updateDurability
@@ -76,11 +75,7 @@ object ChatEventListener {
                 if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
                     Minecraft.getInstance().window.requestAttentionIfInactive()
 
-                    val wayfinderStatus = when (MCCIState.fishingState.climate.climateType) {
-                        ClimateType.TEMPERATE -> Trident.playerState.wayfinderData.temperate
-                        ClimateType.TROPICAL -> Trident.playerState.wayfinderData.tropical
-                        ClimateType.BARREN -> Trident.playerState.wayfinderData.barren
-                    }
+                    val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
                     wayfinderStatus.hasGrotto = false
                     wayfinderStatus.data -= 2000
 

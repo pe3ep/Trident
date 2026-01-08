@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.utils
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.GameQuests
@@ -11,7 +10,6 @@ import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
-import cc.pe3epwithyou.trident.mixin.BossHealthOverlayAccessor
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -20,10 +18,8 @@ import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccServerPacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccStatisticPacket
 import com.noxcrew.noxesium.core.mcc.MccPackets
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.world.BossEvent
 import java.util.*
 
 
@@ -146,7 +142,7 @@ object NoxesiumUtils {
             )
 
             handleQuests(packet.statistic, packet.value)
-            handleFishCaught(packet.statistic, packet.value)
+            handleWayfinderXp(packet.statistic, packet.value)
         }
     }
 
@@ -180,27 +176,10 @@ object NoxesiumUtils {
         }
     }
 
-    private fun handleFishCaught(statistic: String, value: Int) {
-        val wayfinderStatus = when (MCCIState.fishingState.climate.climateType) {
-            ClimateType.TEMPERATE -> Trident.playerState.wayfinderData.temperate
-            ClimateType.TROPICAL -> Trident.playerState.wayfinderData.tropical
-            ClimateType.BARREN -> Trident.playerState.wayfinderData.barren
-        }
-
-        // Grotto Stability
-        val events = (Minecraft.getInstance().gui.bossOverlay as BossHealthOverlayAccessor).events
-        events.forEach { (key, value) ->
-            val text = value.name.string
-            if (text.contains("STABILITY")) {
-                val newStability = text.split(": ")[1].replace("%", "")
-                Logger.debugLog("${MCCIState.fishingState.climate.climateType}: Grotto is at $newStability%")
-                wayfinderStatus.grottoStability = newStability.replace("\uE024", "").replace("\uE01D", "").toIntOrNull() ?: wayfinderStatus.grottoStability
-                DialogCollection.refreshDialog("wayfinder")
-            }
-        }
-
+    private fun handleWayfinderXp(statistic: String, value: Int) {
         // Wayfinder
-        if (statistic.contains("fishing_wayfinder_xp_")) {
+        if (statistic.startsWith("fishing_wayfinder_xp_")) {
+            val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
             if (!wayfinderStatus.hasGrotto) {
                 wayfinderStatus.data += value
                 if (wayfinderStatus.data >= 2000) {
