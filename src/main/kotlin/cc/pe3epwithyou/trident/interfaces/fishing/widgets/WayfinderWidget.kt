@@ -47,7 +47,7 @@ class WayfinderWidget(
 
         if (wayfinderStatus.hasGrotto) {
             val progress =
-                Component.literal(" ${wayfinderStatus.grottoStability}% Stability").defaultFont()
+                Component.literal(" ${wayfinderStatus.grottoStability}% Stability").mccFont()
                     .withStyle(
                         if (wayfinderStatus.grottoStability >= 50) {
                             ChatFormatting.GREEN
@@ -87,7 +87,7 @@ class WayfinderWidget(
                         )
                             .withStyle(if (progressPercentage >= 100) ChatFormatting.GREEN else ChatFormatting.GRAY)
                     )
-                    .defaultFont()
+                    .mccFont()
             val progressBarComponent =
                 ProgressBar.progressComponent((wayfinderStatus.data.toFloat() / 2000f), 25, 5)
 

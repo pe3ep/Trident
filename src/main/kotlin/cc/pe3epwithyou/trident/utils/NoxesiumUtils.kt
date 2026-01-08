@@ -3,7 +3,6 @@ package cc.pe3epwithyou.trident.utils
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.feature.killfeed.trident
 import cc.pe3epwithyou.trident.feature.questing.GameQuests
 import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -11,6 +10,7 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
+import cc.pe3epwithyou.trident.mixin.BossHealthOverlayAccessor
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -19,10 +19,12 @@ import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccServerPacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccStatisticPacket
 import com.noxcrew.noxesium.core.mcc.MccPackets
-import kotlinx.coroutines.selects.select
+import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.world.BossEvent
 import java.util.*
+
 
 object NoxesiumUtils {
     fun skullComponent(
@@ -174,29 +176,36 @@ object NoxesiumUtils {
     }
 
     private fun handleFishCaught(statistic: String, value: Int) {
-        if (!statistic.contains("fishing_wayfinder_xp_")) return
-
-        val climate = statistic.split("_").getOrNull(3) ?: return
-        val wayfinderStatus = when (climate) {
-            "temperate" -> Trident.playerState.wayfinderData.temperate
-            "tropical" -> Trident.playerState.wayfinderData.tropical
-            "barren" -> Trident.playerState.wayfinderData.barren
-            else -> return
+        val wayfinderStatus = when (MCCIState.fishingState.climate.climateType) {
+            ClimateType.TEMPERATE -> Trident.playerState.wayfinderData.temperate
+            ClimateType.TROPICAL -> Trident.playerState.wayfinderData.tropical
+            ClimateType.BARREN -> Trident.playerState.wayfinderData.barren
         }
 
-        if (!wayfinderStatus.hasGrotto) {
-            wayfinderStatus.data += value
-            if (wayfinderStatus.data >= 2000) {
-                wayfinderStatus.hasGrotto = true
-                wayfinderStatus.grottoStability = 100
-            }
-        } else {
-            if (MCCIState.fishingState.isGrotto) {
-                // remove grotto stability
+        // Grotto Stability
+        val events = (Minecraft.getInstance().gui.bossOverlay as BossHealthOverlayAccessor).events
+        events.forEach { (key, value) ->
+            val text = value.name.string
+            if (text.contains("STABILITY")) {
+                val newStability = text.split(": ")[1].replace("%", "")
+                Logger.debugLog("${MCCIState.fishingState.climate.climateType}: Grotto is at $newStability%")
+                wayfinderStatus.grottoStability = newStability.replace("\uE024", "").replace("\uE01D", "").toIntOrNull() ?: wayfinderStatus.grottoStability
+                DialogCollection.refreshDialog("wayfinder")
             }
         }
 
-        DialogCollection.refreshDialog("wayfinder")
+        // Wayfinder
+        if (statistic.contains("fishing_wayfinder_xp_")) {
+            if (!wayfinderStatus.hasGrotto) {
+                wayfinderStatus.data += value
+                if (wayfinderStatus.data >= 2000) {
+                    wayfinderStatus.hasGrotto = true
+                    wayfinderStatus.grottoStability = 100
+                }
+            }
+
+            DialogCollection.refreshDialog("wayfinder")
+        }
     }
 
 
