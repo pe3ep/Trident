@@ -4,7 +4,6 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
-import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -33,16 +32,14 @@ object ApiChecker {
         CoroutineScope(ctx).launch {
             val ping = pingApi()
             if (!ping && Config.Global.apiProvider == ApiProvider.TRIDENT) {
-                main {
-                    Logger.sendMessage(
-                        Component.literal("Trident API is down. Switching to self-hosted token.")
-                            .withSwatch(
-                                TridentFont.ERROR
-                            )
-                    )
-                    Config.handler.instance().globalApiProvider = ApiProvider.SELF_TOKEN
-                    Config.handler.save()
-                }
+                Logger.sendMessage(
+                    Component.literal("Trident API is down. Switching to self-hosted token.")
+                        .withSwatch(
+                            TridentFont.ERROR
+                        )
+                )
+                Config.handler.instance().globalApiProvider = ApiProvider.SELF_TOKEN
+                Config.handler.save()
             }
         }
     }
