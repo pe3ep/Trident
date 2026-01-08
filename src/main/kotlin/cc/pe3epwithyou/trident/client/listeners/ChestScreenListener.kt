@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestingParser
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.AugmentContainer
+import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.Research
@@ -209,17 +210,29 @@ object ChestScreenListener {
     }
 
     private fun handleWfdItemLine(item: ItemStack) {
+        val wayfinderStatus = when (item.displayName.string) {
+            "[Sunken Swamp]" -> Trident.playerState.wayfinderData.temperate
+            "[Mirrored Oasis]" -> Trident.playerState.wayfinderData.tropical
+            "[Volcanic Springs]" -> Trident.playerState.wayfinderData.barren
+            else -> { return }
+        }
+
         val line = item.safeGetLine(13)?.string
         if (line != null && line.contains("Wayfinder Data: ")) {
             val temperateData =
                 line.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
-            Trident.playerState.wayfinderData.temperate.data = temperateData
-            Trident.playerState.wayfinderData.temperate.unlocked = true
-            if (temperateData >= 2000) Trident.playerState.wayfinderData.temperate.hasGrotto =
+            wayfinderStatus.data = temperateData
+            wayfinderStatus.unlocked = true
+            wayfinderStatus.hasGrotto = false
+            if (temperateData >= 2000) wayfinderStatus.hasGrotto =
                 true
+
+            Logger.debugLog("Island: ${item.displayName.string}, Current Data: $temperateData, Grotto: false")
         } else {
-            Trident.playerState.wayfinderData.temperate.hasGrotto = true
+            wayfinderStatus.hasGrotto = true
+            Logger.debugLog("Island: ${item.displayName.string}, Current Data: 2000+, Grotto: true")
         }
+
     }
 
     // TODO: Use safer methods to get data from a slot

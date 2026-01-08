@@ -1,7 +1,9 @@
 package cc.pe3epwithyou.trident.utils
 
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.killfeed.trident
 import cc.pe3epwithyou.trident.feature.questing.GameQuests
 import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -17,6 +19,7 @@ import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccServerPacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccStatisticPacket
 import com.noxcrew.noxesium.core.mcc.MccPackets
+import kotlinx.coroutines.selects.select
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import java.util.*
@@ -136,6 +139,7 @@ object NoxesiumUtils {
             )
 
             handleQuests(packet.statistic, packet.value)
+            handleFishCaught(packet.statistic, packet.value)
         }
     }
 
@@ -168,6 +172,33 @@ object NoxesiumUtils {
             }
         }
     }
+
+    private fun handleFishCaught(statistic: String, value: Int) {
+        if (!statistic.contains("fishing_wayfinder_xp_")) return
+
+        val climate = statistic.split("_").getOrNull(3) ?: return
+        val wayfinderStatus = when (climate) {
+            "temperate" -> Trident.playerState.wayfinderData.temperate
+            "tropical" -> Trident.playerState.wayfinderData.tropical
+            "barren" -> Trident.playerState.wayfinderData.barren
+            else -> return
+        }
+
+        if (!wayfinderStatus.hasGrotto) {
+            wayfinderStatus.data += value
+            if (wayfinderStatus.data >= 2000) {
+                wayfinderStatus.hasGrotto = true
+                wayfinderStatus.grottoStability = 100
+            }
+        } else {
+            if (MCCIState.fishingState.isGrotto) {
+                // remove grotto stability
+            }
+        }
+
+        DialogCollection.refreshDialog("wayfinder")
+    }
+
 
     private fun getCurrentGame(server: String, types: List<String>): Game {
         if (types.size < 2) {
