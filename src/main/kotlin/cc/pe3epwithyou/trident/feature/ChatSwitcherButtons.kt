@@ -19,11 +19,18 @@ object ChatSwitcherButtons {
         return !islandUtils.isPresent
     }
 
+    fun getChatModes(): List<ChatMode> = buildList {
+        add(ChatMode.LOCAL)
+        add(ChatMode.PARTY)
+        if (MCCIState.game.hasTeamChat) add(ChatMode.TEAM)
+        if (MCCIState.isPlobby) add(ChatMode.PLOBBY)
+    }
+
     fun getCurrentButtons(): List<Widget> {
         val x = 2
         var offset = 0
         val channels = mutableListOf<Widget>()
-        ChatMode.entries.forEach {
+        getChatModes().forEach {
             if (!MCCIState.game.hasTeamChat && it == ChatMode.TEAM) return@forEach
             channels.add(Widget(x + offset, it))
             offset += Widget.WIDTH + 2
@@ -41,6 +48,8 @@ object ChatSwitcherButtons {
             private val HOVERED_SPRITE = Resources.trident("textures/interface/chat_channels/hovered.png")
         }
 
+        private var texture = Texture(mode.sprite, WIDTH, HEIGHT)
+
         var isOnCooldown = false
 
         override fun renderWidget(
@@ -48,28 +57,31 @@ object ChatSwitcherButtons {
         ) {
             y = graphics.guiHeight() - CHAT_HEIGHT - HEIGHT
             if (isHovered()) Texture(HOVERED_SPRITE, WIDTH, 2).blit(graphics, x, y + HEIGHT - 1)
-            Texture(mode.sprite, WIDTH, HEIGHT).blit(graphics, x, y)
+            texture.blit(graphics, x, y)
         }
 
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
             if (isOnCooldown) return
             isOnCooldown = true
             val connection = Minecraft.getInstance().connection ?: return
-            connection.sendCommand("chat ${mode.name.lowercase()}")
+            connection.sendCommand("chat ${mode.commandName}")
             DelayedAction.delayTicks(20) {
                 isOnCooldown = false
             }
         }
 
-        override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
+        override fun updateWidgetNarration(narratigonElementOutput: NarrationElementOutput) = Unit
     }
 
-    enum class ChatMode(
-        val sprite: Identifier
+    data class ChatMode(
+        val commandName: String,
+        val sprite: Identifier,
     ) {
-        LOCAL(Resources.trident("textures/interface/chat_channels/local.png")),
-        PARTY(Resources.trident("textures/interface/chat_channels/party.png")),
-        TEAM(Resources.trident("textures/interface/chat_channels/team.png")),
-        PLOBBY(Resources.trident("textures/interface/chat_channels/plobby.png"));
+        companion object {
+            val LOCAL = ChatMode("local",Resources.trident("textures/interface/chat_channels/local.png"))
+            val PARTY = ChatMode("party", Resources.trident("textures/interface/chat_channels/party.png"))
+            val TEAM = ChatMode("team", Resources.trident("textures/interface/chat_channels/team.png"))
+            val PLOBBY = ChatMode("plobby", Resources.trident("textures/interface/chat_channels/plobby.png"))
+        }
     }
 }
