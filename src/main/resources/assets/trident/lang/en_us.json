@@ -8,6 +8,7 @@
   "config.trident.debug.draw_slot_number.description": "Draws slot's index in it's top left corner",
   "config.trident.debug.bypass_on_island.name": "Bypass the MCCI check",
   "config.trident.debug.bypass_on_island.description": "Allows to use MCCI-specific features on other servers and singleplayer \n\n§cWARNING: Things might crash or not work, this is intended for development, use on your own risk.",
+
   "config.trident.global.name": "Global Settings",
   "config.trident.global.description": "Universal non-game specific settings that apply across MCC Island.",
   "config.trident.global.call_to_home.name": "Use Trident's Web Service",
@@ -22,18 +23,21 @@
   "config.trident.global.chat_channel_buttons.description": "Shows buttons for switching between chat channels above the chat input.\n\n§6Disabled if Island Utils is installed",
   "config.trident.global.theme.name": "Module theme",
   "config.trident.global.theme.description": "Changes the current theme that Modules are using.",
+
   "config.trident.indicators.name": "Blueprint Indicators",
   "config.trident.indicators.description": "Indicators for blueprint ownership and craft-ability.",
   "config.trident.indicators.craftable_indicators.name": "Craftable Indicators",
   "config.trident.indicators.craftable_indicators.description": "Shows an indicator if a blueprint is not craftable (missing materials).",
   "config.trident.indicators.blueprint_indicators.name": "Ownership Indicators",
   "config.trident.indicators.blueprint_indicators.description": "Displays icons based on blueprint's ownership status.\n\n§7∙§r Tick Icon - Blueprint has maxed royal donations\n§7∙§r Diamond icon - Blueprint is not owned by player",
+
   "config.trident.rarity_slot.name": "Rarity Overlay",
   "config.trident.rarity_slot.description": "Displays an overlay around the item in its slot, matching the item's rarity color.",
   "config.trident.rarity_slot.enabled.name": "Enabled",
   "config.trident.rarity_slot.enabled.description": "Enables the Rarity Overlay.",
   "config.trident.rarity_slot.display_type.name": "Overlay type",
   "config.trident.rarity_slot.display_type.description": "Changes the visual style of the overlay.",
+
   "config.trident.fishing.name": "Fishing Modules",
   "config.trident.fishing.description": "Modules that apply to the Fishing game",
   "config.trident.fishing.supplies_module.name": "Supplies Module",
@@ -48,10 +52,12 @@
   "config.trident.fishing.wayfinder_module.description": "Shows a window that displays your progress towards a Grotto in your current climate.",
   "config.trident.fishing.show_augment_status_in_interface.name": "Show Augment Status in Interface",
   "config.trident.fishing.show_augment_status_in_interface.description": "Displays the status of your Augments (Broken, Needs repairing, Paused) in the Fishing Supplies menu on MCC Island.",
+
   "config.trident.games.name": "All Games",
   "config.trident.games.description": "Settings that apply to all games on MCC Island, except fishing",
   "config.trident.games.auto_focus.name": "Focus game on countdown",
   "config.trident.games.auto_focus.description": "Automatically focuses Minecraft when your game is about to start.",
+
   "config.trident.questing.name": "Questing Module",
   "config.trident.questing.description": "Settings that apply to the Questing Module",
   "config.trident.questing.enabled.name": "Enabled",
@@ -64,6 +70,7 @@
   "config.trident.questing.show_left.description": "When enabled, shows how much daily/weekly quests you have remaining.",
   "config.trident.questing.hide_if_no_quests.name": "Hide if no quests",
   "config.trident.questing.hide_if_no_quests.description": "When enabled, hides the Questing Module in games if there are no quests.",
+
   "config.trident.killfeed.name": "Kill Feed",
   "config.trident.killfeed.description": "Options that apply to the in-game Kill Feed",
   "config.trident.killfeed.enabled.name": "Enable",
@@ -86,14 +93,22 @@
   "config.trident.killfeed.show_you_in_kill.description": "When enabled, adds a §o(YOU)§r prefix to your kills.",
   "config.trident.killfeed.reverse_order.name": "Reverse kill order",
   "config.trident.killfeed.reverse_order.description": "Reverses the order kills in the kill feed.\n\n§o§7When enabled, kills come from the top instead of the bottom",
+
   "key.category.trident.keys": "Trident",
   "key.trident.config": "Open Trident settings",
   "key.trident.refresh_dialogs": "Refresh opened dialogs",
+
   "trident.not_island": "You are not currently playing on MCC Island",
   "trident.failed_config": "Trident has failed to load the config. Your settings have been reset. Please contact developers to fix this issue.",
+
   "trident.dialog.update_cat.description": "please update Trident. this cat represents developer's emotions when people are using outdated versions",
   "trident.dialog.update_cat.buttons.ok": "ok, ill update",
   "trident.dialog.update_cat.buttons.no": "no i hate you and your cat",
   "trident.dialog.update_cat.happy": "whats good big dawg",
+
+  "trident.dialog.supplies.desynced.tooltip": "§6Module is not synced\n§7Trident has detected that you've received bait, meaning your Supply Module is out of date. Please open your Supply menu to update it.",
+  "trident.dialog.supplies.missing_data.title": "FISHING DATA MISSING",
+  "trident.dialog.supplies.missing_data.description": "In order to update the Supplies Module, please open the Fishing Supplies menu.",
+
   "trident.introduction": "Thank you for downloading Trident!\n\nYou can see the full list of features in the config by pressing %s, or by using Mod Menu.\n\n§oHave fun playing on MCC Island!"
 }
