@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident
 
 import cc.pe3epwithyou.trident.client.TridentCommand
+import cc.pe3epwithyou.trident.client.events.FishingSpotEvents
 import cc.pe3epwithyou.trident.client.events.QuestingEvents
 import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
@@ -12,6 +13,7 @@ import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
@@ -94,12 +96,17 @@ class Trident : ModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register {
             if (!MCCIState.isOnIsland()) return@register
+            if (MCCIState.game != Game.FISHING) return@register
             FishingSpotListener.handle()
         }
 
 //        Register Questing events
         QuestingEvents.INCREMENT_ACTIVE.register {
             QuestStorage.applyIncrement(it)
+        }
+
+        FishingSpotEvents.CAST.register {
+            Logger.debugLog("Cast into $it")
         }
 
         try {

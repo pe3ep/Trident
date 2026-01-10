@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.client.events.FishingSpotEvents
+import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.feature.fishing.FishingSpotParser
 import cc.pe3epwithyou.trident.state.fishing.Perk
 import net.minecraft.client.Minecraft
@@ -9,7 +10,21 @@ import net.minecraft.world.entity.projectile.FishingHook
 import net.minecraft.world.phys.AABB
 
 object FishingSpotListener {
-    data class FishingSpot(val x: Double, val y: Double, val perks: List<Pair<Perk, Double>>)
+    data class FishingSpot(val x: Double, val y: Double, val perks: List<Pair<Perk, Double>>? = null) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+            other as FishingSpot
+            return x == other.x && y == other.y
+        }
+
+        override fun hashCode(): Int {
+            var result = x.hashCode()
+            result = 31 * result + y.hashCode()
+            result = 31 * result + (perks?.hashCode() ?: 0)
+            return result
+        }
+    }
 
     /**
      * If this is null then player is not currently fishing.
@@ -28,8 +43,9 @@ object FishingSpotListener {
             currentSpot = null
             return
         }
-        if (spot != null && (currentSpot == null || currentSpot != spot)) {
+        if (spot != null && (currentSpot == null || currentSpot!! != spot)) {
             currentSpot = spot
+            DepletedDisplay.DepletedTimer.stopLoop()
             FishingSpotEvents.CAST.invoker().onCast(spot)
         }
     }
@@ -43,10 +59,7 @@ object FishingSpotListener {
             level.getEntities(null, box).filterIsInstance<Display.TextDisplay>()
         if (entities.isEmpty()) return null
         val display: Display.TextDisplay = (entities.first())
-
-        // Temporary fake perk list due to display parser not existing yet
         val perks = FishingSpotParser.parse(display.text)
-        if (perks.isEmpty()) return null
         val spot = FishingSpot(display.x, display.y, perks)
         return spot
     }

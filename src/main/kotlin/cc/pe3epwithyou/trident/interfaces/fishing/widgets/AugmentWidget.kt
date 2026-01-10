@@ -152,7 +152,8 @@ class AugmentWidget(
         drawAugmentBar(
             graphics,
             container.status == AugmentStatus.REPAIRED,
-            container.durability / container.augment.uses.toFloat()
+            container.durability / container.augment.uses.toFloat(),
+            container.status
         )
 
         if (Config.Fishing.suppliesModuleShowAugmentDurability) renderRemainingUses(graphics)
@@ -212,8 +213,16 @@ class AugmentWidget(
         graphics.pose().popMatrix()
     }
 
-    private fun drawAugmentBar(graphics: GuiGraphics, isRepaired: Boolean, value: Float) {
+    private fun drawAugmentBar(
+        graphics: GuiGraphics,
+        isRepaired: Boolean,
+        value: Float,
+        status: AugmentStatus
+    ) {
         if (value == 1F) return
+        if (status == AugmentStatus.PAUSED) return
+        if (status == AugmentStatus.NEEDS_REPAIRING) return
+        if (status == AugmentStatus.BROKEN) return
         val barWidth = textureWidth - 2
         val filledWidth = (barWidth * value).toInt().coerceIn(0, barWidth)
         val color = if (isRepaired) REPAIRED_COLOR else NORMAL_COLOR
