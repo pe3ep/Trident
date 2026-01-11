@@ -23,7 +23,7 @@ object ChatSwitcherButtons {
         add(ChatMode.LOCAL)
         add(ChatMode.PARTY)
         if (MCCIState.game.hasTeamChat) add(ChatMode.TEAM)
-        if (MCCIState.isPlobby) add(ChatMode.PLOBBY)
+        if (MCCIState.isInPlobby()) add(ChatMode.PLOBBY)
     }
 
     fun getCurrentButtons(): List<Widget> {
@@ -31,7 +31,6 @@ object ChatSwitcherButtons {
         var offset = 0
         val channels = mutableListOf<Widget>()
         getChatModes().forEach {
-            if (!MCCIState.game.hasTeamChat && it == ChatMode.TEAM) return@forEach
             channels.add(Widget(x + offset, it))
             offset += Widget.WIDTH + 2
         }
