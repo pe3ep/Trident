@@ -55,7 +55,7 @@ object KillChatListener {
     }
 
     private fun handleKill(message: Component, method: KillMethod): Boolean {
-        val players = cleanupComponent(message)
+        val players = findPlayersInComponent(message)
         if (players.isEmpty()) return true
         val victim = players[0]
         val attacker = players.getOrNull(1)
@@ -111,7 +111,7 @@ object KillChatListener {
         return Pair(attackerColor, victimColor)
     }
 
-    private fun cleanupComponent(c: Component): List<Component> {
+    fun findPlayersInComponent(c: Component): List<Component> {
         val rawList = c.toFlatList()
         val socialManager = Minecraft.getInstance().playerSocialManager
         val components: MutableList<Component> = mutableListOf()
