@@ -29,8 +29,8 @@ public class DebugScreenMixin {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Ljava/util/Map;values()Ljava/util/Collection;"))
     private Collection<String> addDebugMessage(Map<Identifier, Collection<String>> instance, Operation<Collection<String>> original) {
         if (this.minecraft.debugEntries.isOverlayVisible()) {
-            if (!MCCIState.INSTANCE.isOnIsland()) return List.of();
-            if (minecraft.player == null) return List.of();
+            if (!MCCIState.INSTANCE.isOnIsland()) return original.call(instance);
+            if (minecraft.player == null) return original.call(instance);
             String message = DebugScreen.INSTANCE.getMessage();
 
             Optional<ModContainer> container = FabricLoader.getInstance().getModContainer("trident");
