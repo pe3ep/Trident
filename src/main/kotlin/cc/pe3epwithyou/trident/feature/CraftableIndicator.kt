@@ -8,6 +8,12 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.world.inventory.Slot
 
 object CraftableIndicator {
+    private val texture = Texture(
+        Resources.trident("textures/interface/no_materials.png"),
+        6,
+        8,
+    )
+
     fun render(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Global.craftableIndicators) return
         val slotName = slot.item.hoverName.string
@@ -16,11 +22,7 @@ object CraftableIndicator {
         lore.forEach { line ->
             if ("Click to Assemble" !in line.string) return@forEach
             if ("(Missing materials)" !in line.string) return@forEach
-            Texture(
-                Resources.trident("textures/interface/no_materials.png"),
-                6,
-                8,
-            ).blit(
+            texture.blit(
                 graphics,
                 slot.x,
                 slot.y + 8,

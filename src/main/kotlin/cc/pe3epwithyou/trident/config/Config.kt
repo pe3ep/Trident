@@ -106,6 +106,9 @@ class Config {
     var killfeedPositionSide: KillfeedPosition = KillfeedPosition.RIGHT
 
     @SerialEntry
+    var killfeedPositionY: Int = 20
+
+    @SerialEntry
     var killfeedRemoveKillTime: Int = 10
 
     @SerialEntry
@@ -201,6 +204,8 @@ class Config {
             get() = handler.instance().killfeedReverseOrder
         val positionSide: KillfeedPosition
             get() = handler.instance().killfeedPositionSide
+        val positionY: Int
+            get() = handler.instance().killfeedPositionY
         val removeKillTime: Int
             get() = handler.instance().killfeedRemoveKillTime
         val maxKills: Int
@@ -382,6 +387,8 @@ class Config {
                         )
                     )
 
+                    lateinit var raritySlotDisplayType: Option<DisplayType>
+
                     options.register("rarity_slot_enabled") {
                         name(Component.translatable("config.trident.rarity_slot.name"))
                         description(
@@ -395,9 +402,14 @@ class Config {
                         )
                         binding(handler.instance()::raritySlotEnabled, false)
                         controller(tickBox())
+                        addListener { option, event ->
+                            if (event == OptionEventListener.Event.STATE_CHANGE) {
+                                raritySlotDisplayType.setAvailable(option.pendingValue())
+                            }
+                        }
                     }
 
-                    options.register("rarity_slot_display_type") {
+                    raritySlotDisplayType = options.register("rarity_slot_display_type") {
                         name(Component.translatable("config.trident.rarity_slot.display_type.name"))
                         description(
                             OptionDescription.createBuilder()
@@ -411,6 +423,7 @@ class Config {
                             if (event != OptionEventListener.Event.STATE_CHANGE) return@addListener
                             RaritySlotPreview.RARITY_DISPLAY_TYPE = option.pendingValue()
                         }
+                        available { handler.instance().raritySlotEnabled }
                     }
                 }
 
@@ -430,6 +443,17 @@ class Config {
                     name(Component.translatable("config.trident.killfeed.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.killfeed.description")))
 
+                    lateinit var killfeedHideKills: Option<Boolean>
+                    lateinit var killfeedShowKillStreaks: Option<Boolean>
+                    lateinit var killfeedClearAfterRound: Option<Boolean>
+                    lateinit var killfeedShowYouInKill: Option<Boolean>
+                    lateinit var killfeedReverseOrder: Option<Boolean>
+                    lateinit var killfeedPositionSide: Option<KillfeedPosition>
+                    lateinit var killfeedPositionY: Option<Int>
+                    lateinit var killfeedRemoveKillTime: Option<Int>
+                    lateinit var killfeedMaxKills: Option<Int>
+
+
                     options.register("killfeed_enabled") {
                         name(Component.translatable("config.trident.killfeed.enabled.name"))
                         description(
@@ -441,51 +465,83 @@ class Config {
                         )
                         binding(handler.instance()::killfeedEnabled, true)
                         controller(tickBox())
+                        addListener { option, event ->
+                            if (event == OptionEventListener.Event.STATE_CHANGE) {
+                                killfeedHideKills.setAvailable(option.pendingValue())
+                                killfeedShowKillStreaks.setAvailable(option.pendingValue())
+                                killfeedClearAfterRound.setAvailable(option.pendingValue())
+                                killfeedShowYouInKill.setAvailable(option.pendingValue())
+                                killfeedReverseOrder.setAvailable(option.pendingValue())
+                                killfeedPositionSide.setAvailable(option.pendingValue())
+                                killfeedPositionY.setAvailable(option.pendingValue())
+                                killfeedRemoveKillTime.setAvailable(option.pendingValue())
+                                killfeedMaxKills.setAvailable(option.pendingValue())
+                            }
+                        }
                     }
 
-                    options.register("killfeed_hide_kills") {
+                    killfeedHideKills = options.register("killfeed_hide_kills") {
                         name(Component.translatable("config.trident.killfeed.hide_kills.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.hide_kills.description")))
                         binding(handler.instance()::killfeedHideKills, false)
                         controller(tickBox())
+                        available { handler.instance().killfeedEnabled }
                     }
 
-                    options.register("killfeed_show_kill_streaks") {
+                    killfeedShowKillStreaks = options.register("killfeed_show_kill_streaks") {
                         name(Component.translatable("config.trident.killfeed.show_kill_streaks.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.show_kill_streaks.description")))
                         binding(handler.instance()::killfeedShowKillStreaks, true)
                         controller(tickBox())
+                        available { handler.instance().killfeedEnabled }
                     }
 
-                    options.register("killfeed_clear_after_round") {
+                    killfeedClearAfterRound = options.register("killfeed_clear_after_round") {
                         name(Component.translatable("config.trident.killfeed.clear_after_round.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.clear_after_round.description")))
                         binding(handler.instance()::killfeedClearAfterRound, true)
                         controller(tickBox())
+                        available { handler.instance().killfeedEnabled }
                     }
 
-                    options.register("killfeed_show_you_in_kill") {
+                    killfeedShowYouInKill = options.register("killfeed_show_you_in_kill") {
                         name(Component.translatable("config.trident.killfeed.show_you_in_kill.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.show_you_in_kill.description")))
                         binding(handler.instance()::killfeedShowYouInKill, true)
                         controller(tickBox())
+                        available { handler.instance().killfeedEnabled }
                     }
 
-                    options.register("killfeed_reverse_order") {
+                    killfeedReverseOrder = options.register("killfeed_reverse_order") {
                         name(Component.translatable("config.trident.killfeed.reverse_order.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.reverse_order.description")))
                         binding(handler.instance()::killfeedReverseOrder, false)
                         controller(tickBox())
+                        available { handler.instance().killfeedEnabled }
                     }
 
-                    options.register("killfeed_position_side") {
+                    killfeedPositionSide = options.register("killfeed_position_side") {
                         name(Component.translatable("config.trident.killfeed.position_side.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.position_side.description")))
                         binding(handler.instance()::killfeedPositionSide, KillfeedPosition.RIGHT)
                         controller(enumSwitch<KillfeedPosition> { v -> v.displayName })
+                        available { handler.instance().killfeedEnabled }
                     }
 
-                    options.register("killfeed_remove_kill_time") {
+                    killfeedPositionY = options.register("killfeed_position_y") {
+                        name(Component.translatable("config.trident.killfeed.position_y.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.killfeed.position_y.description")))
+                        binding(handler.instance()::killfeedPositionY, 20)
+                        controller(
+                            slider(
+                                IntRange(0, 60),
+                                1
+                            ) { v -> Component.literal(v.toString() + "px") }
+                        )
+                        available { handler.instance().killfeedEnabled }
+                    }
+
+                    killfeedRemoveKillTime = options.register("killfeed_remove_kill_time") {
                         name(Component.translatable("config.trident.killfeed.remove_kill_time.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.remove_kill_time.description")))
                         binding(handler.instance()::killfeedRemoveKillTime, 10)
@@ -494,19 +550,26 @@ class Config {
                                 IntRange(0, 30),
                                 1
                             ) { v -> Component.literal(if (v != 0) v.toString() + "s" else "Permanent") })
+                        available { handler.instance().killfeedEnabled }
                     }
 
-                    options.register("killfeed_max_kills") {
+                    killfeedMaxKills = options.register("killfeed_max_kills") {
                         name(Component.translatable("config.trident.killfeed.max_kills.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.killfeed.max_kills.description")))
                         binding(handler.instance()::killfeedMaxKills, 5)
                         controller(slider(IntRange(1, 10), 1))
+                        available { handler.instance().killfeedEnabled }
                     }
                 }
 
                 groups.register("questing") {
                     name(Component.translatable("config.trident.questing.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.questing.description")))
+
+                    lateinit var questingRarityColorName: Option<Boolean>
+                    lateinit var questingShowInLobby: Option<Boolean>
+                    lateinit var questingShowLeft: Option<Boolean>
+                    lateinit var questingHideIfNoQuests: Option<Boolean>
 
                     options.register("questing_enabled") {
                         name(Component.translatable("config.trident.questing.enabled.name"))
@@ -519,40 +582,54 @@ class Config {
                         )
                         binding(handler.instance()::questingEnabled, true)
                         controller(tickBox())
+                        addListener { option, event ->
+                            if (event == OptionEventListener.Event.STATE_CHANGE) {
+                                questingRarityColorName.setAvailable(option.pendingValue())
+                                questingShowInLobby.setAvailable(option.pendingValue())
+                                questingShowLeft.setAvailable(option.pendingValue())
+                                questingHideIfNoQuests.setAvailable(option.pendingValue())
+                            }
+                        }
                     }
 
-                    options.register("questing_rarity_color_name") {
+                    questingRarityColorName = options.register("questing_rarity_color_name") {
                         name(Component.translatable("config.trident.questing.rarity_color_name.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.rarity_color_name.description")))
                         binding(handler.instance()::questingRarityColorName, true)
                         controller(tickBox())
+                        available { handler.instance().questingEnabled }
                     }
 
-                    options.register("questing_show_in_lobby") {
+                    questingShowInLobby = options.register("questing_show_in_lobby") {
                         name(Component.translatable("config.trident.questing.show_in_lobby.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.show_in_lobby.description")))
                         binding(handler.instance()::questingShowInLobby, true)
                         controller(tickBox())
+                        available { handler.instance().questingEnabled }
                     }
 
-                    options.register("questing_show_left") {
+                    questingShowLeft = options.register("questing_show_left") {
                         name(Component.translatable("config.trident.questing.show_left.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.show_left.description")))
                         binding(handler.instance()::questingShowLeft, true)
                         controller(tickBox())
+                        available { handler.instance().questingEnabled }
                     }
 
-                    options.register("questing_hide_if_no_quests") {
+                    questingHideIfNoQuests = options.register("questing_hide_if_no_quests") {
                         name(Component.translatable("config.trident.questing.hide_if_no_quests.name"))
                         description(OptionDescription.of(Component.translatable("config.trident.questing.hide_if_no_quests.description")))
                         binding(handler.instance()::questingHideIfNoQuests, false)
                         controller(tickBox())
+                        available { handler.instance().questingEnabled }
                     }
                 }
 
                 groups.register("fishing") {
                     name(Component.translatable("config.trident.fishing.name"))
                     description(OptionDescription.of(Component.translatable("config.trident.fishing.description")))
+
+                    lateinit var suppliesModuleDurability: Option<Boolean>
 
                     options.register("supplies_module") {
                         name(Component.translatable("config.trident.fishing.supplies_module.name"))
@@ -565,6 +642,23 @@ class Config {
                         )
                         binding(handler.instance()::fishingSuppliesModule, true)
                         controller(tickBox())
+                        addListener { option, event ->
+                            if (event == OptionEventListener.Event.STATE_CHANGE) {
+                                suppliesModuleDurability.setAvailable(option.pendingValue())
+                            }
+                        }
+                    }
+
+                    suppliesModuleDurability = options.register("supplies_module_durability") {
+                        name(Component.translatable("config.trident.fishing.supplies_module.durability.name"))
+                        description(OptionDescription.of(Component.translatable("config.trident.fishing.supplies_module.durability.description")))
+                        binding(
+                            handler.instance()::fishingSuppliesModuleShowAugmentDurability,
+                            false
+                        )
+                        controller(tickBox())
+                        available { handler.instance().fishingSuppliesModule }
+
                     }
 
                     options.register("show_augment_status_in_interface") {
@@ -573,16 +667,6 @@ class Config {
                         binding(
                             handler.instance()::fishingShowAugmentStatusInInterface,
                             true
-                        )
-                        controller(tickBox())
-                    }
-
-                    options.register("supplies_module_durability") {
-                        name(Component.translatable("config.trident.fishing.supplies_module.durability.name"))
-                        description(OptionDescription.of(Component.translatable("config.trident.fishing.supplies_module.durability.description")))
-                        binding(
-                            handler.instance()::fishingSuppliesModuleShowAugmentDurability,
-                            false
                         )
                         controller(tickBox())
                     }

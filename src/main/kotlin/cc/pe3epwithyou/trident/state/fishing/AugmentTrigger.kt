@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.state.fishing
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 
 enum class AugmentTrigger(
@@ -24,7 +25,8 @@ fun updateDurability(trigger: AugmentTrigger) {
         val hasTrigger = it.augment.useTrigger == trigger
         val hasRightStatus =
             it.status != AugmentStatus.NEEDS_REPAIRING || it.status != AugmentStatus.BROKEN || it.status != AugmentStatus.PAUSED
-        return@filter hasTrigger && hasRightStatus
+        val canFishInGrotto = it.augment.worksInGrotto || !MCCIState.fishingState.isGrotto
+        return@filter hasTrigger && hasRightStatus && canFishInGrotto
     }.forEach {
         it.durability -= 1
         if (it.durability == 0 && it.status == AugmentStatus.NEW) it.status =

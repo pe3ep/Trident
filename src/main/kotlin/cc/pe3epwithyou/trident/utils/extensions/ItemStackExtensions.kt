@@ -31,7 +31,7 @@ object ItemStackExtensions {
             predicate.containsMatchIn(component.string)
         }
         if (c == null) {
-            Logger.warn("Failed to find predicate $predicate in item ${this.hoverName.string}")
+            Logger.debugLog("Failed to find predicate $predicate in item ${this.hoverName.string}")
             return null
         }
         return predicate.find(c.string)

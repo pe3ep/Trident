@@ -23,7 +23,7 @@ object ChatSwitcherButtons {
         add(ChatMode.LOCAL)
         add(ChatMode.PARTY)
         if (MCCIState.game.hasTeamChat) add(ChatMode.TEAM)
-        if (MCCIState.isPlobby) add(ChatMode.PLOBBY)
+        if (MCCIState.isInPlobby()) add(ChatMode.PLOBBY)
     }
 
     fun getCurrentButtons(): List<Widget> {
@@ -31,7 +31,6 @@ object ChatSwitcherButtons {
         var offset = 0
         val channels = mutableListOf<Widget>()
         getChatModes().forEach {
-            if (!MCCIState.game.hasTeamChat && it == ChatMode.TEAM) return@forEach
             channels.add(Widget(x + offset, it))
             offset += Widget.WIDTH + 2
         }
@@ -45,7 +44,8 @@ object ChatSwitcherButtons {
             const val WIDTH = 44
 
             const val CHAT_HEIGHT = 16
-            private val HOVERED_SPRITE = Resources.trident("textures/interface/chat_channels/hovered.png")
+            private val HOVERED_SPRITE =
+                Resources.trident("textures/interface/chat_channels/hovered.png")
         }
 
         private var texture = Texture(mode.sprite, WIDTH, HEIGHT)
@@ -78,10 +78,14 @@ object ChatSwitcherButtons {
         val sprite: Identifier,
     ) {
         companion object {
-            val LOCAL = ChatMode("local",Resources.trident("textures/interface/chat_channels/local.png"))
-            val PARTY = ChatMode("party", Resources.trident("textures/interface/chat_channels/party.png"))
-            val TEAM = ChatMode("team", Resources.trident("textures/interface/chat_channels/team.png"))
-            val PLOBBY = ChatMode("plobby", Resources.trident("textures/interface/chat_channels/plobby.png"))
+            val LOCAL =
+                ChatMode("local", Resources.trident("textures/interface/chat_channels/local.png"))
+            val PARTY =
+                ChatMode("party", Resources.trident("textures/interface/chat_channels/party.png"))
+            val TEAM =
+                ChatMode("team", Resources.trident("textures/interface/chat_channels/team.png"))
+            val PLOBBY =
+                ChatMode("plobby", Resources.trident("textures/interface/chat_channels/plobby.png"))
         }
     }
 }

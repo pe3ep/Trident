@@ -41,13 +41,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
         return if (Trident.playerState.supplies.baitDesynced) {
             val warn = Component.literal(" ⚠").defaultFont().withStyle(ChatFormatting.GOLD)
-            val tooltip = Tooltip.create(
-                Component.literal("Module is not synced").withStyle(ChatFormatting.GOLD).append(
-                    Component.literal(
-                        "\nTrident has detected that you've received bait, meaning your Supply Module is out of date. Please open your Supply menu to update it."
-                    ).withStyle(ChatFormatting.GRAY)
-                )
-            )
+            val tooltip = Tooltip.create(Component.translatable("trident.dialog.supplies.desynced.tooltip"))
             DialogTitle(this, baseTitle.append(warn), TITLE_COLOR, tooltip = tooltip)
         } else {
             DialogTitle(this, baseTitle, TITLE_COLOR)
@@ -63,20 +57,12 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
         if (supplies.needsUpdating) {
             StringWidget(
-                Component.literal("Fishing data missing".uppercase()).mccFont()
+                Component.translatable("trident.dialog.supplies.missing_data.title").mccFont()
                     .withStyle(ChatFormatting.GOLD), mcFont
             ).atBottom(0, settings = LayoutConstants.CENTRE)
             MultiLineTextWidget(
-                Component.literal(
-                    """
-                    In order to update 
-                    the Supplies Module, 
-                    please open the following 
-                    menu: A.N.G.L.R. Panel -> 
-                    Fishing Supplies
-                """.trimIndent()
-                ).defaultFont().withStyle(ChatFormatting.GRAY), mcFont
-            ).atBottom(0, settings = LayoutConstants.LEFT)
+                Component.translatable("trident.dialog.supplies.missing_data.description").defaultFont().withStyle(ChatFormatting.GRAY), mcFont
+            ).setMaxWidth(150).atBottom(0, settings = LayoutConstants.LEFT)
             return@grid
         }
 

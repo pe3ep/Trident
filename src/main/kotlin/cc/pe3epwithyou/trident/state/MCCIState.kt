@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.feature.DebugScreen
 import cc.pe3epwithyou.trident.feature.api.ApiChecker
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.utils.Logger
+import cc.pe3epwithyou.trident.utils.ScoreboardUtils
 import cc.pe3epwithyou.trident.utils.TridentFont.ERROR
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
@@ -28,7 +29,7 @@ data class FishingState(
 
 object MCCIState {
     var game: Game = Game.HUB
-    var isPlobby: Boolean = false
+    var isPlobbyGame: Boolean = false
     var fishingState: FishingState = FishingState()
     fun isOnIsland(): Boolean {
         if (Config.Debug.bypassOnIsland) return true
@@ -45,5 +46,15 @@ object MCCIState {
                 Component.translatable("trident.failed_config").withStyle(ERROR.baseStyle)
             Logger.sendMessage(component, true)
         }
+    }
+
+    fun isInPlobby(): Boolean {
+        if (!isOnIsland()) return false
+        if (isPlobbyGame) return true
+        ScoreboardUtils.findInScoreboard(Regex("""PLOBBY \(\d+/\d+\):"""))?.let {
+            return true
+        }
+
+        return false
     }
 }

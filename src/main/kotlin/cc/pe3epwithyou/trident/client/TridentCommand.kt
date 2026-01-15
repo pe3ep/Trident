@@ -6,7 +6,6 @@ import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
-import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
@@ -288,13 +287,8 @@ object TridentCommand {
                 executes {
                     Logger.sendMessage("—————— ISLAND BEGIN ——————", false)
                     Logger.sendMessage("CURRENT GAME: ${MCCIState.game}")
+                    Logger.sendMessage("FISHING STATE: ${MCCIState.fishingState}")
                     Logger.sendMessage("——————— ISLAND END ———————", false)
-                }
-            }
-
-            literal("send_exchange_req") {
-                executes {
-                    ExchangeLookup.lookup()
                 }
             }
 
