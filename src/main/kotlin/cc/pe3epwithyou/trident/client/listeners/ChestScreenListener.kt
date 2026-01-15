@@ -204,21 +204,35 @@ object ChestScreenListener {
             Trident.playerState.supplies.overclocks.supreme.state.isAvailable =
                 !supremeModel.path.startsWith("island_interface/locked")
         }
-        // Refresh supplies dialog if open
         DialogCollection.refreshDialog("supplies")
     }
 
     private fun handleWfdItemLine(item: ItemStack) {
-        val line = item.safeGetLine(13)?.string
-        if (line != null && line.contains("Wayfinder Data: ")) {
-            val temperateData =
-                line.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
-            Trident.playerState.wayfinderData.temperate.data = temperateData
-            Trident.playerState.wayfinderData.temperate.unlocked = true
-            if (temperateData >= 2000) Trident.playerState.wayfinderData.temperate.hasGrotto =
-                true
-        } else {
-            Trident.playerState.wayfinderData.temperate.hasGrotto = true
+        val itemName = item.hoverName.string
+        val wayfinderStatus = when {
+            "Sunken Swamp" in itemName -> Trident.playerState.wayfinderData.temperate
+            "Mirrored Oasis" in itemName -> Trident.playerState.wayfinderData.tropical
+            "Volcanic Springs" in itemName -> Trident.playerState.wayfinderData.barren
+            else -> return
+        }
+
+        item.findInLore(Regex("""Wayfinder Data: (\d{1,3}(?:,\d{3})*)\/(\d{1,3}(?:,\d{3})*)."""))
+            ?.let {
+                val temperateData = it.groups[1]?.value?.parseFormattedInt() ?: return@let
+                wayfinderStatus.data = temperateData
+                wayfinderStatus.unlocked = true
+                wayfinderStatus.hasGrotto = false
+                if (temperateData >= 2000) wayfinderStatus.hasGrotto =
+                    true
+                Logger.debugLog("Island: ${item.displayName.string}, Current Data: $temperateData, Grotto: false")
+                return
+            }
+
+        item.findInLore(Regex("""Remaining Stability: (\d+)%"""))?.let {
+            wayfinderStatus.hasGrotto = true
+            wayfinderStatus.unlocked = true
+            wayfinderStatus.grottoStability = it.groups[1]?.value?.parseFormattedInt() ?: return@let
+            Logger.debugLog("Island: ${item.displayName.string}, Current Data: 2000+, Grotto: true")
         }
     }
 
@@ -226,12 +240,9 @@ object ChestScreenListener {
     fun findWayfinderData(screen: ContainerScreen) {
         if ("FISHING ISLANDS" !in screen.title.string) return
 
-        // temperate
-        handleWfdItemLine(screen.menu.slots[24].item)
-        // tropical
-        handleWfdItemLine(screen.menu.slots[33].item)
-        // barren
-        handleWfdItemLine(screen.menu.slots[42].item)
+        handleWfdItemLine(screen.menu.slots[24].item) // temperate
+        handleWfdItemLine(screen.menu.slots[33].item) // tropical
+        handleWfdItemLine(screen.menu.slots[42].item) // barren
 
         Trident.playerState.wayfinderData.needsUpdating = false
         DialogCollection.refreshDialog("wayfinder")

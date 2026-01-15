@@ -13,7 +13,15 @@ import net.minecraft.network.chat.Component
 
 data class Climate(
     var climateType: ClimateType = ClimateType.TEMPERATE, var wayfinderData: Int = 0
-)
+) {
+    fun getCurrentWayfinderStatus(): WayfinderStatus {
+        return when (this.climateType) {
+            ClimateType.TEMPERATE -> Trident.playerState.wayfinderData.temperate
+            ClimateType.TROPICAL -> Trident.playerState.wayfinderData.tropical
+            ClimateType.BARREN -> Trident.playerState.wayfinderData.barren
+        }
+    }
+}
 
 data class FishingState(
     var climate: Climate = Climate(), var isGrotto: Boolean = false

@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.fishing.SuppliesDialog
+import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.ClimateType
@@ -20,6 +21,7 @@ import com.noxcrew.noxesium.core.mcc.MccPackets
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import java.util.*
+
 
 object NoxesiumUtils {
     fun skullComponent(
@@ -39,6 +41,10 @@ object NoxesiumUtils {
         if (currentGame == Game.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
             DialogCollection.open(k, SuppliesDialog(10, 10, k))
+        }
+        if (currentGame == Game.FISHING && Config.Fishing.wayfinderModule) {
+            val k = "wayfinder"
+            DialogCollection.open(k, WayfinderDialog(10, 10, k))
         }
         if (KillChatListener.killfeedGames.contains(currentGame) && Config.KillFeed.enabled) {
             val k = "killfeed"
@@ -136,6 +142,7 @@ object NoxesiumUtils {
             )
 
             handleQuests(packet.statistic, packet.value)
+            handleWayfinderXp(packet.statistic, packet.value)
         }
     }
 
@@ -168,6 +175,23 @@ object NoxesiumUtils {
             }
         }
     }
+
+    private fun handleWayfinderXp(statistic: String, value: Int) {
+        // Wayfinder
+        if (statistic.startsWith("fishing_wayfinder_xp_")) {
+            val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
+            if (!wayfinderStatus.hasGrotto) {
+                wayfinderStatus.data += value
+                if (wayfinderStatus.data >= 2000) {
+                    wayfinderStatus.hasGrotto = true
+                    wayfinderStatus.grottoStability = 100
+                }
+            }
+
+            DialogCollection.refreshDialog("wayfinder")
+        }
+    }
+
 
     private fun getCurrentGame(server: String, types: List<String>): Game {
         if (types.size < 2) {

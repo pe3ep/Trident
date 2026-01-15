@@ -74,6 +74,12 @@ object ChatEventListener {
 
                 if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
                     Minecraft.getInstance().window.requestAttentionIfInactive()
+
+                    val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
+                    wayfinderStatus.hasGrotto = false
+                    wayfinderStatus.data -= 2000
+
+                    DialogCollection.refreshDialog("wayfinder")
                 }
 
                 // Check if the player received bait and mark supplies as desynced
