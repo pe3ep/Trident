@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner
 import net.minecraft.network.chat.Component
 
 class AugmentWidget(
@@ -38,12 +39,10 @@ class AugmentWidget(
         fun getExtraHeight() = if (Config.Fishing.suppliesModuleShowAugmentDurability) 8 else 0
     }
 
-    init {
-        setupTooltip()
-    }
+    private val augmentTooltip: Tooltip? = setupTooltip()
 
-    private fun setupTooltip() {
-        if (container.augment == Augment.EMPTY_AUGMENT) return
+    private fun setupTooltip(): Tooltip? {
+        if (container.augment == Augment.EMPTY_AUGMENT) return null
         val name = Component.literal(container.augment.augmentName + "\n\n").withColor(
             when (container.status) {
                 AugmentStatus.NEW -> NORMAL_COLOR
@@ -70,7 +69,8 @@ class AugmentWidget(
         val grotto =
             if (container.augment.worksInGrotto) Component.empty() else Component.literal(" ▪ ")
                 .withColor(0x505050.opaqueColor()).append(
-                    Component.literal("Does not work in Grottos.\n").withColor(0xA8B0B0.opaqueColor())
+                    Component.literal("Does not work in Grottos.\n")
+                        .withColor(0xA8B0B0.opaqueColor())
                 )
 
         val spacer = Component.literal("\n")
@@ -124,15 +124,27 @@ class AugmentWidget(
         }
 
         val c =
-            name.append(supplyInfo).append(uses).append(trigger).append(grotto).append(spacer).append(useProgress)
-        setTooltip(Tooltip.create(c))
+            name.append(supplyInfo).append(uses).append(trigger).append(grotto).append(spacer)
+                .append(useProgress)
+        return Tooltip.create(c)
     }
 
     // don't look too close, this code stinks
     override fun renderWidget(
         graphics: GuiGraphics, i: Int, j: Int, f: Float
     ) {
-
+        val client = Minecraft.getInstance()
+        augmentTooltip?.let {
+            if (!isHovered) return@let
+            graphics.setTooltipForNextFrame(
+                client.font,
+                it.toCharSequence(client),
+                MenuTooltipPositioner(rectangle),
+                i,
+                j,
+                false
+            )
+        }
         val isSmall = when (container.status) {
             AugmentStatus.NEEDS_REPAIRING -> true
             AugmentStatus.BROKEN -> true
