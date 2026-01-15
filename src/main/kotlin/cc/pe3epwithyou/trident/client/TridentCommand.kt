@@ -287,6 +287,7 @@ object TridentCommand {
                 executes {
                     Logger.sendMessage("—————— ISLAND BEGIN ——————", false)
                     Logger.sendMessage("CURRENT GAME: ${MCCIState.game}")
+                    Logger.sendMessage("FISHING STATE: ${MCCIState.fishingState}")
                     Logger.sendMessage("——————— ISLAND END ———————", false)
                 }
             }

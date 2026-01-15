@@ -63,15 +63,17 @@ class AugmentWidget(
         val trigger = Component.literal(" ▪ ").withColor(0x505050.opaqueColor()).append(
             Component.literal("Use Condition: ").withColor(0xA8B0B0.opaqueColor())
         ).append(
-            Component.literal("${container.augment.useTrigger.lore}\n\n")
+            Component.literal("${container.augment.useTrigger.lore}\n")
                 .withColor(0xFFFFFF.opaqueColor())
         )
 
         val grotto =
             if (container.augment.worksInGrotto) Component.empty() else Component.literal(" ▪ ")
                 .withColor(0x505050.opaqueColor()).append(
-                    Component.literal("Does not work in Grottos.").withColor(0xA8B0B0.opaqueColor())
+                    Component.literal("Does not work in Grottos.\n").withColor(0xA8B0B0.opaqueColor())
                 )
+
+        val spacer = Component.literal("\n")
 
         val useProgress = when (container.status) {
             AugmentStatus.BROKEN -> {
@@ -122,7 +124,7 @@ class AugmentWidget(
         }
 
         val c =
-            name.append(supplyInfo).append(uses).append(trigger).append(grotto).append(useProgress)
+            name.append(supplyInfo).append(uses).append(trigger).append(grotto).append(spacer).append(useProgress)
         setTooltip(Tooltip.create(c))
     }
 
