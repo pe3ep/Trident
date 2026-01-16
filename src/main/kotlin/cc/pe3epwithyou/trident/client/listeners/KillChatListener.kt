@@ -36,10 +36,17 @@ object KillChatListener {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowGame@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowGame true
             try {
-                val killAssistMatch =
-                    Regex("""^\[.] You assisted in eliminating (.+)!""").matches(message.string)
-                if (killAssistMatch) {
+                Regex("""^\[.] You assisted in eliminating (.+)!""").find(message.string)?.let {
                     KillFeedDialog.applyKillAssist()
+                }
+
+                Regex("""^\[.] (.+) is being revived by the Hero!""").find(message.string)?.let {
+                    val revivedPlayer = findPlayersInComponent(message).getOrNull(0) ?: return@let
+                    KillFeedDialog.addKill(
+                        KillWidget(
+                            revivedPlayer.string, KillMethod.REVIVE, killColors = Pair(0x874fff opacity 128, revivedPlayer.style.color?.value?.opacity(128) ?: fallbackColor)
+                        )
+                    )
                 }
 
                 DeathMessages.entries.forEach { deathMessage ->
@@ -85,7 +92,7 @@ object KillChatListener {
                     killMethod,
                     attacker.string,
                     getColors(victim, attacker),
-                    streak = streaks[attacker.string]!! // This should never fail
+                    streak = streaks[attacker.string]!!
                 )
             )
         } else {

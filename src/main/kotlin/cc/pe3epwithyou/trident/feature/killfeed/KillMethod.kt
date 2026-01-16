@@ -1,12 +1,13 @@
 package cc.pe3epwithyou.trident.feature.killfeed
 
 import cc.pe3epwithyou.trident.state.FontCollection
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 
 enum class KillMethod {
-    GENERIC, MELEE, RANGE, ORB, POTION, MAGIC, VOID, DISCONNECT, EXPLOSION, LAVA, FIRE;
+    GENERIC, MELEE, RANGE, ORB, POTION, MAGIC, VOID, DISCONNECT, EXPLOSION, LAVA, FIRE, REVIVE;
 
     val icon: MutableComponent
         get() = when (this) {
@@ -21,6 +22,8 @@ enum class KillMethod {
             EXPLOSION -> trident('\uE011')
             LAVA -> trident('\uE014')
             FIRE -> trident('\uE013')
+            REVIVE -> FontCollection.texture("island_items/battle_box/kit/hero")
+                .offset(y = 1f)
         }
 
 }
