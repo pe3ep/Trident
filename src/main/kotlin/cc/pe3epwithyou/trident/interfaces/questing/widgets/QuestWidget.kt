@@ -67,7 +67,7 @@ class QuestWidget(
 
         val icon = if (!isCompleted) quest.sprite else COMPLETED_QUEST_SPRITE
         val component = FontCollection.texture(icon)
-            .offset(y = 0.5f)
+            .offset(y = 1f)
             .append(Component.literal(" "))
             .append(questName)
             .append(suffix)

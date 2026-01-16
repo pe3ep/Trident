@@ -36,7 +36,7 @@ class WayfinderWidget(
         val mcFont = Minecraft.getInstance().font
         val islandName = Component.literal(" ${wayfinderStatus.island.uppercase()}").mccFont()
         StringWidget(
-            FontCollection.texture(ISLAND_ICONS[wayfinderStatus.island]!!).offset(y = 0.5f)
+            FontCollection.texture(ISLAND_ICONS[wayfinderStatus.island]!!).offset(y = 1f)
                 .append(islandName), mcFont
         ).atBottom(0, settings = LayoutConstants.LEFT)
 

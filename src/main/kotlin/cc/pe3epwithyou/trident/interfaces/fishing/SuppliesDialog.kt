@@ -71,7 +71,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
         val baitComponent =
             FontCollection.texture("island_items/infinibag/fishing_item/bait_${supplies.bait.type.name.lowercase()}")
-                .offset(y = 0.5f)
+                .offset(y = 1f)
                 .append(
                     Component.literal(" $baitAmount").mccFont()
                         .withColor(if (isBaitDesynced) ChatFormatting.GOLD.color!! else supplies.bait.type.color)
@@ -84,7 +84,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
         val lineComponent =
             FontCollection.texture("island_items/infinibag/fishing_item/line_${supplies.line.type.name.lowercase()}")
-                .offset(y = 0.5f)
+                .offset(y = 1f)
                 .append(Component.empty().withStyle(ChatFormatting.RESET))
                 .append(
                     Component.literal(" $lineDurability/$lineAmount").mccFont()
