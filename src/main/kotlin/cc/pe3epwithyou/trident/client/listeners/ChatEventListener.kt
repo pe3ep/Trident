@@ -78,6 +78,7 @@ object ChatEventListener {
                     val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
                     wayfinderStatus.hasGrotto = false
                     wayfinderStatus.data -= 2000
+                    wayfinderStatus.data.coerceAtLeast(0)
 
                     DialogCollection.refreshDialog("wayfinder")
                 }
