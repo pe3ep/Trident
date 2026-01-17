@@ -50,6 +50,7 @@ object TridentCommand {
         "supplies" to ::SuppliesDialog,
         "questing" to ::QuestingDialog,
         "grumpycat" to ::DisappointedCatDialog,
+        "wayfinder" to ::WayfinderDialog
     )
 
     private fun notOnIsland(): Boolean {
@@ -227,7 +228,6 @@ object TridentCommand {
 
         // Debug dialogs should only be enabled for cool people (devs)
         debugDialogs["research"] = ::ResearchDialog
-        debugDialogs["wayfinder"] = ::WayfinderDialog
         debugDialogs["experiment_tabbed"] = ::TabbedDialog
         debugDialogs["killfeed"] = ::KillFeedDialog
 
