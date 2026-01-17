@@ -691,7 +691,7 @@ class Config {
                             OptionDescription.createBuilder()
                                 .text(Component.translatable("config.trident.fishing.wayfinder_module.description"))
                                 .image(
-                                    Resources.trident("textures/config/wayfinder.png"), 444, 258
+                                    Resources.trident("textures/config/wayfinder.png"), 768, 310
                                 ).build()
                         )
                         binding(handler.instance()::fishingWayfinderModule, true)
