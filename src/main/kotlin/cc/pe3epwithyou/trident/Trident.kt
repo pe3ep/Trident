@@ -8,10 +8,12 @@ import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.TridentDebug
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.mixin.DebugScreenEntriesAccessor
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -50,6 +52,10 @@ class Trident : ModInitializer {
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             TridentCommand.registerCommands(dispatcher)
         }
+
+        // Add Debug Screen
+        val entries = DebugScreenEntriesAccessor.getEntries()
+        entries.put(Resources.trident("debug_tab"), TridentDebug())
 
         settingsKeymapping = KeyBindingHelper.registerKeyBinding(
             KeyMapping(
