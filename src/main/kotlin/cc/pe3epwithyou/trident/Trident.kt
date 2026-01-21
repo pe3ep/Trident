@@ -8,7 +8,7 @@ import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.feature.TridentDebug
+import cc.pe3epwithyou.trident.feature.debug.TridentDebugEntry
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -43,6 +43,8 @@ class Trident : ModInitializer {
         var refreshDialogsKeymapping: KeyMapping? = null
         var playerState = PlayerState()
         var hasFailedToLoadConfig: Boolean = false
+
+        val tridentDebugEntry = Resources.trident("debug_tab")
     }
 
     override fun onInitialize() {
@@ -55,7 +57,7 @@ class Trident : ModInitializer {
 
         // Add Debug Screen
         val entries = DebugScreenEntriesAccessor.getEntries()
-        entries.put(Resources.trident("debug_tab"), TridentDebug())
+        entries[tridentDebugEntry] = TridentDebugEntry()
 
         settingsKeymapping = KeyBindingHelper.registerKeyBinding(
             KeyMapping(

@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.utils.Resources;
+import cc.pe3epwithyou.trident.Trident;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus;
 import net.minecraft.client.gui.components.debug.DebugScreenProfile;
@@ -26,13 +26,9 @@ public class DebugScreenEntriesMixin {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void modifyDefaultProfile(CallbackInfo ci) {
         Map<DebugScreenProfile, Map<Identifier, DebugScreenEntryStatus>> newProfiles = new HashMap<>(PROFILES);
-        Map<Identifier, DebugScreenEntryStatus> defaultProfile =
-                new HashMap<>(newProfiles.get(DebugScreenProfile.DEFAULT));
+        Map<Identifier, DebugScreenEntryStatus> defaultProfile = new HashMap<>(newProfiles.get(DebugScreenProfile.DEFAULT));
 
-        defaultProfile.put(
-                Resources.INSTANCE.trident("debug_tab"),
-                DebugScreenEntryStatus.IN_OVERLAY
-        );
+        defaultProfile.put(Trident.Companion.getTridentDebugEntry(), DebugScreenEntryStatus.IN_OVERLAY);
 
         newProfiles.put(DebugScreenProfile.DEFAULT, Map.copyOf(defaultProfile));
         PROFILES = Map.copyOf(newProfiles);

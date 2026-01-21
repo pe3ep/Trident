@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.feature.DebugScreen
+import cc.pe3epwithyou.trident.feature.debug.DebugScreen
 import cc.pe3epwithyou.trident.feature.api.ApiChecker
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.utils.Logger

@@ -11,7 +11,7 @@ import java.util.Map;
 @Mixin(DebugScreenEntries.class)
 public interface DebugScreenEntriesAccessor {
     @Accessor("ENTRIES_BY_ID")
-    static Map<Identifier, DebugScreenEntry> getEntries(){
+    static Map<Identifier, DebugScreenEntry> getEntries() {
         return null;
     }
 }
