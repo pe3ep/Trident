@@ -109,7 +109,7 @@ class AugmentWidget(
                             .withColor(0xA8B0B0.opaqueColor())
                     )
                 }
-                if (container.status == AugmentStatus.PAUSED) {
+                if (container.paused) {
                     c.append(
                         Component.literal("\n\nPaused")
                             .withColor(WARNING_COLOR_ALT.opaqueColor())
@@ -145,10 +145,10 @@ class AugmentWidget(
                 false
             )
         }
-        val isSmall = when (container.status) {
-            AugmentStatus.NEEDS_REPAIRING -> true
-            AugmentStatus.BROKEN -> true
-            AugmentStatus.PAUSED -> true
+        val isSmall = when {
+            container.status == AugmentStatus.NEEDS_REPAIRING -> true
+            container.status == AugmentStatus.BROKEN -> true
+            container.paused -> true
             else -> false
         }
 
@@ -163,7 +163,7 @@ class AugmentWidget(
             graphics, x + padding, y + padding
         )
 
-        drawAugmentBar(
+        if (!container.paused) drawAugmentBar(
             graphics,
             container.status == AugmentStatus.REPAIRED,
             container.durability / container.augment.uses.toFloat(),
@@ -185,13 +185,13 @@ class AugmentWidget(
                 ).blit(graphics, x, y)
             }
 
-            AugmentStatus.PAUSED -> {
-                Texture(
-                    PAUSED_AUGMENT, 12, 12
-                ).blit(graphics, x, y)
-            }
-
             else -> {}
+        }
+
+        if (container.paused) {
+            Texture(
+                PAUSED_AUGMENT, 12, 12
+            ).blit(graphics, x, y)
         }
     }
 
@@ -211,7 +211,7 @@ class AugmentWidget(
         val posY = y + 15
         val percent = durability / container.augment.uses.toFloat()
         val color = when {
-            container.status == AugmentStatus.PAUSED -> WARNING_COLOR.opaqueColor()
+            container.paused -> WARNING_COLOR.opaqueColor()
             durability == 0 -> 0xA8B0B0.opaqueColor()
             percent <= 0.25f -> TridentFont.ERROR.baseColor
             else -> 0xFFFFFF.opaqueColor()
@@ -234,7 +234,6 @@ class AugmentWidget(
         status: AugmentStatus
     ) {
         if (value == 1F) return
-        if (status == AugmentStatus.PAUSED) return
         if (status == AugmentStatus.NEEDS_REPAIRING) return
         if (status == AugmentStatus.BROKEN) return
         val barWidth = textureWidth - 2

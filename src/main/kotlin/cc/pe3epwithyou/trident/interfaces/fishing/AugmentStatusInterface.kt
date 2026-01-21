@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.interfaces.fishing
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.AugmentWidget
+import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.state.fishing.getAugmentContainer
@@ -23,8 +24,8 @@ object AugmentStatusInterface {
 
         val x = slot.x
         val y = slot.y
-        val status = getStatus(slot) ?: return
-        when (status) {
+        val container = getContainer(slot) ?: return
+        when (container.status) {
             AugmentStatus.NEEDS_REPAIRING -> {
                 Texture(
                     AugmentWidget.REPAIR_AUGMENT, 16, 16, 12, 12
@@ -37,23 +38,23 @@ object AugmentStatusInterface {
                 ).blit(graphics, x, y)
             }
 
-            AugmentStatus.PAUSED -> {
-                Texture(
-                    AugmentWidget.PAUSED_AUGMENT, 16, 16, 12, 12
-                ).blit(graphics, x, y)
-            }
-
             else -> {}
+        }
+
+        if (container.paused) {
+            Texture(
+                AugmentWidget.PAUSED_AUGMENT, 16, 16, 12, 12
+            ).blit(graphics, x, y)
         }
     }
 
-    private fun getStatus(slot: Slot): AugmentStatus? {
+    private fun getContainer(slot: Slot): AugmentContainer? {
         val itemStack = slot.item
         val cleanedName = itemStack.hoverName.string.replace(
             Regex("""(A\.N\.G\.L\.R\.|\[|]|Augment)"""), ""
         ).trim()
         val container =
             getAugmentContainer(cleanedName, itemStack.getLore().map { it.string }) ?: return null
-        return container.status
+        return container
     }
 }

@@ -24,7 +24,7 @@ fun updateDurability(trigger: AugmentTrigger) {
     augmentContainers.filter {
         val hasTrigger = it.augment.useTrigger == trigger
         val hasRightStatus =
-            it.status != AugmentStatus.NEEDS_REPAIRING || it.status != AugmentStatus.BROKEN || it.status != AugmentStatus.PAUSED
+            it.status != AugmentStatus.NEEDS_REPAIRING || it.status != AugmentStatus.BROKEN || !it.paused
         val canFishInGrotto = it.augment.worksInGrotto || !MCCIState.fishingState.isGrotto
         return@filter hasTrigger && hasRightStatus && canFishInGrotto
     }.forEach {

@@ -311,13 +311,14 @@ fun getAugmentByName(name: String): Augment? {
 fun getAugmentContainer(name: String, lore: List<String>): AugmentContainer? {
     Augment.entries.forEach { augment ->
         if (augment.augmentName == name) {
+            var isPaused = false
             val status = when {
                 "This item has previously been repaired." in lore -> AugmentStatus.REPAIRED
                 lore.find { "This item is out of uses! You can Repair" in it } != null -> AugmentStatus.NEEDS_REPAIRING
                 lore.find { "This item is out of uses! You've already" in it } != null -> AugmentStatus.BROKEN
-                lore.find { "Paused: This item will not consume uses" in it } != null -> AugmentStatus.PAUSED
                 else -> AugmentStatus.NEW
             }
+            isPaused = lore.find { "Paused: This item will not consume uses" in it } != null
             var durability: Int? = null
             lore.forEach { s ->
                 Regex("""Uses Remaining: (.+)/(.+)""").matchEntire(s)?.let {
@@ -325,7 +326,7 @@ fun getAugmentContainer(name: String, lore: List<String>): AugmentContainer? {
                     return@forEach
                 }
             }
-            return AugmentContainer(augment, status, durability ?: augment.uses)
+            return AugmentContainer(augment, status, durability ?: augment.uses, isPaused)
         }
     }
     return null

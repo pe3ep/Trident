@@ -148,8 +148,7 @@ object ChestScreenListener {
 
         // Process augments slots
         val augmentSlotsIndices = listOf(30, 31, 32, 33, 34, 39, 40, 41, 42, 43)
-        val augmentsRaw =
-            augmentSlotsIndices.map { screen.menu.slots[it].item } as MutableList
+        val augmentsRaw = augmentSlotsIndices.map { screen.menu.slots[it].item } as MutableList
 
         var availableSlots = 10
         Trident.playerState.supplies.augmentContainers = augmentsRaw.mapNotNull { rawName ->
@@ -162,11 +161,9 @@ object ChestScreenListener {
                 rawName.hoverName.string.contains("Empty Supply Slot") -> null
 
                 else -> {
-                    val cleanedName =
-                        rawName.hoverName.string.replace(
-                            Regex("""(A\.N\.G\.L\.R\.|\[|]|Augment)"""),
-                            ""
-                        ).trim()
+                    val cleanedName = rawName.hoverName.string.replace(
+                        Regex("""(A\.N\.G\.L\.R\.|\[|]|Augment)"""), ""
+                    ).trim()
                     getAugmentContainer(cleanedName, rawName.getLore().map { it.string })
                 }
             }
@@ -222,8 +219,7 @@ object ChestScreenListener {
                 wayfinderStatus.data = temperateData
                 wayfinderStatus.unlocked = true
                 wayfinderStatus.hasGrotto = false
-                if (temperateData >= 2000) wayfinderStatus.hasGrotto =
-                    true
+                if (temperateData >= 2000) wayfinderStatus.hasGrotto = true
                 Logger.debugLog("Island: ${item.displayName.string}, Current Data: $temperateData, Grotto: false")
                 return
             }
@@ -262,12 +258,14 @@ object ChestScreenListener {
                 screen.menu.slots[slot].item.safeGetLine(0)?.string?.split("(")?.getOrNull(1)
                     ?: continue
             val tierLineNoBrackets = tierLine.dropLast(2)
-            val tier = tierLineNoBrackets.split("/")[0].replace(",", "").toIntOrNull()!!
+            val tier = tierLineNoBrackets.split("/").getOrNull(0)?.parseFormattedInt() ?: continue
 
-            val progress = screen.menu.slots[slot].item.safeGetLine(4)?.string ?: continue
-            if (progress.contains("Progress: ")) {
-                val amount = progress.split(": ")[1].split("/")[0].replace(",", "").toIntOrNull()!!
-                val total = progress.split(": ")[1].split("/")[1].replace(",", "").toIntOrNull()!!
+            val progressLine = screen.menu.slots[slot].item.safeGetLine(4)?.string ?: continue
+            if ("Progress: " in progressLine) {
+                val progressValues = progressLine.split(": ").getOrNull(1) ?: continue
+
+                val amount = progressValues.split("/").getOrNull(0)?.parseFormattedInt() ?: continue
+                val total = progressValues.split("/").getOrNull(1)?.parseFormattedInt() ?: continue
 
                 Trident.playerState.research.researchTypes.add(
                     researchSlots.indexOf(slot), Research(

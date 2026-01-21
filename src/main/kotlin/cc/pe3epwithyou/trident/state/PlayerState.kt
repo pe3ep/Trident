@@ -24,6 +24,7 @@ data class AugmentContainer(
     var augment: Augment,
     var status: AugmentStatus = AugmentStatus.NEW,
     var durability: Int = augment.uses,
+    var paused: Boolean = false
 )
 
 @Serializable
