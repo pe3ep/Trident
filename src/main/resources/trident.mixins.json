@@ -13,12 +13,13 @@
     "BossHealthOverlayAccessor",
     "ChatScreenMixin",
     "ClientPacketListenerMixin",
-    "StartConnectToServerMixin",
-    "DebugScreenMixin",
+    "DebugScreenEntriesAccessor",
+    "DebugScreenEntriesMixin",
     "FontLoaderMixin",
     "GuiAccessor",
     "JoinIslandMixin",
-    "OffsetMixin"
+    "OffsetMixin",
+    "StartConnectToServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
