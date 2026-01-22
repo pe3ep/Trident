@@ -21,18 +21,18 @@ enum class AugmentTrigger(
 
 fun updateDurability(trigger: AugmentTrigger) {
     val augmentContainers = Trident.playerState.supplies.augmentContainers
-    augmentContainers.filter {
-        val hasTrigger = it.augment.useTrigger == trigger
-        val hasRightStatus =
-            it.status != AugmentStatus.NEEDS_REPAIRING || it.status != AugmentStatus.BROKEN || !it.paused
-        val canFishInGrotto = it.augment.worksInGrotto || !MCCIState.fishingState.isGrotto
-        return@filter hasTrigger && hasRightStatus && canFishInGrotto
-    }.forEach {
+    augmentContainers.filter { it.augment.useTrigger == trigger }.forEach {
+        if (it.paused) return@forEach
+        if (it.status == AugmentStatus.NEEDS_REPAIRING || it.status == AugmentStatus.BROKEN) return@forEach
+        if (!it.augment.worksInGrotto && MCCIState.fishingState.isGrotto) return@forEach
+
         it.durability -= 1
-        if (it.durability == 0 && it.status == AugmentStatus.NEW) it.status =
-            AugmentStatus.NEEDS_REPAIRING
-        if (it.durability == 0 && it.status == AugmentStatus.REPAIRED) it.status =
-            AugmentStatus.BROKEN
+        it.durability = it.durability.coerceIn(0, it.augment.uses)
+
+        if (it.durability == 0 && it.status == AugmentStatus.NEW)
+            it.status = AugmentStatus.NEEDS_REPAIRING
+        if (it.durability == 0 && it.status == AugmentStatus.REPAIRED)
+            it.status = AugmentStatus.BROKEN
     }
     DialogCollection.refreshDialog("supplies")
     PlayerStateIO.save()

@@ -13,6 +13,8 @@ import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
+import cc.pe3epwithyou.trident.state.fishing.AugmentTrigger
+import cc.pe3epwithyou.trident.state.fishing.updateDurability
 import com.noxcrew.noxesium.core.fabric.feature.sprite.SkullSprite
 import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccServerPacket
@@ -142,7 +144,7 @@ object NoxesiumUtils {
             )
 
             handleQuests(packet.statistic, packet.value)
-            handleWayfinderXp(packet.statistic, packet.value)
+            handleFishCaught(packet.statistic, packet.value)
         }
     }
 
@@ -176,7 +178,7 @@ object NoxesiumUtils {
         }
     }
 
-    private fun handleWayfinderXp(statistic: String, value: Int) {
+    private fun handleFishCaught(statistic: String, value: Int) {
         // Wayfinder
         if (statistic.startsWith("fishing_wayfinder_xp_")) {
             val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
@@ -189,6 +191,29 @@ object NoxesiumUtils {
             }
 
             DialogCollection.refreshDialog("wayfinder")
+        }
+
+        // Augments
+        if (statistic.startsWith("fishing_catch_")) {
+            val triggeredAugments = mutableListOf<AugmentTrigger>()
+
+            when (statistic) {
+                "fishing_catch_caught_any" -> {
+                    triggeredAugments.add(AugmentTrigger.ANYTHING)
+                    if (MCCIState.fishingState.isGrotto) {
+                        triggeredAugments.add(AugmentTrigger.ANYTHING_GROTTO)
+                    }
+                }
+                "fishing_catch_caught_fish" -> triggeredAugments.add(AugmentTrigger.FISH)
+                "fishing_catch_caught_spirit" -> triggeredAugments.add(AugmentTrigger.SPIRIT)
+                "fishing_catch_caught_treasure" -> triggeredAugments.add(AugmentTrigger.TREASURE)
+            }
+
+            triggeredAugments.forEach {
+                updateDurability(it)
+            }
+
+            DialogCollection.refreshDialog("supplies")
         }
     }
 

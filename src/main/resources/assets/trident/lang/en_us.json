@@ -50,6 +50,10 @@
   "config.trident.fishing.island_indicators.description": "Shows the current wind and tides on fishing island inside the Navigator menu.",
   "config.trident.fishing.wayfinder_module.name": "Wayfinder Module",
   "config.trident.fishing.wayfinder_module.description": "Shows a window that displays your progress towards Grottos as well as any active Grotto's stabilities.",
+  "config.trident.fishing.wayfinder_module.display.name": "Wayfinder Module Display Style",
+  "config.trident.fishing.wayfinder_module.display.description": "Determines how the Wayfinder Module is displayed.\n\n§7∙§r Full - Shows full progress bars\n§7∙§r Compact - Shows only the progress percentage towards Grottos",
+  "config.trident.fishing.wayfinder_module.display.full": "Full",
+  "config.trident.fishing.wayfinder_module.display.compact": "Compact",
   "config.trident.fishing.show_augment_status_in_interface.name": "Show Augment Status in Interface",
   "config.trident.fishing.show_augment_status_in_interface.description": "Displays the status of your Augments (Broken, Needs repairing, Paused) in the Fishing Supplies menu on MCC Island.",
 

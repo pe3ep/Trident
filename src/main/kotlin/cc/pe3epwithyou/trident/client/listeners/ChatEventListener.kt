@@ -22,7 +22,6 @@ object ChatEventListener {
     private var isSupplyPreserve = false
     private var triggerBait = true
     private var catchFinished = true
-    private var triggeredAugmentEvents: MutableList<AugmentTrigger> = mutableListOf()
 
     private fun checkJunk(component: Component): Boolean {
         val message = component.string
@@ -78,7 +77,6 @@ object ChatEventListener {
                     val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
                     wayfinderStatus.hasGrotto = false
                     wayfinderStatus.data -= 2000
-                    wayfinderStatus.data.coerceAtLeast(0)
 
                     DialogCollection.refreshDialog("wayfinder")
                 }
@@ -97,7 +95,6 @@ object ChatEventListener {
                 }
 
 
-
                 Regex("^\\(.\\) You caught: \\[(.+)].*").matchEntire(message.string)?.let {
                     if (!catchFinished) return@allowMessage true
 
@@ -105,14 +102,6 @@ object ChatEventListener {
                     isSupplyPreserve = false
                     val isJunk = checkJunk(message)
                     triggerBait = !isJunk
-                    val caught = it.groups[1]?.value ?: return@allowMessage true
-                    when {
-                        " Pearl" in caught -> triggeredAugmentEvents.add(AugmentTrigger.PEARL)
-                        " Spirit" in caught -> triggeredAugmentEvents.add(AugmentTrigger.PEARL)
-                        " Treasure" in caught -> triggeredAugmentEvents.add(AugmentTrigger.TREASURE)
-                        isJunk -> {}
-                        else -> triggeredAugmentEvents.add(AugmentTrigger.FISH)
-                    }
                 }
 
 
@@ -125,7 +114,7 @@ object ChatEventListener {
                     }
 
                     if (message.string.contains(" Elusive Catch")) {
-                        triggeredAugmentEvents.add(AugmentTrigger.ELUSIVE)
+                        updateDurability(AugmentTrigger.ELUSIVE)
                     }
                 }
 
@@ -133,16 +122,8 @@ object ChatEventListener {
                     if (isSupplyPreserve) {
                         isSupplyPreserve = false
                         catchFinished = true
-                        triggeredAugmentEvents.clear()
                         return@allowMessage true
                     }
-
-                    triggeredAugmentEvents.add(AugmentTrigger.ANYTHING)
-                    if (MCCIState.fishingState.isGrotto) {
-                        triggeredAugmentEvents.add(AugmentTrigger.ANYTHING_GROTTO)
-                    }
-
-                    // TODO: Add grotto detection with nox v3
 
                     Trident.playerState.supplies.line.uses?.let {
                         if (it != 0) Trident.playerState.supplies.line.uses = it - 1
@@ -153,15 +134,6 @@ object ChatEventListener {
                             if (it != 0) Trident.playerState.supplies.bait.amount = it - 1
                         }
                     }
-                    Logger.debugLog(
-                        "Triggered augment events: ${
-                            triggeredAugmentEvents.joinToString(
-                                ", "
-                            )
-                        }"
-                    )
-                    triggeredAugmentEvents.forEach { updateDurability(it) }
-                    triggeredAugmentEvents.clear()
 
                     catchFinished = true
                     DialogCollection.refreshDialog("supplies")

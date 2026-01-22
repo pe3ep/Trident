@@ -2,17 +2,20 @@ package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.state.AugmentContainer
+import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.utils.*
 import com.noxcrew.sheeplib.util.lighten
 import com.noxcrew.sheeplib.util.opaqueColor
+import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 
 class AugmentWidget(
@@ -126,6 +129,18 @@ class AugmentWidget(
         val c =
             name.append(supplyInfo).append(uses).append(trigger).append(grotto).append(spacer)
                 .append(useProgress)
+
+        c.append(Component.literal("\n\n")
+            .append(FontCollection.get("_fonts/icon/click_action_left.png", 7, 7).withColor(0xffffff))
+            .append(Component.literal(" > ").withStyle(ChatFormatting.DARK_GRAY))
+            .append(Component.literal("Click to ")
+                .withColor(0xe9d282)
+            )
+            .append(Component.literal("Open A.N.G.L.R. Panel")
+                .withColor(0xfbe460)
+            )
+        )
+
         return Tooltip.create(c)
     }
 
@@ -252,4 +267,9 @@ class AugmentWidget(
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
+
+    override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
+        val connection = Minecraft.getInstance().connection ?: return
+        connection.sendCommand("anglr")
+    }
 }

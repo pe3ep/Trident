@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderModuleDisplay
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
@@ -63,6 +64,9 @@ class Config {
 
     @SerialEntry
     var fishingWayfinderModule: Boolean = true
+
+    @SerialEntry
+    var fishingWayfinderModuleDisplay: WayfinderModuleDisplay = WayfinderModuleDisplay.FULL
 
     @SerialEntry
     var fishingFlashIfDepleted: Boolean = true
@@ -184,6 +188,8 @@ class Config {
             get() = handler.instance().fishingIslandIndicators
         val wayfinderModule: Boolean
             get() = handler.instance().fishingWayfinderModule
+        val wayfinderModuleDisplay: WayfinderModuleDisplay
+            get() = handler.instance().fishingWayfinderModuleDisplay
     }
 
     object Games {
@@ -685,6 +691,8 @@ class Config {
                         controller(tickBox())
                     }
 
+                    lateinit var wayfinderModuleDisplayOption: Option<WayfinderModuleDisplay>
+
                     options.register("wayfinder_module") {
                         name(Component.translatable("config.trident.fishing.wayfinder_module.name"))
                         description(
@@ -696,6 +704,24 @@ class Config {
                         )
                         binding(handler.instance()::fishingWayfinderModule, true)
                         controller(tickBox())
+                        addListener { option, event ->
+                            if (event == OptionEventListener.Event.STATE_CHANGE) {
+                                wayfinderModuleDisplayOption.setAvailable(option.pendingValue())
+                            }
+                        }
+                    }
+
+                    wayfinderModuleDisplayOption = options.register("wayfinder_module_display") {
+                        name(Component.translatable("config.trident.fishing.wayfinder_module.display.name"))
+                        description(
+                            OptionDescription.of(Component.translatable("config.trident.fishing.wayfinder_module.display.description"))
+                        )
+                        binding(
+                            handler.instance()::fishingWayfinderModuleDisplay,
+                            WayfinderModuleDisplay.FULL
+                        )
+                        controller(enumSwitch<WayfinderModuleDisplay> { v -> v.displayName })
+                        available { handler.instance().fishingWayfinderModule }
                     }
                 }
             }
