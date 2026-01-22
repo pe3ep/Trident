@@ -206,6 +206,7 @@ object NoxesiumUtils {
                 }
                 "fishing_catch_caught_fish" -> triggeredAugments.add(AugmentTrigger.FISH)
                 "fishing_catch_caught_spirit" -> triggeredAugments.add(AugmentTrigger.SPIRIT)
+                "fishing_catch_caught_pearl" -> triggeredAugments.add(AugmentTrigger.PEARL)
                 "fishing_catch_caught_treasure" -> triggeredAugments.add(AugmentTrigger.TREASURE)
             }
 
