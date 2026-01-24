@@ -2,10 +2,11 @@ package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
-import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
-import cc.pe3epwithyou.trident.feature.CraftableIndicator;
+import cc.pe3epwithyou.trident.feature.indicators.BlueprintIndicator;
+import cc.pe3epwithyou.trident.feature.indicators.CraftableIndicator;
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
 import cc.pe3epwithyou.trident.feature.fishing.TideWindIndicator;
+import cc.pe3epwithyou.trident.feature.indicators.UpgradeIndicator;
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot;
 import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter;
 import cc.pe3epwithyou.trident.interfaces.fishing.AugmentStatusInterface;
@@ -46,17 +47,19 @@ public class AbstractContainerScreenMixin extends Screen {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         RaritySlot.INSTANCE.render(guiGraphics, slot);
         TideWindIndicator.INSTANCE.renderOutline(guiGraphics, slot);
+        UpgradeIndicator.INSTANCE.renderOutline(guiGraphics, slot);
     }
 
     @Inject(method = "renderSlot", at = @At(value = "TAIL"))
     public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
-            BlueprintIndicators.INSTANCE.checkLore(guiGraphics, slot);
+            BlueprintIndicator.INSTANCE.checkLore(guiGraphics, slot);
         }
         if (Config.Debug.INSTANCE.getDrawSlotNumber()) {
             DebugDraw.INSTANCE.renderSlotNumber(guiGraphics, slot);
         }
+        UpgradeIndicator.INSTANCE.render(guiGraphics, slot);
         TideWindIndicator.INSTANCE.render(guiGraphics, slot);
         CraftableIndicator.INSTANCE.render(guiGraphics, slot);
         if (Config.Global.INSTANCE.getExchangeImprovements()) {

@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.feature
+package cc.pe3epwithyou.trident.feature.indicators
 
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.resources.Identifier
 import net.minecraft.world.inventory.Slot
 
-object BlueprintIndicators {
+object BlueprintIndicator {
     fun checkLore(graphics: GuiGraphics, slot: Slot) {
         if (slot.item.isEmpty) return
         val slotName = slot.item.hoverName.string

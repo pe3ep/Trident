@@ -7,6 +7,8 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
+import cc.pe3epwithyou.trident.feature.doll.Doll
+import cc.pe3epwithyou.trident.feature.doll.DollTestScreen
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
@@ -406,7 +408,24 @@ object TridentCommand {
                         Logger.sendMessage("Started Discord IPC")
                     }
                 }
+            }
 
+            literal("doll") {
+                literal("get_passengers") {
+                    executes {
+                        Doll.getPassengers()
+                    }
+                }
+
+                literal("open_screen") {
+                    executes {
+                        Minecraft.getInstance().execute {
+                            Minecraft.getInstance().setScreen(DollTestScreen())
+                            Logger.sendMessage("Opened screen")
+                        }
+
+                    }
+                }
             }
         }.register(dispatcher)
     }

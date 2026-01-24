@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.utils.extensions
 
-import cc.pe3epwithyou.trident.utils.Logger
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
@@ -18,20 +17,11 @@ object ItemStackExtensions {
         )
     }
 
-    fun ItemStack.safeGetLine(index: Int): Component? {
-        val c = this.getLore().getOrNull(index)
-        if (c == null) {
-            Logger.warn("Failed to get line $index on item " + this.hoverName.string)
-        }
-        return c
-    }
+    fun ItemStack.safeGetLine(index: Int): Component? = this.getLore().getOrNull(index)
 
     fun ItemStack.findInLore(predicate: Regex): MatchResult? {
-        val c = this.getLore().find { component ->
-            predicate.containsMatchIn(component.string)
-        }
+        val c = this.getLore().find { predicate.containsMatchIn(it.string) }
         if (c == null) {
-            Logger.debugLog("Failed to find predicate $predicate in item ${this.hoverName.string}")
             return null
         }
         return predicate.find(c.string)
