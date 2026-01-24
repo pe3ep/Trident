@@ -22,6 +22,7 @@ object ChatEventListener {
     private var isSupplyPreserve = false
     private var triggerBait = true
     private var catchFinished = true
+    var triggeredAugments: MutableList<AugmentTrigger> = mutableListOf()
 
     private fun checkJunk(component: Component): Boolean {
         val message = component.string
@@ -77,6 +78,7 @@ object ChatEventListener {
                     val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
                     wayfinderStatus.hasGrotto = false
                     wayfinderStatus.data -= 2000
+                    wayfinderStatus.data = wayfinderStatus.data.coerceAtLeast(0)
 
                     DialogCollection.refreshDialog("wayfinder")
                 }
@@ -90,7 +92,7 @@ object ChatEventListener {
                 }
 
                 if (message.isStockReplenished() && Config.Fishing.flashIfDepleted) {
-                    updateDurability(AugmentTrigger.SPOT)
+                    triggeredAugments.add(AugmentTrigger.SPOT)
                     DepletedDisplay.DepletedTimer.stopLoop()
                 }
 
@@ -114,7 +116,7 @@ object ChatEventListener {
                     }
 
                     if (message.string.contains(" Elusive Catch")) {
-                        updateDurability(AugmentTrigger.ELUSIVE)
+                        triggeredAugments.add(AugmentTrigger.ELUSIVE)
                     }
                 }
 
@@ -122,8 +124,15 @@ object ChatEventListener {
                     if (isSupplyPreserve) {
                         isSupplyPreserve = false
                         catchFinished = true
+                        triggeredAugments.clear()
                         return@allowMessage true
                     }
+
+                    triggeredAugments.forEach {
+                        updateDurability(it)
+                    }
+
+                    triggeredAugments.clear()
 
                     Trident.playerState.supplies.line.uses?.let {
                         if (it != 0) Trident.playerState.supplies.line.uses = it - 1
