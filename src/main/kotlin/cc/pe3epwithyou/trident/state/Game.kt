@@ -40,7 +40,7 @@ enum class Game(
         hasTeamChat = true
     ),
     PARKOUR_WARRIOR_SURVIVOR(
-        "Parkour Warrior Survivor",
+        "Parkour Warrior",
         "parkour_warrior",
         types = listOf("parkour_warrior", "solo", "survival"),
         primaryColor = 0x6ABD19,

@@ -2,12 +2,13 @@ package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.feature.debug.DebugScreen
 import cc.pe3epwithyou.trident.feature.api.ApiChecker
+import cc.pe3epwithyou.trident.feature.debug.DebugScreen
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.ScoreboardUtils
 import cc.pe3epwithyou.trident.utils.TridentFont.ERROR
+import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
@@ -24,11 +25,14 @@ data class Climate(
 }
 
 data class FishingState(
-    var climate: Climate = Climate(), var isGrotto: Boolean = false
+    var climate: Climate = Climate(), var isGrotto: Boolean = false, var island: String? = null
 )
 
 object MCCIState {
     var game: Game = Game.HUB
+    var lobbyGame: Game = Game.HUB
+    var gameState: ClientboundMccGameStatePacket? = null
+    var gameTypes: List<String> = emptyList()
     var isPlobbyGame: Boolean = false
     var fishingState: FishingState = FishingState()
     fun isOnIsland(): Boolean {

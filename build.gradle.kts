@@ -23,6 +23,7 @@ java {
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
     maven {
         name = "noxcrew-public"
         url = uri("https://maven.noxcrew.com/public")
@@ -63,6 +64,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.2")
+
+    implementation("com.github.caoimhebyrne:KDiscordIPC:0.2.3")
+    include("com.github.caoimhebyrne:KDiscordIPC:0.2.3")
 }
 
 @Suppress("UnstableApiUsage")

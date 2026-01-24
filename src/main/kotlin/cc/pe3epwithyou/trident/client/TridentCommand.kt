@@ -5,6 +5,8 @@ import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
+import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
@@ -287,6 +289,7 @@ object TridentCommand {
                 executes {
                     Logger.sendMessage("—————— ISLAND BEGIN ——————", false)
                     Logger.sendMessage("CURRENT GAME: ${MCCIState.game}")
+                    Logger.sendMessage("LOBBY GAME: ${MCCIState.lobbyGame}")
                     Logger.sendMessage("FISHING STATE: ${MCCIState.fishingState}")
                     Logger.sendMessage("——————— ISLAND END ———————", false)
                 }
@@ -373,6 +376,37 @@ object TridentCommand {
                     Config.handler.load()
                     Logger.sendMessage("Successfully reloaded config")
                 }
+            }
+
+            literal("discord_presence") {
+                literal("update_activity") {
+                    executes {
+                        ActivityManager.updateCurrentActivity()
+                        Logger.sendMessage("Updated Discord activity")
+                    }
+                }
+
+                literal("reset_activity") {
+                    executes {
+                        ActivityManager.hideActivity()
+                        Logger.sendMessage("Reset Discord activity")
+                    }
+                }
+
+                literal("stop") {
+                    executes {
+                        IPCManager.stop()
+                        Logger.sendMessage("Stopped Discord IPC")
+                    }
+                }
+
+                literal("start") {
+                    executes {
+                        IPCManager.init()
+                        Logger.sendMessage("Started Discord IPC")
+                    }
+                }
+
             }
         }.register(dispatcher)
     }
