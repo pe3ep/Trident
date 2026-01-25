@@ -36,6 +36,12 @@ object ComponentExtensions {
         return root.append(styledChild)
     }
 
+    fun MutableComponent.popped(): MutableComponent {
+        val styled = this.copy()
+        val root = Component.literal("").withStyle(Style.EMPTY)
+        return root.append(styled)
+    }
+
     private fun getOffset(x: Float, y: Float) = OffsetFormatter.write(
         OffsetStringFormatter.ComponentOffset(x, y)
     )

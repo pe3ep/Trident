@@ -27,18 +27,15 @@ object ChatSwitcherButtons {
     }
 
     fun getCurrentButtons(): List<Widget> {
-        val x = 2
-        var offset = 0
         val channels = mutableListOf<Widget>()
         getChatModes().forEach {
-            channels.add(Widget(x + offset, it))
-            offset += Widget.WIDTH + 2
+            channels.add(Widget(it))
         }
         return channels
     }
 
-    class Widget(x: Int, val mode: ChatMode) :
-        AbstractWidget(x, 0, WIDTH, HEIGHT, Component.empty()) {
+    class Widget(val mode: ChatMode) :
+        AbstractWidget(0, 0, WIDTH, HEIGHT, Component.empty()) {
         companion object {
             const val HEIGHT = 9
             const val WIDTH = 44
@@ -55,7 +52,6 @@ object ChatSwitcherButtons {
         override fun renderWidget(
             graphics: GuiGraphics, i: Int, j: Int, f: Float
         ) {
-            y = graphics.guiHeight() - CHAT_HEIGHT - HEIGHT
             if (isHovered()) Texture(HOVERED_SPRITE, WIDTH, 2).blit(graphics, x, y + HEIGHT - 1)
             texture.blit(graphics, x, y)
         }

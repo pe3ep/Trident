@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
+import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.doll.Doll
 import cc.pe3epwithyou.trident.feature.doll.DollTestScreen
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
@@ -36,6 +37,7 @@ import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.noxcrew.sheeplib.DialogContainer
 import com.noxcrew.sheeplib.util.opacity
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +48,7 @@ import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Util
 
@@ -138,6 +141,35 @@ object TridentCommand {
                             Component.literal("reset").withSwatch(TridentFont.ERROR)
                         )
                     Logger.sendMessage(c)
+                }
+            }
+
+            literal("setReplyLock") {
+                argument("user", StringArgumentType.string()) {
+                    suggests { _, builder ->
+                        Minecraft.getInstance().connection?.onlinePlayers?.forEach { builder.suggest(it.profile.name) }
+                        builder.buildFuture()
+                    }
+                    argument("mode", BoolArgumentType.bool()) {
+                        executes {
+                            val user = it.getArgument("user", String::class.java)
+                            val enable = it.getArgument("mode", Boolean::class.java)
+                            ReplyLock.currentLock = if (enable) user else null
+                            val screen = Minecraft.getInstance().screen
+                            if (screen is ChatScreen) {
+                                Minecraft.getInstance().setScreen(screen) // re-init screen (hacky, but works)
+                            }
+                            if (enable) {
+                                val component = Component.literal("Enabled reply lock for ").withColor(0xfc7dfc)
+                                    .append(Component.literal(user).withColor(0xffffff))
+                                Logger.sendMessage(component)
+                                return@executes
+                            }
+
+                            val component = Component.literal("Disabled reply lock.").withColor(0xfc7dfc)
+                            Logger.sendMessage(component)
+                        }
+                    }
                 }
             }
 
