@@ -1,14 +1,17 @@
 package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager;
+import cc.pe3epwithyou.trident.feature.friends.FriendsInServer;
 import cc.pe3epwithyou.trident.interfaces.DialogCollection;
 import cc.pe3epwithyou.trident.state.PlayerStateIO;
 import cc.pe3epwithyou.trident.utils.DelayedAction;
 import cc.pe3epwithyou.trident.utils.Logger;
+import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,5 +48,10 @@ public abstract class ConnectionMixin {
                 });
             }
         }
+    }
+
+    @Inject(at = @At("HEAD"), method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V", cancellable = true)
+    public void channelRead(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
+        FriendsInServer.INSTANCE.handlePacket(packet, ci);
     }
 }

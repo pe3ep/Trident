@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
+import cc.pe3epwithyou.trident.feature.friends.FriendsInServer
 import cc.pe3epwithyou.trident.feature.questing.GameQuests
 import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -105,6 +106,7 @@ object NoxesiumUtils {
                 Logger.debugLog("Current lobbygame: ${MCCIState.lobbyGame.title}")
             }
             updateGameDialogs(currentGame, MCCIState.isPlobbyGame, types)
+            FriendsInServer.sendPacket()
 
             if (currentGame in KillChatListener.killfeedGames) {
                 KillFeedDialog.clearKills()

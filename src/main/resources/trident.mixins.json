@@ -11,6 +11,7 @@
   "client": [
     "AbstractContainerScreenMixin",
     "BossHealthOverlayAccessor",
+    "ChatListenerMixin",
     "ChatScreenMixin",
     "ClientPacketListenerMixin",
     "DebugScreenEntriesAccessor",
