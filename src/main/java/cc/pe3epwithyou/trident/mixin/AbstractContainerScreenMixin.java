@@ -58,7 +58,9 @@ public class AbstractContainerScreenMixin extends Screen {
         if (Config.Debug.INSTANCE.getDrawSlotNumber()) {
             DebugDraw.INSTANCE.renderSlotNumber(guiGraphics, slot);
         }
-        UpgradeIndicator.INSTANCE.render(guiGraphics, slot);
+        if (Config.Global.INSTANCE.getUpgradeIndicators()) {
+            UpgradeIndicator.INSTANCE.render(guiGraphics, slot);
+        }
         TideWindIndicator.INSTANCE.render(guiGraphics, slot);
         CraftableIndicator.INSTANCE.render(guiGraphics, slot);
         if (Config.Global.INSTANCE.getExchangeImprovements()) {
