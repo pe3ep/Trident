@@ -42,7 +42,7 @@ object UpgradeIndicator {
     fun render(graphics: GuiGraphics, slot: Slot) {
         val screen = Minecraft.getInstance().screen ?: return
         if (checkUpgrade(screen, slot)) upgradeTexture.blit(graphics, slot.x - 1, slot.y + 9)
-        if (screen.title.string == "STYLE PERKS" && checkLocked(screen, slot)) lockedTexture.blit(
+        if ("STYLE PERKS" in screen.title.string && checkLocked(screen, slot)) lockedTexture.blit(
             graphics,
             slot.x - 1,
             slot.y + 10
