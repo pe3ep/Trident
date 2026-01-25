@@ -8,8 +8,6 @@ import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
-import cc.pe3epwithyou.trident.feature.doll.Doll
-import cc.pe3epwithyou.trident.feature.doll.DollTestScreen
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
@@ -48,7 +46,6 @@ import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Util
 
@@ -145,29 +142,22 @@ object TridentCommand {
             }
 
             literal("setReplyLock") {
+                val client = Minecraft.getInstance()
+                val self = client.gameProfile.name
                 argument("user", StringArgumentType.string()) {
                     suggests { _, builder ->
-                        Minecraft.getInstance().connection?.onlinePlayers?.forEach { builder.suggest(it.profile.name) }
+                        client.connection?.onlinePlayers?.filter { it.profile.name != self}?.forEach { builder.suggest(it.profile.name) }
                         builder.buildFuture()
                     }
                     argument("mode", BoolArgumentType.bool()) {
                         executes {
                             val user = it.getArgument("user", String::class.java)
                             val enable = it.getArgument("mode", Boolean::class.java)
-                            ReplyLock.currentLock = if (enable) user else null
-                            val screen = Minecraft.getInstance().screen
-                            if (screen is ChatScreen) {
-                                Minecraft.getInstance().setScreen(screen) // re-init screen (hacky, but works)
-                            }
                             if (enable) {
-                                val component = Component.literal("Enabled reply lock for ").withColor(0xfc7dfc)
-                                    .append(Component.literal(user).withColor(0xffffff))
-                                Logger.sendMessage(component)
-                                return@executes
+                                ReplyLock.enableLock(user)
+                            } else {
+                                ReplyLock.disableLock()
                             }
-
-                            val component = Component.literal("Disabled reply lock.").withColor(0xfc7dfc)
-                            Logger.sendMessage(component)
                         }
                     }
                 }
@@ -258,6 +248,30 @@ object TridentCommand {
                 }
             }
 
+        }.register(dispatcher)
+
+        // Register aliases
+        Command("replylock") {
+            argument("user", StringArgumentType.string()) {
+                executes {
+                    val user = it.getArgument("user", String::class.java)
+                    if (ReplyLock.currentLock != null) {
+                        ReplyLock.disableLock()
+                        return@executes
+                    }
+
+                    ReplyLock.enableLock(user)
+                }
+            }
+            // If present, we disable the lock
+            executes {
+                if (ReplyLock.currentLock != null) {
+                    ReplyLock.disableLock()
+                    return@executes
+                }
+
+                Logger.sendMessage("Usage: /replylock <player>")
+            }
         }.register(dispatcher)
 
         if (!Config.Debug.developerMode) return
@@ -442,23 +456,23 @@ object TridentCommand {
                 }
             }
 
-            literal("doll") {
-                literal("get_passengers") {
-                    executes {
-                        Doll.getPassengers()
-                    }
-                }
-
-                literal("open_screen") {
-                    executes {
-                        Minecraft.getInstance().execute {
-                            Minecraft.getInstance().setScreen(DollTestScreen())
-                            Logger.sendMessage("Opened screen")
-                        }
-
-                    }
-                }
-            }
+//            literal("doll") {
+//                literal("get_passengers") {
+//                    executes {
+//                        Doll.getPassengers()
+//                    }
+//                }
+//
+//                literal("open_screen") {
+//                    executes {
+//                        Minecraft.getInstance().execute {
+//                            Minecraft.getInstance().setScreen(DollTestScreen())
+//                            Logger.sendMessage("Opened screen")
+//                        }
+//
+//                    }
+//                }
+//            }
         }.register(dispatcher)
     }
 
