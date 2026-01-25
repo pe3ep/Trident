@@ -91,6 +91,13 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
             controller(tickBox())
         }
 
+        rootOptions.register("reply_lock") {
+            name(Component.translatable("config.trident.global.reply_lock.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.global.reply_lock.description")))
+            binding(handler.instance()::globalReplyLock, true)
+            controller(tickBox())
+        }
+
         groups.register("rarity_slot") {
             name(Component.translatable("config.trident.rarity_slot.name"))
             description(

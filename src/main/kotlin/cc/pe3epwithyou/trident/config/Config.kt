@@ -45,7 +45,11 @@ class Config {
     var globalChatChannelButtons: Boolean = false
 
     @SerialEntry
+    var globalReplyLock: Boolean = true
+
+    @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
+
 
     @SerialEntry
     var raritySlotEnabled: Boolean = false
@@ -157,6 +161,8 @@ class Config {
             get() = handler.instance().globalCraftableIndicators
         val upgradeIndicators: Boolean
             get() = handler.instance().globalUpgradeIndicators
+        val replyLock: Boolean
+            get() = handler.instance().globalReplyLock
         val exchangeImprovements: Boolean
             get() = handler.instance().globalExchangeImprovements
     }
@@ -281,6 +287,7 @@ class Config {
             }
 
             generalCategory(categories)
+            discordCategory(categories)
             indicatorsCategory(categories)
             killfeedCategory(categories)
             questingCategory(categories)
