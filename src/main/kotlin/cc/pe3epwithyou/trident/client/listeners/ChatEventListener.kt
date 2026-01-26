@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -56,6 +57,8 @@ object ChatEventListener {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowMessage@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowMessage true
             try {
+                ActivityManager.Party.handleChatMessage(message)
+
                 // PKW messages
                 if (message.isPKWLeapFinished() && Config.Games.autoFocus) {
                     Minecraft.getInstance().window.focusWindowIfInactive()

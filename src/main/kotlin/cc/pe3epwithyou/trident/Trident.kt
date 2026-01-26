@@ -135,7 +135,7 @@ class Trident : ModInitializer {
 
 
     private fun onShutdownClient() {
-        IPCManager.shutdown()
+        IPCManager.stop()
         try {
             if (!hasFailedToLoadConfig) PlayerStateIO.save()
         } catch (e: Exception) {

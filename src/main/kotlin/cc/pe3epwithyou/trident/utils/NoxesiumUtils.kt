@@ -106,7 +106,7 @@ object NoxesiumUtils {
                 Logger.debugLog("Current lobbygame: ${MCCIState.lobbyGame.title}")
             }
             updateGameDialogs(currentGame, MCCIState.isPlobbyGame, types)
-            FriendsInServer.sendPacket()
+            FriendsInServer.request()
 
             if (currentGame in KillChatListener.killfeedGames) {
                 KillFeedDialog.clearKills()

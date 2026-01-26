@@ -65,8 +65,7 @@ dependencies {
     compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.2")
 
-    implementation("com.github.caoimhebyrne:KDiscordIPC:0.2.3")
-    include("com.github.caoimhebyrne:KDiscordIPC:0.2.3")
+    implementation("io.github.vyfor:kpresence:0.6.6")
 }
 
 @Suppress("UnstableApiUsage")

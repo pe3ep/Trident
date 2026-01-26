@@ -26,13 +26,7 @@ object ChatSwitcherButtons {
         if (MCCIState.isInPlobby()) add(ChatMode.PLOBBY)
     }
 
-    fun getCurrentButtons(): List<Widget> {
-        val channels = mutableListOf<Widget>()
-        getChatModes().forEach {
-            channels.add(Widget(it))
-        }
-        return channels
-    }
+    fun getCurrentButtons(): List<Widget> = getChatModes().map(::Widget)
 
     class Widget(val mode: ChatMode) :
         AbstractWidget(0, 0, WIDTH, HEIGHT, Component.empty()) {

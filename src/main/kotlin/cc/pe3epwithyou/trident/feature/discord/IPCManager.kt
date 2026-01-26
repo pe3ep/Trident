@@ -2,98 +2,61 @@ package cc.pe3epwithyou.trident.feature.discord
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.utils.Logger
-import dev.cbyrne.kdiscordipc.KDiscordIPC
-import dev.cbyrne.kdiscordipc.core.event.impl.DisconnectedEvent
-import dev.cbyrne.kdiscordipc.core.event.impl.ErrorEvent
-import dev.cbyrne.kdiscordipc.core.event.impl.ReadyEvent
-import dev.cbyrne.kdiscordipc.data.activity.Activity
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collectLatest
+import io.github.vyfor.kpresence.RichClient
+import io.github.vyfor.kpresence.event.ActivityUpdateEvent
+import io.github.vyfor.kpresence.event.DisconnectEvent
+import io.github.vyfor.kpresence.event.ReadyEvent
+import io.github.vyfor.kpresence.rpc.ActivityBuilder
 
 object IPCManager {
-    private const val CLIENT_ID = "1464403445896314913"
+    private const val CLIENT_ID = 1464403445896314913
 
-    val ipc = KDiscordIPC(CLIENT_ID)
+    var ipc: RichClient? = null
 
-    private var job: Job? = null
-
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        Trident.LOGGER.error("[Trident] Unhandled exception in RichPresence coroutine", throwable)
+    /**
+     * Submits an activity to the Discord IPC client for display as a Rich Presence.
+     *
+     * If the provided activity is null, the current activity will be cleared and removed from the display.
+     * If a valid activity is provided, it will be updated and displayed on the user's Discord profile.
+     *
+     * @param activity An instance of [ActivityBuilder] that defines the details of the activity to display,
+     *                 or null to clear the current activity.
+     */
+    fun submitBuilder(activity: ActivityBuilder?) {
+        ipc?.let {
+            val builtActivity = activity?.build()
+            it.update(builtActivity)
+            Logger.info("Submitted Discord activity: $builtActivity")
+        }
     }
-
-    private val activityUpdates = MutableSharedFlow<Activity?>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
-
-
-    fun submitActivity(activity: Activity?) {
-        activityUpdates.tryEmit(activity)
-        Logger.info("Submitted Discord activity: $activity")
-    }
-
-    val scope = CoroutineScope(
-        SupervisorJob()
-                + Dispatchers.IO
-                + CoroutineName("Trident-RPC")
-                + coroutineExceptionHandler
-    )
 
     fun init() {
-        if (job != null) return
+        try {
+            ipc = RichClient(CLIENT_ID)
 
-        job = scope.launch {
-            ipc.on<ReadyEvent> {
-                Logger.info("Discord Presence Ready for (${data.user.username}#${data.user.discriminator})")
+            ipc!!.on<ReadyEvent> {
+                Logger.info("Discord Presence Ready")
             }
 
-            ipc.on<DisconnectedEvent> {
+            ipc!!.on<DisconnectEvent> {
                 Logger.info("Discord Presence Disconnected")
             }
 
-            ipc.on<ErrorEvent> {
-                Logger.error("Discord IPC Error: ${data.message}")
+            ipc!!.on<ActivityUpdateEvent> {
+                Logger.info("Discord Activity Updated")
             }
 
-            val collector = launch {
-                activityUpdates.collectLatest { activity ->
-                    val ok = withTimeoutOrNull(5_000L) {
-                        Logger.info("Sending activity $activity to Discord")
-                        ipc.activityManager.setActivity(activity)
-                        true
-                    } ?: false
-
-                    if (!ok) {
-                        Logger.info("Failed to set Discord activity (timeout/failed), will try next update")
-                    }
-                }
-            }
-
-            try {
-                ipc.connect()
-            } catch (t: Throwable) {
-                Trident.LOGGER.error("[Trident] Failed to connect to Discord IPC", t)
-            } finally {
-                collector.cancelAndJoin()
-            }
+            ipc!!.connect()
+        } catch (e: Exception) {
+            Trident.LOGGER.error("[Trident] Failed to initialize RichPresence", e)
         }
     }
 
     fun stop() {
-        job?.cancel()
-        job = null
         try {
-            ipc.disconnect()
+            ipc?.shutdown()
         } catch (t: Throwable) {
             Trident.LOGGER.warn("[Trident] Failed to disconnect from Discord IPC", t)
         }
-    }
-
-    fun shutdown() {
-        stop()
-        scope.cancel()
     }
 }
