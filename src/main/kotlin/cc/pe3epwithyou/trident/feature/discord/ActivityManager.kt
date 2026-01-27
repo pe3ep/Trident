@@ -5,9 +5,11 @@ import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.SuggestionPacket
+import cc.pe3epwithyou.trident.utils.useScreen
 import io.github.vyfor.kpresence.rpc.ActivityAssetsBuilder
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
 import java.time.Instant
 
@@ -52,16 +54,22 @@ object ActivityManager {
 
     fun updateCurrentActivity() {
         val activity = getActivity()
+        val container = FabricLoader.getInstance().getModContainer("trident")
+        var version = "Unknown"
+        container.ifPresent { modContainer ->
+            version = modContainer.metadata.version.friendlyString
+        }
+
         activity.details = null
         val game = MCCIState.game
         activity.state = game.title
         val assetsBuilder = ActivityAssetsBuilder()
         assetsBuilder.largeImage = "game_${game.name.lowercase()}"
-        assetsBuilder.smallImage = activity.assets?.smallImage
-        assetsBuilder.smallText = activity.assets?.smallText
+        assetsBuilder.smallImage = "trident"
+        assetsBuilder.smallText = "Trident $version"
 
         MCCIState.gameState?.let {
-            if (it.stage == "podiumphase") {
+            if (it.stage == "podiumphase" || it.stage == "postgame") {
                 activity.details = "Game Finished"
                 return@let
             }
@@ -111,11 +119,16 @@ object ActivityManager {
 
             Game.BATTLE_BOX_ARENA -> {
                 MCCIState.gameState?.let {
-                    if (it.stage == "podiumphase") return@let
+                    if (it.stage == "podiumphase" || it.stage == "postgame") return@let
                     activity.details = "${it.mapName} - Round ${it.round + 1}"
                 }
 
                 assetsBuilder.largeImage = "game_battle_box_arena"
+                Arena.currentRank?.let {
+                    assetsBuilder.smallText = it.name
+                    assetsBuilder.smallImage = it.image
+                }
+
             }
 
             Game.PARKOUR_WARRIOR_DOJO -> {
@@ -139,6 +152,9 @@ object ActivityManager {
 
         if (!Config.Discord.displayExtraInfo) {
             activity.details = null
+            if (game == Game.FISHING) {
+                activity.details = "On a Fishing Island"
+            }
         }
 
         currentActivityBuilder = activity
@@ -191,5 +207,48 @@ object ActivityManager {
                 request()
             }
         }
+    }
+
+    object Arena {
+        var currentRank: Rank? = null
+
+        val knownRanks = listOf(
+            "bronze_iii",
+            "bronze_ii",
+            "bronze_i",
+            "silver_iii",
+            "silver_ii",
+            "silver_i",
+            "gold_iii",
+            "gold_ii",
+            "gold_i",
+            "platinum_iii",
+            "platinum_ii",
+            "platinum_i",
+            "master",
+            "grand_master",
+        )
+
+        fun handleScreen(screen: ContainerScreen) = useScreen(screen) {
+            updateRank(getItem(10).hoverName.string)
+            Logger.debugLog("Set rank to $currentRank")
+        }
+
+        fun updateRank(name: String?) {
+            if (name == null) {
+                currentRank = null
+                return
+            }
+
+            val rank = name.replace(" ", "_").lowercase()
+            if (rank !in knownRanks) {
+                currentRank = null
+                return
+            }
+
+            currentRank = Rank(name, "rank_$rank")
+        }
+
+        data class Rank(val name: String, val image: String)
     }
 }

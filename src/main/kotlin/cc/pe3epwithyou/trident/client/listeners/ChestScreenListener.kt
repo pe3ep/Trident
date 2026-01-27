@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -20,8 +21,10 @@ import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.safeGetLine
 import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
+import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.useScreen
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
@@ -51,6 +54,8 @@ object ChestScreenListener {
             checkName("FISHING ISLANDS") { await { findWayfinderData(it) } }
             checkName("FISHING PROGRESS") { await { findFishingResearch(it) } }
             checkName("ISLAND EXCHANGE") { await { ExchangeHandler.handleScreen(it) } }
+            checkName("MATCH FOUND! (0/") { await { Minecraft.getInstance().window.focusWindowIfInactive() } }
+            checkName("BATTLE BOX ARENA") { await { ActivityManager.Arena.handleScreen(it) } }
         }
 
         Logger.debugLog("Screen title: $title")

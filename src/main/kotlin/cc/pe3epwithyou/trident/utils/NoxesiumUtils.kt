@@ -124,7 +124,7 @@ object NoxesiumUtils {
         ) { _, packet, _ ->
             MCCIState.gameState = packet
             removeKillsIfNeeded(packet)
-            if (packet.stage == "inround" || packet.stage == "countdownphase" || packet.stage == "preparationphase" || packet.stage == "podiumphase") {
+            if (packet.stage == "inround" || packet.stage == "countdownphase" || packet.stage == "preparationphase" || packet.stage == "podiumphase" || packet.stage == "postgame") {
                 ActivityManager.updateCurrentActivity()
             }
         }
