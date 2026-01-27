@@ -96,7 +96,7 @@ object EffectBar {
     ) {
         fun name(): Component =
             FontCollection.texture(icon, textureAtlas).withoutShadow().offset(y = 1f)
-                .append(" $name ${if (amplifier != 0) amplifier + 1 else ""}: ${formattedDuration()}")
+                .append(" $name: ${formattedDuration()}")
 
         fun formattedDuration(): String {
             if (duration == -1) return "∞"
