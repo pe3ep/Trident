@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.data.AtlasIds
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
-import java.util.Locale
+import java.util.*
 import kotlin.math.floor
 
 object EffectBar {
@@ -59,16 +59,27 @@ object EffectBar {
             if (unwrappedId.isEmpty) return@forEach
             val id = unwrappedId.get().identifier()
             if (id in hiddenEffects) return@forEach
+
+            // HITW check
+            if (MCCIState.game == Game.HITW && id == Resources.minecraft("jump_boost")) {
+                if (it.amplifier <= 2) return@forEach // Don't display the constant jump boost effect
+            }
+
             if (id in CUSTOM_EFFECTS) {
                 val effect = CUSTOM_EFFECTS[id]!!
-                effect.duration = it.duration
+                effect.apply {
+                    duration = it.duration
+                    amplifier = it.amplifier
+                }
+
                 effects.add(effect)
             } else {
                 effects.add(
                     Effect(
                         unwrappedMobEffect.displayName.string, id.withPrefix("mob_effect/"),
                         AtlasIds.GUI,
-                        duration = it.duration
+                        duration = it.duration,
+                        amplifier = it.amplifier
                     )
                 )
             }
@@ -80,19 +91,21 @@ object EffectBar {
         val name: String,
         val icon: Identifier,
         val textureAtlas: Identifier = AtlasIds.BLOCKS,
-        var duration: Int = 0
+        var duration: Int = 0,
+        var amplifier: Int = 0
     ) {
         fun name(): Component =
-            FontCollection.texture(icon, textureAtlas).withoutShadow().offset(y = 1f).append(" $name: ${formattedDuration()}")
+            FontCollection.texture(icon, textureAtlas).withoutShadow().offset(y = 1f)
+                .append(" $name ${if (amplifier != 0) amplifier + 1 else ""}: ${formattedDuration()}")
 
         fun formattedDuration(): String {
-            if (duration == -1 ) return "∞"
+            if (duration == -1) return "∞"
             val ms = duration * 50
             val totalSeconds = ms / 1000.0
 
             return when {
                 totalSeconds < 5.0 -> {
-                    String.format(Locale.US, "%.2fs", totalSeconds)
+                    String.format(Locale.US, "%.1fs", totalSeconds)
                 }
 
                 totalSeconds < 60.0 -> {
