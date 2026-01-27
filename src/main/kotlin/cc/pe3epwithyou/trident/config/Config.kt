@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.config
 import cc.pe3epwithyou.trident.config.groups.*
 import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
@@ -140,6 +141,20 @@ class Config {
     @SerialEntry
     var questingHideIfNoQuests: Boolean = false
 
+
+    @SerialEntry
+    var discordEnabled: Boolean = true
+
+    @SerialEntry
+    var discordPrivateMode: Boolean = false
+
+    @SerialEntry
+    var discordDisplayExtraInfo: Boolean = true
+
+    @SerialEntry
+    var discordDisplayParty: Boolean = true
+
+
     @SerialEntry
     var apiKey: String = ""
 
@@ -241,6 +256,17 @@ class Config {
             get() = handler.instance().questingHideIfNoQuests
     }
 
+    object Discord {
+        val enabled: Boolean
+            get() = handler.instance().discordEnabled
+        val privateMode: Boolean
+            get() = handler.instance().discordPrivateMode
+        val displayExtraInfo: Boolean
+            get() = handler.instance().discordDisplayExtraInfo
+        val displayParty: Boolean
+            get() = handler.instance().discordDisplayParty
+    }
+
     object Api {
         val key: String
             get() = handler.instance().apiKey
@@ -284,6 +310,7 @@ class Config {
             save {
                 handler.save()
                 DialogCollection.refreshOpenedDialogs()
+                ActivityManager.updateCurrentActivity()
             }
 
             generalCategory(categories)

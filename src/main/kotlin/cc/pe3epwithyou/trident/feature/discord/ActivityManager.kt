@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.discord
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Logger
@@ -51,34 +52,33 @@ object ActivityManager {
 
     fun updateCurrentActivity() {
         val activity = getActivity()
-        activity.state = null
+        activity.details = null
         val game = MCCIState.game
-        activity.details = "Playing ${game.title}"
+        activity.state = game.title
         val assetsBuilder = ActivityAssetsBuilder()
         assetsBuilder.largeImage = "game_${game.name.lowercase()}"
         assetsBuilder.smallImage = activity.assets?.smallImage
         assetsBuilder.smallText = activity.assets?.smallText
 
-
         MCCIState.gameState?.let {
             if (it.stage == "podiumphase") {
-                activity.state = "Game over"
+                activity.details = "Game Finished"
                 return@let
             }
 
             if (it.totalRounds > 1) {
-                activity.state = "${it.mapName} - Round ${it.round + 1} of ${it.totalRounds}"
+                activity.details = "${it.mapName} - Round ${it.round + 1} of ${it.totalRounds}"
             } else if (it.mapName.length > 2) {
-                activity.state = "${it.mapName}"
+                activity.details = "${it.mapName}"
             }
         }
         when (game) {
             Game.HUB -> {
-                activity.details = "In the Hub"
-                activity.state = null
+                activity.state = "Hub"
+                activity.details = null
                 assetsBuilder.largeImage = "game_hub"
                 if (MCCIState.lobbyGame != Game.HUB) {
-                    activity.state = "${MCCIState.lobbyGame.title} lobby"
+                    activity.details = "${MCCIState.lobbyGame.title} lobby"
                 }
             }
 
@@ -112,7 +112,7 @@ object ActivityManager {
             Game.BATTLE_BOX_ARENA -> {
                 MCCIState.gameState?.let {
                     if (it.stage == "podiumphase") return@let
-                    activity.state = "${it.mapName} - Round ${it.round + 1}"
+                    activity.details = "${it.mapName} - Round ${it.round + 1}"
                 }
 
                 assetsBuilder.largeImage = "game_battle_box_arena"
@@ -123,10 +123,10 @@ object ActivityManager {
                 MCCIState.gameTypes.find { Regex("""(main-\d|daily)""").matches(it) }?.let {
                     Logger.debugLog("Found course type: $it")
                     if (it == "daily") {
-                        activity.state = "Daily Challenge"
+                        activity.details = "Daily Challenge"
                     } else {
                         val challenge = it.split("-").getOrNull(1)?.toIntOrNull() ?: return@let
-                        activity.state = "Course #$challenge"
+                        activity.details = "Course #$challenge"
                     }
                 }
                 assetsBuilder.largeImage = "game_parkour_warrior_dojo"
@@ -137,6 +137,10 @@ object ActivityManager {
 
         activity.assets = assetsBuilder.build()
 
+        if (!Config.Discord.displayExtraInfo) {
+            activity.details = null
+        }
+
         currentActivityBuilder = activity
         Party.request()
     }
@@ -145,13 +149,13 @@ object ActivityManager {
         val activity = getActivity()
         var size = Party.size
         if (size == 1) size = null
-        if (size == null) {
-            activity.party = null
-        } else {
+        if (size != null && Config.Discord.displayParty) {
             activity.party {
                 currentSize = size
                 maxSize = 4
             }
+        } else {
+            activity.party = null
         }
 
         currentActivityBuilder = activity
@@ -162,12 +166,14 @@ object ActivityManager {
         var previousSize: Int? = null
         var size: Int? = null
 
+        var members: List<String> = emptyList()
+
         fun request() = SuggestionPacket.requestSuggestions("/party kick ", ::updateSize)
 
         fun updateSize(suggestions: List<String>) {
             val suggestionCount = suggestions.size
             Logger.debugLog("Party size: ${suggestionCount + 1}")
-
+            members = suggestions
             updatePartySize(suggestionCount + 1)
         }
 
@@ -182,10 +188,6 @@ object ActivityManager {
             val str = message.string
 
             Regex("""(has joined|has been removed|have been removed from|has left|leaves|left|have joined) the party""").find(str)?.let {
-                if ("You left" in str || "You have been removed" in str) {
-                    updatePartySize(null)
-                    return
-                }
                 request()
             }
         }

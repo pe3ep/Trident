@@ -54,6 +54,7 @@ object IPCManager {
 
     fun stop() {
         try {
+            ipc?.update(null)
             ipc?.shutdown()
         } catch (t: Throwable) {
             Trident.LOGGER.warn("[Trident] Failed to disconnect from Discord IPC", t)
