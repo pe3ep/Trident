@@ -49,6 +49,9 @@ class Config {
     var globalReplyLock: Boolean = true
 
     @SerialEntry
+    var globalEffectBar: Boolean = true
+
+    @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
 
 
@@ -180,6 +183,8 @@ class Config {
             get() = handler.instance().globalReplyLock
         val exchangeImprovements: Boolean
             get() = handler.instance().globalExchangeImprovements
+        val effectBar: Boolean
+            get() = handler.instance().globalEffectBar
     }
 
     object RaritySlot {

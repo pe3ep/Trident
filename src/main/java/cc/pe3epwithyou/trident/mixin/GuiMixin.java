@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock;
+import cc.pe3epwithyou.trident.feature.statusbar.EffectBar;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
@@ -24,5 +25,6 @@ public abstract class GuiMixin {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (getCameraPlayer() == null) return;
         ReplyLock.Icon.renderIcon(guiGraphics, getCameraPlayer());
+        EffectBar.render(guiGraphics);
     }
 }

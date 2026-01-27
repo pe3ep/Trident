@@ -54,6 +54,11 @@ object FontCollection {
         return Component.`object`(AtlasSprite(AtlasSprite.DEFAULT_ATLAS, resource))
     }
 
+    fun texture(resource: Identifier, atlas: Identifier): MutableComponent {
+        if (!Identifier.isValidPath(resource.path)) return Component.literal("?").defaultFont()
+        return Component.`object`(AtlasSprite(atlas, resource))
+    }
+
     fun populateCache(icon: Icon) {
         if ("_fonts/icon/xp_bonus" in icon.path.path) {
             val char = collection[icon] ?: return

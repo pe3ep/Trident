@@ -98,6 +98,13 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
             controller(tickBox())
         }
 
+        rootOptions.register("effect_bar") {
+            name(Component.translatable("config.trident.global.effect_bar.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.global.effect_bar.description")))
+            binding(handler.instance()::globalEffectBar, true)
+            controller(tickBox())
+        }
+
         groups.register("rarity_slot") {
             name(Component.translatable("config.trident.rarity_slot.name"))
             description(
