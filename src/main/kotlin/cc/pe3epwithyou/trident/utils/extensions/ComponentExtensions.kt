@@ -32,13 +32,13 @@ object ComponentExtensions {
 
     fun MutableComponent.offset(x: Float = 0f, y: Float = 0f): MutableComponent {
         val styledChild = this.copy().withStyle(Style.EMPTY.withInsertion(getOffset(x, y)))
-        val root = Component.literal("").withStyle(Style.EMPTY)
+        val root = Component.literal("").setStyle(Style.EMPTY)
         return root.append(styledChild)
     }
 
     fun MutableComponent.popped(): MutableComponent {
         val styled = this.copy()
-        val root = Component.literal("").withStyle(Style.EMPTY)
+        val root = Component.literal("").setStyle(Style.EMPTY)
         return root.append(styled)
     }
 

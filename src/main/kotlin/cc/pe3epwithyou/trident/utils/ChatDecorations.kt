@@ -18,7 +18,7 @@ object ChatDecorations {
         val components = mutableListOf<AbstractWidget>()
 
         val lock = ReplyLock.currentLock
-        if (lock != null) {
+        if (lock != null && Config.Global.replyLock) {
             val widget = CurrentLockedChatWidget(lock)
             components.add(widget)
         }

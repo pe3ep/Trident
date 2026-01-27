@@ -18,6 +18,7 @@
     "DebugScreenEntriesMixin",
     "FontLoaderMixin",
     "GuiAccessor",
+    "GuiMixin",
     "JoinIslandMixin",
     "OffsetMixin",
     "StartConnectToServerMixin"

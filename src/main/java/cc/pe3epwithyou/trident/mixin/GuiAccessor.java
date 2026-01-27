@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface GuiAccessor {
     @Accessor
     @Nullable
-    Component getSubtitle();
+    Component getOverlayMessageString();
 
     @Accessor
     @Nullable

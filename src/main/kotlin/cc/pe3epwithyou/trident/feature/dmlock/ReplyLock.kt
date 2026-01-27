@@ -1,24 +1,85 @@
 package cc.pe3epwithyou.trident.feature.dmlock
 
+import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.mixin.GuiAccessor
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
+import com.noxcrew.sheeplib.util.opacity
+import com.noxcrew.sheeplib.util.opaqueColor
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
+import net.minecraft.world.entity.HumanoidArm
+import net.minecraft.world.entity.player.Player
 
 object ReplyLock {
     var currentLock: String? = null
 
+    object Icon {
+        val xpBonusCharCache = mutableSetOf<String>()
+
+        fun containsChar(actionbar: String): Boolean {
+            if (xpBonusCharCache.isEmpty()) return false
+            for (c in actionbar) {
+                if (c.toString() in xpBonusCharCache) return true
+            }
+            return false
+        }
+
+        @JvmStatic
+        fun renderIcon(graphics: GuiGraphics, cameraPlayer: Player) {
+            if (!MCCIState.isOnIsland()) return
+            if (!Config.Global.replyLock) return
+            if (currentLock == null) return
+            val gui = Minecraft.getInstance().gui
+            val actionBar = (gui as GuiAccessor).overlayMessageString ?: return
+
+            val middle: Int = graphics.guiWidth() / 2
+            val hotbarHalf = 91
+            val hand = cameraPlayer.mainArm.opposite
+            var offset = 0
+
+            if (containsChar(actionBar.string)) {
+                offset += 40
+            }
+
+            if (hand == HumanoidArm.RIGHT && !cameraPlayer.offhandItem.isEmpty) {
+                offset += 29
+            }
+
+            val x = middle + hotbarHalf + 1 + offset
+            val y = graphics.guiHeight() - 12
+
+            val lock = Component.literal("\uE016").withTridentFont().popped()
+                .withoutShadow()
+
+            val font = Minecraft.getInstance().font
+
+            graphics.fill(
+                x,
+                y,
+                x + 9,
+                y + 9,
+                0x000000 opacity 128
+            )
+
+            graphics.drawString(font, lock, x + 1, y, 0xffffff.opaqueColor())
+        }
+    }
+
+
     fun register() {
         ClientSendMessageEvents.ALLOW_CHAT.register allowChat@{ message ->
             if (!MCCIState.isOnIsland()) return@allowChat true
+            if (!Config.Global.replyLock) return@allowChat true
             val user = currentLock
             if (user != null) {
                 val connection = Minecraft.getInstance().connection ?: return@allowChat true
@@ -31,6 +92,7 @@ object ReplyLock {
 
         ClientSendMessageEvents.MODIFY_COMMAND.register modifyCmd@{ command ->
             if (!MCCIState.isOnIsland()) return@modifyCmd command
+            if (!Config.Global.replyLock) return@modifyCmd command
 
             var modified = command
             if (modified.startsWith("chat ") || modified == "l" || modified == "local") {
@@ -51,9 +113,11 @@ object ReplyLock {
     }
 
     fun enableLock(user: String, showMessage: Boolean = true) {
+        if (!Config.Global.replyLock) return
         val self = Minecraft.getInstance().gameProfile.name
         if (user.equals(self, ignoreCase = true)) {
-            val component = Component.literal("You can't lock replies with yourself!").withColor(0xfc7dfc)
+            val component =
+                Component.literal("You can't lock replies with yourself!").withColor(0xfc7dfc)
             Logger.sendMessage(component)
             return
         }
@@ -67,6 +131,7 @@ object ReplyLock {
     }
 
     fun disableLock(showMessage: Boolean = true) {
+        if (!Config.Global.replyLock) return
         currentLock = null
         refreshChatScreen()
 
@@ -88,6 +153,7 @@ object ReplyLock {
 
     fun modifyComponent(component: Component): Component {
         if (!MCCIState.isOnIsland()) return component
+        if (!Config.Global.replyLock) return component
 
         var mutable = component.copy()
         Regex("""^\[(PM From|PM To)] (.+):""").find(mutable.string)?.let {
@@ -107,7 +173,7 @@ object ReplyLock {
                 )
                 modified.append(Component.literal(" "))
             }
-            modified.append(Component.literal("$type]: "))
+            modified.append(Component.literal("$type] "))
 
             items.add(0, modified)
             mutable = Component.empty()

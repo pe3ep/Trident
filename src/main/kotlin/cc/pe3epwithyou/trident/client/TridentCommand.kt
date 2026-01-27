@@ -253,6 +253,12 @@ object TridentCommand {
         // Register aliases
         Command("replylock") {
             argument("user", StringArgumentType.string()) {
+                suggests { _, builder ->
+                    val client = Minecraft.getInstance()
+                    val self = client.gameProfile.name
+                    client.connection?.onlinePlayers?.map { it.profile.name }?.filter { it != self}?.filter { !it.startsWith("MCCTabPlayer") && !it.startsWith("MCC_NPC") }?.forEach { builder.suggest(it) }
+                    builder.buildFuture()
+                }
                 executes {
                     val user = it.getArgument("user", String::class.java)
                     if (ReplyLock.currentLock != null) {

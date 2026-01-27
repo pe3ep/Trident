@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.state
 
+import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
@@ -33,11 +34,13 @@ object FontCollection {
 
     fun clear() {
         collection.clear()
+        clearCache()
     }
 
     fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) {
         val i = Icon(location, ascent, height)
         collection[i] = char
+        populateCache(i)
     }
 
     data class Icon(
@@ -49,5 +52,16 @@ object FontCollection {
     fun texture(resource: Identifier): MutableComponent {
         if (!Identifier.isValidPath(resource.path)) return Component.literal("?").defaultFont()
         return Component.`object`(AtlasSprite(AtlasSprite.DEFAULT_ATLAS, resource))
+    }
+
+    fun populateCache(icon: Icon) {
+        if ("_fonts/icon/xp_bonus" in icon.path.path) {
+            val char = collection[icon] ?: return
+            ReplyLock.Icon.xpBonusCharCache.add(char)
+        }
+    }
+
+    fun clearCache() {
+        ReplyLock.Icon.xpBonusCharCache.clear()
     }
 }
