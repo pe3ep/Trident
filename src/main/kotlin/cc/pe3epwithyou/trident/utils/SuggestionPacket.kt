@@ -15,8 +15,6 @@ object SuggestionPacket {
     val tasks: ConcurrentHashMap<Int, SuggestionTask> = ConcurrentHashMap()
 
     data class SuggestionTask(val id: Int, val callback: (List<String>) -> Unit) {
-        var isHandled: Boolean = false
-
         fun handle(strings: List<String>) = Minecraft.getInstance().execute { callback(strings) }
     }
 
@@ -27,9 +25,8 @@ object SuggestionPacket {
         tasks[id] = task
         sendPacket(id, command)
         CoroutineScope(Dispatchers.IO).launch {
-            delay(3_000)
+            delay(1_500)
             val task = tasks.remove(id) ?: return@launch
-            if (task.isHandled) return@launch
             Logger.debugLog("Failed to get suggestions for command $command")
             task.handle(emptyList())
         }
