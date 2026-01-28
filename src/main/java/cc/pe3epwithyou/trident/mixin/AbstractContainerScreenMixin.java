@@ -54,7 +54,7 @@ public class AbstractContainerScreenMixin extends Screen {
     public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
-            BlueprintIndicator.INSTANCE.checkLore(guiGraphics, slot);
+            BlueprintIndicator.checkItem(guiGraphics, slot);
         }
         if (Config.Debug.INSTANCE.getDrawSlotNumber()) {
             DebugDraw.INSTANCE.renderSlotNumber(guiGraphics, slot);
