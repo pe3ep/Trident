@@ -114,11 +114,18 @@ data class FishingResearch(
 )
 
 @Serializable
+data class Rank(val name: String, val image: String)
+
+@Serializable
+data class ArenaData(var currentRank: Rank? = null)
+
+@Serializable
 data class PlayerState(
     var supplies: Supplies = Supplies(),
     var wayfinderData: WayfinderData = WayfinderData(),
     var research: FishingResearch = FishingResearch(),
-    var hatesUpdates: Boolean = false
+    var hatesUpdates: Boolean = false,
+    var arenaData: ArenaData = ArenaData()
 )
 
 object PlayerStateIO {

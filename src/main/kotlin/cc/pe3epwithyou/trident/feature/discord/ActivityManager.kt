@@ -1,8 +1,10 @@
 package cc.pe3epwithyou.trident.feature.discord
 
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
+import cc.pe3epwithyou.trident.state.Rank
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.SuggestionPacket
 import cc.pe3epwithyou.trident.utils.useScreen
@@ -124,7 +126,7 @@ object ActivityManager {
                 }
 
                 assetsBuilder.largeImage = "game_battle_box_arena"
-                Arena.currentRank?.let {
+                Trident.playerState.arenaData.currentRank?.let {
                     assetsBuilder.smallText = it.name
                     assetsBuilder.smallImage = it.image
                 }
@@ -210,8 +212,6 @@ object ActivityManager {
     }
 
     object Arena {
-        var currentRank: Rank? = null
-
         val knownRanks = listOf(
             "bronze_iii",
             "bronze_ii",
@@ -231,24 +231,24 @@ object ActivityManager {
 
         fun handleScreen(screen: ContainerScreen) = useScreen(screen) {
             updateRank(getItem(10).hoverName.string)
+            val currentRank = Trident.playerState.arenaData.currentRank
             Logger.debugLog("Set rank to $currentRank")
         }
 
         fun updateRank(name: String?) {
             if (name == null) {
-                currentRank = null
+                Trident.playerState.arenaData.currentRank = null
                 return
             }
 
             val rank = name.replace(" ", "_").lowercase()
             if (rank !in knownRanks) {
-                currentRank = null
+                Trident.playerState.arenaData.currentRank = null
                 return
             }
 
-            currentRank = Rank(name, "rank_$rank")
+            Trident.playerState.arenaData.currentRank = Rank(name, "rank_$rank")
         }
 
-        data class Rank(val name: String, val image: String)
     }
 }
