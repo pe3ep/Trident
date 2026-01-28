@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
+import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
@@ -458,6 +459,15 @@ object TridentCommand {
                     executes {
                         IPCManager.init()
                         Logger.sendMessage("Started Discord IPC")
+                    }
+                }
+            }
+
+            literal("cache") {
+                literal("dump_cached_icons") {
+                    executes {
+                        Logger.sendMessage("Disguised: ${Disguise.disguiseIconCache}")
+                        Logger.sendMessage("XP: ${ReplyLock.Icon.xpBonusCharCache}")
                     }
                 }
             }

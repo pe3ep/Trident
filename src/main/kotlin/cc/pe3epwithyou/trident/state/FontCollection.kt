@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.contents.objects.AtlasSprite
@@ -38,7 +39,7 @@ object FontCollection {
         clearCache()
     }
 
-    fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) {
+    fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) = Minecraft.getInstance().execute {
         val i = Icon(location, ascent, height)
         collection[i] = char
         populateCache(i)

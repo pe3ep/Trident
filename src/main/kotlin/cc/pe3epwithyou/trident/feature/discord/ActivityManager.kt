@@ -51,7 +51,7 @@ object ActivityManager {
 
     private fun shouldHideActivity(): Boolean {
         if (Config.Discord.privateMode) return true
-        if (Config.Discord.autoPrivateMode && Disguise.isDisguised()) {
+        if (Config.Discord.autoPrivateMode && Disguise.isDisguised) {
             val game = MCCIState.game
             return game != Game.HUB && game != Game.FISHING
         }
