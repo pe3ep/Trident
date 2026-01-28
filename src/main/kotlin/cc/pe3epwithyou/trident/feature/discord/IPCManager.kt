@@ -7,6 +7,8 @@ import io.github.vyfor.kpresence.event.ActivityUpdateEvent
 import io.github.vyfor.kpresence.event.DisconnectEvent
 import io.github.vyfor.kpresence.event.ReadyEvent
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 object IPCManager {
     private const val CLIENT_ID = 1464403445896314913
@@ -24,9 +26,15 @@ object IPCManager {
      */
     fun submitBuilder(activity: ActivityBuilder?) {
         ipc?.let {
-            val builtActivity = activity?.build()
-            it.update(builtActivity)
-            Logger.info("Submitted Discord activity: $builtActivity")
+            it.coroutineScope.launch {
+                withTimeoutOrNull(5_000L) {
+                    val builtActivity = activity?.build()
+                    it.update(builtActivity)
+                    Logger.info("Submitted Discord activity: $builtActivity")
+                } ?: run {
+                    Logger.error("Failed to submit Discord activity: $activity")
+                }
+            }
         }
     }
 
@@ -54,6 +62,7 @@ object IPCManager {
 
     fun stop() {
         try {
+            ActivityManager.hideActivity()
             ipc?.update(null)
             ipc?.shutdown()
         } catch (t: Throwable) {

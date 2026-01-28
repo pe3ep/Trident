@@ -58,9 +58,10 @@ object ChatEventListener {
             if (!MCCIState.isOnIsland()) return@allowMessage true
             try {
                 ActivityManager.Party.handleChatMessage(message)
-                Regex("""You'vØe been (?:promoted|demoted) to (.+)""").find(message.string)?.let {
+                Regex("""You've been (?:promoted|demoted) to (.+)""").find(message.string)?.let {
                     val rank = it.groups[1]?.value
                     ActivityManager.Arena.updateRank(rank)
+                    ActivityManager.updateCurrentActivity()
                 }
 
                 // PKW messages

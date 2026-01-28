@@ -152,6 +152,9 @@ class Config {
     var discordPrivateMode: Boolean = false
 
     @SerialEntry
+    var discordAutoPrivateMode: Boolean = false
+
+    @SerialEntry
     var discordDisplayExtraInfo: Boolean = true
 
     @SerialEntry
@@ -266,6 +269,8 @@ class Config {
             get() = handler.instance().discordEnabled
         val privateMode: Boolean
             get() = handler.instance().discordPrivateMode
+        val autoPrivateMode: Boolean
+            get() = handler.instance().discordAutoPrivateMode
         val displayExtraInfo: Boolean
             get() = handler.instance().discordDisplayExtraInfo
         val displayParty: Boolean

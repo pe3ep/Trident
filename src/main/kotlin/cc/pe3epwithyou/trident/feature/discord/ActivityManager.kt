@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.feature.discord
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.Rank
@@ -17,6 +18,7 @@ import java.time.Instant
 
 object ActivityManager {
     private var currentActivityBuilder: ActivityBuilder? = null
+    var startTime: Long? = null
 
     private fun activityBuilder(block: ActivityBuilder.() -> Unit) = ActivityBuilder().apply(block)
 
@@ -27,8 +29,6 @@ object ActivityManager {
             version = modContainer.metadata.version.friendlyString
         }
 
-        val now = Instant.now().epochSecond
-
         val builder = activityBuilder {
             details = "Playing MCC Island"
             assets {
@@ -38,7 +38,7 @@ object ActivityManager {
             }
 
             timestamps {
-                start = now
+                start = startTime
             }
             button("Download Trident", "https://trident.pe3epwithyou.cc")
         }
@@ -47,14 +47,30 @@ object ActivityManager {
         return builder
     }
 
-    private fun getActivity(): ActivityBuilder = currentActivityBuilder ?: defaultActivity()
+    private fun getActivity(): ActivityBuilder = currentActivityBuilder ?: defaultActivity().also { startTime = Instant.now().epochSecond }
+
+    private fun shouldHideActivity(): Boolean {
+        if (Config.Discord.privateMode) return true
+        if (Config.Discord.autoPrivateMode && Disguise.isDisguised()) {
+            val game = MCCIState.game
+            return game != Game.HUB && game != Game.FISHING
+        }
+        return false
+    }
 
     fun hideActivity() {
         currentActivityBuilder = null
+        startTime = null
         IPCManager.submitBuilder(null)
     }
 
     fun updateCurrentActivity() {
+        if (shouldHideActivity()) {
+            currentActivityBuilder = defaultActivity()
+            IPCManager.submitBuilder(currentActivityBuilder)
+            return
+        }
+
         val activity = getActivity()
         val container = FabricLoader.getInstance().getModContainer("trident")
         var version = "Unknown"

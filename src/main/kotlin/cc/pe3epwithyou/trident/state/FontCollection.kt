@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.state
 
+import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
@@ -64,9 +65,14 @@ object FontCollection {
             val char = collection[icon] ?: return
             ReplyLock.Icon.xpBonusCharCache.add(char)
         }
+        if ("_fonts/icon/chat_channel/disguised" in icon.path.path) {
+            val char = collection[icon] ?: return
+            Disguise.disguiseIconCache = char
+        }
     }
 
     fun clearCache() {
         ReplyLock.Icon.xpBonusCharCache.clear()
+        Disguise.disguiseIconCache = null
     }
 }

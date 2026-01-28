@@ -15,6 +15,7 @@ fun discordCategory(categoryRegistrar: CategoryRegistrar) {
         name(Component.translatable("config.trident.discord"))
 
         lateinit var privateMode: Option<Boolean>
+        lateinit var autoPrivateMode: Option<Boolean>
         lateinit var extraInfo: Option<Boolean>
         lateinit var displayParty: Option<Boolean>
 
@@ -28,6 +29,7 @@ fun discordCategory(categoryRegistrar: CategoryRegistrar) {
                     privateMode.setAvailable(option.pendingValue())
                     extraInfo.setAvailable(option.pendingValue() && !privateMode.pendingValue())
                     displayParty.setAvailable(option.pendingValue() && !privateMode.pendingValue())
+                    autoPrivateMode.setAvailable(option.pendingValue() && !privateMode.pendingValue())
                 }
             }
         }
@@ -41,9 +43,18 @@ fun discordCategory(categoryRegistrar: CategoryRegistrar) {
                 if (event == OptionEventListener.Event.STATE_CHANGE) {
                     extraInfo.setAvailable(!option.pendingValue())
                     displayParty.setAvailable(!option.pendingValue())
+                    autoPrivateMode.setAvailable(!option.pendingValue())
                 }
             }
             available { handler.instance().discordEnabled }
+        }
+
+        autoPrivateMode = rootOptions.register("discord_auto_private_mode") {
+            name(Component.translatable("config.trident.discord.auto_private_mode.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.discord.auto_private_mode.description")))
+            binding(handler.instance()::discordAutoPrivateMode, false)
+            controller(tickBox())
+            available { handler.instance().discordEnabled && !handler.instance().discordPrivateMode }
         }
 
         extraInfo = rootOptions.register("discord_display_extra_info") {

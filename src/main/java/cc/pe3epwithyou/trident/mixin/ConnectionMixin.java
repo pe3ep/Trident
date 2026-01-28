@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.mixin;
 import cc.pe3epwithyou.trident.client.PacketHandler;
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager;
 import cc.pe3epwithyou.trident.interfaces.DialogCollection;
+import cc.pe3epwithyou.trident.state.FontCollection;
 import cc.pe3epwithyou.trident.state.PlayerStateIO;
 import cc.pe3epwithyou.trident.utils.DelayedAction;
 import cc.pe3epwithyou.trident.utils.Logger;
@@ -44,6 +45,7 @@ public abstract class ConnectionMixin {
                     DialogCollection.INSTANCE.saveAllDialogs();
                     PlayerStateIO.INSTANCE.save();
                     ActivityManager.INSTANCE.hideActivity();
+                    FontCollection.INSTANCE.clear();
                     Logger.INSTANCE.info("Disconnected from MCC Island at IP: " + ip);
                 });
             }
