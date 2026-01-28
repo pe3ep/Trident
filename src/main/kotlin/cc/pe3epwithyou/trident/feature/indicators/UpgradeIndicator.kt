@@ -9,7 +9,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.world.inventory.Slot
 
 object UpgradeIndicator {
-    private val screens = listOf("FISHING PERKS", "STYLE PERKS")
+    private val screens = listOf("FISHING PERKS", "STYLE PERKS", "CRAB POTS")
     private val upgradeTexture = Texture(
         Resources.trident("textures/interface/upgrade_arrow.png"),
         7,
@@ -23,7 +23,7 @@ object UpgradeIndicator {
 
     private fun checkUpgrade(screen: Screen, slot: Slot): Boolean {
         if (screens.any { it in screen.title.string }) {
-            slot.item.findInLore(Regex(""". > Left-Click to Upgrade"""))?.let {
+            slot.item.findInLore(Regex(""". > (Left|Right)-Click to Upgrade"""))?.let {
                 return true
             }
         }
@@ -32,7 +32,7 @@ object UpgradeIndicator {
 
     private fun checkLocked(screen: Screen, slot: Slot): Boolean {
         if (screens.any { it in screen.title.string }) {
-            slot.item.findInLore(Regex("""Reach Style Level \d+ to unlock"""))?.let {
+            slot.item.findInLore(Regex("""Reach (Style|Fishing) Level \d+ to unlock"""))?.let {
                 return true
             }
         }
@@ -42,7 +42,7 @@ object UpgradeIndicator {
     fun render(graphics: GuiGraphics, slot: Slot) {
         val screen = Minecraft.getInstance().screen ?: return
         if (checkUpgrade(screen, slot)) upgradeTexture.blit(graphics, slot.x - 1, slot.y + 9)
-        if ("STYLE PERKS" in screen.title.string && checkLocked(screen, slot)) lockedTexture.blit(
+        if (checkLocked(screen, slot)) lockedTexture.blit(
             graphics,
             slot.x - 1,
             slot.y + 10
