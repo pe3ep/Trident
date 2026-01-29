@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestingParser
+import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -84,22 +85,35 @@ object ChestScreenListener {
          */
         if (!Config.Questing.enabled) return
         if ("ISLAND REWARDS" !in screen.title.string) return
-        val quests = mutableListOf<Quest>()
+        val slotQuests = mutableListOf<Quest>()
 
         val dailySlot = screen.menu.slots[37]
-        val dailyQuests = QuestingParser.parseQuestSlot(dailySlot)
-        quests.addAll(dailyQuests ?: emptyList())
+        val dailyQuests = QuestingParser.parseQuestSlot(dailySlot) ?: emptyList()
+        slotQuests.addAll(dailyQuests)
+        QuestLock.questSlots[37]?.apply {
+            quests = dailyQuests
+            isLocked = QuestLock.shouldLock(dailyQuests)
+        }
         QuestStorage.dailyRemaining = QuestingParser.parseRemainingSlot(screen.menu.slots[28])
 
         val weeklySlot = screen.menu.slots[39]
-        val weeklyQuests = QuestingParser.parseQuestSlot(weeklySlot)
-        quests.addAll(weeklyQuests ?: emptyList())
+        val weeklyQuests = QuestingParser.parseQuestSlot(weeklySlot) ?: emptyList()
+        QuestLock.questSlots[39]?.apply {
+            quests = weeklyQuests
+            isLocked = QuestLock.shouldLock(weeklyQuests)
+        }
+        slotQuests.addAll(weeklyQuests)
         QuestStorage.weeklyRemaining = QuestingParser.parseRemainingSlot(screen.menu.slots[30])
 
         val scrollSlot = screen.menu.slots[41]
-        val scrollQuests = QuestingParser.parseQuestSlot(scrollSlot)
-        quests.addAll(scrollQuests ?: emptyList())
-        QuestStorage.loadQuests(quests)
+        val scrollQuests = QuestingParser.parseQuestSlot(scrollSlot)  ?: emptyList()
+        QuestLock.questSlots[41]?.apply {
+            quests = scrollQuests
+            isLocked = QuestLock.shouldLock(scrollQuests)
+        }
+        slotQuests.addAll(scrollQuests)
+
+        QuestStorage.loadQuests(slotQuests)
     }
 
     fun findAugments(screen: ContainerScreen) {
