@@ -47,9 +47,15 @@ object ActivityManager {
         return builder
     }
 
-    private fun getActivity(): ActivityBuilder = currentActivityBuilder ?: defaultActivity().also { startTime = Instant.now().epochSecond }
+    private fun getActivity(): ActivityBuilder {
+        if (currentActivityBuilder == null) {
+            startTime = Instant.now().epochSecond
+            return defaultActivity()
+        }
+        return currentActivityBuilder!!
+    }
 
-    private fun shouldHideActivity(): Boolean {
+    fun shouldHideActivity(): Boolean {
         if (Config.Discord.privateMode) return true
         if (Config.Discord.autoPrivateMode && Disguise.isDisguised) {
             val game = MCCIState.game
