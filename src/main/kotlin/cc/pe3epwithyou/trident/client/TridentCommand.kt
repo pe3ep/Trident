@@ -22,6 +22,8 @@ import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
+import cc.pe3epwithyou.trident.mixin.BossHealthOverlayAccessor
+import cc.pe3epwithyou.trident.mixin.GuiAccessor
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
@@ -472,23 +474,24 @@ object TridentCommand {
                 }
             }
 
-//            literal("doll") {
-//                literal("get_passengers") {
-//                    executes {
-//                        Doll.getPassengers()
-//                    }
-//                }
-//
-//                literal("open_screen") {
-//                    executes {
-//                        Minecraft.getInstance().execute {
-//                            Minecraft.getInstance().setScreen(DollTestScreen())
-//                            Logger.sendMessage("Opened screen")
-//                        }
-//
-//                    }
-//                }
-//            }
+            literal("get_accessor_value") {
+                literal("gui") {
+                    executes {
+                        val gui = Minecraft.getInstance().gui as GuiAccessor
+                        Logger.sendMessage("Actionbar: ${gui.overlayMessageString?.string}")
+                        Logger.sendMessage(gui.overlayMessageString ?: Component.empty())
+                        Logger.sendMessage("Title: ${gui.title}")
+                    }
+                }
+                literal("bosshealthoverlay") {
+                    executes {
+                        val events = (Minecraft.getInstance().gui.bossOverlay as BossHealthOverlayAccessor).events
+                        events.forEach { (uUID, event) ->
+                            Logger.sendMessage("Event UUID: $uUID, Event: ${event.name.string}")
+                        }
+                    }
+                }
+            }
         }.register(dispatcher)
     }
 
