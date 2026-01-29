@@ -25,7 +25,6 @@ object BlueprintIndicator {
             val donatedTotal = it.groups[2]?.value?.toIntOrNull() ?: return
             if (donatedAmount == donatedTotal) {
                 renderIcon(graphics, slot, Icons.MAXED_COSMETIC)
-                return
             }
         } ?: run {
             renderIcon(graphics, slot, Icons.NEW_COSMETIC)
