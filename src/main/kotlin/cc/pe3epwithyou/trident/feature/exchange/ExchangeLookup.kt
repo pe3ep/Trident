@@ -26,11 +26,6 @@ object ExchangeLookup {
         ignoreUnknownKeys = true
     }
 
-    @Serializable
-    data class GraphQLRequest(
-        val query: String
-    )
-
     fun clearCache() {
         exchangeLookupCache = null
         exchangeLookupCacheExpiresIn = null
@@ -83,8 +78,6 @@ object ExchangeLookup {
             }
         """.trimIndent()
 
-        val jsonPayload = JSON.encodeToString(GraphQLRequest.serializer(), GraphQLRequest(graphQLString))
-
         val headers = mutableMapOf<String, String>()
 
         when (provider) {
@@ -92,7 +85,7 @@ object ExchangeLookup {
             ApiProvider.SELF_TOKEN -> headers["X-API-Key"] = key
         }
 
-        NetworkUtil.sendRequest<ExchangeListingsResponse>(RequestMethod.POST, provider.fetchUrl, jsonPayload, headers) {
+        NetworkUtil.sendGraphQL<ExchangeListingsResponse>(provider.fetchUrl, graphQLString, headers) {
             onSuccess { listingsResponse ->
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.COMPLETED
                 exchangeLookupCache = listingsResponse

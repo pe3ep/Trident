@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.utils
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import net.minecraft.client.Minecraft
 import net.minecraft.util.Util
@@ -43,6 +44,24 @@ object NetworkUtil {
             errorHandler = block
         }
     }
+
+    @Serializable
+    data class GraphQLRequest(
+        val query: String
+    )
+
+    inline fun <reified T> sendGraphQL(
+        url: String,
+        body: String,
+        headers: Map<String, String> = emptyMap(),
+        noinline block: Request<T>.() -> Unit
+    ) = sendRequest<T>(
+        RequestMethod.POST,
+        url,
+        JSON.encodeToString(GraphQLRequest(body)),
+        headers,
+        block
+    )
 
     inline fun <reified T> sendRequest(
         method: RequestMethod = RequestMethod.POST,
