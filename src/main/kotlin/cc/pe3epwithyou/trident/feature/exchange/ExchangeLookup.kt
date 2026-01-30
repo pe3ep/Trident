@@ -4,11 +4,8 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.NetworkUtil
-import cc.pe3epwithyou.trident.utils.RequestMethod
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
@@ -20,11 +17,6 @@ import java.time.Instant
 object ExchangeLookup {
     var exchangeLookupCache: ExchangeListingsResponse? = null
     var exchangeLookupCacheExpiresIn: Long? = null
-
-    private val JSON = Json {
-        encodeDefaults = true
-        ignoreUnknownKeys = true
-    }
 
     fun clearCache() {
         exchangeLookupCache = null
