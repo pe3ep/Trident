@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature
 
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Resources
@@ -21,7 +22,7 @@ object ChatSwitcherButtons {
 
     fun getChatModes(): List<ChatMode> = buildList {
         add(ChatMode.LOCAL)
-        add(ChatMode.PARTY)
+        ActivityManager.Party.size?.let { if (it > 1) add(ChatMode.PARTY) }
         if (MCCIState.game.hasTeamChat) add(ChatMode.TEAM)
         if (MCCIState.isInPlobby()) add(ChatMode.PLOBBY)
     }
