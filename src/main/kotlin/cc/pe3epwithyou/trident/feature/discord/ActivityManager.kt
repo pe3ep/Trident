@@ -139,6 +139,10 @@ object ActivityManager {
 
                 activity.details = "Fishing at $islandName"
                 assetsBuilder.largeImage = "game_fishing_$island"
+                Trident.playerState.levelData?.let {
+                    assetsBuilder.smallText = "Level ${it.fishingLevel.level}"
+                    assetsBuilder.smallImage = "level_fishing_${it.fishingLevel.evolution}"
+                }
             }
 
             Game.BATTLE_BOX_ARENA -> {

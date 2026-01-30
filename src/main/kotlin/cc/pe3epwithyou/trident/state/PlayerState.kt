@@ -125,7 +125,8 @@ data class PlayerState(
     var wayfinderData: WayfinderData = WayfinderData(),
     var research: FishingResearch = FishingResearch(),
     var hatesUpdates: Boolean = false,
-    var arenaData: ArenaData = ArenaData()
+    var arenaData: ArenaData = ArenaData(),
+    var levelData: LevelData? = null
 )
 
 object PlayerStateIO {

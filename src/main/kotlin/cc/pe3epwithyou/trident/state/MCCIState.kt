@@ -45,6 +45,7 @@ object MCCIState {
         UpdateChecker.checkForUpdates()
         ApiChecker.joinCheck()
         DebugScreen.fetchMessages()
+        LevelData.fetchData()
         if (Trident.hasFailedToLoadConfig) {
             val component: Component =
                 Component.translatable("trident.failed_config").withStyle(ERROR.baseStyle)
