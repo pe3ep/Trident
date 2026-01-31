@@ -2,6 +2,8 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
+import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -22,6 +24,7 @@ object ChatEventListener {
     private var isSupplyPreserve = false
     private var triggerBait = true
     private var catchFinished = true
+    var triggeredAugments: MutableList<AugmentTrigger> = mutableListOf()
 
     private fun checkJunk(component: Component): Boolean {
         val message = component.string
@@ -55,6 +58,16 @@ object ChatEventListener {
         ClientReceiveMessageEvents.ALLOW_GAME.register allowMessage@{ message, _ ->
             if (!MCCIState.isOnIsland()) return@allowMessage true
             try {
+                ActivityManager.Party.handleChatMessage(message)
+
+                Disguise.handleChatMessage(message.string)
+
+                Regex("""You've been (?:promoted|demoted) to (.+).""").find(message.string)?.let {
+                    val rank = it.groups[1]?.value
+                    ActivityManager.Arena.updateRank(rank)
+                    ActivityManager.updateCurrentActivity()
+                }
+
                 // PKW messages
                 if (message.isPKWLeapFinished() && Config.Games.autoFocus) {
                     Minecraft.getInstance().window.focusWindowIfInactive()
@@ -77,6 +90,7 @@ object ChatEventListener {
                     val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
                     wayfinderStatus.hasGrotto = false
                     wayfinderStatus.data -= 2000
+                    wayfinderStatus.data = wayfinderStatus.data.coerceAtLeast(0)
 
                     DialogCollection.refreshDialog("wayfinder")
                 }
@@ -90,7 +104,7 @@ object ChatEventListener {
                 }
 
                 if (message.isStockReplenished() && Config.Fishing.flashIfDepleted) {
-                    updateDurability(AugmentTrigger.SPOT)
+                    triggeredAugments.add(AugmentTrigger.SPOT)
                     DepletedDisplay.DepletedTimer.stopLoop()
                 }
 
@@ -114,7 +128,7 @@ object ChatEventListener {
                     }
 
                     if (message.string.contains(" Elusive Catch")) {
-                        updateDurability(AugmentTrigger.ELUSIVE)
+                        triggeredAugments.add(AugmentTrigger.ELUSIVE)
                     }
                 }
 
@@ -122,8 +136,15 @@ object ChatEventListener {
                     if (isSupplyPreserve) {
                         isSupplyPreserve = false
                         catchFinished = true
+                        triggeredAugments.clear()
                         return@allowMessage true
                     }
+
+                    triggeredAugments.forEach {
+                        updateDurability(it)
+                    }
+
+                    triggeredAugments.clear()
 
                     Trident.playerState.supplies.line.uses?.let {
                         if (it != 0) Trident.playerState.supplies.line.uses = it - 1

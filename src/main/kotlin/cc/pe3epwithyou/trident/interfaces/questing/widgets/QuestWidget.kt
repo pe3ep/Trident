@@ -28,7 +28,7 @@ class QuestWidget(
     companion object {
         private val COMPLETED_QUEST_SPRITE: Identifier =
             Resources.mcc("island_interface/generic/accept")
-        private const val COMPLETED_QUEST_COLOR: Int = 0x1EFC00
+        private const val COMPLETED_QUEST_COLOR: Int = 0x80ff82
     }
 
     override fun getWidth(): Int = layout.width
@@ -81,11 +81,12 @@ class QuestWidget(
 
         val progress = Component.literal(" ${quest.progress}/${quest.totalProgress}")
             .defaultFont()
-        if (isCompleted) progress.withColor(COMPLETED_QUEST_COLOR)
-        StringWidget(progressComponent.append(progress), mcFont).atBottom(
-            0,
-            settings = LayoutConstants.LEFT
-        )
+        if (!isCompleted) {
+            StringWidget(progressComponent.append(progress), mcFont).atBottom(
+                0,
+                settings = LayoutConstants.LEFT
+            )
+        }
     }
 
     init {

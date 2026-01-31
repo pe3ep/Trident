@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature
 
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Resources
@@ -21,24 +22,15 @@ object ChatSwitcherButtons {
 
     fun getChatModes(): List<ChatMode> = buildList {
         add(ChatMode.LOCAL)
-        add(ChatMode.PARTY)
+        ActivityManager.Party.size?.let { if (it > 1) add(ChatMode.PARTY) }
         if (MCCIState.game.hasTeamChat) add(ChatMode.TEAM)
         if (MCCIState.isInPlobby()) add(ChatMode.PLOBBY)
     }
 
-    fun getCurrentButtons(): List<Widget> {
-        val x = 2
-        var offset = 0
-        val channels = mutableListOf<Widget>()
-        getChatModes().forEach {
-            channels.add(Widget(x + offset, it))
-            offset += Widget.WIDTH + 2
-        }
-        return channels
-    }
+    fun getCurrentButtons(): List<Widget> = getChatModes().map(::Widget)
 
-    class Widget(x: Int, val mode: ChatMode) :
-        AbstractWidget(x, 0, WIDTH, HEIGHT, Component.empty()) {
+    class Widget(val mode: ChatMode) :
+        AbstractWidget(0, 0, WIDTH, HEIGHT, Component.empty()) {
         companion object {
             const val HEIGHT = 9
             const val WIDTH = 44
@@ -55,7 +47,6 @@ object ChatSwitcherButtons {
         override fun renderWidget(
             graphics: GuiGraphics, i: Int, j: Int, f: Float
         ) {
-            y = graphics.guiHeight() - CHAT_HEIGHT - HEIGHT
             if (isHovered()) Texture(HOVERED_SPRITE, WIDTH, 2).blit(graphics, x, y + HEIGHT - 1)
             texture.blit(graphics, x, y)
         }

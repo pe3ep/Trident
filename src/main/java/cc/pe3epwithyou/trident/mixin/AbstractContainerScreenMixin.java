@@ -2,10 +2,14 @@ package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
-import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
-import cc.pe3epwithyou.trident.feature.CraftableIndicator;
+import cc.pe3epwithyou.trident.feature.disguise.Disguise;
+import cc.pe3epwithyou.trident.feature.doll.Doll;
+import cc.pe3epwithyou.trident.feature.indicators.BlueprintIndicator;
+import cc.pe3epwithyou.trident.feature.indicators.CraftableIndicator;
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
 import cc.pe3epwithyou.trident.feature.fishing.TideWindIndicator;
+import cc.pe3epwithyou.trident.feature.indicators.UpgradeIndicator;
+import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock;
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot;
 import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter;
 import cc.pe3epwithyou.trident.interfaces.fishing.AugmentStatusInterface;
@@ -16,6 +20,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +29,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerScreen.class)
 public class AbstractContainerScreenMixin extends Screen {
@@ -35,7 +41,7 @@ public class AbstractContainerScreenMixin extends Screen {
 
     @Shadow
     @Nullable
-    protected Slot hoveredSlot;
+    public Slot hoveredSlot;
 
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
@@ -52,10 +58,13 @@ public class AbstractContainerScreenMixin extends Screen {
     public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
-            BlueprintIndicators.INSTANCE.checkLore(guiGraphics, slot);
+            BlueprintIndicator.checkItem(guiGraphics, slot);
         }
         if (Config.Debug.INSTANCE.getDrawSlotNumber()) {
             DebugDraw.INSTANCE.renderSlotNumber(guiGraphics, slot);
+        }
+        if (Config.Global.INSTANCE.getUpgradeIndicators()) {
+            UpgradeIndicator.INSTANCE.render(guiGraphics, slot);
         }
         TideWindIndicator.INSTANCE.render(guiGraphics, slot);
         CraftableIndicator.INSTANCE.render(guiGraphics, slot);
@@ -63,6 +72,7 @@ public class AbstractContainerScreenMixin extends Screen {
             ExchangeHandler.INSTANCE.renderSlot(guiGraphics, slot);
         }
         AugmentStatusInterface.INSTANCE.render(guiGraphics, slot);
+        QuestLock.renderLock(guiGraphics, slot);
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))
@@ -71,6 +81,7 @@ public class AbstractContainerScreenMixin extends Screen {
 
         Minecraft client = Minecraft.getInstance();
         if (client.screen instanceof ContainerScreen s) {
+            Disguise.checkActionbar();
             if (s.getTitle().getString().contains("FISHING SUPPLIES")) {
                 ChestScreenListener.INSTANCE.findAugments(s);
             }
@@ -103,11 +114,27 @@ public class AbstractContainerScreenMixin extends Screen {
     public void init(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (!Config.Global.INSTANCE.getExchangeImprovements()) return;
-        if (this.getTitle().getString().contains("ISLAND EXCHANGE")) {
+        String screenTitle = this.getTitle().getString();
+        if (screenTitle.contains("ISLAND EXCHANGE")) {
             int x = this.leftPos + 32;
             int y = this.topPos - 33;
             this.addRenderableWidget(new ExchangeFilter(x, y));
         }
+        if (screenTitle.contains("ISLAND REWARDS")) {
+            int x = this.leftPos;
+            int y = this.topPos;
+            this.addRenderableWidget(new QuestLock.Widget(x, y));
+        }
+    }
+
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    public void injectMouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+        QuestLock.handleClick(this.hoveredSlot, cir);
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
+        Doll.render(guiGraphics, i, j, f);
     }
 
 }

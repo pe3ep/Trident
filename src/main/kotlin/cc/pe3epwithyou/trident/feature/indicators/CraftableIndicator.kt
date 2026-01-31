@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.feature
+package cc.pe3epwithyou.trident.feature.indicators
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.Resources

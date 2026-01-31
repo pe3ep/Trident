@@ -29,7 +29,7 @@ class WayfinderDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
     private fun getWidgetTitle(): DialogTitleWidget {
         val icon = FontCollection.get("_fonts/icon/fishing/wayfinder_data.png").withoutShadow()
-        val text = Component.literal(" WAYFINDER DATA".uppercase()).mccFont().offset(y = -0.5f)
+        val text = Component.literal(" WAYFINDER".uppercase()).mccFont().offset(y = -0.5f)
 
         val baseTitle = icon.append(text)
 

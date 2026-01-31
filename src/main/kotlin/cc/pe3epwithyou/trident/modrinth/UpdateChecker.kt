@@ -3,22 +3,14 @@ package cc.pe3epwithyou.trident.modrinth
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
-import cc.pe3epwithyou.trident.utils.DelayedAction
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
-import kotlinx.serialization.json.Json
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.Version
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.util.Util
 import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 import java.time.Duration
 import java.time.Instant
 
@@ -26,14 +18,6 @@ object UpdateChecker {
     var currentVersion: Version? = null
     private const val PROJECT_ID = "L6RCcsrd"
     private const val MOD_ID = "trident"
-
-    private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).executor(
-        Util.nonCriticalIoPool()
-    ).build()
-
-    private val JSON = Json {
-        ignoreUnknownKeys = true
-    }
 
     var latestVersion: Version? = null
 
@@ -45,22 +29,21 @@ object UpdateChecker {
     }
 
     fun checkForUpdates() {
-        val req = HttpRequest.newBuilder()
-            .uri(URI.create("https://api.modrinth.com/v2/project/$PROJECT_ID/version")).GET()
-            .setHeader("User-Agent", "trident-mc-mod").build()
-
-        client.sendAsync(req, HttpResponse.BodyHandlers.ofString())
-            .thenAccept {
-                Minecraft.getInstance().execute { handleResponse(it.body()) }
+        NetworkUtil.sendRequest<List<VersionResponseSchema.ModrinthVersion>>(
+            RequestMethod.GET,
+            "https://api.modrinth.com/v2/project/$PROJECT_ID/version"
+        ) {
+            onSuccess(::handleResponse)
+            onError { _, throwable ->
+                Logger.error(
+                    "Error occurred when checking for updates ",
+                    throwable
+                )
             }
-            .exceptionally {
-                Trident.LOGGER.error("[Trident] Error occurred when checking for updates ", it)
-                return@exceptionally null
-            }
+        }
     }
 
-    private fun handleResponse(response: String) {
-        val versions = JSON.decodeFromString<List<VersionResponseSchema.ModrinthVersion>>(response)
+    private fun handleResponse(versions: List<VersionResponseSchema.ModrinthVersion>) {
         var fetchedVersionModrinth: VersionResponseSchema.ModrinthVersion? = null
         if (currentVersion == null) {
             Logger.error("Missing current version")

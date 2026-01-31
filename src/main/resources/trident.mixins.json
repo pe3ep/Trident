@@ -10,13 +10,16 @@
   ],
   "client": [
     "AbstractContainerScreenMixin",
+    "AvatarRenderStateMixin",
     "BossHealthOverlayAccessor",
+    "ChatListenerMixin",
     "ChatScreenMixin",
     "ClientPacketListenerMixin",
     "DebugScreenEntriesAccessor",
     "DebugScreenEntriesMixin",
     "FontLoaderMixin",
     "GuiAccessor",
+    "GuiMixin",
     "JoinIslandMixin",
     "OffsetMixin",
     "StartConnectToServerMixin"

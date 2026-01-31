@@ -9,6 +9,8 @@ import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.debug.TridentDebugEntry
+import cc.pe3epwithyou.trident.feature.discord.IPCManager
+import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -88,6 +90,8 @@ class Trident : ModInitializer {
         DelayedAction.init()
         QuestListener.register()
         OverclockClock.register()
+        IPCManager.init()
+        ReplyLock.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->
@@ -131,6 +135,7 @@ class Trident : ModInitializer {
 
 
     private fun onShutdownClient() {
+        IPCManager.stop()
         try {
             if (!hasFailedToLoadConfig) PlayerStateIO.save()
         } catch (e: Exception) {

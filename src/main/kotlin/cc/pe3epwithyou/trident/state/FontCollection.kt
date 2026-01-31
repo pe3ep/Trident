@@ -1,9 +1,12 @@
 package cc.pe3epwithyou.trident.state
 
+import cc.pe3epwithyou.trident.feature.disguise.Disguise
+import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.contents.objects.AtlasSprite
@@ -33,11 +36,13 @@ object FontCollection {
 
     fun clear() {
         collection.clear()
+        clearCache()
     }
 
-    fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) {
+    fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) = Minecraft.getInstance().execute {
         val i = Icon(location, ascent, height)
         collection[i] = char
+        populateCache(i)
     }
 
     data class Icon(
@@ -49,5 +54,26 @@ object FontCollection {
     fun texture(resource: Identifier): MutableComponent {
         if (!Identifier.isValidPath(resource.path)) return Component.literal("?").defaultFont()
         return Component.`object`(AtlasSprite(AtlasSprite.DEFAULT_ATLAS, resource))
+    }
+
+    fun texture(resource: Identifier, atlas: Identifier): MutableComponent {
+        if (!Identifier.isValidPath(resource.path)) return Component.literal("?").defaultFont()
+        return Component.`object`(AtlasSprite(atlas, resource))
+    }
+
+    fun populateCache(icon: Icon) {
+        if ("_fonts/icon/xp_bonus" in icon.path.path) {
+            val char = collection[icon] ?: return
+            ReplyLock.Icon.xpBonusCharCache.add(char)
+        }
+        if ("_fonts/icon/chat_channel/disguised" in icon.path.path) {
+            val char = collection[icon] ?: return
+            Disguise.disguiseIconCache = char
+        }
+    }
+
+    fun clearCache() {
+        ReplyLock.Icon.xpBonusCharCache.clear()
+        Disguise.disguiseIconCache = null
     }
 }

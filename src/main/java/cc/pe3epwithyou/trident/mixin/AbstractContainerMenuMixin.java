@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractContainerMenu.class)
 public class AbstractContainerMenuMixin {
 
-    @Inject(method = "clicked", at = @At("HEAD"))
+    @Inject(method = "clicked", at = @At("HEAD"), cancellable = true)
     public void clicked(int i, int j, ClickType clickType, Player player, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
 //        When a user clicks off-screen, the slot is negative. If we don't return here, the game will crash
@@ -27,9 +27,9 @@ public class AbstractContainerMenuMixin {
             Slot slot = screen.getMenu().getSlot(i);
             boolean isLeftClick = j == 0;
             try {
-                SlotClickListener.INSTANCE.handleClick(slot, clickType, isLeftClick);
+                SlotClickListener.INSTANCE.handleClick(slot, clickType, isLeftClick, ci);
             } catch (Exception e) {
-                Logger.INSTANCE.error("Something went wrong when handling click: " + e.getMessage());
+                Logger.INSTANCE.error("Something went wrong when handling click: " + e.getMessage(), null);
             }
         }
     }
