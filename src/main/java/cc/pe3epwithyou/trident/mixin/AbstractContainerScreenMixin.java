@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.mixin;
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
 import cc.pe3epwithyou.trident.feature.disguise.Disguise;
+import cc.pe3epwithyou.trident.feature.doll.Doll;
 import cc.pe3epwithyou.trident.feature.indicators.BlueprintIndicator;
 import cc.pe3epwithyou.trident.feature.indicators.CraftableIndicator;
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
@@ -40,7 +41,7 @@ public class AbstractContainerScreenMixin extends Screen {
 
     @Shadow
     @Nullable
-    protected Slot hoveredSlot;
+    public Slot hoveredSlot;
 
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
@@ -129,6 +130,11 @@ public class AbstractContainerScreenMixin extends Screen {
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void injectMouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         QuestLock.handleClick(this.hoveredSlot, cir);
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
+        Doll.render(guiGraphics, i, j, f);
     }
 
 }
