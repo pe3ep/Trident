@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.client.listeners
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
+import cc.pe3epwithyou.trident.feature.doll.DollCosmetics
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -48,7 +49,7 @@ object ChestScreenListener {
     private fun handleScreen(screen: ContainerScreen) {
         if (!MCCIState.isOnIsland()) return
         val title = screen.title.string
-
+        DollCosmetics.resetCosmetics()
         useScreen(screen) {
             checkName("FISHING SUPPLIES") { await { findAugments(it) } }
             checkName("ISLAND REWARDS") { await { findQuests(it) } }

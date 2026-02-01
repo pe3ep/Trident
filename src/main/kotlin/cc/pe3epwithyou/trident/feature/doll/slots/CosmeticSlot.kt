@@ -4,7 +4,9 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 
 interface CosmeticSlot {
-    fun push(entity: LivingEntity, item: ItemStack)
+    var item: ItemStack?
+
+    fun push(entity: LivingEntity)
 
     fun pop(entity: LivingEntity)
 }

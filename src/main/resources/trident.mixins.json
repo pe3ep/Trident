@@ -9,6 +9,7 @@
     "ConnectionMixin"
   ],
   "client": [
+    "AbstractContainerScreenAccessor",
     "AbstractContainerScreenMixin",
     "AvatarRenderStateMixin",
     "BossHealthOverlayAccessor",
