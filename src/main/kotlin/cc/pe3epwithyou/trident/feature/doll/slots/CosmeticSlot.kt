@@ -9,4 +9,6 @@ interface CosmeticSlot {
     fun push(entity: LivingEntity)
 
     fun pop(entity: LivingEntity)
+
+    fun setRealCurrent(entity: LivingEntity)
 }

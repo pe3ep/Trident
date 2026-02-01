@@ -2,8 +2,6 @@
  * Originally based on code from Island Utils
  * Copyright (c) 2024, AsoDesu_
  * Licensed under the MIT License.
- *
- * - Additional changes by Pe3ep, 2026
  */
 package cc.pe3epwithyou.trident.feature.doll.back
 
@@ -30,7 +28,7 @@ class BackRenderLayer(
         var itemForNextPass: ItemStack? = null
     }
 
-    val itemRenderState = ItemStackRenderState()
+    private val itemRenderState = ItemStackRenderState()
     private val resolver = ctx.itemModelResolver
 
     override fun submit(

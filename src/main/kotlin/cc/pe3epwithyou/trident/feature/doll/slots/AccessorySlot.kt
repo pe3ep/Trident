@@ -19,4 +19,8 @@ class AccessorySlot(override var item: ItemStack?) : CosmeticSlot {
         entity.equipment.set(EquipmentSlot.OFFHAND, item)
         storedItem = null
     }
+
+    override fun setRealCurrent(entity: LivingEntity) {
+        item = entity.equipment.get(EquipmentSlot.OFFHAND)
+    }
 }

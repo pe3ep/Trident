@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.feature.doll
 
-import cc.pe3epwithyou.trident.feature.doll.back.Back
+import cc.pe3epwithyou.trident.feature.doll.chroma.Chroma
 import cc.pe3epwithyou.trident.feature.doll.slots.*
 import net.minecraft.client.Minecraft
 import net.minecraft.core.component.DataComponents
@@ -12,17 +12,16 @@ object DollCosmetics {
         CosmeticType.HAT to Cosmetic(HatSlot(null)),
         CosmeticType.ACCESSORY to Cosmetic(AccessorySlot(null)),
         CosmeticType.CLOAK to Cosmetic(BackSlot(null)),
-        CosmeticType.WEAPON_SKIN to Cosmetic(SkinSlot(null)),
-        CosmeticType.ROD to Cosmetic(SkinSlot(null)),
+        CosmeticType.SKIN to Cosmetic(SkinSlot(null)),
     )
+
+    var currentChroma: Chroma? = null
 
     var lockedSlots = mutableMapOf<CosmeticType, Cosmetic>()
 
     fun setShownCosmetics() {
         val player = Minecraft.getInstance().player ?: return
-        currentCosmetics.filter { (k, _) -> k != CosmeticType.CLOAK }
-            .forEach { (_, v) -> v.slot.item = ItemStack.EMPTY }
-        currentCosmetics[CosmeticType.CLOAK]?.slot?.item = Back.getPlayerBackItem(player)
+        currentCosmetics.forEach { (_, v) -> v.slot.setRealCurrent(player) }
         lockedSlots.forEach { (k, v) -> currentCosmetics[k]?.slot?.item = v.slot.item }
     }
 
@@ -30,6 +29,7 @@ object DollCosmetics {
     fun resetCosmetics() {
         lockedSlots.clear()
         setShownCosmetics()
+        currentChroma = null
     }
 
     fun setCosmetic(item: ItemStack) {
@@ -44,21 +44,22 @@ object DollCosmetics {
 
     fun findCosmeticType(item: ItemStack): CosmeticType? {
         val path = item.components.get(DataComponents.ITEM_MODEL)?.path
-        CosmeticType.entries.forEach { if (path?.startsWith(it.pathPrefix) == true) return it }
+        CosmeticType.entries.forEach { if (it.pathPrefixes.any { prefix -> path?.startsWith(prefix) == true }) return it }
         return null
     }
 
     @Suppress("unused")
     enum class CosmeticType(
-        val pathPrefix: String,
+        val pathPrefixes: List<String>,
         val slot: (ItemStack) -> CosmeticSlot
     ) {
-        HAT("island_cosmetics/general/hat", ::HatSlot),
-        ACCESSORY("island_cosmetics/general/accessory", ::AccessorySlot),
-        CLOAK("island_cosmetics/general/back", ::BackSlot),
-        ROD("island_lobby/fishing/rods", ::SkinSlot),
-        WEAPON_SKIN("island_cosmetics/weapon_skins", ::SkinSlot)
+        HAT(listOf("island_cosmetics/general/hat"), ::HatSlot),
+        ACCESSORY(listOf("island_cosmetics/general/accessory"), ::AccessorySlot),
+        CLOAK(listOf("island_cosmetics/general/back"), ::BackSlot),
+        SKIN(listOf("island_lobby/fishing/rods", "island_cosmetics/weapon_skins"), ::SkinSlot),
     }
+
+    fun isWeaponSkin(item: ItemStack) = item.components.get(DataComponents.ITEM_MODEL)?.path?.startsWith("island_cosmetics/weapon_skins") ?: false
 
     data class Cosmetic(
         val slot: CosmeticSlot,

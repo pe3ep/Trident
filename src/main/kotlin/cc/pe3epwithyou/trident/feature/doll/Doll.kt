@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.doll
 
+import cc.pe3epwithyou.trident.feature.doll.chroma.ChromaWidgets
 import cc.pe3epwithyou.trident.mixin.AbstractContainerScreenAccessor
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -12,6 +13,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.client.input.MouseButtonEvent
@@ -21,13 +23,13 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.inventory.Slot
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.atan
 import kotlin.math.min
 import kotlin.math.pow
 
+
 object Doll {
-
-
     var dollYRot = Y_CENTER
     var dollXRot = X_DEFAULT
 
@@ -47,10 +49,11 @@ object Doll {
 
     @JvmStatic
     fun onClick(mouseButtonEvent: MouseButtonEvent) {
-        dragStartX = mouseButtonEvent.x.toInt()
-        dragStartY = mouseButtonEvent.y.toInt()
         val client = Minecraft.getInstance()
         val screen = client.screen as? ContainerScreen ?: return
+        if (screen.getChildAt(mouseButtonEvent.x, mouseButtonEvent.y).getOrNull() != null) return
+        dragStartX = mouseButtonEvent.x.toInt()
+        dragStartY = mouseButtonEvent.y.toInt()
         val item = screen.hoveredSlot?.item ?: return
         // middle click
         if (mouseButtonEvent.button() == 2) {
@@ -61,9 +64,6 @@ object Doll {
                 DollCosmetics.lockedSlots.remove(type)
             } else {
                 DollCosmetics.lockedSlots[type] = DollCosmetics.Cosmetic(type.slot(item))
-            }
-            if (type == DollCosmetics.CosmeticType.WEAPON_SKIN) {
-                // TODO: Add chromas
             }
         }
     }
@@ -117,13 +117,31 @@ object Doll {
         dollYRot = dollYRot.coerceIn(Y_MIN, Y_MAX)
     }
 
+    fun addWidgets(screen: ContainerScreen) {
+        if (!shouldRender(screen)) return
+        val accessed = screen as AbstractContainerScreenAccessor
+        val x0 = accessed.leftPos - 250
+        val x1 = accessed.leftPos + 4
+        val center = accessed.leftPos - ((x1 - x0) / 2)
+        val widget = CosmeticWidgets(2, accessed.topPos - 64)
+        widget.x = center - widget.width / 2
+        screen.addRenderableWidget(widget)
+
+        val chromas = ChromaWidgets(2, accessed.topPos + accessed.imageHeight)
+        chromas.x = center - chromas.width / 2
+        screen.addRenderableWidget(chromas)
+    }
+
+    @JvmStatic
+    fun shouldRender(screen: Screen): Boolean = (screen as ContainerScreen).menu.items.find { DollCosmetics.validItem(it) } != null
+
     @JvmStatic
     fun render(graphics: GuiGraphics) {
         if (!MCCIState.isOnIsland()) return
 
         val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
         // If there's at least 1 item that can be previewed, we show the doll
-        screen.menu.items.find { DollCosmetics.validItem(it) } ?: return
+        if (!shouldRender(screen)) return
 
         val player = Minecraft.getInstance().player ?: return
         val accessed = screen as AbstractContainerScreenAccessor
@@ -136,21 +154,15 @@ object Doll {
         DollCosmetics.currentCosmetics.forEach { (_, v) -> v.slot.push(player) }
 
         renderDoll(
-            graphics,
-            x0,
-            0,
-            x1,
-            screen.height,
-            size,
-            player
+            graphics, x0, 0, x1, screen.height, size, player
         )
 
-//        graphics.drawString(screen.font, "$dollYRot", x0, accessed.leftPos, 0xffffff opacity 255)
+//        graphics.drawString(screen.font, "$dollYRot", x0, accessed.topPos, 0xffffff.opaqueColor())
+//        graphics.drawString(screen.font, "$dollXRot", x0, accessed.topPos + 10, 0xffffff.opaqueColor())
+//        graphics.drawString(screen.font, "${DollCosmetics.currentCosmetics.mapValues { it.value.slot.item?.hoverName?.string }}", x0, accessed.topPos + accessed.imageHeight + 64, 0xffffff.opaqueColor())
 
         DollCosmetics.currentCosmetics.forEach { (_, v) -> v.slot.pop(player) }
     }
-
-
 
     @JvmStatic
     fun modifyTooltip(original: MutableList<Component>): List<Component> {
@@ -163,14 +175,9 @@ object Doll {
                 .mccFont("icon")
                 .append(Component.literal(" > ").withStyle(ChatFormatting.DARK_GRAY).defaultFont())
                 .append(
-                    Component.literal("Middle-Click to ")
-                        .withColor(0xe9d282)
-                        .defaultFont()
-                )
-                .append(
-                    Component.literal("Toggle Preview")
-                        .withColor(0xfbe460)
-                        .defaultFont()
+                    Component.literal("Middle-Click to ").withColor(0xe9d282).defaultFont()
+                ).append(
+                    Component.literal("Toggle Preview").withColor(0xfbe460).defaultFont()
                 )
 
 
@@ -196,8 +203,8 @@ object Doll {
         val quaternion = Quaternionf().rotateZ(Math.PI.toFloat())
         val quaternion2 = Quaternionf().rotateX(xRot * 20.0f * (Math.PI.toFloat() / 180.0f))
         quaternion.mul(quaternion2)
-        val vector3f =
-            Vector3f(0.0f, livingEntity.bbHeight / 2.0f + f * livingEntityScale, 0.0f)
+        val vector3f = Vector3f(0.0f, livingEntity.bbHeight / 2.0f + f * livingEntityScale, 0.0f)
+
         val renderState = InventoryScreen.extractRenderState(livingEntity)
         if (renderState is LivingEntityRenderState) {
             renderState.bodyRot = yRot
@@ -208,15 +215,7 @@ object Doll {
             renderState.scale = 1f
         }
         guiGraphics.submitEntityRenderState(
-            renderState,
-            size,
-            vector3f,
-            quaternion,
-            quaternion2,
-            x0,
-            y0,
-            x1,
-            y1
+            renderState, size, vector3f, quaternion, quaternion2, x0, y0, x1, y1
         )
     }
 
@@ -233,15 +232,10 @@ object Doll {
         }
     }
 
-
-
     @JvmStatic
     fun onClose() {
         resetDoll()
         DollCosmetics.resetCosmetics()
-        DollCosmetics.setShownCosmetics()
     }
-
-
 
 }

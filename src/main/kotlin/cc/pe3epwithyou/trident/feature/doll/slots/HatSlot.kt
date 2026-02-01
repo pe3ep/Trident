@@ -19,4 +19,8 @@ class HatSlot(override var item: ItemStack?) : CosmeticSlot {
         entity.equipment.set(EquipmentSlot.HEAD, item)
         storedItem = null
     }
+
+    override fun setRealCurrent(entity: LivingEntity) {
+        item = entity.equipment.get(EquipmentSlot.HEAD)
+    }
 }

@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.client.listeners
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
+import cc.pe3epwithyou.trident.feature.doll.Doll
 import cc.pe3epwithyou.trident.feature.doll.DollCosmetics
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.questing.Quest
@@ -58,6 +59,7 @@ object ChestScreenListener {
             checkName("ISLAND EXCHANGE") { await { ExchangeHandler.handleScreen(it) } }
             checkName("MATCH FOUND! (0/") { await { Minecraft.getInstance().window.focusWindowIfInactive() } }
             checkName("BATTLE BOX ARENA") { await { ActivityManager.Arena.handleScreen(it) } }
+            await { Doll.addWidgets(it) }
         }
 
         Logger.debugLog("Screen title: $title")

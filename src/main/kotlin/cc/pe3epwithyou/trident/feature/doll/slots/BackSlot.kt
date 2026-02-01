@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.doll.slots
 
+import cc.pe3epwithyou.trident.feature.doll.back.Back
 import cc.pe3epwithyou.trident.feature.doll.back.BackRenderLayer
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.LivingEntity
@@ -13,4 +14,8 @@ class BackSlot(override var item: ItemStack?) : CosmeticSlot {
     }
 
     override fun pop(entity: LivingEntity) {}
+
+    override fun setRealCurrent(entity: LivingEntity) {
+        item = Back.getPlayerBackItem(entity)
+    }
 }
