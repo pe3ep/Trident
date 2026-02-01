@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.feature.fishing
 
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
-import cc.pe3epwithyou.trident.mixin.BossHealthOverlayAccessor
+import cc.pe3epwithyou.trident.mixin.accessors.BossHealthOverlayAccessor
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.DelayedAction

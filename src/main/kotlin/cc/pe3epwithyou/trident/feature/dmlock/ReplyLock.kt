@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.feature.dmlock
 
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.mixin.GuiAccessor
+import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset

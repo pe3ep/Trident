@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.mixin;
+package cc.pe3epwithyou.trident.mixin.accessors;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.Component;

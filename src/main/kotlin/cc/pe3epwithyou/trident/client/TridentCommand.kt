@@ -22,8 +22,8 @@ import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
-import cc.pe3epwithyou.trident.mixin.BossHealthOverlayAccessor
-import cc.pe3epwithyou.trident.mixin.GuiAccessor
+import cc.pe3epwithyou.trident.mixin.accessors.BossHealthOverlayAccessor
+import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState

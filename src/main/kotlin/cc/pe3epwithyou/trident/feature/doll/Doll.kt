@@ -1,7 +1,9 @@
 package cc.pe3epwithyou.trident.feature.doll
 
 import cc.pe3epwithyou.trident.feature.doll.chroma.ChromaWidgets
-import cc.pe3epwithyou.trident.mixin.AbstractContainerScreenAccessor
+import cc.pe3epwithyou.trident.mixin.accessors.AbstractContainerScreenAccessor
+import cc.pe3epwithyou.trident.mixin.accessors.InventoryScreenAccessor
+import cc.pe3epwithyou.trident.mixin.accessors.ScreenAccessor
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Resources
@@ -15,7 +17,6 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
-import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.network.chat.Component
@@ -54,7 +55,7 @@ object Doll {
         if (screen.getChildAt(mouseButtonEvent.x, mouseButtonEvent.y).getOrNull() != null) return
         dragStartX = mouseButtonEvent.x.toInt()
         dragStartY = mouseButtonEvent.y.toInt()
-        val item = screen.hoveredSlot?.item ?: return
+        val item = (screen as AbstractContainerScreenAccessor).hoveredSlot?.item ?: return
         // middle click
         if (mouseButtonEvent.button() == 2) {
             val type = DollCosmetics.findCosmeticType(item) ?: return
@@ -125,15 +126,16 @@ object Doll {
         val center = accessed.leftPos - ((x1 - x0) / 2)
         val widget = CosmeticWidgets(2, accessed.topPos - 64)
         widget.x = center - widget.width / 2
-        screen.addRenderableWidget(widget)
+        (screen as ScreenAccessor).`trident$addRenderableWidget`(widget)
 
         val chromas = ChromaWidgets(2, accessed.topPos + accessed.imageHeight)
         chromas.x = center - chromas.width / 2
-        screen.addRenderableWidget(chromas)
+        (screen as ScreenAccessor).`trident$addRenderableWidget`(chromas)
     }
 
     @JvmStatic
-    fun shouldRender(screen: Screen): Boolean = (screen as ContainerScreen).menu.items.find { DollCosmetics.validItem(it) } != null
+    fun shouldRender(screen: Screen): Boolean =
+        (screen as ContainerScreen).menu.items.find { DollCosmetics.validItem(it) } != null
 
     @JvmStatic
     fun render(graphics: GuiGraphics) {
@@ -167,7 +169,7 @@ object Doll {
     @JvmStatic
     fun modifyTooltip(original: MutableList<Component>): List<Component> {
         val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return original
-        val item = screen.hoveredSlot?.item ?: return original
+        val item = (screen as AbstractContainerScreenAccessor).hoveredSlot?.item ?: return original
         if (!DollCosmetics.validItem(item)) return original
 
         val component =
@@ -205,7 +207,7 @@ object Doll {
         quaternion.mul(quaternion2)
         val vector3f = Vector3f(0.0f, livingEntity.bbHeight / 2.0f + f * livingEntityScale, 0.0f)
 
-        val renderState = InventoryScreen.extractRenderState(livingEntity)
+        val renderState = InventoryScreenAccessor.`trident$extractRenderState`(livingEntity)
         if (renderState is LivingEntityRenderState) {
             renderState.bodyRot = yRot
             renderState.yRot = 0f

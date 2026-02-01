@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.feature.disguise
 
-import cc.pe3epwithyou.trident.mixin.GuiAccessor
+import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.DelayedAction
