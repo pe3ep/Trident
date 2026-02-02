@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.doll
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.doll.chroma.ChromaWidgets
 import cc.pe3epwithyou.trident.mixin.accessors.AbstractContainerScreenAccessor
 import cc.pe3epwithyou.trident.mixin.accessors.InventoryScreenAccessor
@@ -50,6 +51,8 @@ object Doll {
 
     @JvmStatic
     fun onClick(mouseButtonEvent: MouseButtonEvent) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.cosmeticPreview) return
         val client = Minecraft.getInstance()
         val screen = client.screen as? ContainerScreen ?: return
         if (screen.getChildAt(mouseButtonEvent.x, mouseButtonEvent.y).getOrNull() != null) return
@@ -78,6 +81,7 @@ object Doll {
     @JvmStatic
     fun rotateDoll(draggedX: Float, draggedY: Float) {
         if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.cosmeticPreview) return
 
         val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
         val accessed = screen as AbstractContainerScreenAccessor
@@ -119,6 +123,8 @@ object Doll {
     }
 
     fun addWidgets(screen: ContainerScreen) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.cosmeticPreview) return
         if (!shouldRender(screen)) return
         val accessed = screen as AbstractContainerScreenAccessor
         val x0 = accessed.leftPos - 250
@@ -140,6 +146,7 @@ object Doll {
     @JvmStatic
     fun render(graphics: GuiGraphics) {
         if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.cosmeticPreview) return
 
         val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
         // If there's at least 1 item that can be previewed, we show the doll
@@ -176,6 +183,8 @@ object Doll {
 
     @JvmStatic
     fun modifyTooltip(original: MutableList<Component>): List<Component> {
+        if (!MCCIState.isOnIsland()) return original
+        if (!Config.Global.cosmeticPreview) return original
         val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return original
         val item = (screen as AbstractContainerScreenAccessor).hoveredSlot?.item ?: return original
         if (!DollCosmetics.validItem(item)) return original
@@ -236,6 +245,8 @@ object Doll {
 
     @JvmStatic
     fun renderSlot(graphics: GuiGraphics, slot: Slot) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.cosmeticPreview) return
         if (!DollCosmetics.validItem(slot.item)) return
         val type = DollCosmetics.findCosmeticType(slot.item) ?: return
         if (DollCosmetics.lockedSlots[type]?.slot?.item == slot.item) {

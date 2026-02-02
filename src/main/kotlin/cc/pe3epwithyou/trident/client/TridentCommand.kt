@@ -25,11 +25,7 @@ import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
 import cc.pe3epwithyou.trident.mixin.accessors.BossHealthOverlayAccessor
 import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
-import cc.pe3epwithyou.trident.state.AugmentContainer
-import cc.pe3epwithyou.trident.state.MCCIState
-import cc.pe3epwithyou.trident.state.PlayerState
-import cc.pe3epwithyou.trident.state.PlayerStateIO
-import cc.pe3epwithyou.trident.state.Rarity
+import cc.pe3epwithyou.trident.state.*
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.utils.Command
@@ -43,10 +39,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.noxcrew.sheeplib.DialogContainer
 import com.noxcrew.sheeplib.util.opacity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
@@ -220,7 +213,37 @@ object TridentCommand {
 
                     }
                 }
+            }
 
+            literal("reconnectDiscord") {
+                executes {
+                    IPCManager.ipc?.let {
+                        it.coroutineScope.launch {
+                            try {
+                                withTimeoutOrNull(3_000) {
+                                    it.reconnect()
+                                    main {
+                                        Logger.sendMessage(Component.literal("Successfully reconnected to Discord").withSwatch(TridentFont.TRIDENT_ACCENT))
+                                        ActivityManager.updateCurrentActivity()
+                                    }
+                                } ?: main {
+                                    Logger.sendMessage(
+                                        Component.literal("Failed to reconnect to Discord. Check your internet connection.")
+                                            .withSwatch(TridentFont.ERROR)
+                                    )
+                                }
+                            } catch (e: Exception) {
+                                main {
+                                    Logger.error("Failed to reconnect to Discord", e)
+                                    Logger.sendMessage(
+                                        Component.literal("Failed to reconnect to Discord. Check your game console for errors.")
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                }
             }
 
             literal("api") {

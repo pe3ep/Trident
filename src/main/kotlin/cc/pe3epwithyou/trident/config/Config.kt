@@ -43,13 +43,25 @@ class Config {
     var globalExchangeImprovements: Boolean = true
 
     @SerialEntry
-    var globalChatChannelButtons: Boolean = false
+    var globalChatChannelButtons: Boolean = true
 
     @SerialEntry
     var globalReplyLock: Boolean = true
 
     @SerialEntry
     var globalEffectBar: Boolean = true
+
+    @SerialEntry
+    var globalCosmeticPreview: Boolean = true
+
+    @SerialEntry
+    var globalCraftingNotifications: Boolean = true
+
+    @SerialEntry
+    var globalQuestLock: Boolean = true
+
+    @SerialEntry
+    var globalFriendsInServer: Boolean = true
 
     @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
@@ -191,6 +203,14 @@ class Config {
             get() = handler.instance().globalExchangeImprovements
         val effectBar: Boolean
             get() = handler.instance().globalEffectBar
+        val cosmeticPreview: Boolean
+            get() = handler.instance().globalCosmeticPreview
+        val craftingNotifications: Boolean
+            get() = handler.instance().globalCraftingNotifications
+        val questLock: Boolean
+            get() = handler.instance().globalQuestLock
+        val friendsInServer: Boolean
+            get() = handler.instance().globalFriendsInServer
     }
 
     object RaritySlot {
@@ -310,7 +330,13 @@ class Config {
 
             // Compatibility checks
             if (!utilsCompatible()) {
+                handler.instance().discordEnabled = false
                 handler.instance().globalChatChannelButtons = false
+                handler.instance().globalCosmeticPreview = false
+                handler.instance().globalQuestLock = false
+                handler.instance().globalCraftingNotifications = false
+                handler.instance().globalFriendsInServer = false
+                handler.instance().globalUpgradeIndicators = false
             }
 
             handler.save()

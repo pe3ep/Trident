@@ -79,7 +79,7 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
             description(
                 OptionDescription.of(Component.translatable("config.trident.global.chat_channel_buttons.description"))
             )
-            binding(handler.instance()::globalChatChannelButtons, false)
+            binding(handler.instance()::globalChatChannelButtons, true)
             controller(tickBox())
             available(utilsCompatible())
         }
@@ -103,6 +103,37 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
             description(OptionDescription.of(Component.translatable("config.trident.global.effect_bar.description")))
             binding(handler.instance()::globalEffectBar, true)
             controller(tickBox())
+        }
+
+        rootOptions.register("cosmetic_preview") {
+            name(Component.translatable("config.trident.global.cosmetic_preview.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.global.cosmetic_preview.description")))
+            binding(handler.instance()::globalCosmeticPreview, true)
+            controller(tickBox())
+            available(utilsCompatible())
+        }
+
+        rootOptions.register("crafting_notifications") {
+            name(Component.translatable("config.trident.global.crafting_notifications.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.global.crafting_notifications.description")))
+            binding(handler.instance()::globalCraftingNotifications, true)
+            controller(tickBox())
+            available(utilsCompatible())
+        }
+
+        rootOptions.register("quest_lock") {
+            name(Component.translatable("config.trident.global.quest_lock.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.global.quest_lock.description")))
+            binding(handler.instance()::globalQuestLock, true)
+            controller(tickBox())
+        }
+
+        rootOptions.register("friends_in_server") {
+            name(Component.translatable("config.trident.global.friends_in_server.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.global.friends_in_server.description")))
+            binding(handler.instance()::globalFriendsInServer, true)
+            controller(tickBox())
+            available(utilsCompatible())
         }
 
         groups.register("rarity_slot") {

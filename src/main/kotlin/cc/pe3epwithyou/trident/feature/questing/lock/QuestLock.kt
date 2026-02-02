@@ -1,10 +1,12 @@
 package cc.pe3epwithyou.trident.feature.questing.lock
 
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot
 import cc.pe3epwithyou.trident.state.Game
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.CompoundWidget
@@ -38,6 +40,9 @@ object QuestLock {
 
     @JvmStatic
     fun handleClick(slot: Slot?, cir: CallbackInfoReturnable<Boolean>) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.questLock) return
+
         if (slot == null) return
         val screen = Minecraft.getInstance().screen ?: return
         if ("ISLAND REWARDS" !in screen.title.string) return
@@ -71,6 +76,9 @@ object QuestLock {
 
     @JvmStatic
     fun renderLock(graphics: GuiGraphics, slot: Slot) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.questLock) return
+
         val screen = Minecraft.getInstance().screen ?: return
         if ("ISLAND REWARDS" !in screen.title.string) return
         if ("Quest" !in slot.item.hoverName.string) return

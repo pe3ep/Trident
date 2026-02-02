@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.friends
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -39,11 +40,15 @@ object FriendsInServer {
     }
 
     fun updateFriendsList(suggestions: List<String>) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.friendsInServer) return
         friends = suggestions
         sendMessage()
     }
 
     fun sendMessage() = DelayedAction.delayTicks(45) {
+        if (!MCCIState.isOnIsland()) return@delayTicks
+        if (!Config.Global.friendsInServer) return@delayTicks
         if (!check()) return@delayTicks
         val connection = Minecraft.getInstance().connection ?: return@delayTicks
         val onlinePlayers = connection.onlinePlayers.mapNotNull { it.profile.name }

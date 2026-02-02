@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.utils
 
+import cc.pe3epwithyou.trident.state.MCCIState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -19,6 +20,7 @@ object SuggestionPacket {
     }
 
     fun requestSuggestions(command: String, callback: (List<String>) -> Unit) {
+        if (!MCCIState.isOnIsland()) return
         val id: Int = command.hashCode()
 
         val task = SuggestionTask(id, callback)

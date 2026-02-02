@@ -1,6 +1,8 @@
 package cc.pe3epwithyou.trident.feature.crafting
 
 import cc.pe3epwithyou.trident.Trident
+import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.utils.Logger
@@ -76,6 +78,7 @@ object CraftingNotifications {
     }
 
     fun send(notification: Notification) {
+        if (!Config.Global.craftingNotifications) return
         val nameComponent = Component.literal(notification.itemName).withColor(notification.rarity.color)
 
         val msg = Component.empty().append(
@@ -93,6 +96,8 @@ object CraftingNotifications {
 
     @JvmStatic
     fun handleScreen(screen: ContainerScreen) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.craftingNotifications) return
         if (!listOf("BLUEPRINT ASSEMBLER", "FUSION FORGE").any { it in screen.title.string }) return
 
         useScreen(screen) {

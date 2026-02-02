@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.config.groups
 
 import cc.pe3epwithyou.trident.config.Config.Companion.handler
+import cc.pe3epwithyou.trident.utils.utilsCompatible
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionEventListener
@@ -24,6 +25,7 @@ fun discordCategory(categoryRegistrar: CategoryRegistrar) {
             description(OptionDescription.of(Component.translatable("config.trident.discord.enabled.description")))
             binding(handler.instance()::discordEnabled, true)
             controller(tickBox())
+            available(utilsCompatible())
             addListener { option, event ->
                 if (event == OptionEventListener.Event.STATE_CHANGE) {
                     privateMode.setAvailable(option.pendingValue())
@@ -46,7 +48,7 @@ fun discordCategory(categoryRegistrar: CategoryRegistrar) {
                     autoPrivateMode.setAvailable(!option.pendingValue())
                 }
             }
-            available { handler.instance().discordEnabled }
+            available { utilsCompatible() && handler.instance().discordEnabled }
         }
 
         autoPrivateMode = rootOptions.register("discord_auto_private_mode") {
@@ -54,7 +56,7 @@ fun discordCategory(categoryRegistrar: CategoryRegistrar) {
             description(OptionDescription.of(Component.translatable("config.trident.discord.auto_private_mode.description")))
             binding(handler.instance()::discordAutoPrivateMode, false)
             controller(tickBox())
-            available { handler.instance().discordEnabled && !handler.instance().discordPrivateMode }
+            available { utilsCompatible() && handler.instance().discordEnabled && !handler.instance().discordPrivateMode }
         }
 
         extraInfo = rootOptions.register("discord_display_extra_info") {
@@ -62,7 +64,7 @@ fun discordCategory(categoryRegistrar: CategoryRegistrar) {
             description(OptionDescription.of(Component.translatable("config.trident.discord.display_extra_info.description")))
             binding(handler.instance()::discordDisplayExtraInfo, true)
             controller(tickBox())
-            available { handler.instance().discordEnabled && !handler.instance().discordPrivateMode }
+            available { utilsCompatible() && handler.instance().discordEnabled && !handler.instance().discordPrivateMode }
         }
 
         displayParty = rootOptions.register("discord_display_party") {
@@ -70,7 +72,7 @@ fun discordCategory(categoryRegistrar: CategoryRegistrar) {
             description(OptionDescription.of(Component.translatable("config.trident.discord.display_party.description")))
             binding(handler.instance()::discordDisplayParty, true)
             controller(tickBox())
-            available { handler.instance().discordEnabled && !handler.instance().discordPrivateMode }
+            available { utilsCompatible() && handler.instance().discordEnabled && !handler.instance().discordPrivateMode }
         }
     }
 }

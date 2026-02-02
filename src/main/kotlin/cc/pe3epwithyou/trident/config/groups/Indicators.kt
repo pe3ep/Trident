@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.config.groups
 
 import cc.pe3epwithyou.trident.config.Config.Companion.handler
 import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.utilsCompatible
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.dsl.CategoryRegistrar
 import dev.isxander.yacl3.dsl.binding
@@ -47,6 +48,7 @@ fun indicatorsCategory(categoriesRegistrar: CategoryRegistrar) {
             )
             binding(handler.instance()::globalUpgradeIndicators, true)
             controller(tickBox())
+            available(utilsCompatible())
         }
     }
 }
