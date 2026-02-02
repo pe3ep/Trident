@@ -136,6 +136,13 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
             available(utilsCompatible())
         }
 
+        rootOptions.register("auto_whoami") {
+            name(Component.translatable("config.trident.global.auto_whoami.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.global.auto_whoami.description")))
+            binding(handler.instance()::globalAutoWhoami, true)
+            controller(tickBox())
+        }
+
         groups.register("rarity_slot") {
             name(Component.translatable("config.trident.rarity_slot.name"))
             description(

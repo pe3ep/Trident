@@ -64,6 +64,9 @@ class Config {
     var globalFriendsInServer: Boolean = true
 
     @SerialEntry
+    var globalAutoWhoami: Boolean = true
+
+    @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
 
 
@@ -211,6 +214,8 @@ class Config {
             get() = handler.instance().globalQuestLock
         val friendsInServer: Boolean
             get() = handler.instance().globalFriendsInServer
+        val autoWhoami: Boolean
+            get() = handler.instance().globalAutoWhoami
     }
 
     object RaritySlot {

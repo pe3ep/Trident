@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.disguise
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -12,6 +13,7 @@ object Disguise {
     var isDisguised: Boolean = false
 
     fun handleChatMessage(message: String) {
+        if (!MCCIState.isOnIsland()) return
         if ("You are disguised" in message) {
             isDisguised = true
             sendWhoami()
@@ -28,6 +30,7 @@ object Disguise {
 
     @JvmStatic
     fun checkActionbar(): Boolean {
+        if (!MCCIState.isOnIsland()) return false
         val gui = Minecraft.getInstance().gui as GuiAccessor
         val actionbar = gui.overlayMessageString ?: run {
             isDisguised = false
@@ -41,6 +44,8 @@ object Disguise {
     }
 
     fun sendWhoami() = DelayedAction.delayTicks(60L) delayed@{
+        if (!MCCIState.isOnIsland()) return@delayed
+        if (!Config.Global.autoWhoami) return@delayed
         val game = MCCIState.game
         Logger.debugLog("disguise icon cache: $disguiseIconCache")
         Logger.debugLog("isDisguised: $isDisguised")

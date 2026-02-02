@@ -35,6 +35,8 @@
   "config.trident.global.quest_lock.description": "When enabled, prevents you from accidentally refreshing quests from the selected game.",
   "config.trident.global.friends_in_server.name": "Friends in current server",
   "config.trident.global.friends_in_server.description": "Sends a message when joining a server (lobby, fishtance, game, etc.), showing a list of friends currently in that server. Highlights players in your party.\n\n§6Disabled if Island Utils is installed",
+  "config.trident.global.auto_whoami.name": "Auto /whoami",
+  "config.trident.global.auto_whoami.description": "Automatically runs the /whoami command when joining a game while being disguised.",
 
   "config.trident.discord.name": "Discord Integration",
   "config.trident.discord.enabled.name": "Enabled",
