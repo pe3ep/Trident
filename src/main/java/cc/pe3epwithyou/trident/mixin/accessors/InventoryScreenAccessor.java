@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(InventoryScreen.class)
+@SuppressWarnings("unused")
 public interface InventoryScreenAccessor {
     @Invoker("extractRenderState")
     static EntityRenderState trident$extractRenderState(LivingEntity livingEntity) {

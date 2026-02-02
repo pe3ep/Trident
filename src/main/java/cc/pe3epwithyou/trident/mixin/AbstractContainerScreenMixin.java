@@ -46,7 +46,7 @@ public class AbstractContainerScreenMixin extends Screen {
 
     @Shadow
     @Nullable
-    public Slot hoveredSlot;
+    protected Slot hoveredSlot;
 
     @Shadow
     protected int imageHeight;
