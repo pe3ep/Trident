@@ -2,11 +2,11 @@ package cc.pe3epwithyou.trident.config.groups
 
 import cc.pe3epwithyou.trident.config.Config.Companion.handler
 import cc.pe3epwithyou.trident.config.screen.RaritySlotPreview
-import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.utilsCompatible
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionEventListener
@@ -81,7 +81,7 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
             )
             binding(handler.instance()::globalChatChannelButtons, false)
             controller(tickBox())
-            available(ChatSwitcherButtons.checkCompatibility())
+            available(utilsCompatible())
         }
 
         rootOptions.register("auto_focus") {

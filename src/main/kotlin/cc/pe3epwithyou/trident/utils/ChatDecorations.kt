@@ -4,7 +4,6 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons
 import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons.Widget.Companion.CHAT_HEIGHT
 import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons.Widget.Companion.HEIGHT
-import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons.checkCompatibility
 import cc.pe3epwithyou.trident.feature.dmlock.CurrentLockedChatWidget
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import com.noxcrew.sheeplib.CompoundWidget
@@ -23,7 +22,7 @@ object ChatDecorations {
             components.add(widget)
         }
 
-        if (Config.Global.chatChannelButtons && checkCompatibility()) {
+        if (Config.Global.chatChannelButtons && utilsCompatible()) {
             components.addAll(ChatSwitcherButtons.getCurrentButtons())
         }
 
@@ -32,7 +31,7 @@ object ChatDecorations {
 
     class Widget : CompoundWidget(0, 0, 0, 0) {
         override fun getY(): Int = Minecraft.getInstance().window.guiScaledHeight - CHAT_HEIGHT - HEIGHT - 1
-        override fun getX(): Int = 2
+        override fun getX(): Int = if (utilsCompatible()) 2 else (Minecraft.getInstance().window.guiScaledWidth - this.layout.getWidth() - 2)
 
         override val layout = GridLayout(2) {
             var col = 0
@@ -43,14 +42,15 @@ object ChatDecorations {
         }
 
         init {
-            layout.x = x
-            layout.y = y
-
             layout.arrangeElements()
             layout.visitWidgets(this::addChild)
+
+            width = layout.width
+
+            layout.x = x
+            layout.y = y
         }
 
         override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
-
     }
 }

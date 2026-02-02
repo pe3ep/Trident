@@ -32,5 +32,12 @@ fun debugCategory(categoryRegistrar: CategoryRegistrar) {
             controller(tickBox())
         }
 
+        rootOptions.register("force_incompatibility") {
+            name(Component.translatable("config.trident.debug.force_incompatibility.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.debug.force_incompatibility.description")))
+            binding(handler.instance()::debugForceIncompatibility, false)
+            controller(tickBox())
+        }
+
     }
 }

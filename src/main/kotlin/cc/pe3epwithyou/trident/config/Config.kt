@@ -1,7 +1,6 @@
 package cc.pe3epwithyou.trident.config
 
 import cc.pe3epwithyou.trident.config.groups.*
-import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
@@ -11,6 +10,7 @@ import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderModuleDisplay
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.utilsCompatible
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.SerialEntry
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder
@@ -94,6 +94,9 @@ class Config {
 
     @SerialEntry
     var debugBypassOnIsland: Boolean = false
+
+    @SerialEntry
+    var debugForceIncompatibility: Boolean = false
 
     @SerialEntry
     var gamesAutoFocus: Boolean = false
@@ -204,6 +207,8 @@ class Config {
             get() = handler.instance().debugDrawSlotNumber
         val bypassOnIsland: Boolean
             get() = handler.instance().debugBypassOnIsland
+        val forceIncompatibility: Boolean
+            get() = handler.instance().debugForceIncompatibility
     }
 
     object Fishing {
@@ -303,8 +308,8 @@ class Config {
                 handler.instance().globalRarityOverlay = null
             }
 
-            // Check Island Utils compatibility
-            if (handler.instance().globalChatChannelButtons && !ChatSwitcherButtons.checkCompatibility()) {
+            // Compatibility checks
+            if (!utilsCompatible()) {
                 handler.instance().globalChatChannelButtons = false
             }
 

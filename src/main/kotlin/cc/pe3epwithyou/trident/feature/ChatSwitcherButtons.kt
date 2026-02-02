@@ -15,11 +15,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 
 object ChatSwitcherButtons {
-    fun checkCompatibility(): Boolean {
-        val islandUtils = FabricLoader.getInstance().getModContainer("islandutils")
-        return !islandUtils.isPresent
-    }
-
     fun getChatModes(): List<ChatMode> = buildList {
         add(ChatMode.LOCAL)
         ActivityManager.Party.size?.let { if (it > 1) add(ChatMode.PARTY) }
