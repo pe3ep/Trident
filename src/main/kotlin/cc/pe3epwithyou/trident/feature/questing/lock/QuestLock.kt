@@ -137,13 +137,15 @@ object QuestLock {
             j: Int,
             f: Float
         ) {
+            val isLocked = lockedGame == game
             val color = when {
-                lockedGame == game -> 0xFFFFFF opacity 96
+                isLocked -> 0xFFFFFF opacity 96
                 isHovered -> 0xFFFFFF opacity 32
                 else -> 0xFFFFFF opacity 0
             }
             graphics.fillRoundedAll(x, y, 14, 14, color)
             texture.blit(graphics, x + 1, y + 1)
+            if (isLocked) LOCK_TEXTURE.blit(graphics, x - 2, y - 2)
         }
 
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
