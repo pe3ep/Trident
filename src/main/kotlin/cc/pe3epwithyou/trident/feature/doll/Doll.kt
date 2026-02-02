@@ -148,6 +148,7 @@ object Doll {
         val player = Minecraft.getInstance().player ?: return
         val accessed = screen as AbstractContainerScreenAccessor
         screen.hoveredSlot?.item?.let(DollCosmetics::setCosmetic)
+        wardrobePreview(screen)
 
         val size = accessed.imageHeight.toFloat() / 2.75f
         val x0 = accessed.leftPos - 250
@@ -164,6 +165,13 @@ object Doll {
 //        graphics.drawString(screen.font, "${DollCosmetics.currentCosmetics.mapValues { it.value.slot.item?.hoverName?.string }}", x0, accessed.topPos + accessed.imageHeight + 64, 0xffffff.opaqueColor())
 
         DollCosmetics.currentCosmetics.forEach { (_, v) -> v.slot.pop(player) }
+    }
+
+    fun wardrobePreview(screen: ContainerScreen) {
+        if ("WARDROBE EDITOR" in screen.title.string) {
+            val item = screen.menu.items.getOrNull(29) ?: return
+            DollCosmetics.setCosmetic(item)
+        }
     }
 
     @JvmStatic
@@ -215,6 +223,7 @@ object Doll {
             renderState.boundingBoxWidth /= renderState.scale
             renderState.boundingBoxHeight /= renderState.scale
             renderState.scale = 1f
+            renderState.walkAnimationSpeed = 0f
         }
         guiGraphics.submitEntityRenderState(
             renderState, size, vector3f, quaternion, quaternion2, x0, y0, x1, y1
