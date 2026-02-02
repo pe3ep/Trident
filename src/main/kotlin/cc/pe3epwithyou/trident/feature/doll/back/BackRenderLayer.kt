@@ -2,6 +2,8 @@
  * Originally based on code from Island Utils
  * Copyright (c) 2024, AsoDesu_
  * Licensed under the MIT License.
+ *
+ * Modified by Pe3ep to fix rendering issues with custom capes
  */
 package cc.pe3epwithyou.trident.feature.doll.back
 
@@ -45,6 +47,7 @@ class BackRenderLayer(
         itemForNextPass = null
 
         val entityModel = this.parentModel
+        poseStack.pushPose()
         entityModel.root().translateAndRotate(poseStack)
         entityModel.body.translateAndRotate(poseStack)
         poseStack.translate(0f, -2.1f, 0f)
@@ -52,5 +55,6 @@ class BackRenderLayer(
         poseStack.scale(0.625f, -0.625f, -0.625f)
         resolver.updateForLiving(itemRenderState, item, ItemDisplayContext.HEAD, player)
         itemRenderState.submit(poseStack, submitNodeCollector, i, OverlayTexture.NO_OVERLAY, entityRenderState.outlineColor)
+        poseStack.popPose()
     }
 }

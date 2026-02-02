@@ -31,13 +31,13 @@ class CurrentLockedChatWidget(val user: String) : AbstractWidget(0, 0, 0, 9, Com
                 Component.literal("\uE002").withFont(Resources.minecraft("padding"))
             )
             .append(
-            Component.literal("REPLY LOCK: ").mccFont().withColor(0xFFFFFF)
-                .append(Component.literal(user.uppercase()).withColor(0xfc7dfc))
-        ).withoutShadow()
-        width =
-            Minecraft.getInstance().font.width(
-                displayedComponent
-            ) + PADDING * 2 + 3
+                Component.literal("REPLY LOCK: ").mccFont().withColor(0xFFFFFF)
+                    .append(Component.literal(user.uppercase()).withColor(0xfc7dfc))
+            ).withoutShadow()
+
+        width = Minecraft.getInstance().font.width(
+            displayedComponent
+        ) + PADDING * 2 + 3
     }
 
     override fun renderWidget(
@@ -61,7 +61,13 @@ class CurrentLockedChatWidget(val user: String) : AbstractWidget(0, 0, 0, 9, Com
             0xFFFFFF.opaqueColor()
         )
         if (!Config.Global.chatChannelButtons) return
-        graphics.fill(x + width - 1, y + height / 2 - 2, x + width, y + height / 2 + 3, 0x000000 opacity 64)
+        graphics.fill(
+            x + width - 1,
+            y + height / 2 - 2,
+            x + width,
+            y + height / 2 + 3,
+            0x000000 opacity 64
+        )
     }
 
     override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
