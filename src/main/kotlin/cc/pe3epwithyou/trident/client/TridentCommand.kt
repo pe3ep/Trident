@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
+import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
@@ -28,6 +29,7 @@ import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
+import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.utils.Command
@@ -490,6 +492,22 @@ object TridentCommand {
                             Logger.sendMessage("Event UUID: $uUID, Event: ${event.name.string}")
                         }
                     }
+                }
+            }
+
+            literal("fake_crafting_toast") {
+                executes {
+                    val player = Minecraft.getInstance().player ?: return@executes
+
+                    val item = player.mainHandItem
+                    CraftingNotifications.send(CraftingNotifications.Notification(
+                        CraftingNotifications.Source.ASSEMBLER,
+                        item.hoverName.string,
+                        Rarity.getFromItem(item) ?: Rarity.COMMON,
+                        0,
+                        1,
+                        count = 5
+                    ))
                 }
             }
         }.register(dispatcher)

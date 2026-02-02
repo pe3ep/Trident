@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.doll.Doll
 import cc.pe3epwithyou.trident.feature.doll.DollCosmetics
@@ -60,6 +61,7 @@ object ChestScreenListener {
             checkName("MATCH FOUND! (0/") { await { Minecraft.getInstance().window.focusWindowIfInactive() } }
             checkName("BATTLE BOX ARENA") { await { ActivityManager.Arena.handleScreen(it) } }
             await { Doll.addWidgets(it) }
+            await { CraftingNotifications.handleScreen(it) }
         }
 
         Logger.debugLog("Screen title: $title")
