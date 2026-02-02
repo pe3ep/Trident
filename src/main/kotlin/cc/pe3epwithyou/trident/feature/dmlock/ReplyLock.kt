@@ -2,8 +2,10 @@ package cc.pe3epwithyou.trident.feature.dmlock
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
+import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Logger
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
@@ -180,20 +182,26 @@ object ReplyLock {
             items.forEach { mutable = mutable.append(it) }
 
             mutable.style = mutable.style
-                .withClickEvent(ClickEvent.RunCommand("trident setReplyLock ${user?.string} ${!isLocked}"))
-                .withHoverEvent(HoverEvent.ShowText(getTooltip(isLocked)))
+                .withClickEvent(ClickEvent.RunCommand("replylock ${user?.string}"))
+                .withHoverEvent(HoverEvent.ShowText(getTooltip()))
         }
 
         return mutable
     }
 
-    private fun getTooltip(isLocked: Boolean): Component {
-        return if (isLocked) {
-            Component.literal("Locked. Click to unlock").withStyle(ChatFormatting.RED)
-        } else {
-            Component.literal("Click here to lock this conversation")
-                .withStyle(ChatFormatting.GREEN)
-        }
+    private fun getTooltip(): Component {
+        return FontCollection.get("_fonts/icon/click_action_left.png", 7, 7).withColor(0xffffff)
+            .append(Component.literal(" > ").withStyle(ChatFormatting.DARK_GRAY).defaultFont())
+            .append(
+                Component.literal("Click to ")
+                    .withColor(0xe9d282)
+                    .defaultFont()
+            )
+            .append(
+                Component.literal("Toggle Reply Lock")
+                    .withColor(0xfbe460)
+                    .defaultFont()
+            )
     }
 
     private fun cleanupOther(components: List<Component>): Component? {
