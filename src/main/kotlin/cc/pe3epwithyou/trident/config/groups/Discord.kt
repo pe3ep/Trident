@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component
 
 fun discordCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("discord") {
-        name(Component.translatable("config.trident.discord"))
+        name(Component.translatable("config.trident.discord.name"))
 
         lateinit var privateMode: Option<Boolean>
         lateinit var autoPrivateMode: Option<Boolean>
