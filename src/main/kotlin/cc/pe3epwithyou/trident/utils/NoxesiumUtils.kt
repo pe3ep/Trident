@@ -1,7 +1,10 @@
 package cc.pe3epwithyou.trident.utils
 
+import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
+import cc.pe3epwithyou.trident.feature.friends.FriendsInServer
 import cc.pe3epwithyou.trident.feature.questing.GameQuests
 import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -14,7 +17,6 @@ import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.fishing.AugmentTrigger
-import cc.pe3epwithyou.trident.state.fishing.updateDurability
 import com.noxcrew.noxesium.core.fabric.feature.sprite.SkullSprite
 import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccServerPacket
@@ -52,7 +54,7 @@ object NoxesiumUtils {
             val k = "killfeed"
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
         }
-        if (currentGame != Game.HUB && currentGame != Game.FISHING) {
+        if (currentGame != Game.FISHING) {
             if (!Config.Questing.enabled) return
             val k = "questing"
             if (isPlobby) {
@@ -66,8 +68,11 @@ object NoxesiumUtils {
                 return
             }
 
+            val game = if (currentGame == Game.HUB) MCCIState.lobbyGame else currentGame
+
             if ("lobby" in types && !Config.Questing.showInLobby) return
-            QuestingDialog.currentGame = currentGame
+            if (game == Game.HUB) return
+            QuestingDialog.currentGame = game
             DialogCollection.open(k, QuestingDialog(10, 10, k))
             DialogCollection.refreshDialog(k)
         }
@@ -91,19 +96,17 @@ object NoxesiumUtils {
         ) { _, packet, _ ->
             val server = packet.server
             val types = packet.types
-
-            Logger.debugLog(
-                "NOX Packet received:\nserver: $server\ntypes: $types"
-            )
+            MCCIState.gameTypes = types
+            MCCIState.gameState = null
 
             val currentGame = getCurrentGame(server, types)
-            MCCIState.isPlobbyGame = false
-
-            if ("session" in types) {
-                MCCIState.isPlobbyGame = true
+            MCCIState.isPlobbyGame = "session" in types
+            if (currentGame == Game.HUB) {
+                MCCIState.lobbyGame = parseGameString(types.getOrNull(2) ?: "lobby")
+                Logger.debugLog("Current lobbygame: ${MCCIState.lobbyGame.title}")
             }
-
             updateGameDialogs(currentGame, MCCIState.isPlobbyGame, types)
+            FriendsInServer.request()
 
             if (currentGame in KillChatListener.killfeedGames) {
                 KillFeedDialog.clearKills()
@@ -112,37 +115,23 @@ object NoxesiumUtils {
                 MCCIState.game = currentGame
                 Logger.debugLog("Current game: ${MCCIState.game.title}")
             }
+
+            ActivityManager.updateCurrentActivity()
         }
 
         MccPackets.CLIENTBOUND_MCC_GAME_STATE.addListener(
             this, ClientboundMccGameStatePacket::class.java
         ) { _, packet, _ ->
+            MCCIState.gameState = packet
             removeKillsIfNeeded(packet)
-            Logger.debugLog(
-                """
-                NOX GAME_STATE Packet Received:
-                mapID: ${packet.mapId}
-                mapName: ${packet.mapName}
-                round: ${packet.round}
-                stage: ${packet.stage}
-                phaseType: ${packet.phaseType}
-                totalRounds: ${packet.totalRounds}
-                """.trimIndent()
-            )
+            if (packet.stage == "inround" || packet.stage == "countdownphase" || packet.stage == "preparationphase" || packet.stage == "podiumphase" || packet.stage == "postgame") {
+                ActivityManager.updateCurrentActivity()
+            }
         }
 
         MccPackets.CLIENTBOUND_MCC_STATISTIC.addListener(
             this, ClientboundMccStatisticPacket::class.java
         ) { _, packet, _ ->
-            Logger.debugLog(
-                """
-                CLIENTBOUND_MCC_STATISTIC:
-                stat: ${packet.statistic}
-                value: ${packet.value}
-                record: ${packet.record}
-            """.trimIndent()
-            )
-
             handleQuests(packet.statistic, packet.value)
             handleFishCaught(packet.statistic, packet.value)
         }
@@ -169,6 +158,7 @@ object NoxesiumUtils {
 
     private fun updateFishingState(island: String) {
         MCCIState.fishingState.isGrotto = island.contains("grotto", ignoreCase = true)
+        MCCIState.fishingState.island = island
 
         ClimateType.entries.forEach {
             if (island.contains(it.prefix, ignoreCase = true)) {
@@ -195,23 +185,19 @@ object NoxesiumUtils {
 
         // Augments
         if (statistic.startsWith("fishing_catch_")) {
-            val triggeredAugments = mutableListOf<AugmentTrigger>()
+            ChatEventListener.triggeredAugments
 
             when (statistic) {
                 "fishing_catch_caught_any" -> {
-                    triggeredAugments.add(AugmentTrigger.ANYTHING)
+                    ChatEventListener.triggeredAugments.add(AugmentTrigger.ANYTHING)
                     if (MCCIState.fishingState.isGrotto) {
-                        triggeredAugments.add(AugmentTrigger.ANYTHING_GROTTO)
+                        ChatEventListener.triggeredAugments.add(AugmentTrigger.ANYTHING_GROTTO)
                     }
                 }
-                "fishing_catch_caught_fish" -> triggeredAugments.add(AugmentTrigger.FISH)
-                "fishing_catch_caught_spirit" -> triggeredAugments.add(AugmentTrigger.SPIRIT)
-                "fishing_catch_caught_pearl" -> triggeredAugments.add(AugmentTrigger.PEARL)
-                "fishing_catch_caught_treasure" -> triggeredAugments.add(AugmentTrigger.TREASURE)
-            }
-
-            triggeredAugments.forEach {
-                updateDurability(it)
+                "fishing_catch_caught_fish" -> ChatEventListener.triggeredAugments.add(AugmentTrigger.FISH)
+                "fishing_catch_caught_spirit" -> ChatEventListener.triggeredAugments.add(AugmentTrigger.SPIRIT)
+                "fishing_catch_caught_pearl" -> ChatEventListener.triggeredAugments.add(AugmentTrigger.PEARL)
+                "fishing_catch_caught_treasure" -> ChatEventListener.triggeredAugments.add(AugmentTrigger.TREASURE)
             }
 
             DialogCollection.refreshDialog("supplies")
@@ -234,8 +220,7 @@ object NoxesiumUtils {
 
         // Lobby servers
         if (server == "lobby") {
-            val game = types.getOrNull(2) ?: "lobby"
-            return parseGameString(game)
+            return Game.HUB
         }
 
         // Dojo
@@ -267,11 +252,6 @@ object NoxesiumUtils {
 
 
     private fun parseGameString(game: String): Game {
-        Game.entries.forEach {
-            if (it.gameID == game) {
-                return it
-            }
-        }
-        return Game.HUB
+        return Game.entries.find { it.gameID == game } ?: Game.HUB
     }
 }

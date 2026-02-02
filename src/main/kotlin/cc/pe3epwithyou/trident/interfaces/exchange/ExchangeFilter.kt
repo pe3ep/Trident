@@ -38,6 +38,8 @@ class ExchangeFilter(x: Int, y: Int) : AbstractWidget(x, y, 63, 15, Component.em
         showOwnedItems = !showOwnedItems
     }
 
+    override fun isFocused(): Boolean = false
+
     override fun playDownSound(soundManager: SoundManager) {
         soundManager.play(
             SimpleSoundInstance.forUI(

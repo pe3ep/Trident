@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.ConfigUtil
+import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications.Notification
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
@@ -114,11 +115,26 @@ data class FishingResearch(
 )
 
 @Serializable
+data class Rank(val name: String, val image: String)
+
+@Serializable
+data class ArenaData(var currentRank: Rank? = null)
+
+@Serializable
+data class CraftingNotifications(
+    var assembler: List<Notification> = emptyList(),
+    var fusion: List<Notification> = emptyList()
+)
+
+@Serializable
 data class PlayerState(
     var supplies: Supplies = Supplies(),
     var wayfinderData: WayfinderData = WayfinderData(),
     var research: FishingResearch = FishingResearch(),
-    var hatesUpdates: Boolean = false
+    var hatesUpdates: Boolean = false,
+    var arenaData: ArenaData = ArenaData(),
+    var levelData: LevelData? = null,
+    var craftingNotifications: CraftingNotifications = CraftingNotifications()
 )
 
 object PlayerStateIO {

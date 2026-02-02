@@ -3,41 +3,20 @@ package cc.pe3epwithyou.trident.feature.exchange
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.utils.Logger
+import cc.pe3epwithyou.trident.utils.NetworkUtil
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.util.Util
 import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 import java.time.Duration
 import java.time.Instant
 
 object ExchangeLookup {
     var exchangeLookupCache: ExchangeListingsResponse? = null
     var exchangeLookupCacheExpiresIn: Long? = null
-
-    private val client = HttpClient.newBuilder()
-        .connectTimeout(Duration.ofSeconds(10))
-        .version(HttpClient.Version.HTTP_1_1)
-        .executor(Util.nonCriticalIoPool())
-        .build()
-
-    private val JSON = Json {
-        encodeDefaults = true
-        ignoreUnknownKeys = true
-    }
-
-    @Serializable
-    data class GraphQLRequest(
-        val query: String
-    )
 
     fun clearCache() {
         exchangeLookupCache = null
@@ -91,24 +70,15 @@ object ExchangeLookup {
             }
         """.trimIndent()
 
-        val payload = GraphQLRequest(query = graphQLString)
-        val jsonPayload = JSON.encodeToString(GraphQLRequest.serializer(), payload)
-
-        val req = HttpRequest.newBuilder().uri(URI.create(provider.fetchUrl)).POST(
-            HttpRequest.BodyPublishers.ofString(jsonPayload)
-        ).setHeader("Content-Type", "application/json")
-            .setHeader("User-Agent", "trident-mc-mod/${player.name}")
-
+        val headers = mutableMapOf<String, String>()
 
         when (provider) {
-            ApiProvider.TRIDENT -> req.setHeader("x-mc-uuid", player.id.toString())
-            ApiProvider.SELF_TOKEN -> req.setHeader("X-API-Key", key)
+            ApiProvider.TRIDENT -> headers["x-mc-uuid"] = player.id.toString()
+            ApiProvider.SELF_TOKEN -> headers["X-API-Key"] = key
         }
 
-
-        client.sendAsync(req.build(), HttpResponse.BodyHandlers.ofString())
-            .thenAccept {
-                val listingsResponse = JSON.decodeFromString<ExchangeListingsResponse>(it.body())
+        NetworkUtil.sendGraphQL<ExchangeListingsResponse>(provider.fetchUrl, graphQLString, headers) {
+            onSuccess { listingsResponse ->
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.COMPLETED
                 exchangeLookupCache = listingsResponse
                 val expiresIn = Instant.now().toEpochMilli() + Duration.ofSeconds(60).toMillis()
@@ -116,17 +86,15 @@ object ExchangeLookup {
                 ExchangeHandler.updatePrices()
                 ExchangeHandler.updateCosmetics()
             }
-            .exceptionally {
+
+            onError { _, throwable ->
+                Logger.error("Something went wrong when fetching Exchange API", throwable)
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
-                Logger.error("Failed to fetch exchange API on url ${provider.fetchUrl}: ${it.message}")
                 Logger.sendMessage(
                     Component.literal("Something went wrong when fetching Exchange API. Please contact developers to fix this issue")
                         .withSwatch(TridentFont.ERROR)
                 )
-
-                return@exceptionally null
             }
-
-
+        }
     }
 }

@@ -5,6 +5,11 @@ import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
+import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
+import cc.pe3epwithyou.trident.feature.discord.IPCManager
+import cc.pe3epwithyou.trident.feature.disguise.Disguise
+import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
@@ -18,10 +23,9 @@ import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
 import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.interfaces.questing.QuestingDialog
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
-import cc.pe3epwithyou.trident.state.AugmentContainer
-import cc.pe3epwithyou.trident.state.MCCIState
-import cc.pe3epwithyou.trident.state.PlayerState
-import cc.pe3epwithyou.trident.state.PlayerStateIO
+import cc.pe3epwithyou.trident.mixin.accessors.BossHealthOverlayAccessor
+import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
+import cc.pe3epwithyou.trident.state.*
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.utils.Command
@@ -32,12 +36,10 @@ import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.noxcrew.sheeplib.DialogContainer
 import com.noxcrew.sheeplib.util.opacity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
@@ -137,6 +139,28 @@ object TridentCommand {
                 }
             }
 
+            literal("setReplyLock") {
+                val client = Minecraft.getInstance()
+                val self = client.gameProfile.name
+                argument("user", StringArgumentType.string()) {
+                    suggests { _, builder ->
+                        client.connection?.onlinePlayers?.filter { it.profile.name != self}?.forEach { builder.suggest(it.profile.name) }
+                        builder.buildFuture()
+                    }
+                    argument("mode", BoolArgumentType.bool()) {
+                        executes {
+                            val user = it.getArgument("user", String::class.java)
+                            val enable = it.getArgument("mode", Boolean::class.java)
+                            if (enable) {
+                                ReplyLock.enableLock(user)
+                            } else {
+                                ReplyLock.disableLock()
+                            }
+                        }
+                    }
+                }
+            }
+
             /**
              * Joke command :p
              */
@@ -189,7 +213,37 @@ object TridentCommand {
 
                     }
                 }
+            }
 
+            literal("reconnectDiscord") {
+                executes {
+                    IPCManager.ipc?.let {
+                        it.coroutineScope.launch {
+                            try {
+                                withTimeoutOrNull(3_000) {
+                                    it.reconnect()
+                                    main {
+                                        Logger.sendMessage(Component.literal("Successfully reconnected to Discord").withSwatch(TridentFont.TRIDENT_ACCENT))
+                                        ActivityManager.updateCurrentActivity()
+                                    }
+                                } ?: main {
+                                    Logger.sendMessage(
+                                        Component.literal("Failed to reconnect to Discord. Check your internet connection.")
+                                            .withSwatch(TridentFont.ERROR)
+                                    )
+                                }
+                            } catch (e: Exception) {
+                                main {
+                                    Logger.error("Failed to reconnect to Discord", e)
+                                    Logger.sendMessage(
+                                        Component.literal("Failed to reconnect to Discord. Check your game console for errors.")
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                }
             }
 
             literal("api") {
@@ -222,6 +276,36 @@ object TridentCommand {
                 }
             }
 
+        }.register(dispatcher)
+
+        // Register aliases
+        Command("replylock") {
+            argument("user", StringArgumentType.string()) {
+                suggests { _, builder ->
+                    val client = Minecraft.getInstance()
+                    val self = client.gameProfile.name
+                    client.connection?.onlinePlayers?.map { it.profile.name }?.filter { it != self}?.filter { !it.startsWith("MCCTabPlayer") && !it.startsWith("MCC_NPC") }?.forEach { builder.suggest(it) }
+                    builder.buildFuture()
+                }
+                executes {
+                    val user = it.getArgument("user", String::class.java)
+                    if (ReplyLock.currentLock != null) {
+                        ReplyLock.disableLock()
+                        return@executes
+                    }
+
+                    ReplyLock.enableLock(user)
+                }
+            }
+            // If present, we disable the lock
+            executes {
+                if (ReplyLock.currentLock != null) {
+                    ReplyLock.disableLock()
+                    return@executes
+                }
+
+                Logger.sendMessage("Usage: /replylock <player>")
+            }
         }.register(dispatcher)
 
         if (!Config.Debug.developerMode) return
@@ -287,6 +371,7 @@ object TridentCommand {
                 executes {
                     Logger.sendMessage("—————— ISLAND BEGIN ——————", false)
                     Logger.sendMessage("CURRENT GAME: ${MCCIState.game}")
+                    Logger.sendMessage("LOBBY GAME: ${MCCIState.lobbyGame}")
                     Logger.sendMessage("FISHING STATE: ${MCCIState.fishingState}")
                     Logger.sendMessage("——————— ISLAND END ———————", false)
                 }
@@ -372,6 +457,80 @@ object TridentCommand {
                 executes {
                     Config.handler.load()
                     Logger.sendMessage("Successfully reloaded config")
+                }
+            }
+
+            literal("discord_presence") {
+                literal("update_activity") {
+                    executes {
+                        ActivityManager.updateCurrentActivity()
+                        Logger.sendMessage("Updated Discord activity")
+                    }
+                }
+
+                literal("reset_activity") {
+                    executes {
+                        ActivityManager.hideActivity()
+                        Logger.sendMessage("Reset Discord activity")
+                    }
+                }
+
+                literal("stop") {
+                    executes {
+                        IPCManager.stop()
+                        Logger.sendMessage("Stopped Discord IPC")
+                    }
+                }
+
+                literal("start") {
+                    executes {
+                        IPCManager.init()
+                        Logger.sendMessage("Started Discord IPC")
+                    }
+                }
+            }
+
+            literal("cache") {
+                literal("dump_cached_icons") {
+                    executes {
+                        Logger.sendMessage("Disguised: ${Disguise.disguiseIconCache}")
+                        Logger.sendMessage("XP: ${ReplyLock.Icon.xpBonusCharCache}")
+                    }
+                }
+            }
+
+            literal("get_accessor_value") {
+                literal("gui") {
+                    executes {
+                        val gui = Minecraft.getInstance().gui as GuiAccessor
+                        Logger.sendMessage("Actionbar: ${gui.overlayMessageString?.string}")
+                        Logger.sendMessage(gui.overlayMessageString ?: Component.empty())
+                        Logger.sendMessage("Title: ${gui.title}")
+                    }
+                }
+                literal("bosshealthoverlay") {
+                    executes {
+                        val events = (Minecraft.getInstance().gui.bossOverlay as BossHealthOverlayAccessor).events
+                        events.forEach { (uUID, event) ->
+                            Logger.sendMessage("Event UUID: $uUID, Event: ${event.name.string}")
+                        }
+                    }
+                }
+            }
+
+            literal("fake_crafting_toast") {
+                executes {
+                    val player = Minecraft.getInstance().player ?: return@executes
+
+                    val item = player.mainHandItem
+                    CraftingNotifications.send(CraftingNotifications.Notification(
+                        CraftingNotifications.Source.ASSEMBLER,
+                        item.hoverName.string,
+                        Rarity.getFromItem(item) ?: Rarity.COMMON,
+                        0,
+                        1,
+                        count = 5
+                    ))
                 }
             }
         }.register(dispatcher)

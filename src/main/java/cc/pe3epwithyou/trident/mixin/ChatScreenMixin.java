@@ -1,8 +1,7 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.config.Config;
-import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons;
 import cc.pe3epwithyou.trident.state.MCCIState;
+import cc.pe3epwithyou.trident.utils.ChatDecorations;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -20,8 +19,6 @@ public abstract class ChatScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     public void init(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-        if (!ChatSwitcherButtons.INSTANCE.checkCompatibility()) return;
-        if (!Config.Global.INSTANCE.getChatChannelButtons()) return;
-        ChatSwitcherButtons.INSTANCE.getCurrentButtons().forEach(this::addRenderableWidget);
+        this.addRenderableWidget(new ChatDecorations.Widget());
     }
 }

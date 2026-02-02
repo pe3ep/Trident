@@ -16,6 +16,7 @@ import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner
 import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
 
 class AugmentWidget(
@@ -272,4 +273,6 @@ class AugmentWidget(
         val connection = Minecraft.getInstance().connection ?: return
         connection.sendCommand("anglr")
     }
+
+    override fun playDownSound(soundManager: SoundManager) = Unit
 }

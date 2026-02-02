@@ -6,7 +6,7 @@ import cc.pe3epwithyou.trident.state.Rarity
 import cc.pe3epwithyou.trident.utils.Resources
 import net.minecraft.resources.Identifier
 
-class Quest(
+data class Quest(
     val game: Game,
     val type: QuestType,
     val subtype: QuestSubtype,
@@ -14,6 +14,7 @@ class Quest(
     val criteria: QuestCriteria,
     var progress: Int,
     val totalProgress: Int,
+    val slot: Int
 ) {
     val sprite: Identifier
         get() {

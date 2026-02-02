@@ -18,8 +18,8 @@ object Logger {
         }
     }
 
-    fun error(s: String) {
-        Trident.LOGGER.error("$PREFIX $s")
+    fun error(s: String, t: Throwable? = null) {
+        Trident.LOGGER.error("$PREFIX $s", t)
     }
 
     fun warn(s: String) {

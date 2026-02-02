@@ -6,14 +6,16 @@ import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeLookup
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
+import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.inventory.Slot
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 object SlotClickListener {
-    fun handleClick(slot: Slot, clickType: ClickType, isLeftClick: Boolean) {
+    fun handleClick(slot: Slot, clickType: ClickType, isLeftClick: Boolean, ci: CallbackInfo) {
         val client = Minecraft.getInstance()
         if (client.screen !is ContainerScreen) return
         val screen = client.screen as ContainerScreen
@@ -30,9 +32,14 @@ object SlotClickListener {
 
         if (Config.Questing.enabled && "ISLAND REWARDS" in screen.title.string) {
             val item = slot.item
-            if (clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE) {
+            val allowedSlots = listOf(37, 39, 41)
+            if (slot.index in allowedSlots && clickType == ClickType.PICKUP || clickType == ClickType.QUICK_MOVE) {
                 if ("Quest" !in item.hoverName.string) return
                 QuestListener.isWaitingRefresh = true
+                QuestLock.questSlots[slot.index]?.apply {
+                    quests = emptyList()
+                    isLocked = false
+                }
             }
         }
 

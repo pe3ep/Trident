@@ -16,9 +16,8 @@ object QuestingParser {
     fun parseRemainingSlot(slot: Slot): Int {
         val item = slot.item
         item.getLore().forEach { l ->
-            val match = Regex("Remaining (Daily|Weekly) Quests: (\\d+)").find(l.string)
-            if (match != null) {
-                val remaining = match.groups[2]?.value?.toIntOrNull() ?: 0
+            Regex("Remaining (Daily|Weekly) Quests: (\\d+)").find(l.string)?.let {
+                val remaining = it.groups[2]?.value?.toIntOrNull() ?: 0
                 return remaining
             }
         }
@@ -57,10 +56,11 @@ object QuestingParser {
             }
         }
 
+        val itemName = item.hoverName.string
         val subtype = when {
-            "Daily" in item.hoverName.string -> QuestSubtype.DAILY
-            "Weekly" in item.hoverName.string -> QuestSubtype.WEEKLY
-            "Scroll" in item.hoverName.string -> QuestSubtype.SCROLL
+            "Daily" in itemName -> QuestSubtype.DAILY
+            "Weekly" in itemName -> QuestSubtype.WEEKLY
+            "Scroll" in itemName -> QuestSubtype.SCROLL
             else -> return null
         }
 
@@ -68,16 +68,17 @@ object QuestingParser {
         val loreResult = parseLore(slot.item)
         Logger.debugLog("Got parsed quests - $loreResult")
         if (loreResult.isEmpty()) return null
-        loreResult.forEach { parsedQuest ->
+        loreResult.forEach {
             quests.add(
                 Quest(
-                    parsedQuest.game,
+                    it.game,
                     type,
                     subtype,
                     rarity,
-                    parsedQuest.criteria,
-                    parsedQuest.progress.first,
-                    parsedQuest.progress.second
+                    it.criteria,
+                    it.progress.first,
+                    it.progress.second,
+                    slot.index
                 )
             )
         }

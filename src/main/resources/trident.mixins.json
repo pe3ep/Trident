@@ -6,20 +6,27 @@
   "refmap": "trident.refmap.json",
   "mixins": [
     "AbstractContainerMenuMixin",
-    "ConnectionMixin"
+    "ConnectionMixin",
+    "accessors.LivingEntityAccessor"
   ],
   "client": [
     "AbstractContainerScreenMixin",
-    "BossHealthOverlayAccessor",
+    "AvatarRenderStateMixin",
+    "ChatListenerMixin",
     "ChatScreenMixin",
     "ClientPacketListenerMixin",
-    "DebugScreenEntriesAccessor",
     "DebugScreenEntriesMixin",
     "FontLoaderMixin",
-    "GuiAccessor",
+    "GuiMixin",
     "JoinIslandMixin",
     "OffsetMixin",
-    "StartConnectToServerMixin"
+    "StartConnectToServerMixin",
+    "accessors.AbstractContainerScreenAccessor",
+    "accessors.BossHealthOverlayAccessor",
+    "accessors.DebugScreenEntriesAccessor",
+    "accessors.GuiAccessor",
+    "accessors.InventoryScreenAccessor",
+    "accessors.ScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

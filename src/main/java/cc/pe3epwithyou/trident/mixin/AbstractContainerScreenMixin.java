@@ -2,28 +2,39 @@ package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
-import cc.pe3epwithyou.trident.feature.BlueprintIndicators;
-import cc.pe3epwithyou.trident.feature.CraftableIndicator;
+import cc.pe3epwithyou.trident.feature.disguise.Disguise;
+import cc.pe3epwithyou.trident.feature.doll.Doll;
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
 import cc.pe3epwithyou.trident.feature.fishing.TideWindIndicator;
+import cc.pe3epwithyou.trident.feature.indicators.BlueprintIndicator;
+import cc.pe3epwithyou.trident.feature.indicators.CraftableIndicator;
+import cc.pe3epwithyou.trident.feature.indicators.UpgradeIndicator;
+import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock;
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot;
 import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter;
 import cc.pe3epwithyou.trident.interfaces.fishing.AugmentStatusInterface;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.DebugDraw;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 @Mixin(AbstractContainerScreen.class)
 public class AbstractContainerScreenMixin extends Screen {
@@ -36,6 +47,9 @@ public class AbstractContainerScreenMixin extends Screen {
     @Shadow
     @Nullable
     protected Slot hoveredSlot;
+
+    @Shadow
+    protected int imageHeight;
 
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
@@ -52,10 +66,13 @@ public class AbstractContainerScreenMixin extends Screen {
     public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
-            BlueprintIndicators.INSTANCE.checkLore(guiGraphics, slot);
+            BlueprintIndicator.checkItem(guiGraphics, slot);
         }
         if (Config.Debug.INSTANCE.getDrawSlotNumber()) {
             DebugDraw.INSTANCE.renderSlotNumber(guiGraphics, slot);
+        }
+        if (Config.Global.INSTANCE.getUpgradeIndicators()) {
+            UpgradeIndicator.INSTANCE.render(guiGraphics, slot);
         }
         TideWindIndicator.INSTANCE.render(guiGraphics, slot);
         CraftableIndicator.INSTANCE.render(guiGraphics, slot);
@@ -63,14 +80,17 @@ public class AbstractContainerScreenMixin extends Screen {
             ExchangeHandler.INSTANCE.renderSlot(guiGraphics, slot);
         }
         AugmentStatusInterface.INSTANCE.render(guiGraphics, slot);
+        QuestLock.renderLock(guiGraphics, slot);
+        Doll.renderSlot(guiGraphics, slot);
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))
-    public void onClose(CallbackInfo ci) {
+    public void injectOnClose(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-
         Minecraft client = Minecraft.getInstance();
         if (client.screen instanceof ContainerScreen s) {
+            Doll.onClose();
+            Disguise.checkActionbar();
             if (s.getTitle().getString().contains("FISHING SUPPLIES")) {
                 ChestScreenListener.INSTANCE.findAugments(s);
             }
@@ -81,15 +101,24 @@ public class AbstractContainerScreenMixin extends Screen {
     }
 
     @Inject(method = "renderTooltip", at = @At("HEAD"), cancellable = true)
-    public void renderTooltip(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci) {
+    public void injectRenderTooltip(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
             if (!ExchangeHandler.INSTANCE.shouldRenderTooltip(hoveredSlot)) ci.cancel();
         }
     }
 
+    @WrapMethod(method = "getTooltipFromContainerItem")
+    public List<Component> wrapGetTooltip(ItemStack itemStack, Operation<List<Component>> original) {
+        if (!MCCIState.INSTANCE.isOnIsland()) {
+            return original.call(itemStack);
+        }
+
+        return Doll.modifyTooltip(original.call(itemStack));
+    }
+
     @Inject(method = "renderBackground", at = @At(value = "TAIL"))
-    public void renderBackground(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
+    public void injectRenderBackground(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         Minecraft client = Minecraft.getInstance();
         if (client.screen instanceof ContainerScreen s) {
@@ -102,12 +131,39 @@ public class AbstractContainerScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     public void init(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-        if (!Config.Global.INSTANCE.getExchangeImprovements()) return;
-        if (this.getTitle().getString().contains("ISLAND EXCHANGE")) {
+        String screenTitle = this.getTitle().getString();
+        if (screenTitle.contains("ISLAND EXCHANGE") && Config.Global.INSTANCE.getExchangeImprovements()) {
             int x = this.leftPos + 32;
             int y = this.topPos - 33;
             this.addRenderableWidget(new ExchangeFilter(x, y));
         }
+        if (screenTitle.contains("ISLAND REWARDS") && Config.Global.INSTANCE.getQuestLock()) {
+            int y = this.topPos + this.imageHeight;
+            QuestLock.Widget widget = new QuestLock.Widget(2, y);
+            widget.setX(this.width / 2 - widget.getWidth() / 2);
+            this.addRenderableWidget(widget);
+        }
+    }
+
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    public void injectMouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+        QuestLock.handleClick(this.hoveredSlot, cir);
+        Doll.onClick(mouseButtonEvent);
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    public void injectRender(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
+        Doll.render(guiGraphics);
+    }
+
+    @Inject(method = "mouseDragged", at = @At("HEAD"))
+    public void injectMouseDragged(MouseButtonEvent mouseButtonEvent, double d, double e, CallbackInfoReturnable<Boolean> cir) {
+        Doll.rotateDoll((float) e, (float) d);
+    }
+
+    @Inject(method = "mouseReleased", at = @At("HEAD"))
+    public void injectMouseReleased(MouseButtonEvent mouseButtonEvent, CallbackInfoReturnable<Boolean> cir) {
+        Doll.onReleased();
     }
 
 }

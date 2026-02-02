@@ -2,10 +2,15 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
+import cc.pe3epwithyou.trident.feature.doll.Doll
+import cc.pe3epwithyou.trident.feature.doll.DollCosmetics
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestingParser
+import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -20,8 +25,10 @@ import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.safeGetLine
 import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
+import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.useScreen
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
@@ -44,13 +51,17 @@ object ChestScreenListener {
     private fun handleScreen(screen: ContainerScreen) {
         if (!MCCIState.isOnIsland()) return
         val title = screen.title.string
-
+        DollCosmetics.resetCosmetics()
         useScreen(screen) {
             checkName("FISHING SUPPLIES") { await { findAugments(it) } }
             checkName("ISLAND REWARDS") { await { findQuests(it) } }
             checkName("FISHING ISLANDS") { await { findWayfinderData(it) } }
             checkName("FISHING PROGRESS") { await { findFishingResearch(it) } }
             checkName("ISLAND EXCHANGE") { await { ExchangeHandler.handleScreen(it) } }
+            checkName("MATCH FOUND! (0/") { await { Minecraft.getInstance().window.focusWindowIfInactive() } }
+            checkName("BATTLE BOX ARENA") { await { ActivityManager.Arena.handleScreen(it) } }
+            await { Doll.addWidgets(it) }
+            await { CraftingNotifications.handleScreen(it) }
         }
 
         Logger.debugLog("Screen title: $title")
@@ -79,22 +90,35 @@ object ChestScreenListener {
          */
         if (!Config.Questing.enabled) return
         if ("ISLAND REWARDS" !in screen.title.string) return
-        val quests = mutableListOf<Quest>()
+        val slotQuests = mutableListOf<Quest>()
 
         val dailySlot = screen.menu.slots[37]
-        val dailyQuests = QuestingParser.parseQuestSlot(dailySlot)
-        quests.addAll(dailyQuests ?: emptyList())
+        val dailyQuests = QuestingParser.parseQuestSlot(dailySlot) ?: emptyList()
+        slotQuests.addAll(dailyQuests)
+        QuestLock.questSlots[37]?.apply {
+            quests = dailyQuests
+            isLocked = QuestLock.shouldLock(dailyQuests)
+        }
         QuestStorage.dailyRemaining = QuestingParser.parseRemainingSlot(screen.menu.slots[28])
 
         val weeklySlot = screen.menu.slots[39]
-        val weeklyQuests = QuestingParser.parseQuestSlot(weeklySlot)
-        quests.addAll(weeklyQuests ?: emptyList())
+        val weeklyQuests = QuestingParser.parseQuestSlot(weeklySlot) ?: emptyList()
+        QuestLock.questSlots[39]?.apply {
+            quests = weeklyQuests
+            isLocked = QuestLock.shouldLock(weeklyQuests)
+        }
+        slotQuests.addAll(weeklyQuests)
         QuestStorage.weeklyRemaining = QuestingParser.parseRemainingSlot(screen.menu.slots[30])
 
         val scrollSlot = screen.menu.slots[41]
-        val scrollQuests = QuestingParser.parseQuestSlot(scrollSlot)
-        quests.addAll(scrollQuests ?: emptyList())
-        QuestStorage.loadQuests(quests)
+        val scrollQuests = QuestingParser.parseQuestSlot(scrollSlot)  ?: emptyList()
+        QuestLock.questSlots[41]?.apply {
+            quests = scrollQuests
+            isLocked = QuestLock.shouldLock(scrollQuests)
+        }
+        slotQuests.addAll(scrollQuests)
+
+        QuestStorage.loadQuests(slotQuests)
     }
 
     fun findAugments(screen: ContainerScreen) {

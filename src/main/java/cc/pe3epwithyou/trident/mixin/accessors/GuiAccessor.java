@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.mixin;
+package cc.pe3epwithyou.trident.mixin.accessors;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.Component;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface GuiAccessor {
     @Accessor
     @Nullable
-    Component getSubtitle();
+    Component getOverlayMessageString();
 
     @Accessor
     @Nullable
