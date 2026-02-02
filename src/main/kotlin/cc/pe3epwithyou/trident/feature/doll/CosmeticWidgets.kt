@@ -47,6 +47,7 @@ class CosmeticWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
             j: Int,
             f: Float
         ) {
+            guiGraphics.fillRoundedAll(x, y, 18, 18, 0x111111 opacity 128)
             val item = DollCosmetics.currentCosmetics[type]?.slot?.item?.copy() ?: return
             if (isWeaponSkin(item)) {
                 DollCosmetics.currentChroma?.let {
@@ -60,7 +61,6 @@ class CosmeticWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
                     )
                 }
             }
-            guiGraphics.fillRoundedAll(x, y, 18, 18, 0x111111 opacity 128)
             ItemRenderer(item, 16, 16).render(guiGraphics, x + 1, y + 1)
         }
 

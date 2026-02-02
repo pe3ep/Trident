@@ -9,8 +9,11 @@ import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
+import cc.pe3epwithyou.trident.utils.gridLayout
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.GridLayout
+import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -97,38 +100,40 @@ object QuestLock {
         var isLocked: Boolean = false
     )
 
-    class Widget(x: Int, y: Int) : CompoundWidget(x + 200, y + 60, 52, 52) {
-        override val layout = GridLayout(2) {
+    class Widget(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
+        override val layout = gridLayout(1, x, y) {
             val games = Game.entries.toMutableSet()
             games.remove(Game.HUB)
             games.remove(Game.FISHING)
             games.remove(Game.BATTLE_BOX_ARENA)
 
             var col = 0
-            var row = 0
             games.forEach {
-                GameWidget(it).at(row, col)
+                GameWidget(it).at(0, col)
                 col++
-                if (col == 3) {
-                    col = 0
-                    row++
-                }
             }
+        }
+
+        override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
+            graphics.fillRoundedAll(x - 1, y - 1, width + 2, height + 2, 0x111111 opacity 128)
+            super.renderWidget(graphics, i, j, f)
         }
 
         init {
             layout.arrangeElements()
             layout.visitWidgets(this::addChild)
-            layout.x = getX()
-            layout.y = getY()
+
+            width = layout.width
+            height = layout.height
         }
     }
 
-    class GameWidget(val game: Game) : AbstractWidget(0, 0, 16, 16, Component.empty()) {
+    class GameWidget(val game: Game) : AbstractWidget(0, 0, 14, 14, Component.empty()) {
         private val texture: Texture = Texture(
             Resources.mcc("textures/${game.icon}"),
-            16,
-            16
+            12,
+            12,
+            16,16
         )
 
         override fun renderWidget(
@@ -137,16 +142,13 @@ object QuestLock {
             j: Int,
             f: Float
         ) {
-            if (isHovered || game == lockedGame) RaritySlot.renderOutline(
-                graphics, x, y, TextColor.fromRgb(
-                    when {
-                        isHovered -> 0xcecece
-                        game == lockedGame -> 0xFFFFFF
-                        else -> 0x000000
-                    }
-                ), DisplayType.OUTLINE
-            )
-            texture.blit(graphics, x, y)
+            val color = when {
+                lockedGame == game -> 0xFFFFFF opacity 96
+                isHovered -> 0xFFFFFF opacity 32
+                else -> 0xFFFFFF opacity 0
+            }
+            graphics.fillRoundedAll(x, y, 14, 14, color)
+            texture.blit(graphics, x + 1, y + 1)
         }
 
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {

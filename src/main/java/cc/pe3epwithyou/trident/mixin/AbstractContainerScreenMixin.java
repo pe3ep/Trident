@@ -48,6 +48,9 @@ public class AbstractContainerScreenMixin extends Screen {
     @Nullable
     public Slot hoveredSlot;
 
+    @Shadow
+    protected int imageHeight;
+
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
     }
@@ -136,9 +139,10 @@ public class AbstractContainerScreenMixin extends Screen {
             this.addRenderableWidget(new ExchangeFilter(x, y));
         }
         if (screenTitle.contains("ISLAND REWARDS")) {
-            int x = this.leftPos;
-            int y = this.topPos;
-            this.addRenderableWidget(new QuestLock.Widget(x, y));
+            int y = this.topPos + this.imageHeight;
+            QuestLock.Widget widget = new QuestLock.Widget(2, y);
+            widget.setX(this.width / 2 - widget.getWidth() / 2);
+            this.addRenderableWidget(widget);
         }
     }
 

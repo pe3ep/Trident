@@ -69,7 +69,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
 
         val texture = Texture(
             chroma.itemTexture,
-            10, 10
+            10, 10, 16, 16
         )
 
         override fun renderWidget(
@@ -83,7 +83,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
             if (!isWeaponSkin(item)) return
             graphics.fillRoundedAll(
                 x, y, 14, 14, when {
-                    isSelected -> 0xffffff opacity 64
+                    isSelected -> 0xffffff opacity 96
                     isHovered -> 0xffffff opacity 32
                     else -> 0xffffff opacity 0
                 }
