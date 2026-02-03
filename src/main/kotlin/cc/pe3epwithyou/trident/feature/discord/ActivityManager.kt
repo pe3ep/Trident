@@ -141,9 +141,11 @@ object ActivityManager {
 
                 activity.details = "Fishing at $islandName"
                 assetsBuilder.largeImage = "game_fishing_$island"
-                Trident.playerState.levelData?.let {
-                    assetsBuilder.smallText = "Level ${it.fishingLevel.level}"
-                    assetsBuilder.smallImage = "level_fishing_${it.fishingLevel.evolution}"
+                if (Config.Discord.displayExtraInfo) {
+                    Trident.playerState.levelData?.let {
+                        assetsBuilder.smallText = "Level ${it.fishingLevel.level}"
+                        assetsBuilder.smallImage = "level_fishing_${it.fishingLevel.evolution}"
+                    }
                 }
             }
 
@@ -154,9 +156,11 @@ object ActivityManager {
                 }
 
                 assetsBuilder.largeImage = "game_battle_box_arena"
-                Trident.playerState.arenaData.currentRank?.let {
-                    assetsBuilder.smallText = it.name
-                    assetsBuilder.smallImage = it.image
+                if (Config.Discord.displayExtraInfo) {
+                    Trident.playerState.arenaData.currentRank?.let {
+                        assetsBuilder.smallText = it.name
+                        assetsBuilder.smallImage = it.image
+                    }
                 }
 
             }
