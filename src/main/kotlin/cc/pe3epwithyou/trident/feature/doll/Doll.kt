@@ -27,6 +27,7 @@ import org.joml.Quaternionf
 import org.joml.Vector3f
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.atan
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
@@ -122,20 +123,36 @@ object Doll {
         dollYRot = dollYRot.coerceIn(Y_MIN, Y_MAX)
     }
 
+    fun getTopPos(screen: ContainerScreen): Int {
+        val accessed = screen as AbstractContainerScreenAccessor
+        return max(accessed.topPos - 64, 4)
+    }
+
+    fun getBottomPos(screen: ContainerScreen, widgetHeight: Int): Int {
+        val accessed = screen as AbstractContainerScreenAccessor
+        return min(accessed.topPos + accessed.imageHeight, screen.height - widgetHeight - 4)
+    }
+
+    fun getLeftPos(screen: ContainerScreen): Int {
+        val accessed = screen as AbstractContainerScreenAccessor
+        return max(accessed.leftPos - 250, 0)
+    }
+
     fun addWidgets(screen: ContainerScreen) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
         if (!shouldRender(screen)) return
         val accessed = screen as AbstractContainerScreenAccessor
-        val x0 = accessed.leftPos - 250
-        val x1 = accessed.leftPos + 4
+        val x0 = getLeftPos(screen)
+        val x1 = accessed.leftPos + 6
         val center = accessed.leftPos - ((x1 - x0) / 2)
-        val widget = CosmeticWidgets(2, accessed.topPos - 64)
+        val widget = CosmeticWidgets(2, getTopPos(screen))
         widget.x = center - widget.width / 2
         (screen as ScreenAccessor).`trident$addRenderableWidget`(widget)
 
-        val chromas = ChromaWidgets(2, accessed.topPos + accessed.imageHeight)
+        val chromas = ChromaWidgets(2, 0)
         chromas.x = center - chromas.width / 2
+        chromas.y = getBottomPos(screen, chromas.height)
         (screen as ScreenAccessor).`trident$addRenderableWidget`(chromas)
     }
 
@@ -158,8 +175,8 @@ object Doll {
         wardrobePreview(screen)
 
         val size = accessed.imageHeight.toFloat() / 2.75f
-        val x0 = accessed.leftPos - 250
-        val x1 = accessed.leftPos + 4
+        val x0 = getLeftPos(screen)
+        val x1 = accessed.leftPos + 6
 
         DollCosmetics.currentCosmetics.forEach { (_, v) -> v.slot.push(player) }
 

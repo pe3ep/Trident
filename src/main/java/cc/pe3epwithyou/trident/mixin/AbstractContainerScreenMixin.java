@@ -151,7 +151,7 @@ public class AbstractContainerScreenMixin extends Screen {
         Doll.onClick(mouseButtonEvent);
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
+    @Inject(method = "renderContents", at = @At("HEAD"))
     public void injectRender(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
         Doll.render(guiGraphics);
     }

@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.sounds.SoundManager
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.component.CustomModelData
@@ -36,6 +37,8 @@ class CosmeticWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         width = layout.width
         height = layout.height
     }
+
+    override fun playDownSound(soundManager: SoundManager) = Unit
 
     override fun isFocused(): Boolean = false
 
