@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
+import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications;
 import cc.pe3epwithyou.trident.feature.disguise.Disguise;
 import cc.pe3epwithyou.trident.feature.doll.Doll;
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
@@ -92,6 +93,7 @@ public class AbstractContainerScreenMixin extends Screen {
             if (s.getTitle().getString().contains("ISLAND REWARDS")) {
                 ChestScreenListener.INSTANCE.findQuests(s);
             }
+            CraftingNotifications.handleScreen(s);
         }
     }
 
