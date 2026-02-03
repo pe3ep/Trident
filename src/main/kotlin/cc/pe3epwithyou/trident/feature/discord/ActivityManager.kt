@@ -71,6 +71,8 @@ object ActivityManager {
     }
 
     fun updateCurrentActivity() {
+        if (!MCCIState.isOnIsland()) return hideActivity()
+        if (!Config.Discord.enabled) return hideActivity()
         if (shouldHideActivity()) {
             currentActivityBuilder = defaultActivity()
             IPCManager.submitBuilder(currentActivityBuilder)
