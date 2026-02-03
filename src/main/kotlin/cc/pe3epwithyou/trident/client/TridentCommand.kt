@@ -139,28 +139,6 @@ object TridentCommand {
                 }
             }
 
-            literal("setReplyLock") {
-                val client = Minecraft.getInstance()
-                val self = client.gameProfile.name
-                argument("user", StringArgumentType.string()) {
-                    suggests { _, builder ->
-                        client.connection?.onlinePlayers?.filter { it.profile.name != self}?.forEach { builder.suggest(it.profile.name) }
-                        builder.buildFuture()
-                    }
-                    argument("mode", BoolArgumentType.bool()) {
-                        executes {
-                            val user = it.getArgument("user", String::class.java)
-                            val enable = it.getArgument("mode", Boolean::class.java)
-                            if (enable) {
-                                ReplyLock.enableLock(user)
-                            } else {
-                                ReplyLock.disableLock()
-                            }
-                        }
-                    }
-                }
-            }
-
             /**
              * Joke command :p
              */
@@ -531,6 +509,28 @@ object TridentCommand {
                         1,
                         count = 5
                     ))
+                }
+            }
+
+            literal("setReplyLock") {
+                val client = Minecraft.getInstance()
+                val self = client.gameProfile.name
+                argument("user", StringArgumentType.string()) {
+                    suggests { _, builder ->
+                        client.connection?.onlinePlayers?.filter { it.profile.name != self}?.forEach { builder.suggest(it.profile.name) }
+                        builder.buildFuture()
+                    }
+                    argument("mode", BoolArgumentType.bool()) {
+                        executes {
+                            val user = it.getArgument("user", String::class.java)
+                            val enable = it.getArgument("mode", Boolean::class.java)
+                            if (enable) {
+                                ReplyLock.enableLock(user)
+                            } else {
+                                ReplyLock.disableLock()
+                            }
+                        }
+                    }
                 }
             }
         }.register(dispatcher)
