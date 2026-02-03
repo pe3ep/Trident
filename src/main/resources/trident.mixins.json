@@ -21,7 +21,7 @@
     "GuiMixin",
     "JoinIslandMixin",
     "OffsetMixin",
-    "StartConnectToServerMixin",
+    "OnlineServerEntryMixin",
     "accessors.AbstractContainerScreenAccessor",
     "accessors.BossHealthOverlayAccessor",
     "accessors.DebugScreenEntriesAccessor",

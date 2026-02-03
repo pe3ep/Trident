@@ -70,6 +70,8 @@ class CosmeticWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
 
         override fun isFocused(): Boolean = false
 
+        override fun playDownSound(soundManager: SoundManager) = Unit
+
         override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
 
     }
