@@ -25,6 +25,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.inventory.Slot
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.atan
 import kotlin.math.max
@@ -199,12 +200,12 @@ object Doll {
     }
 
     @JvmStatic
-    fun modifyTooltip(original: MutableList<Component>): List<Component> {
-        if (!MCCIState.isOnIsland()) return original
-        if (!Config.Global.cosmeticPreview) return original
-        val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return original
-        val item = (screen as AbstractContainerScreenAccessor).hoveredSlot?.item ?: return original
-        if (!DollCosmetics.validItem(item)) return original
+    fun modifyTooltip(consumer: Consumer<Component>) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.cosmeticPreview) return
+        val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
+        val item = (screen as AbstractContainerScreenAccessor).hoveredSlot?.item ?: return
+        if (!DollCosmetics.validItem(item)) return
 
         val component =
             FontCollection.get("_fonts/icon/click_action_middle.png", 7, 7).withColor(0xffffff)
@@ -216,9 +217,7 @@ object Doll {
                     Component.literal("Toggle Preview").withColor(0xfbe460).defaultFont()
                 )
 
-
-        original.add(component)
-        return original
+        consumer.accept(component)
     }
 
     fun renderDoll(
