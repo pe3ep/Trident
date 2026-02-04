@@ -72,7 +72,7 @@ class CurrentLockedChatWidget(val user: String) : AbstractWidget(0, 0, 0, 9, Com
 
     override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
         val screen = Minecraft.getInstance().screen
-        Minecraft.getInstance().connection?.sendCommand("trident setReplyLock $user false")
+        Minecraft.getInstance().connection?.sendCommand("replylock $user")
         currentLock = null
         Minecraft.getInstance().setScreen(screen) // re-init screen (hacky, but works)
     }
