@@ -88,7 +88,6 @@ object ChestScreenListener {
          * 39 - weekly
          * 41 - scroll
          */
-        if (!Config.Questing.enabled) return
         if ("ISLAND REWARDS" !in screen.title.string) return
         val slotQuests = mutableListOf<Quest>()
 
@@ -237,7 +236,7 @@ object ChestScreenListener {
             else -> return
         }
 
-        item.findInLore(Regex("""Wayfinder Data: (\d{1,3}(?:,\d{3})*)\/(\d{1,3}(?:,\d{3})*)."""))
+        item.findInLore(Regex("""Wayfinder Data: (\d{1,3}(?:,\d{3})*)/(\d{1,3}(?:,\d{3})*)."""))
             ?.let {
                 val temperateData = it.groups[1]?.value?.parseFormattedInt() ?: return@let
                 wayfinderStatus.data = temperateData

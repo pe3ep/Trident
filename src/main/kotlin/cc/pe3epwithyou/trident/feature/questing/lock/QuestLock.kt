@@ -11,6 +11,8 @@ import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.util.opacity
+import com.noxcrew.sheeplib.util.opaqueColor
+import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -31,7 +33,7 @@ object QuestLock {
         Resources.trident("textures/interface/upgrade_locked.png"), 7, 7
     )
 
-    var lockedGame: Game? = null
+    var lockedGames: MutableSet<Game> = mutableSetOf()
     val questSlots = mutableMapOf<Int, QuestSlot>(
         37 to QuestSlot(),
         39 to QuestSlot(),
@@ -53,7 +55,7 @@ object QuestLock {
         }
         val questSlot = questSlots[slot.index] ?: return
         val quests = questSlot.quests
-        if (quests.any { it.slot == slot.index && it.game == lockedGame }) {
+        if (quests.any { it.slot == slot.index && it.game in lockedGames }) {
             if (!questSlot.isLocked) return
             Logger.debugLog("Quest slot ${slot.index} is locked")
             cir.cancel()
@@ -66,7 +68,7 @@ object QuestLock {
         }
     }
 
-    fun shouldLock(quests: List<Quest>) = quests.any { it.game == lockedGame }
+    fun shouldLock(quests: List<Quest>) = quests.any { it.game in lockedGames }
 
     fun setLocked(slot: Int, bl: Boolean) {
         val questSlot = questSlots[slot] ?: return
@@ -84,7 +86,7 @@ object QuestLock {
         if ("Quest" !in slot.item.hoverName.string) return
 
         val questSlot = questSlots[slot.index] ?: return
-        if (questSlot.isLocked && questSlot.quests.any { it.slot == slot.index && it.game == lockedGame }) {
+        if (questSlot.isLocked && questSlot.quests.any { it.slot == slot.index && it.game in lockedGames }) {
             RaritySlot.renderOutline(
                 graphics, slot.x, slot.y, TextColor.fromRgb(
                     when {
@@ -120,6 +122,25 @@ object QuestLock {
         override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
             graphics.fillRoundedAll(x - 1, y - 1, width + 2, height + 2, 0x111111 opacity 128)
             super.renderWidget(graphics, i, j, f)
+            val x = graphics.guiWidth() / 2
+
+            var c =
+                Component.literal("${lockedGames.size} Game${if (lockedGames.size == 1) "" else "s"} Locked")
+                    .withStyle(
+                        ChatFormatting.WHITE
+                    )
+
+            if (lockedGames.isEmpty()) {
+                c = Component.literal("Select Game to Lock").withStyle(ChatFormatting.GRAY)
+            }
+
+            graphics.drawCenteredString(
+                Minecraft.getInstance().font,
+                c,
+                x,
+                y + 20,
+                0xffffff.opaqueColor()
+            )
         }
 
         init {
@@ -136,7 +157,7 @@ object QuestLock {
             Resources.mcc("textures/${game.icon}"),
             12,
             12,
-            16,16
+            16, 16
         )
 
         override fun renderWidget(
@@ -145,7 +166,7 @@ object QuestLock {
             j: Int,
             f: Float
         ) {
-            val isLocked = lockedGame == game
+            val isLocked = game in lockedGames
             val color = when {
                 isLocked -> 0xFFFFFF opacity 96
                 isHovered -> 0xFFFFFF opacity 32
@@ -157,12 +178,14 @@ object QuestLock {
         }
 
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
-            if (lockedGame == game) {
-                lockedGame = null
+            if (game in lockedGames) {
+                lockedGames.remove(game)
                 return
             }
-            lockedGame = game
-            ChestScreenListener.findQuests(Minecraft.getInstance().screen as? ContainerScreen ?: return)
+            lockedGames.add(game)
+            ChestScreenListener.findQuests(
+                Minecraft.getInstance().screen as? ContainerScreen ?: return
+            )
         }
 
         override fun playDownSound(soundManager: SoundManager) {

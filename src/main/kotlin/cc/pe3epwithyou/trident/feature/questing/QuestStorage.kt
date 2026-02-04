@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.questing
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -36,6 +37,7 @@ object QuestStorage {
             val list = store.computeIfAbsent(q.game) { CopyOnWriteArrayList() }
             list.add(q)
         }
+        if (!Config.Questing.enabled) return
         DialogCollection.refreshDialog("questing")
     }
 
