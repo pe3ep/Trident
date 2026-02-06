@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.doll.chroma
 
+import cc.pe3epwithyou.trident.feature.doll.CosmeticType
 import cc.pe3epwithyou.trident.feature.doll.DollCosmetics
 import cc.pe3epwithyou.trident.feature.doll.DollCosmetics.isWeaponSkin
 import cc.pe3epwithyou.trident.utils.Resources
@@ -35,7 +36,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
 
     override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val item =
-            DollCosmetics.currentCosmetics[DollCosmetics.CosmeticType.SKIN]?.slot?.item ?: return
+            DollCosmetics.currentCosmetics[CosmeticType.SKIN]?.slot?.item ?: return
         if (!isWeaponSkin(item)) return
 
         val notSelected = Component.literal("Select Chroma").withStyle(ChatFormatting.GRAY)
@@ -78,7 +79,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
             j: Int,
             f: Float
         ) {
-            val item = DollCosmetics.currentCosmetics[DollCosmetics.CosmeticType.SKIN]?.slot?.item
+            val item = DollCosmetics.currentCosmetics[CosmeticType.SKIN]?.slot?.item
                 ?: return
             if (!isWeaponSkin(item)) return
             graphics.fillRoundedAll(
@@ -93,7 +94,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         }
 
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
-            val item = DollCosmetics.currentCosmetics[DollCosmetics.CosmeticType.SKIN]?.slot?.item
+            val item = DollCosmetics.currentCosmetics[CosmeticType.SKIN]?.slot?.item
                 ?: return
             if (!isWeaponSkin(item)) return
             if (DollCosmetics.currentChroma == chroma) {
@@ -105,7 +106,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         }
 
         override fun playDownSound(soundManager: SoundManager) {
-            val item = DollCosmetics.currentCosmetics[DollCosmetics.CosmeticType.SKIN]?.slot?.item
+            val item = DollCosmetics.currentCosmetics[CosmeticType.SKIN]?.slot?.item
                 ?: return
             if (!isWeaponSkin(item)) return
             soundManager.playMaster(Resources.mcc("ui.click_normal"))

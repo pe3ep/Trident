@@ -42,7 +42,7 @@ class CosmeticWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
 
     override fun isFocused(): Boolean = false
 
-    class CosmeticItemWidget(val type: DollCosmetics.CosmeticType) :
+    class CosmeticItemWidget(val type: CosmeticType) :
         AbstractWidget(0, 0, 18, 18, Component.empty()) {
         override fun renderWidget(
             guiGraphics: GuiGraphics,

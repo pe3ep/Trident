@@ -48,17 +48,6 @@ object DollCosmetics {
         return null
     }
 
-    @Suppress("unused")
-    enum class CosmeticType(
-        val pathPrefixes: List<String>,
-        val slot: (ItemStack) -> CosmeticSlot
-    ) {
-        HAT(listOf("island_cosmetics/general/hat"), ::HatSlot),
-        ACCESSORY(listOf("island_cosmetics/general/accessory"), ::AccessorySlot),
-        CLOAK(listOf("island_cosmetics/general/back"), ::BackSlot),
-        SKIN(listOf("island_lobby/fishing/rods", "island_cosmetics/weapon_skins"), ::SkinSlot),
-    }
-
     fun isWeaponSkin(item: ItemStack) = item.components.get(DataComponents.ITEM_MODEL)?.path?.startsWith("island_cosmetics/weapon_skins") ?: false
 
     data class Cosmetic(
