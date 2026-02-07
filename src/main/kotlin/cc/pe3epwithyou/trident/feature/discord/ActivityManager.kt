@@ -258,7 +258,7 @@ object ActivityManager {
             "platinum_ii",
             "platinum_i",
             "master",
-            "grand_master",
+            "grandmaster",
         )
 
         fun handleScreen(screen: ContainerScreen) = useScreen(screen) {
