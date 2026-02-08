@@ -12,9 +12,13 @@ import cc.pe3epwithyou.trident.utils.useScreen
 import io.github.vyfor.kpresence.rpc.ActivityAssetsBuilder
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 import java.time.Instant
+import java.util.Locale
 
 object ActivityManager {
     private var currentActivityBuilder: ActivityBuilder? = null
@@ -203,6 +207,7 @@ object ActivityManager {
             activity.party {
                 currentSize = size
                 maxSize = 4
+                id = Party.partyID
             }
         } else {
             activity.party = null
@@ -215,12 +220,14 @@ object ActivityManager {
     object Party {
         var previousSize: Int? = null
         var size: Int? = null
+        var partyID: String? = null
 
         var members: List<String> = emptyList()
 
         fun request() = SuggestionPacket.requestSuggestions("/party kick ", ::updateSize)
 
         fun updateSize(suggestions: List<String>) {
+            updatePartyID(suggestions)
             val suggestionCount = suggestions.size
             Logger.debugLog("Party size: ${suggestionCount + 1}")
             members = suggestions
@@ -232,6 +239,27 @@ object ActivityManager {
             previousSize = size
             size = if (newSize == 1) null else newSize
             sendWithParty()
+        }
+
+        fun sha1(input: String): String {
+            val bytes = input.toByteArray(StandardCharsets.UTF_8)
+            val md = MessageDigest.getInstance("SHA-1")
+            val digest = md.digest(bytes)
+            return buildString {
+                digest.forEach { append("%02x".format(it)) }
+            }
+        }
+
+        fun updatePartyID(suggestions: List<String>) {
+            val members = suggestions.toMutableList()
+            if (members.isEmpty()) {
+                partyID = null
+                return
+            }
+            val self = Minecraft.getInstance().gameProfile.name
+            members.add(self)
+            val id = members.map { it.lowercase(Locale.ROOT) }.sorted().joinToString("-")
+            partyID = sha1(id)
         }
 
         fun handleChatMessage(message: Component) {
