@@ -97,11 +97,6 @@ object ReplyLock {
             if (!Config.Global.replyLock) return@modifyCmd command
 
             var modified = command
-            if (modified.startsWith("chat ") || modified == "l" || modified == "local") {
-                currentLock = null
-                Minecraft.getInstance()
-                    .setScreen(Minecraft.getInstance().screen) // re-init screen (hacky, but works)
-            }
 
             if (modified.startsWith("r ") || modified.startsWith("reply ")) {
                 if (currentLock == null) return@modifyCmd command

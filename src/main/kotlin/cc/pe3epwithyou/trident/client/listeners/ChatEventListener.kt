@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
+import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -66,6 +67,14 @@ object ChatEventListener {
                     val rank = it.groups[1]?.value
                     ActivityManager.Arena.updateRank(rank)
                     ActivityManager.updateCurrentActivity()
+                }
+
+                Regex("""You are now in the .+ chat.""").find(message.string)?.let {
+                    if (ReplyLock.currentLock != null) {
+                        ReplyLock.disableLock()
+                        Minecraft.getInstance()
+                            .setScreen(Minecraft.getInstance().screen)
+                    }
                 }
 
                 // PKW messages
