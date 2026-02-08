@@ -203,7 +203,7 @@ object ActivityManager {
         val activity = getActivity()
         var size = Party.size
         if (size == 1) size = null
-        if (size != null && Config.Discord.displayParty) {
+        if (size != null && !shouldHideActivity() && Config.Discord.displayParty) {
             activity.party {
                 currentSize = size
                 maxSize = 4
@@ -259,7 +259,9 @@ object ActivityManager {
             val self = Minecraft.getInstance().gameProfile.name
             members.add(self)
             val id = members.map { it.lowercase(Locale.ROOT) }.sorted().joinToString("-")
+            Logger.debugLog("Party ID: $id")
             partyID = sha1(id)
+            Logger.debugLog("Party ID (hashed): $partyID")
         }
 
         fun handleChatMessage(message: Component) {
