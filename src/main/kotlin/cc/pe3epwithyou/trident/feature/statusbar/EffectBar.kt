@@ -25,9 +25,30 @@ object EffectBar {
         )
     }
 
-    private val hiddenEffects = buildSet {
+    private val globalHiddenEffects = buildSet {
         add(Resources.minecraft("hunger"))
         add(Resources.minecraft("dolphins_grace"))
+        add(Resources.minecraft("night_vision"))
+    }
+
+    /**
+     * Maps games to a set of effects that should be displayed or hidden based on the amplifier.
+     *   - `Identifier`: Represents an identifier of the effect
+     *   - `Int`: Represents the minimum effect amplifier required to display the effect.
+     *     If the effect has a lower amplifier, it will not be displayed.
+     *     If set to -1, the effect will always be hidden.
+     */
+    private val gameConstants: Map<Game, Map<Identifier, Int>> = buildMap {
+        put(Game.ROCKET_SPLEEF_RUSH, buildMap {
+            put(Resources.minecraft("jump_boost"), -1)
+            put(Resources.minecraft("speed"), -1)
+        })
+        put(Game.HITW, buildMap {
+            put(Resources.minecraft("jump_boost"), 3)
+        })
+        put(Game.DYNABALL, buildMap {
+            put(Resources.minecraft("haste"), -1)
+        })
     }
 
     @JvmStatic
@@ -53,16 +74,23 @@ object EffectBar {
     fun getCurrentActiveEffects(): List<Effect> {
         val player = Minecraft.getInstance().player ?: return emptyList()
         val effects = mutableListOf<Effect>()
-        player.activeEffects.forEach {
+        player.activeEffects.forEach playerEffects@{
             val unwrappedId = it.effect.unwrapKey()
             val unwrappedMobEffect = it.effect.value()
-            if (unwrappedId.isEmpty) return@forEach
+            if (unwrappedId.isEmpty) return@playerEffects
             val id = unwrappedId.get().identifier()
-            if (id in hiddenEffects) return@forEach
+            if (id in globalHiddenEffects) return@playerEffects
 
-            // HITW check
-            if (MCCIState.game == Game.HITW && id == Resources.minecraft("jump_boost")) {
-                if (it.amplifier <= 2) return@forEach // Don't display the constant jump boost effect
+            val currentGame = MCCIState.game
+            gameConstants.forEach { (game, pairs) ->
+                if (currentGame == game) {
+                    pairs.forEach { (effect, amplifier) ->
+                        if (effect == id) {
+                            if (amplifier == -1) return@playerEffects
+                            if (it.amplifier < amplifier) return@playerEffects
+                        }
+                    }
+                }
             }
 
             if (id in CUSTOM_EFFECTS) {
