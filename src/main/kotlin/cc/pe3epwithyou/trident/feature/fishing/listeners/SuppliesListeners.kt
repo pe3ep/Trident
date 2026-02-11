@@ -26,7 +26,7 @@ object SuppliesListeners {
         ContainerEvents.onClose(::find)
 
         ClickEvents.onClick {
-            titleHas("FISHING SUPPLIES")
+            requireTitle("FISHING SUPPLIES")
             if (!Config.Fishing.suppliesModule) return@onClick
             val item = clickedItem() ?: return@onClick
             if (item.isEmpty) return@onClick
@@ -48,7 +48,7 @@ object SuppliesListeners {
     }
 
     fun find(ctx: ContainerContext) = with(ctx) {
-        titleHas("FISHING SUPPLIES")
+        requireTitle("FISHING SUPPLIES")
         if (!Config.Fishing.suppliesModule) return@with
         val supplies = playerState().supplies
 

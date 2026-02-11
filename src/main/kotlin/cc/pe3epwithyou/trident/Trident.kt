@@ -8,16 +8,22 @@ import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.crafting.NotificationLifecycle
 import cc.pe3epwithyou.trident.feature.debug.TridentDebugEntry
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
+import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
+import cc.pe3epwithyou.trident.feature.doll.Doll
+import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.feature.fishing.listeners.ResearchListeners
 import cc.pe3epwithyou.trident.feature.fishing.listeners.SuppliesListeners
 import cc.pe3epwithyou.trident.feature.fishing.listeners.WayfinderListeners
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
+import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.mixin.accessors.DebugScreenEntriesAccessor
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
@@ -100,6 +106,12 @@ class Trident : ModInitializer {
         SuppliesListeners.register()
         WayfinderListeners.register()
         ResearchListeners.register()
+        ExchangeHandler.register()
+        ActivityManager.Arena.register()
+        Doll.register()
+        CraftingNotifications.register()
+        Disguise.register()
+        QuestLock.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->

@@ -1,15 +1,19 @@
 package cc.pe3epwithyou.trident.feature.discord
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.container.ContainerContext
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.Rank
-import cc.pe3epwithyou.trident.utils.*
+import cc.pe3epwithyou.trident.utils.Logger
+import cc.pe3epwithyou.trident.utils.SuggestionPacket
+import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.playerState
 import io.github.vyfor.kpresence.rpc.ActivityAssetsBuilder
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -286,8 +290,15 @@ object ActivityManager {
             "grandmaster",
         )
 
-        fun handleScreen(screen: ContainerScreen) = useScreen(screen) {
-            updateRank(getItem(10).hoverName.string)
+        fun register() {
+            ContainerEvents.onOpen(::handleScreen)
+            ContainerEvents.onClose(::handleScreen)
+        }
+
+        fun handleScreen(ctx: ContainerContext) = with(ctx) {
+            requireTitle("BATTLE BOX ARENA")
+            val item = item(10) ?: return@with
+            updateRank(item.hoverName.string)
             val currentRank = playerState().arenaData.currentRank
             Logger.debugLog("Set rank to $currentRank")
         }

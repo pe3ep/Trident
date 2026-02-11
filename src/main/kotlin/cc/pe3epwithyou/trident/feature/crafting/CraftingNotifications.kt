@@ -1,6 +1,8 @@
 package cc.pe3epwithyou.trident.feature.crafting
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.container.ContainerContext
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 import cc.pe3epwithyou.trident.state.Rarity
@@ -115,22 +117,24 @@ object CraftingNotifications {
         Logger.sendMessage(msg)
     }
 
-    @JvmStatic
-    fun handleScreen(screen: ContainerScreen) {
-        if (!MCCIState.isOnIsland()) return
-        if (!Config.Global.craftingNotifications) return
-        if (!listOf("BLUEPRINT ASSEMBLER", "FUSION FORGE").any { it in screen.title.string }) return
+    fun handleScreen(ctx: ContainerContext) = with(ctx) {
+        if (!MCCIState.isOnIsland()) return@with
+        if (!Config.Global.craftingNotifications) return@with
+        if (!listOf("BLUEPRINT ASSEMBLER", "FUSION FORGE").any { it in handledScreen.title.string }) return@with
 
-        useScreen(screen) {
-            val items = mutableListOf<Notification>()
-            val source = Source.from(screen)
-            (19..25).forEach {
-                val item = getItem(it)
-                val notification = fromItem(item, source) ?: return@forEach
-                items.add(notification)
-            }
-            add(items, source)
+        val items = mutableListOf<Notification>()
+        val source = Source.from(handledScreen)
+        (19..25).forEach {
+            val item = item(it) ?: return@forEach
+            val notification = fromItem(item, source) ?: return@forEach
+            items.add(notification)
         }
+        add(items, source)
+    }
+
+    fun register() {
+        ContainerEvents.onOpen(::handleScreen)
+        ContainerEvents.onClose(::handleScreen)
     }
 
     private val FUSION_ICON =

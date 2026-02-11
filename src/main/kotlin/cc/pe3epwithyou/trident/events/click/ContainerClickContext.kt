@@ -3,21 +3,26 @@ package cc.pe3epwithyou.trident.events.click
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.client.input.MouseButtonEvent
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 @DslMarker
 annotation class ContainerClickDsl
 
 @Suppress("unused")
 @ContainerClickDsl
-class ContainerClickContext(val doubleClick: Boolean, val screen: ContainerScreen, val mouseEvent: MouseButtonEvent) : ContainerContext(screen) {
+class ContainerClickContext(val doubleClick: Boolean, val screen: ContainerScreen, val mouseEvent: MouseButtonEvent, val cir: CallbackInfoReturnable<Boolean>) : ContainerContext(screen) {
     val left: Boolean = key == 0
     val right: Boolean = key == 1
+    val middle: Boolean = key == 2
     val alt: Boolean = mouseEvent.hasAltDown()
     val ctrl: Boolean = mouseEvent.hasControlDown()
     val shift: Boolean = mouseEvent.hasShiftDown()
     val key: Int
         get() = mouseEvent.button()
+    val x: Double = mouseEvent.x
+    val y: Double = mouseEvent.y
 
+    fun cancel() = cir.cancel()
     fun clickedSlot() = hoveredSlot()
     fun clickedItem() = clickedSlot()?.item
 }

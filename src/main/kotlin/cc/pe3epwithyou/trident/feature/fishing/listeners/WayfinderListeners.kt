@@ -17,7 +17,7 @@ object WayfinderListeners {
     }
 
     fun findData(ctx: ContainerContext) = with(ctx) {
-        titleHas("FISHING ISLANDS")
+        requireTitle("FISHING ISLANDS")
         val wayfinder = playerState().wayfinderData
 
         item(24)?.let { processWayfinder(wayfinder.temperate, it) }

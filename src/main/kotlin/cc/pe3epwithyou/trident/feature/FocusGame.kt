@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState.game
 import cc.pe3epwithyou.trident.state.MCCIState.isOnIsland
@@ -38,6 +39,13 @@ object FocusGame {
 
                 minecraft().window.focusWindowIfInactive()
             }
+        }
+    }
+
+    fun register() {
+        ContainerEvents.onOpen {
+            requireTitle("MATCH FOUND! (0/")
+            minecraft().window.focusWindowIfInactive()
         }
     }
 }

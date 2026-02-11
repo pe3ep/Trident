@@ -5,8 +5,6 @@ import cc.pe3epwithyou.trident.events.click.ClickEvents;
 import cc.pe3epwithyou.trident.events.click.ContainerClickContext;
 import cc.pe3epwithyou.trident.events.container.ContainerContext;
 import cc.pe3epwithyou.trident.events.container.ContainerEvents;
-import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications;
-import cc.pe3epwithyou.trident.feature.disguise.Disguise;
 import cc.pe3epwithyou.trident.feature.doll.Doll;
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
 import cc.pe3epwithyou.trident.feature.fishing.TideWindIndicator;
@@ -46,9 +44,6 @@ public class AbstractContainerScreenMixin extends Screen {
     @Nullable
     protected Slot hoveredSlot;
 
-    @Shadow
-    protected int imageHeight;
-
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
     }
@@ -86,9 +81,6 @@ public class AbstractContainerScreenMixin extends Screen {
     public void injectOnClose(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (minecraft.screen instanceof ContainerScreen s) {
-            Doll.onClose();
-            Disguise.checkActionbar();
-            CraftingNotifications.handleScreen(s);
             ContainerEvents.INSTANCE.getCLOSE().invoker().invoke(new ContainerContext(s));
         }
     }
@@ -127,11 +119,9 @@ public class AbstractContainerScreenMixin extends Screen {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void injectMouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl, CallbackInfoReturnable<Boolean> cir) {
-        QuestLock.handleClick(this.hoveredSlot, cir);
-        Doll.onClick(mouseButtonEvent);
         ContainerScreen containerScreen = minecraft.screen instanceof ContainerScreen s ? s : null;
         if (containerScreen == null) return;
-        ClickEvents.INSTANCE.getCLICK().invoker().invoke(new ContainerClickContext(bl, containerScreen, mouseButtonEvent));
+        ClickEvents.INSTANCE.getCLICK().invoker().invoke(new ContainerClickContext(bl, containerScreen, mouseButtonEvent, cir));
     }
 
     @Inject(method = "renderContents", at = @At("HEAD"))

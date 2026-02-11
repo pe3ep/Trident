@@ -17,7 +17,7 @@ object ResearchListeners {
     }
 
     fun find(ctx: ContainerContext) = with(ctx) {
-        titleHas("FISHING PROGRESS")
+        requireTitle("FISHING PROGRESS")
 
         val types = mutableListOf<Research>()
         var index = 12

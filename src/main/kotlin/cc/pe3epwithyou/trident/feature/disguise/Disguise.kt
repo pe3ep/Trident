@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature.disguise
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -28,7 +29,11 @@ object Disguise {
         }
     }
 
-    @JvmStatic
+    fun register() {
+        ContainerEvents.onOpen { checkActionbar() }
+        ContainerEvents.onClose { checkActionbar() }
+    }
+
     fun checkActionbar(): Boolean {
         if (!MCCIState.isOnIsland()) return false
         val gui = minecraft().gui as GuiAccessor

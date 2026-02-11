@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "trident.refmap.json",
   "mixins": [
-    "screen.AbstractContainerMenuMixin",
     "connection.ConnectionMixin",
     "ItemStackMixin",
     "accessors.LivingEntityAccessor"
