@@ -1,7 +1,11 @@
 package cc.pe3epwithyou.trident.feature.questing
 
-import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.container.ContainerContext
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
+import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
+import cc.pe3epwithyou.trident.utils.context
+import cc.pe3epwithyou.trident.utils.screenWidth
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -20,7 +24,7 @@ object QuestListener {
         if (!isWaitingRefresh) return
         if ("Quest" !in item.hoverName.string) return
         val screen = (Minecraft.getInstance().screen ?: return) as ContainerScreen
-        ChestScreenListener.findQuests(screen)
+        findQuests(screen.context())
     }
 
     fun register() {
@@ -28,5 +32,55 @@ object QuestListener {
             if (!Config.Questing.enabled) return@eventHandler
             handleRefreshTasksChat(message)
         }
+
+        ContainerEvents.onInit {
+            titleHas("ISLAND REWARDS")
+            if (!Config.Global.questLock) return@onInit
+            val widget = QuestLock.Widget(2, topPos() + imageHeight())
+            widget.x = (screenWidth() / 2 - widget.getWidth() / 2)
+            addRenderable(widget)
+        }
+        ContainerEvents.onOpen(::findQuests)
+        ContainerEvents.onClose(::findQuests)
+
     }
+
+    fun findQuests(ctx: ContainerContext) =
+        with(ctx) {
+            titleHas("ISLAND REWARDS")
+
+            val slotQuests = mutableListOf<Quest>()
+
+            fun handleQuestSlot(index: Int): List<Quest> {
+                val slot = slot(index) ?: return emptyList()
+                val quests = QuestingParser.parseQuestSlot(slot).orEmpty()
+
+                QuestLock.questSlots[index]?.apply {
+                    this.quests = quests
+                    isLocked = QuestLock.shouldLock(quests)
+                }
+
+                slotQuests += quests
+                return quests
+            }
+
+            fun handleRemainingSlot(index: Int): Int {
+                val slot = slot(index) ?: return 0
+                return QuestingParser.parseRemainingSlot(slot)
+            }
+
+            // Daily
+            handleQuestSlot(37)
+            QuestStorage.dailyRemaining = handleRemainingSlot(28)
+
+            // Weekly
+            handleQuestSlot(39)
+            QuestStorage.weeklyRemaining = handleRemainingSlot(30)
+
+            // Scroll
+            handleQuestSlot(41)
+
+            QuestStorage.loadQuests(slotQuests)
+        }
+
 }

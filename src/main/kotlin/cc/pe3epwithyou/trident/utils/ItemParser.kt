@@ -11,8 +11,8 @@ object ItemParser {
     fun getActiveOverclock(item: ItemStack): Augment? {
         var beginSearch = false
         item.getLore().forEach { line ->
-//            Due to people having different upgrade costs, it's easier to simply go over each line and start
-//            searching overclocks once we reach this text
+            // Due to people having different upgrade costs, it's easier to simply go over each line and start
+            // searching overclocks once we reach this text
             if ("Overclocked Perk:" in line.string) {
                 beginSearch = true
             }
@@ -31,7 +31,7 @@ object ItemParser {
     fun getUnstableOverclock(item: ItemStack): OverclockTexture? {
         var beginSearch = false
         item.getLore().forEach { line ->
-//            Get overclock duration, as it can be different depending on the upgrade
+            // Get overclock duration, as it can be different depending on the upgrade
             if ("Duration: " in line.string) {
                 val minutes = line.string.split(": ")[1]
                 if (minutes.split(" ").size == 1) {

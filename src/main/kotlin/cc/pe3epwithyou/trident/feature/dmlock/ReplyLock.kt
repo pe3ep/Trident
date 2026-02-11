@@ -174,7 +174,7 @@ object ReplyLock {
 
             items.add(0, modified)
             mutable = Component.empty()
-            items.forEach { mutable = mutable.append(it) }
+            items.forEach { item -> mutable = mutable.append(item) }
 
             mutable.style = mutable.style
                 .withClickEvent(ClickEvent.RunCommand("replylock ${user?.string}"))

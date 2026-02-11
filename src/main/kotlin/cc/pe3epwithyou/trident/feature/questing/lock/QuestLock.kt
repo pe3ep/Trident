@@ -1,8 +1,8 @@
 package cc.pe3epwithyou.trident.feature.questing.lock
 
-import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.Quest
+import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot
 import cc.pe3epwithyou.trident.state.Game
@@ -183,9 +183,8 @@ object QuestLock {
                 return
             }
             lockedGames.add(game)
-            ChestScreenListener.findQuests(
-                Minecraft.getInstance().screen as? ContainerScreen ?: return
-            )
+            val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
+            QuestListener.findQuests(screen.context())
         }
 
         override fun playDownSound(soundManager: SoundManager) {

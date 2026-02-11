@@ -26,7 +26,7 @@ public class ClientPacketListenerMixin {
     private void injectHandleContainerSetSlot(ClientboundContainerSetSlotPacket clientboundContainerSetSlotPacket, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         QuestListener.INSTANCE.handleRefreshTasksItem(clientboundContainerSetSlotPacket.getItem());
-        ScreenManager.Companion.setWaitingForItems(false);
+        ScreenManager.setWaiting(false);
     }
 
     @Inject(method = "handleBossUpdate", at = @At("TAIL"))

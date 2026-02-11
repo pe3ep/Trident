@@ -21,11 +21,22 @@ object ContainerEvents {
      */
     fun onClose(block: ContainerContext.() -> Unit) = CLOSE.registerWithContext(block)
 
+    /**
+     * Registers a listener triggered when a container screen is initialized.
+     *
+     * @param block a [ContainerContext] lambda
+     */
+    fun onInit(block: ContainerContext.() -> Unit) = INIT.registerWithContext(block)
+
     val OPEN: Event<ContainerEventCallback> = EventFactory.createArrayBacked(ContainerEventCallback::class.java) { listeners ->
         ContainerEventCallback { ctx -> listeners.forEach { it.invoke(ctx) } }
     }
 
     val CLOSE: Event<ContainerEventCallback> = EventFactory.createArrayBacked(ContainerEventCallback::class.java) { listeners ->
+        ContainerEventCallback { ctx -> listeners.forEach { it.invoke(ctx) } }
+    }
+
+    val INIT: Event<ContainerEventCallback> = EventFactory.createArrayBacked(ContainerEventCallback::class.java) { listeners ->
         ContainerEventCallback { ctx -> listeners.forEach { it.invoke(ctx) } }
     }
 

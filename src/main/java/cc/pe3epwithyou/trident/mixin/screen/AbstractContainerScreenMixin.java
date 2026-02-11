@@ -4,6 +4,8 @@ import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
 import cc.pe3epwithyou.trident.events.click.ClickEvents;
 import cc.pe3epwithyou.trident.events.click.ContainerClickContext;
+import cc.pe3epwithyou.trident.events.container.ContainerContext;
+import cc.pe3epwithyou.trident.events.container.ContainerEvents;
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications;
 import cc.pe3epwithyou.trident.feature.disguise.Disguise;
 import cc.pe3epwithyou.trident.feature.doll.Doll;
@@ -92,9 +94,6 @@ public class AbstractContainerScreenMixin extends Screen {
             if (s.getTitle().getString().contains("FISHING SUPPLIES")) {
                 ChestScreenListener.INSTANCE.findAugments(s);
             }
-            if (s.getTitle().getString().contains("ISLAND REWARDS")) {
-                ChestScreenListener.INSTANCE.findQuests(s);
-            }
             CraftingNotifications.handleScreen(s);
         }
     }
@@ -122,16 +121,12 @@ public class AbstractContainerScreenMixin extends Screen {
     public void init(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         String screenTitle = this.getTitle().getString();
+        Screen screen = Minecraft.getInstance().screen;
+        ContainerEvents.INSTANCE.getINIT().invoker().invoke(new ContainerContext((ContainerScreen) screen));
         if (screenTitle.contains("ISLAND EXCHANGE") && Config.Global.INSTANCE.getExchangeImprovements()) {
             int x = this.leftPos + 32;
             int y = this.topPos - 33;
             this.addRenderableWidget(new ExchangeFilter(x, y));
-        }
-        if (screenTitle.contains("ISLAND REWARDS") && Config.Global.INSTANCE.getQuestLock()) {
-            int y = this.topPos + this.imageHeight;
-            QuestLock.Widget widget = new QuestLock.Widget(2, y);
-            widget.setX(this.width / 2 - widget.getWidth() / 2);
-            this.addRenderableWidget(widget);
         }
     }
 
