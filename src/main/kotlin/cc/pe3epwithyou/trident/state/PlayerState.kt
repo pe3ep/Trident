@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.config.ConfigUtil
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications.Notification
+import cc.pe3epwithyou.trident.feature.fishing.FishingType
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
@@ -102,7 +103,7 @@ data class WayfinderData(
 
 @Serializable
 data class Research(
-    var type: String,
+    var type: FishingType,
     var tier: Int = 1,
     var progressThroughTier: Int = 0,
     var totalForTier: Int = 1000

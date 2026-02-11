@@ -12,8 +12,9 @@ import cc.pe3epwithyou.trident.feature.crafting.NotificationLifecycle
 import cc.pe3epwithyou.trident.feature.debug.TridentDebugEntry
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
-import cc.pe3epwithyou.trident.feature.fishing.listeners.SuppliesListeners
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
+import cc.pe3epwithyou.trident.feature.fishing.listeners.ResearchListeners
+import cc.pe3epwithyou.trident.feature.fishing.listeners.SuppliesListeners
 import cc.pe3epwithyou.trident.feature.fishing.listeners.WayfinderListeners
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -98,6 +99,7 @@ class Trident : ModInitializer {
         NotificationLifecycle.register()
         SuppliesListeners.register()
         WayfinderListeners.register()
+        ResearchListeners.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->
