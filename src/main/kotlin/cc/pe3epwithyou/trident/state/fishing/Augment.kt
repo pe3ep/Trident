@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.state.fishing
 
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.utils.Resources
-import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
+import cc.pe3epwithyou.trident.utils.parseFormattedInt
 import net.minecraft.resources.Identifier
 
 @Suppress("unused")

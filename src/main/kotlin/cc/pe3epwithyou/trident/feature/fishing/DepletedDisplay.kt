@@ -1,11 +1,13 @@
 package cc.pe3epwithyou.trident.feature.fishing
 
 import cc.pe3epwithyou.trident.utils.Title
-import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
-import kotlinx.coroutines.*
+import cc.pe3epwithyou.trident.utils.background
+import cc.pe3epwithyou.trident.utils.main
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import net.minecraft.util.Util
 import net.minecraft.world.phys.Vec3
 import java.time.Instant
 import java.time.ZoneId
@@ -37,7 +39,7 @@ object DepletedDisplay {
             this.title = component
             this.castAt = Instant.now()
 
-            this.job = CoroutineScope(Util.backgroundExecutor().asCoroutineDispatcher()).launch {
+            this.job = background().launch {
                 while (true) {
                     delay(ticks)
                     ticks = 100

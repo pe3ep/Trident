@@ -1,9 +1,9 @@
 package cc.pe3epwithyou.trident.utils
 
-import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
-import net.minecraft.util.Util
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -43,8 +43,7 @@ object DelayedAction {
      */
     fun delay(delayMs: Long, action: () -> Unit): DelayedTask {
         val id = UUID.randomUUID()
-        val ctx = Util.backgroundExecutor().asCoroutineDispatcher()
-        val future = CoroutineScope(ctx).launch {
+        val future = background().launch {
             delay(delayMs)
             tasks.remove(id)
             main(action)

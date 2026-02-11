@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.events.container
 import cc.pe3epwithyou.trident.events.StopExecution
 import cc.pe3epwithyou.trident.mixin.accessors.AbstractContainerScreenAccessor
 import cc.pe3epwithyou.trident.mixin.accessors.ScreenAccessor
+import cc.pe3epwithyou.trident.utils.context
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
@@ -36,4 +37,4 @@ open class ContainerContext(val handledScreen: ContainerScreen) {
 }
 
 fun withContainerCtx(screen: ContainerScreen, block: ContainerContext.() -> Unit) =
-    ContainerContext(screen).block()
+    screen.context().block()

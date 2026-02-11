@@ -28,11 +28,8 @@ import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.*
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
-import cc.pe3epwithyou.trident.utils.Command
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
-import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
@@ -45,7 +42,6 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import net.minecraft.util.Util
 
 object TridentCommand {
     private val debugDialogs = mutableMapOf(
@@ -147,8 +143,7 @@ object TridentCommand {
                     if (jokeCooldown) return@executes
                     jokeCooldown = true
 
-                    val scope = Util.backgroundExecutor().asCoroutineDispatcher()
-                    CoroutineScope(scope).launch {
+                    background().launch {
                         main {
                             Logger.sendMessage("Requesting autofish.jar...")
                         }
@@ -195,7 +190,7 @@ object TridentCommand {
 
             literal("reconnectDiscord") {
                 executes {
-                    CoroutineScope(Util.nonCriticalIoPool().asCoroutineDispatcher()).launch {
+                    nonCriticalIO().launch {
                         try {
                             withTimeoutOrNull(3_000) {
                                 IPCManager.stop()
