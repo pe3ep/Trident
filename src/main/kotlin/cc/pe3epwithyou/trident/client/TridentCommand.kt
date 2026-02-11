@@ -60,8 +60,6 @@ object TridentCommand {
         return false
     }
 
-    var jokeCooldown: Boolean = false
-
     fun registerCommands(dispatcher: CommandDispatcher<FabricClientCommandSource>) {
         /**
          * Main /trident command
@@ -139,50 +137,47 @@ object TridentCommand {
              */
             literal("autofish") {
                 executes {
-                    if (jokeCooldown) return@executes
-                    jokeCooldown = true
+                    withCooldown("autofish", 20_000) {
+                        background().launch {
+                            main {
+                                Logger.sendMessage("Requesting autofish.jar...")
+                            }
 
-                    background().launch {
-                        main {
-                            Logger.sendMessage("Requesting autofish.jar...")
+                            delay(4000)
+                            main {
+                                Logger.sendMessage("Received a response from the server")
+                            }
+
+                            delay(2000)
+                            main {
+                                Logger.sendMessage("It says the following:")
+                            }
+
+                            delay(3000)
+                            main {
+                                Logger.sendMessage(
+                                    Component.literal("Did you really just try to enable autofishing?")
+                                        .withStyle(ChatFormatting.AQUA)
+                                )
+                            }
+
+                            delay(3000)
+                            main {
+                                Logger.sendMessage(
+                                    Component.literal("Are we serious right meow bro?")
+                                        .withStyle(ChatFormatting.AQUA)
+                                )
+                            }
+
+                            delay(3000)
+                            main {
+                                Logger.sendMessage(
+                                    Component.literal("This incident will be reported.")
+                                        .withSwatch(TridentFont.ERROR)
+                                        .withStyle(ChatFormatting.BOLD)
+                                )
+                            }
                         }
-
-                        delay(4000)
-                        main {
-                            Logger.sendMessage("Received a response from the server")
-                        }
-
-                        delay(2000)
-                        main {
-                            Logger.sendMessage("It says the following:")
-                        }
-
-                        delay(3000)
-                        main {
-                            Logger.sendMessage(
-                                Component.literal("Did you really just try to enable autofishing?")
-                                    .withStyle(ChatFormatting.AQUA)
-                            )
-                        }
-
-                        delay(3000)
-                        main {
-                            Logger.sendMessage(
-                                Component.literal("Are we serious right meow bro?")
-                                    .withStyle(ChatFormatting.AQUA)
-                            )
-                        }
-
-                        delay(3000)
-                        main {
-                            Logger.sendMessage(
-                                Component.literal("This incident will be reported.")
-                                    .withSwatch(TridentFont.ERROR).withStyle(ChatFormatting.BOLD)
-                            )
-                            jokeCooldown = false
-                        }
-
-
                     }
                 }
             }
@@ -414,8 +409,7 @@ object TridentCommand {
                                         killMethod = method,
                                         attacker = self.name.toString(),
                                         killColors = Pair(
-                                            0x606060 opacity 128,
-                                            0x606060 opacity 100
+                                            0x606060 opacity 128, 0x606060 opacity 100
                                         ),
                                         streak = it.getArgument("streak", Int::class.java),
                                         hasAssist = it.getArgument("hasAssist", Boolean::class.java)
