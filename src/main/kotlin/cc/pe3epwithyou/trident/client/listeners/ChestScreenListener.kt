@@ -2,6 +2,8 @@ package cc.pe3epwithyou.trident.client.listeners
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.container.ContainerContext
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.doll.Doll
@@ -62,6 +64,9 @@ object ChestScreenListener {
             checkName("BATTLE BOX ARENA") { await { ActivityManager.Arena.handleScreen(it) } }
             await { Doll.addWidgets(it) }
             await { CraftingNotifications.handleScreen(it) }
+            await {
+                ContainerEvents.OPEN.invoker().invoke(ContainerContext(it))
+            }
         }
 
         Logger.debugLog("Screen title: $title")

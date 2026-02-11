@@ -18,7 +18,6 @@ import net.minecraft.network.chat.Component
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.time.Instant
-import java.util.Locale
 
 object ActivityManager {
     private var currentActivityBuilder: ActivityBuilder? = null
@@ -258,7 +257,7 @@ object ActivityManager {
             }
             val self = Minecraft.getInstance().gameProfile.name
             members.add(self)
-            val id = members.map { it.lowercase(Locale.ROOT) }.sorted().joinToString("-")
+            val id = members.map { it.lowercase() }.sorted().joinToString("-")
             Logger.debugLog("Party ID: $id")
             partyID = sha1(id)
             Logger.debugLog("Party ID (hashed): $partyID")
