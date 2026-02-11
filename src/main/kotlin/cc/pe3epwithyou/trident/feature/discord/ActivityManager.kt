@@ -1,15 +1,11 @@
 package cc.pe3epwithyou.trident.feature.discord
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.Rank
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.SuggestionPacket
-import cc.pe3epwithyou.trident.utils.minecraft
-import cc.pe3epwithyou.trident.utils.useScreen
+import cc.pe3epwithyou.trident.utils.*
 import io.github.vyfor.kpresence.rpc.ActivityAssetsBuilder
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
 import net.fabricmc.loader.api.FabricLoader
@@ -145,7 +141,7 @@ object ActivityManager {
                 activity.details = "Fishing at $islandName"
                 assetsBuilder.largeImage = "game_fishing_$island"
                 if (Config.Discord.displayExtraInfo) {
-                    Trident.playerState.levelData?.let {
+                    playerState().levelData?.let {
                         assetsBuilder.smallText = "Level ${it.fishingLevel.level}"
                         assetsBuilder.smallImage = "level_fishing_${it.fishingLevel.evolution}"
                     }
@@ -160,7 +156,7 @@ object ActivityManager {
 
                 assetsBuilder.largeImage = "game_battle_box_arena"
                 if (Config.Discord.displayExtraInfo) {
-                    Trident.playerState.arenaData.currentRank?.let {
+                    playerState().arenaData.currentRank?.let {
                         assetsBuilder.smallText = it.name
                         assetsBuilder.smallImage = it.image
                     }
@@ -292,23 +288,23 @@ object ActivityManager {
 
         fun handleScreen(screen: ContainerScreen) = useScreen(screen) {
             updateRank(getItem(10).hoverName.string)
-            val currentRank = Trident.playerState.arenaData.currentRank
+            val currentRank = playerState().arenaData.currentRank
             Logger.debugLog("Set rank to $currentRank")
         }
 
         fun updateRank(name: String?) {
             if (name == null) {
-                Trident.playerState.arenaData.currentRank = null
+                playerState().arenaData.currentRank = null
                 return
             }
 
             val rank = name.replace(" ", "_").lowercase()
             if (rank !in knownRanks) {
-                Trident.playerState.arenaData.currentRank = null
+                playerState().arenaData.currentRank = null
                 return
             }
 
-            Trident.playerState.arenaData.currentRank = Rank(name, "rank_$rank")
+            playerState().arenaData.currentRank = Rank(name, "rank_$rank")
         }
 
     }

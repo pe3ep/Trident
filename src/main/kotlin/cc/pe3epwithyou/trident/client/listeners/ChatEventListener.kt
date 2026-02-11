@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.client.listeners
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
@@ -15,6 +14,7 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentionIfInactive
 import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.playerState
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
@@ -106,8 +106,8 @@ object ChatEventListener {
 
                 // Check if the player received bait and mark supplies as desynced
                 if (message.isReceivedItem() && "Bait" in message.string) {
-                    if (!Trident.playerState.supplies.baitDesynced) {
-                        Trident.playerState.supplies.baitDesynced = true
+                    if (!playerState().supplies.baitDesynced) {
+                        playerState().supplies.baitDesynced = true
                         DialogCollection.refreshDialog("supplies")
                     }
                 }
@@ -155,13 +155,13 @@ object ChatEventListener {
 
                     triggeredAugments.clear()
 
-                    Trident.playerState.supplies.line.uses?.let {
-                        if (it != 0) Trident.playerState.supplies.line.uses = it - 1
+                    playerState().supplies.line.uses?.let {
+                        if (it != 0) playerState().supplies.line.uses = it - 1
                     }
 
                     if (triggerBait) {
-                        Trident.playerState.supplies.bait.amount?.let {
-                            if (it != 0) Trident.playerState.supplies.bait.amount = it - 1
+                        playerState().supplies.bait.amount?.let {
+                            if (it != 0) playerState().supplies.bait.amount = it - 1
                         }
                     }
 

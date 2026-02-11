@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.modrinth
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.updatechecker.DisappointedCatDialog
 import cc.pe3epwithyou.trident.utils.*
@@ -63,7 +62,7 @@ object UpdateChecker {
             // New version available, notify the user
             sendUpdateAvailableMessage(latestVersion!!.friendlyString)
 
-            if (Trident.playerState.hatesUpdates) return
+            if (playerState().hatesUpdates) return
             val published = Instant.parse(fetchedVersionModrinth?.date_published ?: return)
             val now = Instant.now()
             val activateSillyDate = published.plus(Duration.ofDays(7L))

@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.feature.api.ApiProvider.TRIDENT
 import cc.pe3epwithyou.trident.utils.NetworkUtil
 import cc.pe3epwithyou.trident.utils.RequestMethod
 import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.playerState
 import kotlinx.serialization.Serializable
 
 object DebugScreen {
@@ -38,7 +39,7 @@ object DebugScreen {
     }
 
     fun getMessage(): String {
-        if (Trident.playerState.hatesUpdates) {
+        if (playerState().hatesUpdates) {
             return "i CANNOT BELIEVE you hate the cat..."
         }
         return customMessage ?: "Thank you for using Trident <3"

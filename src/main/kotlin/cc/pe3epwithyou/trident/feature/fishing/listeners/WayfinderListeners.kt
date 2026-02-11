@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.feature.fishing.listeners
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
@@ -8,6 +7,7 @@ import cc.pe3epwithyou.trident.state.WayfinderStatus
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.parseFormattedInt
+import cc.pe3epwithyou.trident.utils.playerState
 import net.minecraft.world.item.ItemStack
 
 object WayfinderListeners {
@@ -18,7 +18,7 @@ object WayfinderListeners {
 
     fun findData(ctx: ContainerContext) = with(ctx) {
         titleHas("FISHING ISLANDS")
-        val wayfinder = Trident.playerState.wayfinderData
+        val wayfinder = playerState().wayfinderData
 
         item(24)?.let { processWayfinder(wayfinder.temperate, it) }
         item(33)?.let { processWayfinder(wayfinder.tropical, it) }

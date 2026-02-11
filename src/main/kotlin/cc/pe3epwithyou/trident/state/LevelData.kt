@@ -1,11 +1,11 @@
 package cc.pe3epwithyou.trident.state
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.NetworkUtil
 import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.playerState
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -50,7 +50,7 @@ data class LevelData(val crownLevel: ResponseLevelData, val fishingLevel: Respon
                         response.data.player.crownLevel.styleLevelData
                     )
 
-                    Trident.playerState.levelData = data
+                    playerState().levelData = data
 
                     Logger.debugLog("Fetched level data: $data")
                 }

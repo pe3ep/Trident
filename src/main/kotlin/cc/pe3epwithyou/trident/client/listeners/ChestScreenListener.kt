@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.client.listeners
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
@@ -61,7 +60,7 @@ object ChestScreenListener {
         if ("FISHING PROGRESS" !in screen.title.string) return
 
         // empty the list
-        Trident.playerState.research.researchTypes = mutableListOf()
+        playerState().research.researchTypes = mutableListOf()
 
         val researchSlots = listOf(12, 13, 14, 15, 16)
         val researchTypes =
@@ -80,7 +79,7 @@ object ChestScreenListener {
                 val amount = progressValues.split("/").getOrNull(0)?.parseFormattedInt() ?: continue
                 val total = progressValues.split("/").getOrNull(1)?.parseFormattedInt() ?: continue
 
-                Trident.playerState.research.researchTypes.add(
+                playerState().research.researchTypes.add(
                     researchSlots.indexOf(slot), Research(
                         researchTypes[slot] ?: "Strong",
                         tier = tier,
@@ -91,7 +90,7 @@ object ChestScreenListener {
             }
         }
 
-        Trident.playerState.research.needsUpdating = false
+        playerState().research.needsUpdating = false
         DialogCollection.refreshDialog("research")
     }
 }

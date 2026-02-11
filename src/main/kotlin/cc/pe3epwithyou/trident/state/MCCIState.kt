@@ -9,6 +9,7 @@ import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.ScoreboardUtils
 import cc.pe3epwithyou.trident.utils.TridentFont.ERROR
 import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.playerState
 import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import net.minecraft.network.chat.Component
 
@@ -17,9 +18,9 @@ data class Climate(
 ) {
     fun getCurrentWayfinderStatus(): WayfinderStatus {
         return when (this.climateType) {
-            ClimateType.TEMPERATE -> Trident.playerState.wayfinderData.temperate
-            ClimateType.TROPICAL -> Trident.playerState.wayfinderData.tropical
-            ClimateType.BARREN -> Trident.playerState.wayfinderData.barren
+            ClimateType.TEMPERATE -> playerState().wayfinderData.temperate
+            ClimateType.TROPICAL -> playerState().wayfinderData.tropical
+            ClimateType.BARREN -> playerState().wayfinderData.barren
         }
     }
 }

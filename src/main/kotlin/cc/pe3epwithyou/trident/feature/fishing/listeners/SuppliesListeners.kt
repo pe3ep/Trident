@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.feature.fishing.listeners
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.events.click.ClickEvents
 import cc.pe3epwithyou.trident.events.container.ContainerContext
@@ -18,6 +17,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.safeGetLine
 import cc.pe3epwithyou.trident.utils.parseFormattedInt
+import cc.pe3epwithyou.trident.utils.playerState
 import net.minecraft.core.component.DataComponents
 
 object SuppliesListeners {
@@ -28,11 +28,11 @@ object SuppliesListeners {
         ClickEvents.onClick {
             titleHas("FISHING SUPPLIES")
             if (!Config.Fishing.suppliesModule) return@onClick
-            val item = hoveredSlot()?.item ?: return@onClick
+            val item = clickedItem() ?: return@onClick
             if (item.isEmpty) return@onClick
 
             val name = item.hoverName.string
-            val overclocks = Trident.playerState.supplies.overclocks
+            val overclocks = playerState().supplies.overclocks
             if (name.contains("Unstable Overclock", ignoreCase = true) && shift && left) {
                 val state = overclocks.unstable.state
                 if (!state.isAvailable) return@onClick
@@ -50,7 +50,7 @@ object SuppliesListeners {
     fun find(ctx: ContainerContext) = with(ctx) {
         titleHas("FISHING SUPPLIES")
         if (!Config.Fishing.suppliesModule) return@with
-        val supplies = Trident.playerState.supplies
+        val supplies = playerState().supplies
 
         processBait(supplies)
         processLine(supplies)

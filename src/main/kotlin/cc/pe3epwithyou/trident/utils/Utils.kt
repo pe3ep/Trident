@@ -1,6 +1,8 @@
 package cc.pe3epwithyou.trident.utils
 
+import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.events.container.ContainerContext
+import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import com.noxcrew.sheeplib.layout.GridLayoutBuilder
 import kotlinx.coroutines.*
@@ -19,6 +21,7 @@ fun String.parseFormattedInt(): Int? {
 }
 
 fun minecraft(): Minecraft = Minecraft.getInstance()
+fun playerState(): PlayerState = Trident.playerState
 
 fun nonCriticalIO() = CoroutineScope(Util.nonCriticalIoPool().asCoroutineDispatcher())
 fun background() = CoroutineScope(Util.backgroundExecutor().asCoroutineDispatcher())

@@ -1,9 +1,9 @@
 package cc.pe3epwithyou.trident.state.fishing
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
+import cc.pe3epwithyou.trident.utils.playerState
 
 enum class AugmentTrigger(
     val lore: String
@@ -20,7 +20,7 @@ enum class AugmentTrigger(
 }
 
 fun updateDurability(trigger: AugmentTrigger) {
-    val augmentContainers = Trident.playerState.supplies.augmentContainers
+    val augmentContainers = playerState().supplies.augmentContainers
     augmentContainers.filter { it.augment.useTrigger == trigger }.forEach {
         if (it.paused) return@forEach
         if (it.status == AugmentStatus.NEEDS_REPAIRING || it.status == AugmentStatus.BROKEN) return@forEach

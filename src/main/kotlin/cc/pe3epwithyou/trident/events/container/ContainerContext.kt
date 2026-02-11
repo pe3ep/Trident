@@ -36,5 +36,8 @@ open class ContainerContext(val handledScreen: ContainerScreen) {
     fun leftPos() = (handledScreen as AbstractContainerScreenAccessor).leftPos
 }
 
-fun withContainerCtx(screen: ContainerScreen, block: ContainerContext.() -> Unit) =
-    screen.context().block()
+fun withContainerCtx(screen: ContainerScreen, block: ContainerContext.() -> Unit) {
+    try {
+        screen.context().block()
+    } catch (_: StopExecution) {} // Ignored
+}

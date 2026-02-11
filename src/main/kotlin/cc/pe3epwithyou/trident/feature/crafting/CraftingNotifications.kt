@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.feature.crafting
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
@@ -68,8 +67,8 @@ object CraftingNotifications {
     fun add(notifications: List<Notification>, source: Source) {
         notifications.forEach { it.start() }
         when (source) {
-            Source.ASSEMBLER -> Trident.playerState.craftingNotifications.assembler = notifications
-            Source.FUSION -> Trident.playerState.craftingNotifications.fusion = notifications
+            Source.ASSEMBLER -> playerState().craftingNotifications.assembler = notifications
+            Source.FUSION -> playerState().craftingNotifications.fusion = notifications
         }
         PlayerStateIO.save()
     }
@@ -150,7 +149,7 @@ object CraftingNotifications {
     ) {
         if (!Config.Global.craftingNotifications) return
         if (!serverData.ip.endsWith("mccisland.net")) return
-        val assembler = Trident.playerState.craftingNotifications.assembler.filter { it.isFinished }
+        val assembler = playerState().craftingNotifications.assembler.filter { it.isFinished }
         var yOffset = 0
         if (assembler.isNotEmpty()) {
             val x = x - 16
@@ -160,7 +159,7 @@ object CraftingNotifications {
             yOffset += 16
         }
 
-        val fusion = Trident.playerState.craftingNotifications.fusion.filter { it.isFinished }
+        val fusion = playerState().craftingNotifications.fusion.filter { it.isFinished }
         if (fusion.isNotEmpty()) {
             val x = x - 16
             val y = y + 2 + yOffset

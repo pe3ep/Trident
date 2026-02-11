@@ -1,8 +1,8 @@
 package cc.pe3epwithyou.trident.feature.crafting
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications.Notification
+import cc.pe3epwithyou.trident.utils.playerState
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 
@@ -17,7 +17,7 @@ class NotificationLifecycle : ClientTickEvents.EndTick {
 
     override fun onEndTick(client: Minecraft) {
         if (!Config.Global.craftingNotifications) return
-        Trident.playerState.craftingNotifications.assembler.forEach(Notification::check)
-        Trident.playerState.craftingNotifications.fusion.forEach(Notification::check)
+        playerState().craftingNotifications.assembler.forEach(Notification::check)
+        playerState().craftingNotifications.fusion.forEach(Notification::check)
     }
 }
