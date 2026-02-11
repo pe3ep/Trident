@@ -12,6 +12,7 @@ import net.minecraft.world.inventory.Slot
 @DslMarker
 annotation class ContainerDsl
 
+@Suppress("unused")
 @ContainerDsl
 open class ContainerContext(val handledScreen: ContainerScreen) {
     fun titleHas(title: String) {

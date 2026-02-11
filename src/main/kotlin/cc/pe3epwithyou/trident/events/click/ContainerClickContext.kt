@@ -7,13 +7,17 @@ import net.minecraft.client.input.MouseButtonEvent
 @DslMarker
 annotation class ContainerClickDsl
 
+@Suppress("unused")
 @ContainerClickDsl
-class ContainerClickContext(val isDoubleClick: Boolean, val screen: ContainerScreen, val mouseEvent: MouseButtonEvent) : ContainerContext(screen) {
-    fun left() = key() == 0
-    fun right() = key() == 1
-    fun alt() = mouseEvent.hasAltDown()
-    fun ctrl() = mouseEvent.hasControlDown()
-    fun shift() = mouseEvent.hasShiftDown()
-    fun key() = mouseEvent.button()
-    fun doubleClick() = isDoubleClick
+class ContainerClickContext(val doubleClick: Boolean, val screen: ContainerScreen, val mouseEvent: MouseButtonEvent) : ContainerContext(screen) {
+    val left: Boolean = key == 0
+    val right: Boolean = key == 1
+    val alt: Boolean = mouseEvent.hasAltDown()
+    val ctrl: Boolean = mouseEvent.hasControlDown()
+    val shift: Boolean = mouseEvent.hasShiftDown()
+    val key: Int
+        get() = mouseEvent.button()
+
+    fun clickedSlot() = hoveredSlot()
+    fun clickedItem() = clickedSlot()?.item
 }

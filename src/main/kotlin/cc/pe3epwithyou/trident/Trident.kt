@@ -22,7 +22,6 @@ import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
-import cc.pe3epwithyou.trident.test.registerTestEvents
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
@@ -95,7 +94,6 @@ class Trident : ModInitializer {
         IPCManager.init()
         ReplyLock.register()
         NotificationLifecycle.register()
-        registerTestEvents()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->

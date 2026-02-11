@@ -6,11 +6,16 @@ import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.EventFactory
 
 object ClickEvents {
+    /**
+     * Registers a listener triggered when the user clicks inside a container.
+     *
+     * @param block a [ContainerClickContext] lambda
+     */
+    fun onClick(block: ContainerClickContext.() -> Unit) = CLICK.registerWithContext(block)
+
     val CLICK: Event<ClickEventCallback> = EventFactory.createArrayBacked(ClickEventCallback::class.java) { listeners ->
         ClickEventCallback { ctx -> listeners.forEach { it.invoke(ctx) } }
     }
-
-    fun onClick(block: ContainerClickContext.() -> Unit) = CLICK.registerWithContext(block)
 
     fun interface ClickEventCallback { fun invoke(ctx: ContainerClickContext) }
 
