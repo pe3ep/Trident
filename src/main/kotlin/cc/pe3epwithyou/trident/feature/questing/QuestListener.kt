@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature.questing
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.click.ClickEvents
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
@@ -15,7 +16,7 @@ import net.minecraft.world.item.ItemStack
 object QuestListener {
     var isWaitingRefresh: Boolean = false
 
-    fun handleRefreshTasksChat(m: Component) {
+    private fun handleRefreshTasksChat(m: Component) {
         if (!Regex("^\\(.\\) Quest Tasks Rerolled!").matches(m.string)) return
         isWaitingRefresh = true
     }
@@ -40,8 +41,24 @@ object QuestListener {
             widget.x = (screenWidth() / 2 - widget.getWidth() / 2)
             addRenderable(widget)
         }
+
         ContainerEvents.onOpen(::findQuests)
         ContainerEvents.onClose(::findQuests)
+
+        ClickEvents.onClick {
+            titleHas("ISLAND REWARDS")
+            val allowedSlots = listOf(37, 39, 41)
+            val slot = clickedSlot() ?: return@onClick
+            val name = slot.item.hoverName.string
+            if (slot.index in allowedSlots && left) {
+                if (!name.contains("Quest", ignoreCase = true)) return@onClick
+                isWaitingRefresh = true
+                QuestLock.questSlots[slot.index]?.apply {
+                    quests = emptyList()
+                    isLocked = false
+                }
+            }
+        }
 
     }
 

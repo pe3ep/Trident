@@ -32,5 +32,7 @@ enum class Rarity(
             }
             return null
         }
+
+        fun fromString(string: String): Rarity = entries.find { it.name.equals(string, ignoreCase = true) } ?: COMMON
     }
 }
