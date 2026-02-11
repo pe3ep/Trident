@@ -195,32 +195,33 @@ object TridentCommand {
 
             literal("reconnectDiscord") {
                 executes {
-                    IPCManager.ipc?.let {
-                        it.coroutineScope.launch {
-                            try {
-                                withTimeoutOrNull(3_000) {
-                                    it.reconnect()
-                                    main {
-                                        Logger.sendMessage(Component.literal("Successfully reconnected to Discord").withSwatch(TridentFont.TRIDENT_ACCENT))
-                                        ActivityManager.updateCurrentActivity()
-                                    }
-                                } ?: main {
-                                    Logger.sendMessage(
-                                        Component.literal("Failed to reconnect to Discord. Check your internet connection.")
-                                            .withSwatch(TridentFont.ERROR)
-                                    )
-                                }
-                            } catch (e: Exception) {
+                    CoroutineScope(Util.nonCriticalIoPool().asCoroutineDispatcher()).launch {
+                        try {
+                            withTimeoutOrNull(3_000) {
+                                IPCManager.stop()
+                                IPCManager.init()
                                 main {
-                                    Logger.error("Failed to reconnect to Discord", e)
                                     Logger.sendMessage(
-                                        Component.literal("Failed to reconnect to Discord. Check your game console for errors.")
+                                        Component.literal("Successfully reconnected to Discord")
+                                            .withSwatch(TridentFont.TRIDENT_ACCENT)
                                     )
+                                    ActivityManager.updateCurrentActivity()
                                 }
+                            } ?: main {
+                                Logger.sendMessage(
+                                    Component.literal("Timed out when reconnecting to Discord. Check your internet connection.")
+                                        .withSwatch(TridentFont.ERROR)
+                                )
+                            }
+                        } catch (e: Exception) {
+                            main {
+                                Logger.error("Failed to reconnect to Discord", e)
+                                Logger.sendMessage(
+                                    Component.literal("Failed to reconnect to Discord. Check your game console for errors.")
+                                )
                             }
                         }
                     }
-
                 }
             }
 
@@ -262,7 +263,9 @@ object TridentCommand {
                 suggests { _, builder ->
                     val client = Minecraft.getInstance()
                     val self = client.gameProfile.name
-                    client.connection?.onlinePlayers?.map { it.profile.name }?.filter { it != self}?.filter { !it.startsWith("MCCTabPlayer") && !it.startsWith("MCC_NPC") }?.forEach { builder.suggest(it) }
+                    client.connection?.onlinePlayers?.map { it.profile.name }?.filter { it != self }
+                        ?.filter { !it.startsWith("MCCTabPlayer") && !it.startsWith("MCC_NPC") }
+                        ?.forEach { builder.suggest(it) }
                     builder.buildFuture()
                 }
                 executes {
@@ -488,7 +491,8 @@ object TridentCommand {
                 }
                 literal("bosshealthoverlay") {
                     executes {
-                        val events = (Minecraft.getInstance().gui.bossOverlay as BossHealthOverlayAccessor).events
+                        val events =
+                            (Minecraft.getInstance().gui.bossOverlay as BossHealthOverlayAccessor).events
                         events.forEach { (uUID, event) ->
                             Logger.sendMessage("Event UUID: $uUID, Event: ${event.name.string}")
                         }
@@ -501,14 +505,16 @@ object TridentCommand {
                     val player = Minecraft.getInstance().player ?: return@executes
 
                     val item = player.mainHandItem
-                    CraftingNotifications.send(CraftingNotifications.Notification(
-                        CraftingNotifications.Source.ASSEMBLER,
-                        item.hoverName.string,
-                        Rarity.getFromItem(item) ?: Rarity.COMMON,
-                        0,
-                        1,
-                        count = 5
-                    ))
+                    CraftingNotifications.send(
+                        CraftingNotifications.Notification(
+                            CraftingNotifications.Source.ASSEMBLER,
+                            item.hoverName.string,
+                            Rarity.getFromItem(item) ?: Rarity.COMMON,
+                            0,
+                            1,
+                            count = 5
+                        )
+                    )
                 }
             }
 
@@ -517,7 +523,8 @@ object TridentCommand {
                 val self = client.gameProfile.name
                 argument("user", StringArgumentType.string()) {
                     suggests { _, builder ->
-                        client.connection?.onlinePlayers?.filter { it.profile.name != self}?.forEach { builder.suggest(it.profile.name) }
+                        client.connection?.onlinePlayers?.filter { it.profile.name != self }
+                            ?.forEach { builder.suggest(it.profile.name) }
                         builder.buildFuture()
                     }
                     argument("mode", BoolArgumentType.bool()) {

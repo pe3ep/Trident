@@ -39,8 +39,8 @@ object IPCManager {
     }
 
     fun init() {
-        ipc = RichClient(CLIENT_ID)
         try {
+            ipc = RichClient(CLIENT_ID)
             ipc!!.on<ReadyEvent> {
                 Logger.info("Discord Presence Ready")
             }
