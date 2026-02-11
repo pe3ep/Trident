@@ -6,11 +6,7 @@ import cc.pe3epwithyou.trident.utils.Resources
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionEventListener
-import dev.isxander.yacl3.dsl.CategoryRegistrar
-import dev.isxander.yacl3.dsl.available
-import dev.isxander.yacl3.dsl.binding
-import dev.isxander.yacl3.dsl.enumSwitch
-import dev.isxander.yacl3.dsl.tickBox
+import dev.isxander.yacl3.dsl.*
 import net.minecraft.network.chat.Component
 
 fun fishingCategory(categoryRegistrar: CategoryRegistrar) {

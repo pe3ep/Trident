@@ -35,7 +35,6 @@ import java.util.concurrent.CompletableFuture
  * }
  * ```
  */
-@Suppress("unused")
 class Command(
     name: String, block: Builder.() -> Unit
 ) {

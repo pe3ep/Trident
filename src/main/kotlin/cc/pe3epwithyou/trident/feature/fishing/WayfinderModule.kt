@@ -6,7 +6,7 @@ import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
+import cc.pe3epwithyou.trident.utils.parseFormattedInt
 import net.minecraft.client.Minecraft
 
 object WayfinderModule {
