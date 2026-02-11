@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.3.0"
-    id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT"
-    kotlin("plugin.serialization") version "2.0.20"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.fabric.loom)
+    alias(libs.plugins.kotlin.serialization)
     id("maven-publish")
 }
 
@@ -53,20 +53,25 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
     mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
-    include(modImplementation("com.noxcrew.sheeplib:api:1.5.0+1.21.11")!!)
-    modImplementation("dev.isxander:yet-another-config-lib:${project.property("yacl_version")}")
-    modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    modCompileOnly("com.noxcrew.noxesium:fabric:3.0.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
-    compileOnlyApi("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0-RC.2")
-    modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.2")
+    // Fabric
+    modImplementation(libs.fabric.loader)
+    modImplementation(libs.fabric.language.kotlin)
+    modImplementation(libs.fabric.api)
 
-    implementation("io.github.vyfor:kpresence:0.6.6")
-    include("io.github.vyfor:kpresence:0.6.6")
+    // Deps
+    modImplementation(libs.sheeplib.api)
+    include(libs.sheeplib.api)
+    modImplementation(libs.yacl)
+    modImplementation(libs.modmenu)
+    modCompileOnly(libs.noxesium.fabric)
+    implementation(libs.kpresence)
+    include(libs.kpresence)
+    modRuntimeOnly(libs.dev.auth.fabric) // development-only
+
+    // Kotlin
+    implementation(libs.kotlinx.serialization.json)
+    compileOnlyApi(libs.kotlinx.coroutines.core)
 }
 
 @Suppress("UnstableApiUsage")
@@ -81,15 +86,15 @@ loom {
 tasks.processResources {
     inputs.property("version", project.version)
     inputs.property("minecraft_version", project.property("minecraft_version"))
-    inputs.property("loader_version", project.property("loader_version"))
+    inputs.property("loader_version", libs.versions.fabric.loader.get())
     filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand(
-            "version" to project.version as Any,
-            "minecraft_version" to project.property("minecraft_version") as Any,
-            "loader_version" to project.property("loader_version") as Any,
-            "kotlin_loader_version" to project.property("kotlin_loader_version") as Any
+            "version" to project.version,
+            "minecraft_version" to project.property("minecraft_version")!!,
+            "loader_version" to libs.versions.fabric.loader.get(),
+            "kotlin_loader_version" to libs.versions.fabric.kotlin.loader.get()
         )
     }
 }
@@ -110,10 +115,9 @@ tasks.jar {
 }
 
 tasks.remapJar {
-    archiveFileName = "Trident-${version}+${project.property("minecraft_version")}.jar"
+    archiveFileName = "${project.property("archives_base_name")}-${version}+${project.property("minecraft_version")}.jar"
 }
 
-// configure the maven publication
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
@@ -122,12 +126,5 @@ publishing {
             version = version
             from(components["java"])
         }
-    }
-
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
     }
 }

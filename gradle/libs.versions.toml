@@ -1,0 +1,44 @@
+[versions]
+# Kotlin
+kotlin = "2.3.0"
+kotlin-serialization-plugin = "2.0.20"
+kotlinx-serialization = "1.8.1"
+kotlinx-coroutines = "1.9.0-RC.2"
+
+# Fabric
+loom = "1.14-SNAPSHOT"
+fabric-loader = "0.18.4"
+fabric-kotlin-loader = "1.13.8+kotlin.2.3.0"
+fabric-api = "0.140.2+1.21.11"
+
+# Deps
+yacl = "3.8.1+1.21.11-fabric"
+modmenu = "17.0.0-beta.1"
+sheeplib = "1.5.0+1.21.11"
+noxesium = "3.0.0"
+kpresence = "0.6.6"
+dev-auth = "1.2.2"
+
+[libraries]
+# Fabric
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
+fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-kotlin-loader" }
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
+
+# Kotlin
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines" }
+
+# Deps
+yacl = { module = "dev.isxander:yet-another-config-lib", version.ref = "yacl" }
+modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
+sheeplib-api = { module = "com.noxcrew.sheeplib:api", version.ref = "sheeplib" }
+noxesium-fabric = { module = "com.noxcrew.noxesium:fabric", version.ref = "noxesium" }
+dev-auth-fabric = { module = "me.djtheredstoner:DevAuth-fabric", version.ref = "dev-auth" }
+kpresence = { module = "io.github.vyfor:kpresence", version.ref = "kpresence" }
+
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization-plugin" }
+fabric-loom = { id = "net.fabricmc.fabric-loom-remap", version.ref = "loom" }
