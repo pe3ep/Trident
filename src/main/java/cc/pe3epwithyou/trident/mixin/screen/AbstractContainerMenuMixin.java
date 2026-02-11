@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.mixin;
+package cc.pe3epwithyou.trident.mixin.screen;
 
 import cc.pe3epwithyou.trident.client.listeners.SlotClickListener;
 import cc.pe3epwithyou.trident.state.MCCIState;
@@ -18,9 +18,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AbstractContainerMenuMixin {
 
     @Inject(method = "clicked", at = @At("HEAD"), cancellable = true)
-    public void clicked(int i, int j, ClickType clickType, Player player, CallbackInfo ci) {
+    public void injectClicked(int i, int j, ClickType clickType, Player player, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-//        When a user clicks off-screen, the slot is negative. If we don't return here, the game will crash
+        // When a user clicks off-screen, the slot is negative. If we don't return here, the game will crash
         if (i < 0) return;
         Minecraft client = Minecraft.getInstance();
         if (client.screen instanceof ContainerScreen screen) {

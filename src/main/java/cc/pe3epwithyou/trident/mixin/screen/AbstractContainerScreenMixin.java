@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.mixin;
+package cc.pe3epwithyou.trident.mixin.screen;
 
 import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
@@ -52,14 +52,14 @@ public class AbstractContainerScreenMixin extends Screen {
     }
 
     @Inject(method = "renderSlot", at = @At(value = "HEAD"))
-    public void renderSlot(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
+    public void injectRenderSlotHead(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         RaritySlot.INSTANCE.render(guiGraphics, slot);
         TideWindIndicator.INSTANCE.renderOutline(guiGraphics, slot);
     }
 
     @Inject(method = "renderSlot", at = @At(value = "TAIL"))
-    public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
+    public void injectRenderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
             BlueprintIndicator.checkItem(guiGraphics, slot);

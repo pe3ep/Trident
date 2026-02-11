@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
     @Inject(method = "addDetailsToTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/TooltipFlag;isAdvanced()Z", shift = At.Shift.AFTER))
-    void addDetailsToTooltip(Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, @Nullable Player player, TooltipFlag tooltipFlag, Consumer<Component> consumer, CallbackInfo ci) {
+    void injectAddDetailsToTooltip(Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, @Nullable Player player, TooltipFlag tooltipFlag, Consumer<Component> consumer, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         Doll.modifyTooltip(consumer);
     }

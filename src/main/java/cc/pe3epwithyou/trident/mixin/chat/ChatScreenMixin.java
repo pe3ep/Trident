@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.mixin;
+package cc.pe3epwithyou.trident.mixin.chat;
 
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.ChatDecorations;
