@@ -3,10 +3,10 @@ package cc.pe3epwithyou.trident.feature.fishing
 import cc.pe3epwithyou.trident.utils.Title
 import cc.pe3epwithyou.trident.utils.background
 import cc.pe3epwithyou.trident.utils.main
+import cc.pe3epwithyou.trident.utils.minecraft
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.world.phys.Vec3
 import java.time.Instant
@@ -34,7 +34,7 @@ object DepletedDisplay {
         private var job: Job? = null
 
         fun startLoop(component: Component, waitFor: Long) {
-            this.playerPosition = Minecraft.getInstance().player?.position()!!
+            this.playerPosition = minecraft().player?.position()!!
             this.ticks = waitFor * 50
             this.title = component
             this.castAt = Instant.now()
@@ -44,7 +44,7 @@ object DepletedDisplay {
                     delay(ticks)
                     ticks = 100
                     val currentPos =
-                        Minecraft.getInstance().player?.position() ?: Vec3(0.0, 0.0, 0.0)
+                        minecraft().player?.position() ?: Vec3(0.0, 0.0, 0.0)
                     if ((castAt != null && hasHourPassed(castAt!!)) || currentPos != playerPosition) {
                         stopLoop()
                         break

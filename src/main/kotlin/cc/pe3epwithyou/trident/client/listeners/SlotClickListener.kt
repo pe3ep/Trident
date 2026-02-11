@@ -8,7 +8,7 @@ import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.inventory.Slot
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 object SlotClickListener {
     fun handleClick(slot: Slot, clickType: ClickType, isLeftClick: Boolean, ci: CallbackInfo) {
-        val client = Minecraft.getInstance()
+        val client = minecraft()
         if (client.screen !is ContainerScreen) return
         val screen = client.screen as ContainerScreen
         if (Config.Fishing.suppliesModule && "FISHING SUPPLIES" in screen.title.string) {

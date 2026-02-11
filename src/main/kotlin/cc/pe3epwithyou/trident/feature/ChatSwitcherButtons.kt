@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -48,7 +48,7 @@ object ChatSwitcherButtons {
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
             if (isOnCooldown) return
             isOnCooldown = true
-            val connection = Minecraft.getInstance().connection ?: return
+            val connection = minecraft().connection ?: return
             connection.sendCommand("chat ${mode.commandName}")
             DelayedAction.delayTicks(20) {
                 isOnCooldown = false

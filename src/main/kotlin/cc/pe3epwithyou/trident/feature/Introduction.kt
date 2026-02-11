@@ -5,9 +5,9 @@ import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation
 import com.noxcrew.sheeplib.layout.GridLayout
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.MultiLineTextWidget
 import net.minecraft.client.gui.components.StringWidget
@@ -25,7 +25,7 @@ object Introduction {
             original.call()
             return
         }
-        Minecraft.getInstance().setScreen(IntroductionScreen(original))
+        minecraft().setScreen(IntroductionScreen(original))
     }
 
     fun finishIntroduction(original: Operation<Void>) {
@@ -71,7 +71,7 @@ object Introduction {
                 Button.builder(
                     Component.literal("Open Trident's Config")
                 ) { _ ->
-                    Minecraft.getInstance().setScreen(Config.getScreen(this@IntroductionScreen))
+                    minecraft().setScreen(Config.getScreen(this@IntroductionScreen))
                 }.width(200).build().atBottom(0)
             }
 

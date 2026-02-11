@@ -8,11 +8,11 @@ import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.Rank
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.SuggestionPacket
+import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.useScreen
 import io.github.vyfor.kpresence.rpc.ActivityAssetsBuilder
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
 import java.nio.charset.StandardCharsets
@@ -255,7 +255,7 @@ object ActivityManager {
                 partyID = null
                 return
             }
-            val self = Minecraft.getInstance().gameProfile.name
+            val self = minecraft().gameProfile.name
             members.add(self)
             val id = members.map { it.lowercase() }.sorted().joinToString("-")
             Logger.debugLog("Party ID: $id")

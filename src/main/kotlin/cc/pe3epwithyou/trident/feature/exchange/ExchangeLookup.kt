@@ -6,7 +6,7 @@ import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.NetworkUtil
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -25,7 +25,7 @@ object ExchangeLookup {
 
     fun lookup() {
         if (!Config.Global.exchangeImprovements) return
-        val player = Minecraft.getInstance().gameProfile
+        val player = minecraft().gameProfile
         val provider = Config.Global.apiProvider
         val key = Config.Api.key
 

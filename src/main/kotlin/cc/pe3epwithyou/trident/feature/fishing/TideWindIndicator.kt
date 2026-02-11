@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.resources.Identifier
 import net.minecraft.world.inventory.Slot
@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.Slot
 object TideWindIndicator {
     fun renderOutline(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Fishing.islandIndicators) return
-        val client = Minecraft.getInstance()
+        val client = minecraft()
         val screen = client.screen ?: return
         if ("FISHING ISLANDS" !in screen.title.string) return
         val item = slot.item
@@ -27,7 +27,7 @@ object TideWindIndicator {
 
     fun render(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Fishing.islandIndicators) return
-        val client = Minecraft.getInstance()
+        val client = minecraft()
         val screen = client.screen ?: return
         if ("FISHING ISLANDS" !in screen.title.string) return
         val item = slot.item

@@ -4,9 +4,9 @@ import cc.pe3epwithyou.trident.feature.doll.DollCosmetics.isWeaponSkin
 import cc.pe3epwithyou.trident.utils.ItemRenderer
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.gridLayout
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -25,7 +25,7 @@ class CosmeticWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
     }
 
     override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        val screen = Minecraft.getInstance().screen ?: return
+        val screen = minecraft().screen ?: return
         if (!Doll.shouldRender(screen)) return
         super.renderWidget(graphics, i, j, f)
     }

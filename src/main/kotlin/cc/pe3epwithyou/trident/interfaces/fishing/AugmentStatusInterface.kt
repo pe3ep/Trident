@@ -8,7 +8,7 @@ import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.state.fishing.getAugmentContainer
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.world.inventory.Slot
 
@@ -19,7 +19,7 @@ object AugmentStatusInterface {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Fishing.showAugmentStatusInInterface) return
         if (slot.index !in AUGMENT_SLOTS) return
-        val title = Minecraft.getInstance().screen?.title?.string ?: return
+        val title = minecraft().screen?.title?.string ?: return
         if ("FISHING SUPPLIES" !in title) return
 
         val x = slot.x

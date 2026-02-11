@@ -7,10 +7,10 @@ import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.themes.TransparentTheme
 import cc.pe3epwithyou.trident.utils.DelayedAction
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.layouts.GridLayout
 
 class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
@@ -69,7 +69,7 @@ class KillFeedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
     override fun isDragging(): Boolean = false
 
     private fun positionKillFeed(): Int {
-        val client = Minecraft.getInstance()
+        val client = minecraft()
         val screenWidth = client.window.guiScaledWidth
         val pos = when (Config.KillFeed.positionSide) {
             KillfeedPosition.LEFT -> 0

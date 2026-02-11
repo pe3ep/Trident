@@ -5,8 +5,8 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider.TRIDENT
 import cc.pe3epwithyou.trident.utils.NetworkUtil
 import cc.pe3epwithyou.trident.utils.RequestMethod
+import cc.pe3epwithyou.trident.utils.minecraft
 import kotlinx.serialization.Serializable
-import net.minecraft.client.Minecraft
 
 object DebugScreen {
     private var customMessage: String? = null
@@ -18,7 +18,7 @@ object DebugScreen {
 
     fun fetchMessages() {
         if (!Config.Global.callToHome) return
-        val player = Minecraft.getInstance().gameProfile
+        val player = minecraft().gameProfile
 
         NetworkUtil.sendRequest<DebugResponse>(
             RequestMethod.GET,

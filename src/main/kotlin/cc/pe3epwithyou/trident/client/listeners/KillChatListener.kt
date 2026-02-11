@@ -9,9 +9,9 @@ import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Logger
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Util
 
@@ -120,7 +120,7 @@ object KillChatListener {
 
     fun findPlayersInComponent(c: Component): List<Component> {
         val rawList = c.toFlatList()
-        val socialManager = Minecraft.getInstance().playerSocialManager
+        val socialManager = minecraft().playerSocialManager
         val components: MutableList<Component> = mutableListOf()
         rawList.forEach {
             if (it.string.length in 1..2) return@forEach

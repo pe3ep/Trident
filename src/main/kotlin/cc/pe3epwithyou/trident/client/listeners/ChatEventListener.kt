@@ -14,8 +14,8 @@ import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentionIfInactive
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
 import java.util.*
@@ -72,20 +72,20 @@ object ChatEventListener {
                 Regex("""You are now in the .+ chat.""").find(message.string)?.let {
                     if (ReplyLock.currentLock != null) {
                         ReplyLock.disableLock()
-                        Minecraft.getInstance()
-                            .setScreen(Minecraft.getInstance().screen)
+                        minecraft()
+                            .setScreen(minecraft().screen)
                     }
                 }
 
                 // PKW messages
                 if (message.isPKWLeapFinished() && Config.Games.autoFocus) {
-                    Minecraft.getInstance().window.focusWindowIfInactive()
+                    minecraft().window.focusWindowIfInactive()
                 }
 
                 // Fishing messages
                 if (message.isDepletedSpot() && Config.Fishing.flashIfDepleted) {
-                    Minecraft.getInstance().window.requestAttentionIfInactive()
-                    Minecraft.getInstance().player?.playSound(
+                    minecraft().window.requestAttentionIfInactive()
+                    minecraft().player?.playSound(
                         SoundEvent(
                             Resources.mcc("games.fishing.stock_depleted"), Optional.empty()
                         )
@@ -94,7 +94,7 @@ object ChatEventListener {
                 }
 
                 if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
-                    Minecraft.getInstance().window.requestAttentionIfInactive()
+                    minecraft().window.requestAttentionIfInactive()
 
                     val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
                     wayfinderStatus.hasGrotto = false

@@ -11,9 +11,9 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.playMaster
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.Screen
@@ -55,8 +55,7 @@ object Doll {
     fun onClick(mouseButtonEvent: MouseButtonEvent) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
-        val client = Minecraft.getInstance()
-        val screen = client.screen as? ContainerScreen ?: return
+        val screen = minecraft().screen as? ContainerScreen ?: return
         if (screen.getChildAt(mouseButtonEvent.x, mouseButtonEvent.y).getOrNull() != null) return
         dragStartX = mouseButtonEvent.x.toInt()
         dragStartY = mouseButtonEvent.y.toInt()
@@ -65,7 +64,7 @@ object Doll {
         if (mouseButtonEvent.button() == 2) {
             val type = DollCosmetics.findCosmeticType(item) ?: return
             val lockedSlot = DollCosmetics.lockedSlots[type]
-            client.soundManager.playMaster(Resources.mcc("ui.click_normal"))
+            minecraft().soundManager.playMaster(Resources.mcc("ui.click_normal"))
             if (lockedSlot?.slot?.item == item) {
                 DollCosmetics.lockedSlots.remove(type)
             } else {
@@ -85,7 +84,7 @@ object Doll {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
 
-        val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
+        val screen = minecraft().screen as? ContainerScreen ?: return
         val accessed = screen as AbstractContainerScreenAccessor
         val x1 = accessed.leftPos + 4
 
@@ -166,11 +165,11 @@ object Doll {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
 
-        val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
+        val screen = minecraft().screen as? ContainerScreen ?: return
         // If there's at least 1 item that can be previewed, we show the doll
         if (!shouldRender(screen)) return
 
-        val player = Minecraft.getInstance().player ?: return
+        val player = minecraft().player ?: return
         val accessed = screen as AbstractContainerScreenAccessor
         screen.hoveredSlot?.item?.let(DollCosmetics::setCosmetic)
         wardrobePreview(screen)
@@ -203,7 +202,7 @@ object Doll {
     fun modifyTooltip(consumer: Consumer<Component>) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
-        val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
+        val screen = minecraft().screen as? ContainerScreen ?: return
         val item = (screen as AbstractContainerScreenAccessor).hoveredSlot?.item ?: return
         if (!DollCosmetics.validItem(item)) return
 

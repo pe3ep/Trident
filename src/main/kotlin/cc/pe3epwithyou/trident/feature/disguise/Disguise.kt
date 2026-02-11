@@ -6,7 +6,7 @@ import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Logger
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 
 object Disguise {
     var disguiseIconCache: String? = null
@@ -31,7 +31,7 @@ object Disguise {
     @JvmStatic
     fun checkActionbar(): Boolean {
         if (!MCCIState.isOnIsland()) return false
-        val gui = Minecraft.getInstance().gui as GuiAccessor
+        val gui = minecraft().gui as GuiAccessor
         val actionbar = gui.overlayMessageString ?: run {
             isDisguised = false
             return false
@@ -51,7 +51,7 @@ object Disguise {
         Logger.debugLog("isDisguised: $isDisguised")
         Logger.debugLog("game: $game")
         if (game == Game.HUB || game == Game.FISHING || game == Game.PARKOUR_WARRIOR_DOJO) return@delayed
-        val connection = Minecraft.getInstance().connection ?: return@delayed
+        val connection = minecraft().connection ?: return@delayed
         connection.sendCommand("whoami")
     }
 }

@@ -5,13 +5,13 @@ import cc.pe3epwithyou.trident.utils.ProgressBar
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.GridLayout
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -54,7 +54,7 @@ class ResearchWidget(
     }
 
     override val layout = GridLayout(themed.theme.dimensions.paddingInner) {
-        val mcFont = Minecraft.getInstance().font
+        val mcFont = minecraft().font
         val researchName = Component.literal(research.type.uppercase()).mccFont()
         WayfinderNameWidget(RESEARCH_ICONS[research.type], researchName, mcFont).atBottom(
             0,

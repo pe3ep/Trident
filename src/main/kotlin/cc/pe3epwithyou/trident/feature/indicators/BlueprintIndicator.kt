@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.feature.indicators
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.resources.Identifier
@@ -12,7 +12,7 @@ import net.minecraft.world.inventory.Slot
 object BlueprintIndicator {
     @JvmStatic
     fun checkItem(graphics: GuiGraphics, slot: Slot) {
-        if (Minecraft.getInstance().screen !is ContainerScreen) return
+        if (minecraft().screen !is ContainerScreen) return
         checkLore(graphics, slot)
     }
 

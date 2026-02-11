@@ -10,7 +10,6 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import kotlinx.serialization.Serializable
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.navigation.ScreenRectangle
@@ -112,7 +111,7 @@ object CraftingNotifications {
             )
         )
 
-        Minecraft.getInstance().toastManager.addToast(CraftingToast(notification))
+        minecraft().toastManager.addToast(CraftingToast(notification))
 
         Logger.sendMessage(msg)
     }
@@ -192,7 +191,7 @@ object CraftingNotifications {
         j: Int
     ) {
         val rectangle = ScreenRectangle(x, y, width, height)
-        val client = Minecraft.getInstance()
+        val client = minecraft()
         if (rectangle.containsPoint(i, j)) {
             graphics.setTooltipForNextFrame(
                 client.font,

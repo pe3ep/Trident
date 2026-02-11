@@ -9,7 +9,6 @@ import cc.pe3epwithyou.trident.utils.*
 import com.noxcrew.sheeplib.util.lighten
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Tooltip
@@ -149,7 +148,7 @@ class AugmentWidget(
     override fun renderWidget(
         graphics: GuiGraphics, i: Int, j: Int, f: Float
     ) {
-        val client = Minecraft.getInstance()
+        val client = minecraft()
         augmentTooltip?.let {
             if (!isHovered) return@let
             graphics.setTooltipForNextFrame(
@@ -234,7 +233,7 @@ class AugmentWidget(
         }
         pose.scaleAround(factor, factor, posX.toFloat(), posY.toFloat(), pose)
         graphics.drawString(
-            Minecraft.getInstance().font,
+            minecraft().font,
             Component.literal("$durability").withColor(color),
             posX,
             posY,
@@ -270,7 +269,7 @@ class AugmentWidget(
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
 
     override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
-        val connection = Minecraft.getInstance().connection ?: return
+        val connection = minecraft().connection ?: return
         connection.sendCommand("anglr")
     }
 

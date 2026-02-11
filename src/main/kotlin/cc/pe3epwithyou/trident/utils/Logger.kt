@@ -2,7 +2,6 @@ package cc.pe3epwithyou.trident.utils
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object Logger {
@@ -32,10 +31,10 @@ object Logger {
 
     fun sendMessage(c: Component, prefix: Boolean = true) {
         if (prefix) {
-            Minecraft.getInstance().gui.chat.addMessage(TridentFont.withPrefix(c))
+            minecraft().gui.chat.addMessage(TridentFont.withPrefix(c))
             return
         }
-        Minecraft.getInstance().gui.chat.addMessage(c)
+        minecraft().gui.chat.addMessage(c)
     }
 
 }

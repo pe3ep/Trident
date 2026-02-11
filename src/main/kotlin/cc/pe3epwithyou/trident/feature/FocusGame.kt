@@ -8,7 +8,7 @@ import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.isMaximized
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import org.lwjgl.glfw.GLFW
 
 object FocusGame {
@@ -19,24 +19,24 @@ object FocusGame {
                 Logger.debugLog(
                     """
                         isActive: ${WindowExtensions.isActive}
-                        isMaximized: ${Minecraft.getInstance().window.isMaximized}
+                        isMaximized: ${minecraft().window.isMaximized}
                         
                         IconifiedValue: ${
                         GLFW.glfwGetWindowAttrib(
-                            Minecraft.getInstance().window.handle(),
+                            minecraft().window.handle(),
                             GLFW.GLFW_ICONIFIED
                         )
                     }
                         MaximizedValue: ${
                         GLFW.glfwGetWindowAttrib(
-                            Minecraft.getInstance().window.handle(),
+                            minecraft().window.handle(),
                             GLFW.GLFW_MAXIMIZED
                         )
                     }
                     """.trimIndent()
                 )
 
-                Minecraft.getInstance().window.focusWindowIfInactive()
+                minecraft().window.focusWindowIfInactive()
             }
         }
     }

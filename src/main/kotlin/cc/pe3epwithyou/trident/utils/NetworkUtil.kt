@@ -2,7 +2,6 @@ package cc.pe3epwithyou.trident.utils
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import net.minecraft.client.Minecraft
 import net.minecraft.util.Util
 import java.net.URI
 import java.net.http.HttpClient
@@ -72,7 +71,7 @@ object NetworkUtil {
     ) {
         val request = Request<T>().apply(block)
 
-        val player = Minecraft.getInstance().player
+        val player = minecraft().player
         val req = HttpRequest.newBuilder().uri(URI.create(url))
 
         when (method) {
@@ -96,12 +95,12 @@ object NetworkUtil {
             .thenAccept {
                 Logger.debugLog("${it.body()}")
                 val res = JSON.decodeFromString<T>(it.body())
-                Minecraft.getInstance().execute {
+                minecraft().execute {
                     request.successHandler.invoke(res)
                 }
             }
             .exceptionally {
-                Minecraft.getInstance().execute { request.errorHandler.invoke(url, it) }
+                minecraft().execute { request.errorHandler.invoke(url, it) }
                 null
             }
     }

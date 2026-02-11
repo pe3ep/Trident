@@ -13,7 +13,6 @@ import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -46,7 +45,7 @@ object QuestLock {
         if (!Config.Global.questLock) return
 
         if (slot == null) return
-        val screen = Minecraft.getInstance().screen ?: return
+        val screen = minecraft().screen ?: return
         if ("ISLAND REWARDS" !in screen.title.string) return
         if (slot.index !in questSlots) return
         if ("Quest" !in slot.item.hoverName.string) {
@@ -81,7 +80,7 @@ object QuestLock {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.questLock) return
 
-        val screen = Minecraft.getInstance().screen ?: return
+        val screen = minecraft().screen ?: return
         if ("ISLAND REWARDS" !in screen.title.string) return
         if ("Quest" !in slot.item.hoverName.string) return
 
@@ -135,7 +134,7 @@ object QuestLock {
             }
 
             graphics.drawCenteredString(
-                Minecraft.getInstance().font,
+                minecraft().font,
                 c,
                 x,
                 y + 20,
@@ -183,7 +182,7 @@ object QuestLock {
                 return
             }
             lockedGames.add(game)
-            val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
+            val screen = minecraft().screen as? ContainerScreen ?: return
             QuestListener.findQuests(screen.context())
         }
 

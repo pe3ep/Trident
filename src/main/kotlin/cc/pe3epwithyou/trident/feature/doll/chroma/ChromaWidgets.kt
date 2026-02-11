@@ -3,16 +3,12 @@ package cc.pe3epwithyou.trident.feature.doll.chroma
 import cc.pe3epwithyou.trident.feature.doll.CosmeticType
 import cc.pe3epwithyou.trident.feature.doll.DollCosmetics
 import cc.pe3epwithyou.trident.feature.doll.DollCosmetics.isWeaponSkin
-import cc.pe3epwithyou.trident.utils.Resources
-import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
-import cc.pe3epwithyou.trident.utils.gridLayout
-import cc.pe3epwithyou.trident.utils.playMaster
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -43,7 +39,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         val selected = DollCosmetics.currentChroma?.chromaName?.let { Component.literal(it) }
 
         graphics.drawCenteredString(
-            Minecraft.getInstance().font,
+            minecraft().font,
             selected ?: notSelected,
             (x + width / 2),
             y - 14,

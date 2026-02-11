@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.client.events.FishingSpotEvents
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.feature.fishing.FishingSpotParser
 import cc.pe3epwithyou.trident.state.fishing.Perk
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.world.entity.Display
 import net.minecraft.world.entity.projectile.FishingHook
 import net.minecraft.world.phys.AABB
@@ -33,8 +33,7 @@ object FishingSpotListener {
     var currentSpot: FishingSpot? = null
 
     fun handle() {
-        val client = Minecraft.getInstance()
-        val hook = client.player?.fishing
+        val hook = minecraft().player?.fishing
         if (hook == null || !hook.isInLiquid) {
             return
         }
@@ -51,10 +50,9 @@ object FishingSpotListener {
     }
 
     private fun findNearestSpot(hook: FishingHook): FishingSpot? {
-        val client = Minecraft.getInstance()
         val blockPos = hook.onPos
         val box = AABB.ofSize(blockPos.center, 3.5, 6.0, 3.5)
-        val level = client.level ?: return null
+        val level = minecraft().level ?: return null
         val entities =
             level.getEntities(null, box).filterIsInstance<Display.TextDisplay>()
         if (entities.isEmpty()) return null

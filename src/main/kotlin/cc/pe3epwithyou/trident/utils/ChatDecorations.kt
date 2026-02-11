@@ -8,7 +8,6 @@ import cc.pe3epwithyou.trident.feature.dmlock.CurrentLockedChatWidget
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.GridLayout
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 
@@ -30,8 +29,8 @@ object ChatDecorations {
     }
 
     class Widget : CompoundWidget(0, 0, 0, 0) {
-        override fun getY(): Int = Minecraft.getInstance().window.guiScaledHeight - CHAT_HEIGHT - HEIGHT - 1
-        override fun getX(): Int = if (utilsCompatible()) 2 else (Minecraft.getInstance().window.guiScaledWidth - this.layout.getWidth() - 2)
+        override fun getY(): Int = minecraft().window.guiScaledHeight - CHAT_HEIGHT - HEIGHT - 1
+        override fun getX(): Int = if (utilsCompatible()) 2 else (minecraft().window.guiScaledWidth - this.layout.getWidth() - 2)
 
         override val layout = GridLayout(2) {
             var col = 0

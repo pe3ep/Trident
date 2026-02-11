@@ -8,8 +8,8 @@ import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.ScoreboardUtils
 import cc.pe3epwithyou.trident.utils.TridentFont.ERROR
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 data class Climate(
@@ -37,11 +37,11 @@ object MCCIState {
     var fishingState: FishingState = FishingState()
     fun isOnIsland(): Boolean {
         if (Config.Debug.bypassOnIsland) return true
-        val server = Minecraft.getInstance().currentServer ?: return false
+        val server = minecraft().currentServer ?: return false
         return server.ip.contains("mccisland.net", true)
     }
 
-    fun onJoin() = Minecraft.getInstance().execute {
+    fun onJoin() = minecraft().execute {
         UpdateChecker.checkForUpdates()
         ApiChecker.joinCheck()
         DebugScreen.fetchMessages()

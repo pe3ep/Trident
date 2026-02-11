@@ -7,9 +7,9 @@ import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedLeft
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedRight
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LayoutSettings
@@ -33,7 +33,7 @@ class KillBackground(
         LinearLayout.Orientation.HORIZONTAL,
         0,
     ) {
-        val client = Minecraft.getInstance()
+        val client = minecraft()
         val mcFont = client.font
         if (player == null && killMethod != null) {
             val c = killMethod.icon

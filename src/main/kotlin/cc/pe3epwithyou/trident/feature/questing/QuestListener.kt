@@ -5,9 +5,9 @@ import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
 import cc.pe3epwithyou.trident.utils.context
+import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.screenWidth
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
@@ -23,7 +23,7 @@ object QuestListener {
     fun handleRefreshTasksItem(item: ItemStack) {
         if (!isWaitingRefresh) return
         if ("Quest" !in item.hoverName.string) return
-        val screen = (Minecraft.getInstance().screen ?: return) as ContainerScreen
+        val screen = (minecraft().screen ?: return) as ContainerScreen
         findQuests(screen.context())
     }
 

@@ -3,11 +3,7 @@ package cc.pe3epwithyou.trident.utils
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import com.noxcrew.sheeplib.layout.GridLayoutBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.client.gui.screens.inventory.ContainerScreen

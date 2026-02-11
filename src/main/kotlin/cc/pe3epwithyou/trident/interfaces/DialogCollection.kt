@@ -2,8 +2,8 @@ package cc.pe3epwithyou.trident.interfaces
 
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.utils.Logger
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.DialogContainer
-import net.minecraft.client.Minecraft
 
 /**
  * Collection that manages a collection of opened dialogs identified by unique keys.
@@ -216,8 +216,8 @@ object DialogCollection {
             }
         }
 
-        val screenWidth = Minecraft.getInstance().window.guiScaledWidth
-        val screenHeight = Minecraft.getInstance().window.guiScaledHeight
+        val screenWidth = minecraft().window.guiScaledWidth
+        val screenHeight = minecraft().window.guiScaledHeight
 
         // Fallback grid scan
         var y = cornerPos.second

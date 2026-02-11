@@ -5,14 +5,14 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.NetworkUtil
+import cc.pe3epwithyou.trident.utils.minecraft
 import kotlinx.serialization.Serializable
-import net.minecraft.client.Minecraft
 
 @Serializable
 data class LevelData(val crownLevel: ResponseLevelData, val fishingLevel: ResponseLevelData, val styleLevel: ResponseLevelData) {
     companion object {
         fun fetchData() {
-            val uuid = Minecraft.getInstance().gameProfile.id.toString()
+            val uuid = minecraft().gameProfile.id.toString()
 
             val gql = """
                 query CrownLevel {

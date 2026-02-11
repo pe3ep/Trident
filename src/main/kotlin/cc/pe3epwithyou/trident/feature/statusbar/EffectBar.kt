@@ -6,8 +6,8 @@ import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.data.AtlasIds
 import net.minecraft.network.chat.Component
@@ -58,7 +58,7 @@ object EffectBar {
         if (MCCIState.game == Game.FISHING || MCCIState.game == Game.HUB) return
 
         val x = graphics.guiWidth() / 2
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
 
         val c = Component.empty()
         val effects = getCurrentActiveEffects()
@@ -72,7 +72,7 @@ object EffectBar {
     }
 
     fun getCurrentActiveEffects(): List<Effect> {
-        val player = Minecraft.getInstance().player ?: return emptyList()
+        val player = minecraft().player ?: return emptyList()
         val effects = mutableListOf<Effect>()
         player.activeEffects.forEach playerEffects@{
             val unwrappedId = it.effect.unwrapKey()

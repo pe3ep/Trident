@@ -6,8 +6,8 @@ import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -85,7 +85,7 @@ object ExchangeHandler {
 
     fun shouldRenderTooltip(slot: Slot): Boolean {
         if (!Config.Global.exchangeImprovements) return true
-        val screen = Minecraft.getInstance().screen ?: return true
+        val screen = minecraft().screen ?: return true
         if ("ISLAND EXCHANGE" !in screen.title.string) return true
         if (!inSlotBoundary(slot)) return true
         if (fetchingProgress.isLoading()) return true
@@ -97,7 +97,7 @@ object ExchangeHandler {
 
     fun renderSlot(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Global.exchangeImprovements) return
-        val screen = Minecraft.getInstance().screen ?: return
+        val screen = minecraft().screen ?: return
         if ("ISLAND EXCHANGE" !in screen.title.string) return
         if (!inSlotBoundary(slot)) return
         if (fetchingProgress.isLoading()) return

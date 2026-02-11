@@ -20,7 +20,6 @@ import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter;
 import cc.pe3epwithyou.trident.interfaces.fishing.AugmentStatusInterface;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.DebugDraw;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -87,8 +86,7 @@ public class AbstractContainerScreenMixin extends Screen {
     @Inject(method = "onClose", at = @At(value = "HEAD"))
     public void injectOnClose(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-        Minecraft client = Minecraft.getInstance();
-        if (client.screen instanceof ContainerScreen s) {
+        if (minecraft.screen instanceof ContainerScreen s) {
             Doll.onClose();
             Disguise.checkActionbar();
             if (s.getTitle().getString().contains("FISHING SUPPLIES")) {
@@ -109,8 +107,7 @@ public class AbstractContainerScreenMixin extends Screen {
     @Inject(method = "renderBackground", at = @At(value = "TAIL"))
     public void injectRenderBackground(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-        Minecraft client = Minecraft.getInstance();
-        if (client.screen instanceof ContainerScreen s) {
+        if (minecraft.screen instanceof ContainerScreen s) {
             if (s.getTitle().getString().contains("ISLAND EXCHANGE")) {
                 ExchangeHandler.INSTANCE.renderBackground(guiGraphics, leftPos, topPos);
             }
@@ -121,7 +118,7 @@ public class AbstractContainerScreenMixin extends Screen {
     public void init(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         String screenTitle = this.getTitle().getString();
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = minecraft.screen;
         ContainerEvents.INSTANCE.getINIT().invoker().invoke(new ContainerContext((ContainerScreen) screen));
         if (screenTitle.contains("ISLAND EXCHANGE") && Config.Global.INSTANCE.getExchangeImprovements()) {
             int x = this.leftPos + 32;
@@ -134,7 +131,7 @@ public class AbstractContainerScreenMixin extends Screen {
     public void injectMouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         QuestLock.handleClick(this.hoveredSlot, cir);
         Doll.onClick(mouseButtonEvent);
-        ContainerScreen containerScreen = Minecraft.getInstance().screen instanceof ContainerScreen s ? s : null;
+        ContainerScreen containerScreen = minecraft.screen instanceof ContainerScreen s ? s : null;
         if (containerScreen == null) return;
         ClickEvents.INSTANCE.getCLICK().invoker().invoke(new ContainerClickContext(bl, containerScreen, mouseButtonEvent));
     }

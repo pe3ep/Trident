@@ -40,7 +40,6 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object TridentCommand {
@@ -256,7 +255,7 @@ object TridentCommand {
         Command("replylock") {
             argument("user", StringArgumentType.string()) {
                 suggests { _, builder ->
-                    val client = Minecraft.getInstance()
+                    val client = minecraft()
                     val self = client.gameProfile.name
                     client.connection?.onlinePlayers?.map { it.profile.name }?.filter { it != self }
                         ?.filter { !it.startsWith("MCCTabPlayer") && !it.startsWith("MCC_NPC") }
@@ -406,7 +405,7 @@ object TridentCommand {
                         }
                         argument("hasAssist", BoolArgumentType.bool()) {
                             executes {
-                                val self = Minecraft.getInstance().gameProfile
+                                val self = minecraft().gameProfile
                                 val method =
                                     KillMethod.valueOf(it.getArgument("method", String::class.java))
                                 KillFeedDialog.addKill(
@@ -478,7 +477,7 @@ object TridentCommand {
             literal("get_accessor_value") {
                 literal("gui") {
                     executes {
-                        val gui = Minecraft.getInstance().gui as GuiAccessor
+                        val gui = minecraft().gui as GuiAccessor
                         Logger.sendMessage("Actionbar: ${gui.overlayMessageString?.string}")
                         Logger.sendMessage(gui.overlayMessageString ?: Component.empty())
                         Logger.sendMessage("Title: ${gui.title}")
@@ -487,7 +486,7 @@ object TridentCommand {
                 literal("bosshealthoverlay") {
                     executes {
                         val events =
-                            (Minecraft.getInstance().gui.bossOverlay as BossHealthOverlayAccessor).events
+                            (minecraft().gui.bossOverlay as BossHealthOverlayAccessor).events
                         events.forEach { (uUID, event) ->
                             Logger.sendMessage("Event UUID: $uUID, Event: ${event.name.string}")
                         }
@@ -497,7 +496,7 @@ object TridentCommand {
 
             literal("fake_crafting_toast") {
                 executes {
-                    val player = Minecraft.getInstance().player ?: return@executes
+                    val player = minecraft().player ?: return@executes
 
                     val item = player.mainHandItem
                     CraftingNotifications.send(
@@ -514,7 +513,7 @@ object TridentCommand {
             }
 
             literal("setReplyLock") {
-                val client = Minecraft.getInstance()
+                val client = minecraft()
                 val self = client.gameProfile.name
                 argument("user", StringArgumentType.string()) {
                     suggests { _, builder ->

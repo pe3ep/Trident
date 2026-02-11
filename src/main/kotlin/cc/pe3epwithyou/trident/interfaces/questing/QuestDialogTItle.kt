@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.interfaces.questing
 
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.dialog.Dialog
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
@@ -8,7 +9,6 @@ import com.noxcrew.sheeplib.layout.CanvasLayout
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.widget.IconButton
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
@@ -45,7 +45,7 @@ class QuestDialogTitle(
         100,
         FONT_HEIGHT + PADDING * 2,
     ).apply {
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
         val rightPadding = height + GAP
 
         val w = StringWidget(

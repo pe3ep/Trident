@@ -8,10 +8,10 @@ import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.network.chat.Component
 
@@ -60,18 +60,18 @@ class TabbedDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
     }
 
     private fun iceCreamTab() = grid {
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
         StringWidget(Component.literal("I love ice cream!"), font).atBottom(0)
     }
 
     private fun burgerTab() = grid {
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
         StringWidget(Component.literal("I love burgers!!"), font).atBottom(0)
         StringWidget(Component.literal("borger :O"), font).atBottom(0)
     }
 
     private fun friesTab() = grid {
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
         StringWidget(Component.literal("I LOVEE fries"), font).atBottom(0)
         StringWidget(Component.literal("fries never cries"), font).atBottom(0)
     }

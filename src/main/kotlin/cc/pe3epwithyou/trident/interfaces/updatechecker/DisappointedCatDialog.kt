@@ -7,11 +7,11 @@ import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.widget.ThemedButton
 import net.fabricmc.loader.api.Version
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.MultiLineTextWidget
@@ -23,7 +23,7 @@ import net.minecraft.network.chat.Component
 class DisappointedCatDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
     Themed by TridentThemed {
     override fun layout(): GridLayout = grid {
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
         CatImageWidget().atBottom(0, 2)
         val currentVersion = UpdateChecker.currentVersion ?: Version.parse("9.9.9")
         if (currentVersion < UpdateChecker.latestVersion) {
