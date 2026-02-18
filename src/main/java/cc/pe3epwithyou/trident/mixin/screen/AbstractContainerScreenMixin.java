@@ -72,7 +72,7 @@ public class AbstractContainerScreenMixin extends Screen {
         if (Config.Global.INSTANCE.getExchangeImprovements()) {
             ExchangeHandler.INSTANCE.renderSlot(guiGraphics, slot);
         }
-        AugmentStatusInterface.INSTANCE.render(guiGraphics, slot);
+        AugmentStatusInterface.render(guiGraphics, slot);
         QuestLock.renderLock(guiGraphics, slot);
         Doll.renderSlot(guiGraphics, slot);
     }
