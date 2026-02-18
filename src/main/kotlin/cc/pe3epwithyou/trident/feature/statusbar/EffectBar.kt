@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature.statusbar
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -68,7 +69,8 @@ object EffectBar {
             c.append(effect.name())
         }
         val width = font.width(c) / 2
-        graphics.drawString(font, c, x - width, graphics.guiHeight() - 80, 0xFFFFFF.opaqueColor())
+        val offset = if (checkEliminationBanner()) 62 else 0
+        graphics.drawString(font, c, x - width, graphics.guiHeight() - 80 - offset, 0xFFFFFF.opaqueColor())
     }
 
     fun getCurrentActiveEffects(): List<Effect> {
@@ -113,6 +115,12 @@ object EffectBar {
             }
         }
         return effects
+    }
+
+    private fun checkEliminationBanner(): Boolean {
+        val actionBar = (minecraft().gui as GuiAccessor).overlayMessageString ?: return false
+        val strings = listOf("ELIMINATION", "RAMPAGE")
+        return strings.any { actionBar.string.contains(it, ignoreCase = true) }
     }
 
     data class Effect(
