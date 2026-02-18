@@ -20,8 +20,13 @@ enum class Chroma(
     SCIFI_TECH(listOf(5393513, 13883358, 14712390, 3932152), "High Tech"),
     GOLDEN_GUARDIAN(listOf(6379130, 15896902, 9520201, 16731521), "Golden Guardian"),
     BLUE_POSEIDONS(listOf(3706313, 13407047, 8867406, 12451803), "Blue Poseidon"),
-    CRYSTAL_ICE(listOf(7008255, 6444114, 16777215, 7805183), "Crystal Ice");
+    CRYSTAL_ICE(listOf(7008255, 6444114, 16777215, 7805183), "Crystal Ice"),
+    SENTINEL_GOLD(listOf(16758587, 5190949, 9053477, 15158783), "Golden Sentinel"),
+    DRAGON_RED(listOf(13712394, 16769357, 15722940, 5103725), "Dragon Red"),
+    APEX_BLUE(listOf(4096440, 13096665, 12219682, 9240575), "Apex Blue"),
+    MECH_GREEN(listOf(5871699, 15576891, 3161675, 16746288), "Mech Green"),
 
+    ;
     val itemTexture: Identifier
         get() = Resources.mcc("textures/island_items/infinibag/chroma_set/${this.name.lowercase()}.png")
 

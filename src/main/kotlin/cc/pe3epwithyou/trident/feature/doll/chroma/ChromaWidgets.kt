@@ -23,7 +23,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         Chroma.entries.forEach { chroma ->
             ChromaWidget(chroma).at(row, col)
             col++
-            if (col == 5) {
+            if (col == 6) {
                 col = 0
                 row++
             }
