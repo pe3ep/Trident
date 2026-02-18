@@ -10,6 +10,7 @@ import cc.pe3epwithyou.trident.feature.doll.chroma.ChromaWidgets
 import cc.pe3epwithyou.trident.mixin.accessors.AbstractContainerScreenAccessor
 import cc.pe3epwithyou.trident.mixin.accessors.InventoryScreenAccessor
 import cc.pe3epwithyou.trident.state.FontCollection
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
@@ -149,8 +150,14 @@ object Doll {
         addRenderable(chromas)
     }
 
-    fun shouldRender(screen: Screen): Boolean =
-        (screen as? ContainerScreen ?: return false).menu.items.find { DollCosmetics.validItem(it) } != null
+    fun shouldRender(screen: Screen): Boolean {
+        if (MCCIState.game != Game.HUB && MCCIState.game != Game.FISHING) return false
+        return (screen as? ContainerScreen ?: return false).menu.items.find {
+            DollCosmetics.validItem(
+                it
+            )
+        } != null
+    }
 
     fun register() {
         ContainerEvents.onOpen {
