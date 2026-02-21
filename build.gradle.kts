@@ -74,13 +74,8 @@ dependencies {
     compileOnlyApi(libs.kotlinx.coroutines.core)
 }
 
-@Suppress("UnstableApiUsage")
 loom {
     accessWidenerPath = file("src/main/resources/trident.accesswidener")
-
-    mixin {
-        defaultRefmapName.set("trident.refmap.json")
-    }
 }
 
 tasks.processResources {
