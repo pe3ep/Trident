@@ -7,16 +7,11 @@ import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.Rank
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.SuggestionPacket
-import cc.pe3epwithyou.trident.utils.minecraft
-import cc.pe3epwithyou.trident.utils.playerState
+import cc.pe3epwithyou.trident.utils.*
 import io.github.vyfor.kpresence.rpc.ActivityAssetsBuilder
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.network.chat.Component
-import java.nio.charset.StandardCharsets
-import java.security.MessageDigest
 import java.time.Instant
 
 object ActivityManager {
@@ -63,6 +58,9 @@ object ActivityManager {
         if (Config.Discord.autoPrivateMode && Disguise.isDisguised) {
             val game = MCCIState.game
             return game != Game.HUB && game != Game.FISHING
+        }
+        minecraft().currentServer?.let {
+            if (!ProdCheck.isProd(it.ip)) return true
         }
         return false
     }
@@ -238,15 +236,6 @@ object ActivityManager {
             previousSize = size
             size = if (newSize == 1) null else newSize
             sendWithParty()
-        }
-
-        fun sha1(input: String): String {
-            val bytes = input.toByteArray(StandardCharsets.UTF_8)
-            val md = MessageDigest.getInstance("SHA-1")
-            val digest = md.digest(bytes)
-            return buildString {
-                digest.forEach { append("%02x".format(it)) }
-            }
         }
 
         fun updatePartyID(suggestions: List<String>) {
