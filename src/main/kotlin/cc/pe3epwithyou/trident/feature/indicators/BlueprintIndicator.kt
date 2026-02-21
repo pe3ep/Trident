@@ -2,12 +2,14 @@ package cc.pe3epwithyou.trident.feature.indicators
 
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
-import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
+import net.minecraft.core.component.DataComponents
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.Identifier
 import net.minecraft.world.inventory.Slot
+import kotlin.jvm.optionals.getOrNull
 
 object BlueprintIndicator {
     @JvmStatic
@@ -18,16 +20,16 @@ object BlueprintIndicator {
 
     private fun checkLore(graphics: GuiGraphics, slot: Slot) {
         if (slot.item.isEmpty) return
-        val slotName = slot.item.hoverName.string
-        if ("Blueprint: " !in slotName) return
-        slot.item.findInLore(Regex("""Royal Donations: (\d+)/(\d+)"""))?.let {
-            val donatedAmount = it.groups[1]?.value?.toIntOrNull() ?: return
-            val donatedTotal = it.groups[2]?.value?.toIntOrNull() ?: return
-            if (donatedAmount == donatedTotal) {
+        val tag = slot.item.components.get(DataComponents.CUSTOM_DATA)?.copyTag() ?: return
+        parseTag(tag)?.let {
+            if (!it.ownership) {
+                renderIcon(graphics, slot, Icons.NEW_COSMETIC)
+                return
+            }
+
+            if (it.donationsCurrent >= it.donationsLimit) {
                 renderIcon(graphics, slot, Icons.MAXED_COSMETIC)
             }
-        } ?: run {
-            renderIcon(graphics, slot, Icons.NEW_COSMETIC)
         }
     }
 
@@ -50,4 +52,23 @@ object BlueprintIndicator {
             Resources.trident("textures/interface/blueprint_indicators/maxed.png")
         )
     }
+
+    private fun parseTag(tag: CompoundTag): BlueprintData? {
+        tag.getCompound("PublicBukkitValues")?.getOrNull()?.let { pbv ->
+            pbv.getCompound("mcc_island:blueprint")?.getOrNull()?.let {
+                return BlueprintData(
+                    ownership = it.getBoolean("mcc_island:ownership").getOrNull() ?: return null,
+                    donationsCurrent = it.getInt("mcc_island:donations_current").getOrNull() ?: return null,
+                    donationsLimit = it.getInt("mcc_island:donations_limit").getOrNull() ?: return null
+                )
+            }
+        }
+        return null
+    }
+
+    data class BlueprintData(
+        val ownership: Boolean,
+        val donationsCurrent: Int,
+        val donationsLimit: Int
+    )
 }
