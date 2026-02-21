@@ -24,11 +24,14 @@ object FontCollection {
         return get(icon)
     }
 
+    private val fallbackComponent = Component.literal("?").defaultFont()
+
     fun get(icon: Icon): MutableComponent {
+        if (!minecraft().isRunning) return fallbackComponent
         val char = collection[icon]
         if (char == null) {
             Logger.error("Failed to get a char ${icon.path} from the font collection")
-            return Component.literal("?").defaultFont()
+            return fallbackComponent
         }
         val comp = Component.literal(char).mccFont("icon")
         return comp
@@ -40,6 +43,7 @@ object FontCollection {
     }
 
     fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) = minecraft().execute {
+        if (!minecraft().isRunning) return@execute
         val i = Icon(location, ascent, height)
         collection[i] = char
         populateCache(i)
@@ -52,12 +56,14 @@ object FontCollection {
     fun texture(path: String): MutableComponent = texture(Resources.mcc(path))
 
     fun texture(resource: Identifier): MutableComponent {
-        if (!Identifier.isValidPath(resource.path)) return Component.literal("?").defaultFont()
+        if (!minecraft().isRunning) return fallbackComponent
+        if (!Identifier.isValidPath(resource.path)) return fallbackComponent
         return Component.`object`(AtlasSprite(AtlasSprite.DEFAULT_ATLAS, resource))
     }
 
     fun texture(resource: Identifier, atlas: Identifier): MutableComponent {
-        if (!Identifier.isValidPath(resource.path)) return Component.literal("?").defaultFont()
+        if (!minecraft().isRunning) return fallbackComponent
+        if (!Identifier.isValidPath(resource.path)) return fallbackComponent
         return Component.`object`(AtlasSprite(atlas, resource))
     }
 
