@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature.doll.chroma
 
 import cc.pe3epwithyou.trident.feature.doll.CosmeticType
+import cc.pe3epwithyou.trident.feature.doll.Doll
 import cc.pe3epwithyou.trident.feature.doll.DollCosmetics
 import cc.pe3epwithyou.trident.feature.doll.DollCosmetics.isWeaponSkin
 import cc.pe3epwithyou.trident.utils.*
@@ -31,6 +32,8 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
     }
 
     override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
+        val screen = minecraft().screen ?: return
+        if (!Doll.shouldRender(screen)) return
         val item =
             DollCosmetics.currentCosmetics[CosmeticType.SKIN]?.slot?.item ?: return
         if (!isWeaponSkin(item)) return
@@ -75,6 +78,8 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
             j: Int,
             f: Float
         ) {
+            val screen = minecraft().screen ?: return
+            if (!Doll.shouldRender(screen)) return
             val item = DollCosmetics.currentCosmetics[CosmeticType.SKIN]?.slot?.item
                 ?: return
             if (!isWeaponSkin(item)) return
@@ -90,6 +95,8 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         }
 
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
+            val screen = minecraft().screen ?: return
+            if (!Doll.shouldRender(screen)) return
             val item = DollCosmetics.currentCosmetics[CosmeticType.SKIN]?.slot?.item
                 ?: return
             if (!isWeaponSkin(item)) return
@@ -102,6 +109,8 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         }
 
         override fun playDownSound(soundManager: SoundManager) {
+            val screen = minecraft().screen ?: return
+            if (!Doll.shouldRender(screen)) return
             val item = DollCosmetics.currentCosmetics[CosmeticType.SKIN]?.slot?.item
                 ?: return
             if (!isWeaponSkin(item)) return

@@ -135,7 +135,6 @@ object Doll {
     fun addWidgets(ctx: ContainerContext) = with(ctx) {
         if (!MCCIState.isOnIsland()) return@with
         if (!Config.Global.cosmeticPreview) return@with
-        if (!shouldRender(handledScreen)) return@with
 
         val x0 = getLeftPos(this)
         val x1 = leftPos() + 6
