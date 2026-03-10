@@ -4,9 +4,9 @@ import cc.pe3epwithyou.trident.client.TridentCommand
 import cc.pe3epwithyou.trident.client.events.FishingSpotEvents
 import cc.pe3epwithyou.trident.client.events.QuestingEvents
 import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
-import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
+import cc.pe3epwithyou.trident.client.listeners.registerScreenEvents
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.crafting.NotificationLifecycle
@@ -94,8 +94,8 @@ class Trident : ModInitializer {
         /* Convert deprecated config entries to their new counterpart */
         Config.convertDeprecated()
 
+        registerScreenEvents()
         ChatEventListener.register()
-        ChestScreenListener.register()
         KillChatListener.register()
         DelayedAction.init()
         QuestListener.register()

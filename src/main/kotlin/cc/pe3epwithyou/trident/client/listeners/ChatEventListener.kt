@@ -9,16 +9,11 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.fishing.AugmentTrigger
 import cc.pe3epwithyou.trident.state.fishing.updateDurability
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentionIfInactive
-import cc.pe3epwithyou.trident.utils.minecraft
-import cc.pe3epwithyou.trident.utils.playerState
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.network.chat.Component
-import net.minecraft.sounds.SoundEvent
-import java.util.*
 
 // TODO: Rewrite this listener to be much cleaner
 object ChatEventListener {
@@ -27,12 +22,9 @@ object ChatEventListener {
     private var catchFinished = true
     var triggeredAugments: MutableList<AugmentTrigger> = mutableListOf()
 
-    private fun checkJunk(component: Component): Boolean {
-        val message = component.string
-        return listOf(
-            "Rusted Can", "Tangled Kelp", "Lost Shoe", "Royal Residue", "Forgotten Crown"
-        ).any { message.contains(it) }
-    }
+    private fun isJunk(component: Component): Boolean = listOf(
+        "Rusted Can", "Tangled Kelp", "Lost Shoe", "Royal Residue", "Forgotten Crown"
+    ).any { component.string.contains(it) }
 
     // Regex matchers for fishing messages taken from the amazing Jamboree mod <3
     // https://github.com/JamesMCo/jamboree
@@ -85,11 +77,7 @@ object ChatEventListener {
                 // Fishing messages
                 if (message.isDepletedSpot() && Config.Fishing.flashIfDepleted) {
                     minecraft().window.requestAttentionIfInactive()
-                    minecraft().player?.playSound(
-                        SoundEvent(
-                            Resources.mcc("games.fishing.stock_depleted"), Optional.empty()
-                        )
-                    )
+                    minecraft().soundManager.playMaster(Resources.mcc("games.fishing.stock_depleted"))
                     DepletedDisplay.showDepletedTitle()
                 }
 
@@ -123,7 +111,7 @@ object ChatEventListener {
 
                     catchFinished = false
                     isSupplyPreserve = false
-                    val isJunk = checkJunk(message)
+                    val isJunk = isJunk(message)
                     triggerBait = !isJunk
                 }
 

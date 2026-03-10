@@ -123,9 +123,10 @@ object KillChatListener {
         val socialManager = minecraft().playerSocialManager
         val components: MutableList<Component> = mutableListOf()
         rawList.forEach {
-            if (it.string.length in 1..2) return@forEach
-            if ("[" in it.string) return@forEach
-            val uuid = socialManager.getDiscoveredUUID(it.string)
+            val str = it.string
+            if (str.length in 1..2) return@forEach
+            if ("[" in str) return@forEach
+            val uuid = socialManager.getDiscoveredUUID(str)
             if (uuid == Util.NIL_UUID) return@forEach
             components.add(it)
             if (components.size == 2) return components

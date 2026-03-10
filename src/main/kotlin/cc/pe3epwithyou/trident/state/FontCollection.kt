@@ -55,13 +55,7 @@ object FontCollection {
 
     fun texture(path: String): MutableComponent = texture(Resources.mcc(path))
 
-    fun texture(resource: Identifier): MutableComponent {
-        if (!minecraft().isRunning) return fallbackComponent
-        if (!Identifier.isValidPath(resource.path)) return fallbackComponent
-        return Component.`object`(AtlasSprite(AtlasSprite.DEFAULT_ATLAS, resource))
-    }
-
-    fun texture(resource: Identifier, atlas: Identifier): MutableComponent {
+    fun texture(resource: Identifier, atlas: Identifier = AtlasSprite.DEFAULT_ATLAS): MutableComponent {
         if (!minecraft().isRunning) return fallbackComponent
         if (!Identifier.isValidPath(resource.path)) return fallbackComponent
         return Component.`object`(AtlasSprite(atlas, resource))
