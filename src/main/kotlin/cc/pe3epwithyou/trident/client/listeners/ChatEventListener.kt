@@ -81,8 +81,10 @@ object ChatEventListener {
                     DepletedDisplay.showDepletedTitle()
                 }
 
-                if (message.isOutOfGrotto() && Config.Fishing.flashIfDepleted) {
-                    minecraft().window.requestAttentionIfInactive()
+                if (message.isOutOfGrotto()) {
+                    if (Config.Fishing.flashIfDepleted) {
+                        minecraft().window.requestAttentionIfInactive()
+                    }
 
                     val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
                     wayfinderStatus.hasGrotto = false
