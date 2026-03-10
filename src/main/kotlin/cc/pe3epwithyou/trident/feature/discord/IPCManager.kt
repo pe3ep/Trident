@@ -21,18 +21,23 @@ object IPCManager {
      * If the provided activity is null, the current activity will be cleared and removed from the display.
      * If a valid activity is provided, it will be updated and displayed on the user's Discord profile.
      *
-     * @param activity An instance of [ActivityBuilder] that defines the details of the activity to display,
+     * @param builder An instance of [ActivityBuilder] that defines the details of the activity to display,
      *                 or null to clear the current activity.
      */
-    fun submitBuilder(activity: ActivityBuilder?) {
+    fun submitBuilder(builder: ActivityBuilder?) {
         ipc?.let {
+            if (builder == null) {
+                it.update(null)
+                return
+            }
+
             it.coroutineScope.launch {
                 withTimeoutOrNull(5_000L) {
-                    val builtActivity = activity?.build()
+                    val builtActivity = builder.build()
                     it.update(builtActivity)
                     Logger.info("Submitted Discord activity: $builtActivity")
                 } ?: run {
-                    Logger.error("Failed to submit Discord activity: $activity")
+                    Logger.error("Failed to submit Discord activity: $builder")
                 }
             }
         }
