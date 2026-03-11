@@ -43,7 +43,13 @@ object FontCollection {
     }
 
     fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) = minecraft().execute {
+        /*
+         * Sometimes when force-quitting the game using ⌘Q (or Alt+F4), the process would
+         * crash since it's trying to access memory that has been unloaded. This should
+         * hopefully prevent this issue from happening.
+         */
         if (!minecraft().isRunning) return@execute
+
         val i = Icon(location, ascent, height)
         collection[i] = char
         populateCache(i)

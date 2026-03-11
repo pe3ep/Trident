@@ -14,11 +14,11 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundTabListPacket
 
 object FriendsInServer {
-    private val regex = Regex("""(?:INSTANCE|FISHTANCE) (\d+)""")
+    private val regex = Regex("""(?:INSTANCE|FISHTANCE) ([a-zA-Z0-9]+)""")
 
     var friends: List<String> = emptyList()
-    var prevInstance: Int? = null
-    var currentInstance: Int? = null
+    var prevInstance: String? = null
+    var currentInstance: String? = null
 
     fun request() = SuggestionPacket.requestSuggestions("/friend remove ", ::updateFriendsList)
 
@@ -26,7 +26,7 @@ object FriendsInServer {
         if (packet !is ClientboundTabListPacket) return
         val match = regex.find(packet.footer.string)
         if (match != null) {
-            val instance = match.groupValues[1].toIntOrNull()
+            val instance = match.groups[1]?.value
             prevInstance = currentInstance
             currentInstance = instance
         } else {
