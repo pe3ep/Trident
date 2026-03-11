@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature.statusbar
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.discord.EventActivity
 import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.Game
@@ -56,7 +57,7 @@ object EffectBar {
     fun render(graphics: GuiGraphics) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.effectBar) return
-        if (MCCIState.game == Game.FISHING || MCCIState.game == Game.HUB) return
+        if (MCCIState.game == Game.FISHING) return
 
         val x = graphics.guiWidth() / 2
         val font = minecraft().font
@@ -76,22 +77,32 @@ object EffectBar {
     fun getCurrentActiveEffects(): List<Effect> {
         val player = minecraft().player ?: return emptyList()
         val effects = mutableListOf<Effect>()
-        player.activeEffects.forEach playerEffects@{
+        player.activeEffects.forEach forEachEffect@{
             val unwrappedId = it.effect.unwrapKey()
             val unwrappedMobEffect = it.effect.value()
-            if (unwrappedId.isEmpty) return@playerEffects
+            if (unwrappedId.isEmpty) return@forEachEffect
             val id = unwrappedId.get().identifier()
-            if (id in globalHiddenEffects) return@playerEffects
+            if (id in globalHiddenEffects) return@forEachEffect
 
             val currentGame = MCCIState.game
             gameConstants.forEach { (game, pairs) ->
                 if (currentGame == game) {
                     pairs.forEach { (effect, amplifier) ->
                         if (effect == id) {
-                            if (amplifier == -1) return@playerEffects
-                            if (it.amplifier < amplifier) return@playerEffects
+                            if (amplifier == -1) return@forEachEffect
+                            if (it.amplifier < amplifier) return@forEachEffect
                         }
                     }
+                }
+            }
+
+            EventActivity.fetchedActivities?.forEach { activity ->
+                activity.noxesiumServer.let { nox ->
+                    if (MCCIState.currentServer != nox.server) return@forEach
+                    if (MCCIState.gameTypes != nox.types) return@forEach
+                }
+                if (!activity.showEffectBar) {
+                    return@forEachEffect
                 }
             }
 
