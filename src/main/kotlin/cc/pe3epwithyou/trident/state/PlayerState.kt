@@ -134,7 +134,7 @@ data class PlayerState(
     var research: FishingResearch = FishingResearch(),
     var hatesUpdates: Boolean = false,
     var arenaData: ArenaData = ArenaData(),
-    var levelData: LevelData? = null,
+    var levelData: CrownLevel? = null,
     var craftingNotifications: CraftingNotifications = CraftingNotifications()
 )
 

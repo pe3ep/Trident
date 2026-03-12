@@ -23,7 +23,7 @@ object DebugScreen {
 
         NetworkUtil.sendRequest<DebugResponse>(
             RequestMethod.GET,
-            "${TRIDENT.fetchUrl}/debug-screen?for=${player.id}"
+            "${TRIDENT.fetchUrl}/debugMessage?for=${player.id}"
         ) {
             onSuccess { response ->
                 customMessage = response.message.takeIf { response.success && response.hasMessage }

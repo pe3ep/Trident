@@ -144,8 +144,8 @@ object ActivityManager {
                 assetsBuilder.largeImage = "game_fishing_$island"
                 if (Config.Discord.displayExtraInfo) {
                     playerState().levelData?.let {
-                        assetsBuilder.smallText = "Level ${it.fishingLevel.level}"
-                        assetsBuilder.smallImage = "level_fishing_${it.fishingLevel.evolution}"
+                        assetsBuilder.smallText = "Level ${it.fishingLevelData.level}"
+                        assetsBuilder.smallImage = "level_fishing_${it.fishingLevelData.evolution}"
                     }
                 }
             }

@@ -1,90 +1,46 @@
 package cc.pe3epwithyou.trident.state
 
-import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.feature.api.ApiProvider
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.NetworkUtil
-import cc.pe3epwithyou.trident.utils.minecraft
-import cc.pe3epwithyou.trident.utils.playerState
+import cc.pe3epwithyou.trident.feature.exchange.Collections
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LevelData(val crownLevel: ResponseLevelData, val fishingLevel: ResponseLevelData, val styleLevel: ResponseLevelData) {
-    companion object {
-        fun fetchData() {
-            val uuid = minecraft().gameProfile.id.toString()
+data class PlayerDataResponse(
+    val data: PlayerDataResponsePlayer,
+)
 
-            val gql = """
-                query CrownLevel {
-                  player(uuid: "$uuid") {
-                    crownLevel {
-                      fishingLevelData {
-                        evolution
-                        level
-                      }
-                      levelData {
-                        evolution
-                        level
-                      }
-                      styleLevelData {
-                        evolution
-                        level
-                      }
-                    }
-                  }
-                }
-            """.trimIndent()
+@Serializable
+data class PlayerDataResponsePlayer(
+    val player: Player,
+)
 
-            val headers = mutableMapOf<String, String>()
-            val provider = Config.Global.apiProvider
-            when (provider) {
-                ApiProvider.TRIDENT -> headers["x-mc-uuid"] = uuid
-                ApiProvider.SELF_TOKEN -> headers["X-API-Key"] = Config.Api.key
-            }
+@Serializable
+data class Player(
+    val collections: Collections,
+    val crownLevel: CrownLevel,
+)
 
-            NetworkUtil.sendGraphQL<CrownLevelResponse>(provider.fetchUrl, gql, headers) {
-                onSuccess { response ->
-                    val data = LevelData(
-                        response.data.player.crownLevel.levelData,
-                        response.data.player.crownLevel.fishingLevelData,
-                        response.data.player.crownLevel.styleLevelData
-                    )
+@Serializable
+data class CrownLevel(
+    val fishingLevelData: FishingLevelData,
+    val levelData: LevelData,
+    val styleLevelData: StyleLevelData,
+)
 
-                    playerState().levelData = data
+@Serializable
+data class FishingLevelData(
+    val evolution: Int,
+    val level: Int,
+)
 
-                    Logger.debugLog("Fetched level data: $data")
-                }
-            }
-        }
+@Serializable
+data class LevelData(
+    val evolution: Int,
+    val level: Int,
+)
 
-        @Serializable
-        private data class CrownLevelResponse(
-            val data: Data,
-        )
-
-        @Serializable
-        private data class Data(
-            val player: Player,
-        )
-
-        @Serializable
-        private data class Player(
-            val crownLevel: CrownLevel,
-        )
-
-        @Serializable
-        private data class CrownLevel(
-            val fishingLevelData: ResponseLevelData,
-            val levelData: ResponseLevelData,
-            val styleLevelData: ResponseLevelData,
-        )
-
-        @Serializable
-        data class ResponseLevelData(
-            val evolution: Int,
-            val level: Int,
-        )
-    }
-}
-
+@Serializable
+data class StyleLevelData(
+    val evolution: Int,
+    val level: Int,
+)
 

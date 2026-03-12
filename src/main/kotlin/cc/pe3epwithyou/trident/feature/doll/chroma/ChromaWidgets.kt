@@ -21,10 +21,11 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
     override val layout = gridLayout(1) {
         var col = 0
         var row = 0
-        Chroma.entries.forEach { chroma ->
+        val maxCols = ChromaManger.maxCols ?: 6
+        ChromaManger.fetchedChromas?.forEach { chroma ->
             ChromaWidget(chroma).at(row, col)
             col++
-            if (col == 6) {
+            if (col == maxCols) {
                 col = 0
                 row++
             }
@@ -34,12 +35,13 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
     override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val screen = minecraft().screen ?: return
         if (!Doll.shouldRender(screen)) return
+        if (ChromaManger.fetchedChromas == null) return
         val item =
             DollCosmetics.currentCosmetics[CosmeticType.SKIN]?.slot?.item ?: return
         if (!isWeaponSkin(item)) return
 
         val notSelected = Component.literal("Select Chroma").withStyle(ChatFormatting.GRAY)
-        val selected = DollCosmetics.currentChroma?.chromaName?.let { Component.literal(it) }
+        val selected = DollCosmetics.currentChroma?.displayName?.let { Component.literal(it) }
 
         graphics.drawCenteredString(
             minecraft().font,

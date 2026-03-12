@@ -499,6 +499,7 @@ object TridentCommand {
                             item.hoverName.string,
                             Rarity.getFromItem(item) ?: Rarity.COMMON,
                             0,
+                            0,
                             1,
                             count = 5
                         )

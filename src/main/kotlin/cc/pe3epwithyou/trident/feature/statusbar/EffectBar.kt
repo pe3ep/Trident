@@ -71,7 +71,7 @@ object EffectBar {
         }
         val width = font.width(c) / 2
         val offset = if (checkEliminationBanner()) 62 else 0
-        graphics.drawString(font, c, x - width, graphics.guiHeight() - 80 - offset, 0xFFFFFF.opaqueColor())
+        graphics.drawString(font, c, x - width, graphics.guiHeight() - 86 - offset, 0xFFFFFF.opaqueColor())
     }
 
     fun getCurrentActiveEffects(): List<Effect> {
@@ -130,7 +130,7 @@ object EffectBar {
 
     private fun checkEliminationBanner(): Boolean {
         val actionBar = (minecraft().gui as GuiAccessor).overlayMessageString ?: return false
-        val strings = listOf("ELIMINATION", "RAMPAGE")
+        val strings = listOf("ELIMINATION", "RAMPAGE", "SPECTATING")
         return strings.any { actionBar.string.contains(it, ignoreCase = true) }
     }
 

@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiChecker
 import cc.pe3epwithyou.trident.feature.debug.DebugScreen
 import cc.pe3epwithyou.trident.feature.discord.EventActivity
+import cc.pe3epwithyou.trident.feature.doll.chroma.ChromaManger
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.ScoreboardUtils
@@ -48,7 +49,8 @@ object MCCIState {
         UpdateChecker.checkForUpdates()
         ApiChecker.joinCheck()
         DebugScreen.fetchMessages()
-        LevelData.fetchData()
+        PlayerData.fetchData()
+        ChromaManger.fetchChromas()
         EventActivity.fetchEventActivities()
         if (Trident.hasFailedToLoadConfig) {
             val component: Component =

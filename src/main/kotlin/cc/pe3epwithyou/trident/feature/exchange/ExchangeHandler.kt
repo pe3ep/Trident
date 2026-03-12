@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.events.click.ClickEvents
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter
+import cc.pe3epwithyou.trident.state.PlayerData
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
@@ -93,8 +94,8 @@ object ExchangeHandler {
         }
     }
 
-    fun updateCosmetics() {
-        val collections = ExchangeLookup.exchangeLookupCache!!.data.player.collections ?: return
+    fun updateCosmetics() = PlayerData.fetchedData?.let {
+        val collections = it.data.player.collections
         val filtered = collections.cosmetics.filter { (owned, _) -> owned }
         ownedCosmetics.clear()
         filtered.forEach { (_, cosmetic) ->
