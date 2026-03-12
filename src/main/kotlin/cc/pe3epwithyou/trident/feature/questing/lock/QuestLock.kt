@@ -42,11 +42,12 @@ object QuestLock {
         requireTitle("ISLAND REWARDS")
         if (!Config.Global.questLock) return@with
         val itemName = clickedItem()?.hoverName?.string ?: return@with
+        val index = clickedSlot()?.index ?: return@with
+        if (index !in questContainers.keys) return@with
         if (!itemName.contains("Quest", ignoreCase = true)) {
             cancel()
             return@with
         }
-        val index = clickedSlot()?.index ?: return@with
         val questContainer = questContainers[index] ?: return@with
         if (shift) {
             if (itemName.contains("Scroll", ignoreCase = true) && right) {
@@ -58,10 +59,10 @@ object QuestLock {
                     Resources.minecraft("block.note_block.bass"),
                     pitch = 0.5f
                 )
-                return@with
             }
+            return@with
         }
-        if (!shift && right) {
+        if (right) {
             if (!questContainer.isUnlocked) {
                 setLocked(index, false)
                 minecraft().soundManager.playMaster(Resources.mcc("ui.click_normal"))
