@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.discord
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.utils.NetworkUtil
 import cc.pe3epwithyou.trident.utils.RequestMethod
@@ -9,6 +10,7 @@ object EventActivity {
     var fetchedActivities: List<EventActivitiesResponseItem>? = null
 
     fun fetchEventActivities() {
+        if (!Config.Global.callToHome) return
         NetworkUtil.sendRequest<List<EventActivitiesResponseItem>>(
             RequestMethod.GET, ApiProvider.TRIDENT.fetchUrl + "/getEventActivities",
         ) {

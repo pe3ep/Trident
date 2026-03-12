@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature.doll.chroma
 
 import cc.pe3epwithyou.trident.Trident
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.utils.NetworkUtil
 import cc.pe3epwithyou.trident.utils.RequestMethod
@@ -13,6 +14,7 @@ object ChromaManger {
     var maxCols: Int? = null
 
     fun fetchChromas() {
+        if (!Config.Global.callToHome) return
         NetworkUtil.sendRequest<ChromaResponse>(RequestMethod.GET, ApiProvider.TRIDENT.fetchUrl + "/query/chromas") {
             onSuccess {
                 fetchedChromas = it.chromas
