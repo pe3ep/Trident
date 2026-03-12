@@ -114,6 +114,9 @@ class Config {
     var debugForceIncompatibility: Boolean = false
 
     @SerialEntry
+    var debugForceCompatibility: Boolean = false
+
+    @SerialEntry
     var gamesAutoFocus: Boolean = false
 
 
@@ -234,6 +237,8 @@ class Config {
             get() = handler.instance().debugBypassOnIsland
         val forceIncompatibility: Boolean
             get() = handler.instance().debugForceIncompatibility
+        val forceCompatibility: Boolean
+            get() = handler.instance().debugForceCompatibility
     }
 
     object Fishing {

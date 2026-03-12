@@ -14,5 +14,6 @@ private fun container(id: String): Optional<ModContainer> = FabricLoader.getInst
 private fun check(id: String): Boolean {
     val modContainer = container(id)
     if (Config.Debug.forceIncompatibility) return false
+    if (Config.Debug.forceCompatibility) return true
     return !modContainer.isPresent
 }
