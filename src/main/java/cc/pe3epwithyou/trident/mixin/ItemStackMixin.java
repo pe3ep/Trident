@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.mixin;
 
 import cc.pe3epwithyou.trident.feature.doll.Doll;
+import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -22,5 +23,6 @@ public class ItemStackMixin {
     void injectAddDetailsToTooltip(Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, @Nullable Player player, TooltipFlag tooltipFlag, Consumer<Component> consumer, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         Doll.modifyTooltip(consumer);
+        QuestLock.modifyTooltip(consumer);
     }
 }

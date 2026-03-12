@@ -1,10 +1,10 @@
 package cc.pe3epwithyou.trident.feature.questing.lock
 
+import cc.pe3epwithyou.trident.events.container.withContainerCtx
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
-import cc.pe3epwithyou.trident.utils.context
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
@@ -51,7 +51,9 @@ class GameWidget(val game: Game) : AbstractWidget(0, 0, 14, 14, Component.empty(
         }
         QuestLock.lockedGames.add(game)
         val screen = minecraft().screen as? ContainerScreen ?: return
-        QuestListener.findQuests(screen.context())
+        withContainerCtx(screen) {
+            QuestListener.findQuests(this)
+        }
     }
 
     override fun playDownSound(soundManager: SoundManager) {

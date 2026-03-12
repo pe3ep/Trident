@@ -1,13 +1,11 @@
 package cc.pe3epwithyou.trident.feature.questing
 
 import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.events.click.ClickEvents
-import cc.pe3epwithyou.trident.events.click.ContainerClickContext
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.events.container.ContainerEvents
+import cc.pe3epwithyou.trident.events.container.withContainerCtx
 import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
 import cc.pe3epwithyou.trident.feature.questing.lock.QuestLockWidget
-import cc.pe3epwithyou.trident.utils.context
 import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.screenWidth
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
@@ -27,7 +25,7 @@ object QuestListener {
         if (!isWaitingRefresh) return
         if ("Quest" !in item.hoverName.string) return
         val screen = (minecraft().screen ?: return) as ContainerScreen
-        findQuests(screen.context())
+        withContainerCtx(screen) { findQuests(this) }
     }
 
     fun register() {
@@ -46,23 +44,6 @@ object QuestListener {
 
         ContainerEvents.onOpen(::findQuests)
         ContainerEvents.onClose(::findQuests)
-
-        ClickEvents.onClick(::handleRefresh)
-    }
-
-    fun handleRefresh(ctx: ContainerClickContext) = with(ctx) {
-        requireTitle("ISLAND REWARDS")
-        val allowedSlots = listOf(37, 39, 41)
-        val slot = clickedSlot() ?: return@with
-        val name = slot.item.hoverName.string
-        if (slot.index in allowedSlots && left) {
-            if (!name.contains("Quest", ignoreCase = true)) return@with
-            isWaitingRefresh = true
-            QuestLock.questSlots[slot.index]?.apply {
-                quests = emptyList()
-                isLocked = false
-            }
-        }
     }
 
     fun findQuests(ctx: ContainerContext) =
@@ -70,14 +51,14 @@ object QuestListener {
             requireTitle("ISLAND REWARDS")
 
             val slotQuests = mutableListOf<Quest>()
-
+            QuestLock.questContainers.values.forEach { it.isUnlocked = false }
             fun handleQuestSlot(index: Int): List<Quest> {
                 val slot = slot(index) ?: return emptyList()
                 val quests = QuestingParser.parseQuestSlot(slot).orEmpty()
 
-                QuestLock.questSlots[index]?.apply {
+                QuestLock.questContainers[index]?.apply {
                     this.quests = quests
-                    isLocked = QuestLock.shouldLock(quests)
+                    isUnlocked = !QuestLock.shouldLock(quests)
                 }
 
                 slotQuests += quests
