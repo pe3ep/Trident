@@ -40,9 +40,7 @@ class QuestWidget(
 
         val questName = Component.literal(quest.displayName.uppercase())
             .mccFont()
-        if (Config.Questing.rarityColorName) {
-            questName.withColor(quest.rarity.color)
-        }
+        questName.withColor(quest.rarity.color)
         if (isCompleted) {
             questName.withColor(COMPLETED_QUEST_COLOR)
             questName.withStyle(ChatFormatting.ITALIC)

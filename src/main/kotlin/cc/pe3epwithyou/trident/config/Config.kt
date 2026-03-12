@@ -154,9 +154,6 @@ class Config {
     var questingEnabled: Boolean = true
 
     @SerialEntry
-    var questingRarityColorName: Boolean = true
-
-    @SerialEntry
     var questingShowInLobby: Boolean = true
 
     @SerialEntry
@@ -289,8 +286,6 @@ class Config {
     object Questing {
         val enabled: Boolean
             get() = handler.instance().questingEnabled
-        val rarityColorName: Boolean
-            get() = handler.instance().questingRarityColorName
         val showInLobby: Boolean
             get() = handler.instance().questingShowInLobby
         val showLeft: Boolean
