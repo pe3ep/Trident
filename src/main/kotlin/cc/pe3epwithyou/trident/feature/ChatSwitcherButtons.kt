@@ -2,11 +2,10 @@ package cc.pe3epwithyou.trident.feature
 
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.state.MCCIState
-import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
-import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.withCooldown
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -24,8 +23,7 @@ object ChatSwitcherButtons {
 
     fun getCurrentButtons(): List<Widget> = getChatModes().map(::Widget)
 
-    class Widget(val mode: ChatMode) :
-        AbstractWidget(0, 0, WIDTH, HEIGHT, Component.empty()) {
+    class Widget(val mode: ChatMode) : AbstractWidget(0, 0, WIDTH, HEIGHT, Component.empty()) {
         companion object {
             const val HEIGHT = 9
             const val WIDTH = 44
@@ -37,8 +35,6 @@ object ChatSwitcherButtons {
 
         private var texture = Texture(mode.sprite, WIDTH, HEIGHT)
 
-        var isOnCooldown = false
-
         override fun renderWidget(
             graphics: GuiGraphics, i: Int, j: Int, f: Float
         ) {
@@ -47,12 +43,9 @@ object ChatSwitcherButtons {
         }
 
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
-            if (isOnCooldown) return
-            isOnCooldown = true
-            val connection = Minecraft.getInstance().connection ?: return
-            connection.sendCommand("chat ${mode.commandName}")
-            DelayedAction.delayTicks(20) {
-                isOnCooldown = false
+            withCooldown(mode, 1_000) {
+                val connection = minecraft().connection ?: return@withCooldown
+                connection.sendCommand("chat ${mode.commandName}")
             }
         }
 

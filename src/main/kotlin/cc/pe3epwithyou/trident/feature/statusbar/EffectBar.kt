@@ -1,13 +1,15 @@
 package cc.pe3epwithyou.trident.feature.statusbar
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.discord.EventActivity
+import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.data.AtlasIds
 import net.minecraft.network.chat.Component
@@ -55,10 +57,10 @@ object EffectBar {
     fun render(graphics: GuiGraphics) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.effectBar) return
-        if (MCCIState.game == Game.FISHING || MCCIState.game == Game.HUB) return
+        if (MCCIState.game == Game.FISHING) return
 
         val x = graphics.guiWidth() / 2
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
 
         val c = Component.empty()
         val effects = getCurrentActiveEffects()
@@ -68,28 +70,39 @@ object EffectBar {
             c.append(effect.name())
         }
         val width = font.width(c) / 2
-        graphics.drawString(font, c, x - width, graphics.guiHeight() - 80, 0xFFFFFF.opaqueColor())
+        val offset = if (checkEliminationBanner()) 62 else 0
+        graphics.drawString(font, c, x - width, graphics.guiHeight() - 86 - offset, 0xFFFFFF.opaqueColor())
     }
 
     fun getCurrentActiveEffects(): List<Effect> {
-        val player = Minecraft.getInstance().player ?: return emptyList()
+        val player = minecraft().player ?: return emptyList()
         val effects = mutableListOf<Effect>()
-        player.activeEffects.forEach playerEffects@{
+        player.activeEffects.forEach forEachEffect@{
             val unwrappedId = it.effect.unwrapKey()
             val unwrappedMobEffect = it.effect.value()
-            if (unwrappedId.isEmpty) return@playerEffects
+            if (unwrappedId.isEmpty) return@forEachEffect
             val id = unwrappedId.get().identifier()
-            if (id in globalHiddenEffects) return@playerEffects
+            if (id in globalHiddenEffects) return@forEachEffect
 
             val currentGame = MCCIState.game
             gameConstants.forEach { (game, pairs) ->
                 if (currentGame == game) {
                     pairs.forEach { (effect, amplifier) ->
                         if (effect == id) {
-                            if (amplifier == -1) return@playerEffects
-                            if (it.amplifier < amplifier) return@playerEffects
+                            if (amplifier == -1) return@forEachEffect
+                            if (it.amplifier < amplifier) return@forEachEffect
                         }
                     }
+                }
+            }
+
+            EventActivity.fetchedActivities?.forEach { activity ->
+                activity.noxesiumServer.let { nox ->
+                    if (MCCIState.currentServer != nox.server) return@forEach
+                    if (MCCIState.gameTypes != nox.types) return@forEach
+                }
+                if (!activity.showEffectBar) {
+                    return@forEachEffect
                 }
             }
 
@@ -113,6 +126,12 @@ object EffectBar {
             }
         }
         return effects
+    }
+
+    private fun checkEliminationBanner(): Boolean {
+        val actionBar = (minecraft().gui as GuiAccessor).overlayMessageString ?: return false
+        val strings = listOf("ELIMINATION", "RAMPAGE", "SPECTATING")
+        return strings.any { actionBar.string.contains(it, ignoreCase = true) }
     }
 
     data class Effect(

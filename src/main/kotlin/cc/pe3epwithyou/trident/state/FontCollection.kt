@@ -6,7 +6,7 @@ import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.contents.objects.AtlasSprite
@@ -24,11 +24,14 @@ object FontCollection {
         return get(icon)
     }
 
+    private val fallbackComponent = Component.literal("?").defaultFont()
+
     fun get(icon: Icon): MutableComponent {
+        if (!minecraft().isRunning) return fallbackComponent
         val char = collection[icon]
         if (char == null) {
             Logger.error("Failed to get a char ${icon.path} from the font collection")
-            return Component.literal("?").defaultFont()
+            return fallbackComponent
         }
         val comp = Component.literal(char).mccFont("icon")
         return comp
@@ -39,7 +42,14 @@ object FontCollection {
         clearCache()
     }
 
-    fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) = Minecraft.getInstance().execute {
+    fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) = minecraft().execute {
+        /*
+         * Sometimes when force-quitting the game using ⌘Q (or Alt+F4), the process would
+         * crash since it's trying to access memory that has been unloaded. This should
+         * hopefully prevent this issue from happening.
+         */
+        if (!minecraft().isRunning) return@execute
+
         val i = Icon(location, ascent, height)
         collection[i] = char
         populateCache(i)
@@ -51,13 +61,9 @@ object FontCollection {
 
     fun texture(path: String): MutableComponent = texture(Resources.mcc(path))
 
-    fun texture(resource: Identifier): MutableComponent {
-        if (!Identifier.isValidPath(resource.path)) return Component.literal("?").defaultFont()
-        return Component.`object`(AtlasSprite(AtlasSprite.DEFAULT_ATLAS, resource))
-    }
-
-    fun texture(resource: Identifier, atlas: Identifier): MutableComponent {
-        if (!Identifier.isValidPath(resource.path)) return Component.literal("?").defaultFont()
+    fun texture(resource: Identifier, atlas: Identifier = AtlasSprite.DEFAULT_ATLAS): MutableComponent {
+        if (!minecraft().isRunning) return fallbackComponent
+        if (!Identifier.isValidPath(resource.path)) return fallbackComponent
         return Component.`object`(AtlasSprite(atlas, resource))
     }
 

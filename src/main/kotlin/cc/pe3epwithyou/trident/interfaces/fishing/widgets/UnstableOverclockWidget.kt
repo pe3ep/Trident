@@ -3,9 +3,9 @@ package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 import cc.pe3epwithyou.trident.interfaces.shared.widgets.ModelWidget
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.Model
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LinearLayout
 import net.minecraft.network.chat.Component
@@ -21,7 +21,7 @@ class UnstableOverclockWidget(
         LinearLayout.Orientation.HORIZONTAL,
         0,
     ) {
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
         +ModelWidget(
             Model(
                 overclockTexture.texturePath,

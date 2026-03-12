@@ -28,11 +28,8 @@ import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.*
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
-import cc.pe3epwithyou.trident.utils.Command
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
-import cc.pe3epwithyou.trident.utils.extensions.CoroutineScopeExt.main
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
@@ -43,9 +40,7 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import net.minecraft.util.Util
 
 object TridentCommand {
     private val debugDialogs = mutableMapOf(
@@ -64,8 +59,6 @@ object TridentCommand {
         }
         return false
     }
-
-    var jokeCooldown: Boolean = false
 
     fun registerCommands(dispatcher: CommandDispatcher<FabricClientCommandSource>) {
         /**
@@ -144,83 +137,80 @@ object TridentCommand {
              */
             literal("autofish") {
                 executes {
-                    if (jokeCooldown) return@executes
-                    jokeCooldown = true
+                    withCooldown("autofish", 20_000) {
+                        background().launch {
+                            main {
+                                Logger.sendMessage("Requesting autofish.jar...")
+                            }
 
-                    val scope = Util.backgroundExecutor().asCoroutineDispatcher()
-                    CoroutineScope(scope).launch {
-                        main {
-                            Logger.sendMessage("Requesting autofish.jar...")
+                            delay(4000)
+                            main {
+                                Logger.sendMessage("Received a response from the server")
+                            }
+
+                            delay(2000)
+                            main {
+                                Logger.sendMessage("It says the following:")
+                            }
+
+                            delay(3000)
+                            main {
+                                Logger.sendMessage(
+                                    Component.literal("Did you really just try to enable autofishing?")
+                                        .withStyle(ChatFormatting.AQUA)
+                                )
+                            }
+
+                            delay(3000)
+                            main {
+                                Logger.sendMessage(
+                                    Component.literal("Are we serious right meow bro?")
+                                        .withStyle(ChatFormatting.AQUA)
+                                )
+                            }
+
+                            delay(3000)
+                            main {
+                                Logger.sendMessage(
+                                    Component.literal("This incident will be reported.")
+                                        .withSwatch(TridentFont.ERROR)
+                                        .withStyle(ChatFormatting.BOLD)
+                                )
+                            }
                         }
-
-                        delay(4000)
-                        main {
-                            Logger.sendMessage("Received a response from the server")
-                        }
-
-                        delay(2000)
-                        main {
-                            Logger.sendMessage("It says the following:")
-                        }
-
-                        delay(3000)
-                        main {
-                            Logger.sendMessage(
-                                Component.literal("Did you really just try to enable autofishing?")
-                                    .withStyle(ChatFormatting.AQUA)
-                            )
-                        }
-
-                        delay(3000)
-                        main {
-                            Logger.sendMessage(
-                                Component.literal("Are we serious right meow bro?")
-                                    .withStyle(ChatFormatting.AQUA)
-                            )
-                        }
-
-                        delay(3000)
-                        main {
-                            Logger.sendMessage(
-                                Component.literal("This incident will be reported.")
-                                    .withSwatch(TridentFont.ERROR).withStyle(ChatFormatting.BOLD)
-                            )
-                            jokeCooldown = false
-                        }
-
-
                     }
                 }
             }
 
             literal("reconnectDiscord") {
                 executes {
-                    IPCManager.ipc?.let {
-                        it.coroutineScope.launch {
-                            try {
-                                withTimeoutOrNull(3_000) {
-                                    it.reconnect()
-                                    main {
-                                        Logger.sendMessage(Component.literal("Successfully reconnected to Discord").withSwatch(TridentFont.TRIDENT_ACCENT))
-                                        ActivityManager.updateCurrentActivity()
-                                    }
-                                } ?: main {
-                                    Logger.sendMessage(
-                                        Component.literal("Failed to reconnect to Discord. Check your internet connection.")
-                                            .withSwatch(TridentFont.ERROR)
-                                    )
-                                }
-                            } catch (e: Exception) {
+                    nonCriticalIO().launch {
+                        try {
+                            withTimeoutOrNull(3_000) {
+                                IPCManager.stop()
+                                IPCManager.init()
                                 main {
-                                    Logger.error("Failed to reconnect to Discord", e)
                                     Logger.sendMessage(
-                                        Component.literal("Failed to reconnect to Discord. Check your game console for errors.")
+                                        Component.literal("Successfully reconnected to Discord")
+                                            .withSwatch(TridentFont.TRIDENT_ACCENT)
                                     )
+                                    ActivityManager.updateCurrentActivity()
                                 }
+                            } ?: main {
+                                Logger.sendMessage(
+                                    Component.literal("Timed out when reconnecting to Discord. Check your internet connection.")
+                                        .withSwatch(TridentFont.ERROR)
+                                )
+                            }
+                        } catch (e: Exception) {
+                            main {
+                                Logger.error("Failed to reconnect to Discord", e)
+                                Logger.sendMessage(
+                                    Component.literal("Failed to reconnect to Discord. Check your game console for errors.")
+                                )
                             }
                         }
                     }
-
                 }
             }
 
@@ -260,9 +250,11 @@ object TridentCommand {
         Command("replylock") {
             argument("user", StringArgumentType.string()) {
                 suggests { _, builder ->
-                    val client = Minecraft.getInstance()
+                    val client = minecraft()
                     val self = client.gameProfile.name
-                    client.connection?.onlinePlayers?.map { it.profile.name }?.filter { it != self}?.filter { !it.startsWith("MCCTabPlayer") && !it.startsWith("MCC_NPC") }?.forEach { builder.suggest(it) }
+                    client.connection?.onlinePlayers?.map { it.profile.name }?.filter { it != self }
+                        ?.filter { !it.startsWith("MCCTabPlayer") && !it.startsWith("MCC_NPC") }
+                        ?.forEach { builder.suggest(it) }
                     builder.buildFuture()
                 }
                 executes {
@@ -408,7 +400,7 @@ object TridentCommand {
                         }
                         argument("hasAssist", BoolArgumentType.bool()) {
                             executes {
-                                val self = Minecraft.getInstance().gameProfile
+                                val self = minecraft().gameProfile
                                 val method =
                                     KillMethod.valueOf(it.getArgument("method", String::class.java))
                                 KillFeedDialog.addKill(
@@ -417,8 +409,7 @@ object TridentCommand {
                                         killMethod = method,
                                         attacker = self.name.toString(),
                                         killColors = Pair(
-                                            0x606060 opacity 128,
-                                            0x606060 opacity 100
+                                            0x606060 opacity 128, 0x606060 opacity 100
                                         ),
                                         streak = it.getArgument("streak", Int::class.java),
                                         hasAssist = it.getArgument("hasAssist", Boolean::class.java)
@@ -480,7 +471,7 @@ object TridentCommand {
             literal("get_accessor_value") {
                 literal("gui") {
                     executes {
-                        val gui = Minecraft.getInstance().gui as GuiAccessor
+                        val gui = minecraft().gui as GuiAccessor
                         Logger.sendMessage("Actionbar: ${gui.overlayMessageString?.string}")
                         Logger.sendMessage(gui.overlayMessageString ?: Component.empty())
                         Logger.sendMessage("Title: ${gui.title}")
@@ -488,7 +479,8 @@ object TridentCommand {
                 }
                 literal("bosshealthoverlay") {
                     executes {
-                        val events = (Minecraft.getInstance().gui.bossOverlay as BossHealthOverlayAccessor).events
+                        val events =
+                            (minecraft().gui.bossOverlay as BossHealthOverlayAccessor).events
                         events.forEach { (uUID, event) ->
                             Logger.sendMessage("Event UUID: $uUID, Event: ${event.name.string}")
                         }
@@ -498,26 +490,30 @@ object TridentCommand {
 
             literal("fake_crafting_toast") {
                 executes {
-                    val player = Minecraft.getInstance().player ?: return@executes
+                    val player = minecraft().player ?: return@executes
 
                     val item = player.mainHandItem
-                    CraftingNotifications.send(CraftingNotifications.Notification(
-                        CraftingNotifications.Source.ASSEMBLER,
-                        item.hoverName.string,
-                        Rarity.getFromItem(item) ?: Rarity.COMMON,
-                        0,
-                        1,
-                        count = 5
-                    ))
+                    CraftingNotifications.send(
+                        CraftingNotifications.Notification(
+                            CraftingNotifications.Source.ASSEMBLER,
+                            item.hoverName.string,
+                            Rarity.getFromItem(item) ?: Rarity.COMMON,
+                            0,
+                            0,
+                            1,
+                            count = 5
+                        )
+                    )
                 }
             }
 
             literal("setReplyLock") {
-                val client = Minecraft.getInstance()
+                val client = minecraft()
                 val self = client.gameProfile.name
                 argument("user", StringArgumentType.string()) {
                     suggests { _, builder ->
-                        client.connection?.onlinePlayers?.filter { it.profile.name != self}?.forEach { builder.suggest(it.profile.name) }
+                        client.connection?.onlinePlayers?.filter { it.profile.name != self }
+                            ?.forEach { builder.suggest(it.profile.name) }
                         builder.buildFuture()
                     }
                     argument("mode", BoolArgumentType.bool()) {

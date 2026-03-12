@@ -9,7 +9,6 @@ data class ExchangeListingsResponse(
 
 @Serializable
 data class ExchangeListings(
-    val player: CosmeticOwnershipPlayer,
     val activeIslandExchangeListings: List<ActiveIslandExchangeListingsItem>
 )
 

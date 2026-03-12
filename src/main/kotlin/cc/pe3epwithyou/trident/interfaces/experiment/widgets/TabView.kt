@@ -4,10 +4,10 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.experiment.DetachedTabDialog
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
 import cc.pe3epwithyou.trident.interfaces.shared.widgets.LayoutPortal
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.Layout
 import net.minecraft.network.chat.Component
@@ -36,7 +36,7 @@ class TabView(
     }
 
     private fun detachedLayout() = grid {
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
         StringWidget(Component.literal("This tab is detached"), font).atBottom(0)
     }
 

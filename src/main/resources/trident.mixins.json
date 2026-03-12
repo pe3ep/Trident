@@ -5,21 +5,15 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "trident.refmap.json",
   "mixins": [
-    "AbstractContainerMenuMixin",
-    "ConnectionMixin",
     "ItemStackMixin",
-    "accessors.LivingEntityAccessor"
+    "accessors.LivingEntityAccessor",
+    "connection.ConnectionMixin"
   ],
   "client": [
-    "AbstractContainerScreenMixin",
-    "AvatarRenderStateMixin",
-    "ChatListenerMixin",
-    "ChatScreenMixin",
-    "ClientPacketListenerMixin",
+    "AvatarRendererMixin",
     "DebugScreenEntriesMixin",
     "FontLoaderMixin",
     "GuiMixin",
-    "JoinIslandMixin",
     "OffsetMixin",
     "OnlineServerEntryMixin",
     "accessors.AbstractContainerScreenAccessor",
@@ -27,7 +21,12 @@
     "accessors.DebugScreenEntriesAccessor",
     "accessors.GuiAccessor",
     "accessors.InventoryScreenAccessor",
-    "accessors.ScreenAccessor"
+    "accessors.ScreenAccessor",
+    "chat.ChatComponentMixin",
+    "chat.ChatScreenMixin",
+    "connection.ClientHandshakePacketListenerImplMixin",
+    "connection.ClientPacketListenerMixin",
+    "screen.AbstractContainerScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

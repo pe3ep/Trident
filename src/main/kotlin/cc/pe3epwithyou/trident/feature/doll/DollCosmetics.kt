@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.feature.doll
 
 import cc.pe3epwithyou.trident.feature.doll.chroma.Chroma
 import cc.pe3epwithyou.trident.feature.doll.slots.*
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
@@ -20,7 +20,7 @@ object DollCosmetics {
     var lockedSlots = mutableMapOf<CosmeticType, Cosmetic>()
 
     fun setShownCosmetics() {
-        val player = Minecraft.getInstance().player ?: return
+        val player = minecraft().player ?: return
         currentCosmetics.forEach { (_, v) -> v.slot.setRealCurrent(player) }
         lockedSlots.forEach { (k, v) -> currentCosmetics[k]?.slot?.item = v.slot.item }
     }

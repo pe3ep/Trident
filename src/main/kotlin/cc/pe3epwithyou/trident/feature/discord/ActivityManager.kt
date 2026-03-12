@@ -1,24 +1,18 @@
 package cc.pe3epwithyou.trident.feature.discord
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.container.ContainerContext
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.Rank
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.SuggestionPacket
-import cc.pe3epwithyou.trident.utils.useScreen
+import cc.pe3epwithyou.trident.utils.*
 import io.github.vyfor.kpresence.rpc.ActivityAssetsBuilder
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
-import java.nio.charset.StandardCharsets
-import java.security.MessageDigest
 import java.time.Instant
-import java.util.Locale
 
 object ActivityManager {
     private var currentActivityBuilder: ActivityBuilder? = null
@@ -64,6 +58,9 @@ object ActivityManager {
         if (Config.Discord.autoPrivateMode && Disguise.isDisguised) {
             val game = MCCIState.game
             return game != Game.HUB && game != Game.FISHING
+        }
+        minecraft().currentServer?.let {
+            if (!ProdCheck.isProd(it.ip)) return true
         }
         return false
     }
@@ -146,9 +143,9 @@ object ActivityManager {
                 activity.details = "Fishing at $islandName"
                 assetsBuilder.largeImage = "game_fishing_$island"
                 if (Config.Discord.displayExtraInfo) {
-                    Trident.playerState.levelData?.let {
-                        assetsBuilder.smallText = "Level ${it.fishingLevel.level}"
-                        assetsBuilder.smallImage = "level_fishing_${it.fishingLevel.evolution}"
+                    playerState().levelData?.let {
+                        assetsBuilder.smallText = "Level ${it.fishingLevelData.level}"
+                        assetsBuilder.smallImage = "level_fishing_${it.fishingLevelData.evolution}"
                     }
                 }
             }
@@ -161,7 +158,7 @@ object ActivityManager {
 
                 assetsBuilder.largeImage = "game_battle_box_arena"
                 if (Config.Discord.displayExtraInfo) {
-                    Trident.playerState.arenaData.currentRank?.let {
+                    playerState().arenaData.currentRank?.let {
                         assetsBuilder.smallText = it.name
                         assetsBuilder.smallImage = it.image
                     }
@@ -184,6 +181,24 @@ object ActivityManager {
             }
 
             else -> {}
+        }
+
+        EventActivity.fetchedActivities?.let { activityList ->
+            Logger.debugLog("Fetched activities: $activityList")
+            for (fetchedActivity in activityList) {
+                fetchedActivity.noxesiumServer.let {
+                    if (MCCIState.currentServer != it.server) continue
+                    if (MCCIState.gameTypes != it.types) continue
+                }
+                if (fetchedActivity.hideInAutoPrivateMode && shouldHideActivity()) {
+                    hideActivity()
+                    return
+                }
+
+                activity.details = fetchedActivity.rpc.details.takeIf { it.isNotEmpty() }
+                activity.state = fetchedActivity.rpc.state.takeIf { it.isNotEmpty() }
+                assetsBuilder.largeImage = fetchedActivity.rpc.largeImage
+            }
         }
 
         activity.assets = assetsBuilder.build()
@@ -241,24 +256,15 @@ object ActivityManager {
             sendWithParty()
         }
 
-        fun sha1(input: String): String {
-            val bytes = input.toByteArray(StandardCharsets.UTF_8)
-            val md = MessageDigest.getInstance("SHA-1")
-            val digest = md.digest(bytes)
-            return buildString {
-                digest.forEach { append("%02x".format(it)) }
-            }
-        }
-
         fun updatePartyID(suggestions: List<String>) {
             val members = suggestions.toMutableList()
             if (members.isEmpty()) {
                 partyID = null
                 return
             }
-            val self = Minecraft.getInstance().gameProfile.name
+            val self = minecraft().gameProfile.name
             members.add(self)
-            val id = members.map { it.lowercase(Locale.ROOT) }.sorted().joinToString("-")
+            val id = members.map { it.lowercase() }.sorted().joinToString("-")
             Logger.debugLog("Party ID: $id")
             partyID = sha1(id)
             Logger.debugLog("Party ID (hashed): $partyID")
@@ -291,25 +297,32 @@ object ActivityManager {
             "grandmaster",
         )
 
-        fun handleScreen(screen: ContainerScreen) = useScreen(screen) {
-            updateRank(getItem(10).hoverName.string)
-            val currentRank = Trident.playerState.arenaData.currentRank
+        fun register() {
+            ContainerEvents.onOpen(::handleScreen)
+            ContainerEvents.onClose(::handleScreen)
+        }
+
+        fun handleScreen(ctx: ContainerContext) = with(ctx) {
+            requireTitle("BATTLE BOX ARENA")
+            val item = item(10) ?: return@with
+            updateRank(item.hoverName.string)
+            val currentRank = playerState().arenaData.currentRank
             Logger.debugLog("Set rank to $currentRank")
         }
 
         fun updateRank(name: String?) {
             if (name == null) {
-                Trident.playerState.arenaData.currentRank = null
+                playerState().arenaData.currentRank = null
                 return
             }
 
             val rank = name.replace(" ", "_").lowercase()
             if (rank !in knownRanks) {
-                Trident.playerState.arenaData.currentRank = null
+                playerState().arenaData.currentRank = null
                 return
             }
 
-            Trident.playerState.arenaData.currentRank = Rank(name, "rank_$rank")
+            playerState().arenaData.currentRank = Rank(name, "rank_$rank")
         }
 
     }

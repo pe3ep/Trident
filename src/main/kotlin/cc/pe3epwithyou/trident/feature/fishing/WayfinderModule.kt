@@ -6,8 +6,8 @@ import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.DelayedAction
 import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
-import net.minecraft.client.Minecraft
+import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.parseFormattedInt
 
 object WayfinderModule {
     fun handleBossbarEvent() = DelayedAction.delayTicks(1L) {
@@ -15,7 +15,7 @@ object WayfinderModule {
         if (!MCCIState.fishingState.isGrotto) return@delayTicks
         val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
 
-        val events = (Minecraft.getInstance().gui.bossOverlay as BossHealthOverlayAccessor).events
+        val events = (minecraft().gui.bossOverlay as BossHealthOverlayAccessor).events
         events.forEach { (_, value) ->
             Regex("""STABILITY: (\d+)%""").find(value.name.string)?.let {
                 val newStability = it.groups[1]?.value?.parseFormattedInt() ?: return@forEach

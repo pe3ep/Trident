@@ -3,12 +3,12 @@ package cc.pe3epwithyou.trident.interfaces.experiment.widgets
 import cc.pe3epwithyou.trident.interfaces.themes.TabbedDialogTheme
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemed
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.linear
 import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LinearLayout
@@ -25,7 +25,7 @@ class TabLong(
     override val layout: LinearLayout = linear(
         LinearLayout.Orientation.HORIZONTAL
     ) {
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
 
         val title: MutableComponent = tab.title as MutableComponent
 

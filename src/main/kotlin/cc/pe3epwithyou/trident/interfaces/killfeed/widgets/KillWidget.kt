@@ -2,10 +2,10 @@ package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
 import cc.pe3epwithyou.trident.utils.TridentColor
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.layouts.LinearLayout
 
 class KillWidget(
@@ -22,7 +22,7 @@ class KillWidget(
     override val layout: LinearLayout = LinearLayout(
         LinearLayout.Orientation.HORIZONTAL, 0
     ) {
-        val self = Minecraft.getInstance().player?.name?.string ?: "Unknown"
+        val self = minecraft().player?.name?.string ?: "Unknown"
 
         val firstSelfColor = TridentColor(killColors.first).color opacity 192
         val secondSelfColor = TridentColor(killColors.second).color opacity 192

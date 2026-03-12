@@ -114,6 +114,9 @@ class Config {
     var debugForceIncompatibility: Boolean = false
 
     @SerialEntry
+    var debugForceCompatibility: Boolean = false
+
+    @SerialEntry
     var gamesAutoFocus: Boolean = false
 
 
@@ -149,9 +152,6 @@ class Config {
 
     @SerialEntry
     var questingEnabled: Boolean = true
-
-    @SerialEntry
-    var questingRarityColorName: Boolean = true
 
     @SerialEntry
     var questingShowInLobby: Boolean = true
@@ -234,6 +234,8 @@ class Config {
             get() = handler.instance().debugBypassOnIsland
         val forceIncompatibility: Boolean
             get() = handler.instance().debugForceIncompatibility
+        val forceCompatibility: Boolean
+            get() = handler.instance().debugForceCompatibility
     }
 
     object Fishing {
@@ -284,8 +286,6 @@ class Config {
     object Questing {
         val enabled: Boolean
             get() = handler.instance().questingEnabled
-        val rarityColorName: Boolean
-            get() = handler.instance().questingRarityColorName
         val showInLobby: Boolean
             get() = handler.instance().questingShowInLobby
         val showLeft: Boolean

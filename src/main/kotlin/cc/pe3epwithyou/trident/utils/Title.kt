@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.utils
 
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 object Title {
@@ -12,9 +11,9 @@ object Title {
         fadeOut: Int,
         resetTime: Boolean = true
     ) {
-        Minecraft.getInstance().gui.setTimes(fadeIn, stay, fadeOut)
-        Minecraft.getInstance().gui.setSubtitle(subtitle)
-        Minecraft.getInstance().gui.setTitle(title)
-        if (resetTime) Minecraft.getInstance().gui.resetTitleTimes()
+        minecraft().gui.setTimes(fadeIn, stay, fadeOut)
+        minecraft().gui.setSubtitle(subtitle)
+        minecraft().gui.setTitle(title)
+        if (resetTime) minecraft().gui.resetTitleTimes()
     }
 }

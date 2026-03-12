@@ -10,12 +10,12 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.GridLayout
 import com.noxcrew.sheeplib.theme.Themed
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
@@ -35,14 +35,12 @@ class QuestWidget(
     override fun getHeight(): Int = layout.height
 
     override val layout = GridLayout(themed.theme.dimensions.paddingInner) {
-        val mcFont = Minecraft.getInstance().font
+        val mcFont = minecraft().font
         val isCompleted = quest.isCompleted
 
         val questName = Component.literal(quest.displayName.uppercase())
             .mccFont()
-        if (Config.Questing.rarityColorName) {
-            questName.withColor(quest.rarity.color)
-        }
+        questName.withColor(quest.rarity.color)
         if (isCompleted) {
             questName.withColor(COMPLETED_QUEST_COLOR)
             questName.withStyle(ChatFormatting.ITALIC)

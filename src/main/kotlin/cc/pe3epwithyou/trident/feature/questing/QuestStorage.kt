@@ -22,9 +22,6 @@ object QuestStorage {
     /**
      * Clear all current stored quests and replace them with the provided list.
      * Each quest will be added to the list for its `quest.game`.
-     *
-     * This is suitable for loading quests from disk / network or refreshing
-     * the active set wholesale.
      */
     fun loadQuests(quests: List<Quest>) {
         // Clear each game's list (preserves map keys)

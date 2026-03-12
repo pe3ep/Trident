@@ -1,24 +1,25 @@
 package cc.pe3epwithyou.trident.feature.doll
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.click.ClickEvents
+import cc.pe3epwithyou.trident.events.click.ContainerClickContext
+import cc.pe3epwithyou.trident.events.container.ContainerContext
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
+import cc.pe3epwithyou.trident.events.container.withContainerCtx
 import cc.pe3epwithyou.trident.feature.doll.chroma.ChromaWidgets
 import cc.pe3epwithyou.trident.mixin.accessors.AbstractContainerScreenAccessor
 import cc.pe3epwithyou.trident.mixin.accessors.InventoryScreenAccessor
-import cc.pe3epwithyou.trident.mixin.accessors.ScreenAccessor
 import cc.pe3epwithyou.trident.state.FontCollection
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
-import cc.pe3epwithyou.trident.utils.Resources
-import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
-import cc.pe3epwithyou.trident.utils.playMaster
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
-import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.LivingEntity
@@ -37,7 +38,6 @@ object Doll {
     var dollYRot = Y_CENTER
     var dollXRot = X_DEFAULT
 
-    @JvmStatic
     fun resetDoll() {
         dollXRot = X_DEFAULT
         dollYRot = Y_CENTER
@@ -51,21 +51,17 @@ object Doll {
     var dragStartX = -1
     var dragStartY = -1
 
-    @JvmStatic
-    fun onClick(mouseButtonEvent: MouseButtonEvent) {
-        if (!MCCIState.isOnIsland()) return
-        if (!Config.Global.cosmeticPreview) return
-        val client = Minecraft.getInstance()
-        val screen = client.screen as? ContainerScreen ?: return
-        if (screen.getChildAt(mouseButtonEvent.x, mouseButtonEvent.y).getOrNull() != null) return
-        dragStartX = mouseButtonEvent.x.toInt()
-        dragStartY = mouseButtonEvent.y.toInt()
-        val item = (screen as AbstractContainerScreenAccessor).hoveredSlot?.item ?: return
-        // middle click
-        if (mouseButtonEvent.button() == 2) {
-            val type = DollCosmetics.findCosmeticType(item) ?: return
+    fun onClick(ctx: ContainerClickContext) = with(ctx) {
+        if (!Config.Global.cosmeticPreview) return@with
+        if (screen.getChildAt(x, y).getOrNull() != null) return@with
+        dragStartX = x.toInt()
+        dragStartY = y.toInt()
+        val item = clickedItem() ?: return@with
+
+        if (middle) {
+            val type = DollCosmetics.findCosmeticType(item) ?: return@with
             val lockedSlot = DollCosmetics.lockedSlots[type]
-            client.soundManager.playMaster(Resources.mcc("ui.click_normal"))
+            minecraft().soundManager.playMaster(Resources.mcc("ui.click_normal"))
             if (lockedSlot?.slot?.item == item) {
                 DollCosmetics.lockedSlots.remove(type)
             } else {
@@ -85,125 +81,132 @@ object Doll {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
 
-        val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
-        val accessed = screen as AbstractContainerScreenAccessor
-        val x1 = accessed.leftPos + 4
+        val screen = minecraft().screen as? ContainerScreen ?: return
+        withContainerCtx(screen) {
+            val x1 = leftPos() + 4
+            val rectangle = ScreenRectangle(0, 0, x1, screenHeight())
+            if (dragStartX == -1 || dragStartY == -1) return@withContainerCtx
+            if (!rectangle.containsPoint(dragStartX, dragStartY)) return@withContainerCtx
 
-        val rectangle = ScreenRectangle(0, 0, x1, screen.height)
-        if (dragStartX == -1 || dragStartY == -1) return
-        if (!rectangle.containsPoint(dragStartX, dragStartY)) return
+            dollXRot -= draggedX
 
-        dollXRot -= draggedX
+            val current = dollYRot
 
-        val current = dollYRot
+            // Small soft zone so resistance appears close to the hard limit.
+            val softZone = 60f
+            val curveExp = 0.5f
 
-        // Small soft zone so resistance appears close to the hard limit.
-        val softZone = 60f
-        val curveExp = 0.5f
+            val distToLower = (current - Y_MIN).coerceAtLeast(0f)
+            val distToUpper = (Y_MAX - current).coerceAtLeast(0f)
+            val distToNearest = min(distToLower, distToUpper)
 
-        val distToLower = (current - Y_MIN).coerceAtLeast(0f)
-        val distToUpper = (Y_MAX - current).coerceAtLeast(0f)
-        val distToNearest = min(distToLower, distToUpper)
+            val delta = -draggedY
 
-        val delta = -draggedY
+            val nearestIsLower = distToLower <= distToUpper
+            val movingTowardNearest = if (nearestIsLower) delta < 0f else delta > 0f
 
-        val nearestIsLower = distToLower <= distToUpper
-        val movingTowardNearest = if (nearestIsLower) delta < 0f else delta > 0f
+            if (distToNearest >= softZone || !movingTowardNearest) {
+                dollYRot += delta
+            } else {
+                val normalized = ((softZone - distToNearest) / softZone).coerceIn(0f, 1f)
 
-        if (distToNearest >= softZone || !movingTowardNearest) {
-            dollYRot += delta
-        } else {
-            val normalized = ((softZone - distToNearest) / softZone).coerceIn(0f, 1f)
+                val reduction = normalized.pow(curveExp)
+                val scale = 1f - reduction
 
-            val reduction = normalized.pow(curveExp)
-            val scale = 1f - reduction
+                dollYRot += delta * scale
+            }
 
-            dollYRot += delta * scale
+            dollYRot = dollYRot.coerceIn(Y_MIN, Y_MAX)
         }
-
-        dollYRot = dollYRot.coerceIn(Y_MIN, Y_MAX)
     }
 
-    fun getTopPos(screen: ContainerScreen): Int {
-        val accessed = screen as AbstractContainerScreenAccessor
-        return max(accessed.topPos - 64, 4)
+    fun getTopPos(ctx: ContainerContext): Int {
+        return max(ctx.topPos() - 64, 4)
     }
 
-    fun getBottomPos(screen: ContainerScreen, widgetHeight: Int): Int {
-        val accessed = screen as AbstractContainerScreenAccessor
-        return min(accessed.topPos + accessed.imageHeight, screen.height - widgetHeight - 4)
+    fun getBottomPos(ctx: ContainerContext, widgetHeight: Int): Int {
+        return min(ctx.topPos() + ctx.imageHeight(), screenHeight() - widgetHeight - 4)
     }
 
-    fun getLeftPos(screen: ContainerScreen): Int {
-        val accessed = screen as AbstractContainerScreenAccessor
-        return max(accessed.leftPos - 250, 0)
+    fun getLeftPos(ctx: ContainerContext): Int {
+        return max(ctx.leftPos() - 250, 0)
     }
 
-    fun addWidgets(screen: ContainerScreen) {
-        if (!MCCIState.isOnIsland()) return
-        if (!Config.Global.cosmeticPreview) return
-        if (!shouldRender(screen)) return
-        val accessed = screen as AbstractContainerScreenAccessor
-        val x0 = getLeftPos(screen)
-        val x1 = accessed.leftPos + 6
-        val center = accessed.leftPos - ((x1 - x0) / 2)
-        val widget = CosmeticWidgets(2, getTopPos(screen))
+    fun addWidgets(ctx: ContainerContext) = with(ctx) {
+        if (!MCCIState.isOnIsland()) return@with
+        if (!Config.Global.cosmeticPreview) return@with
+
+        val x0 = getLeftPos(this)
+        val x1 = leftPos() + 6
+        val center = leftPos() - ((x1 - x0) / 2)
+        val widget = CosmeticWidgets(2, getTopPos(this))
         widget.x = center - widget.width / 2
-        (screen as ScreenAccessor).`trident$addRenderableWidget`(widget)
+        addRenderable(widget)
 
         val chromas = ChromaWidgets(2, 0)
         chromas.x = center - chromas.width / 2
-        chromas.y = getBottomPos(screen, chromas.height)
-        (screen as ScreenAccessor).`trident$addRenderableWidget`(chromas)
+        chromas.y = getBottomPos(this, chromas.height)
+        addRenderable(chromas)
     }
 
-    @JvmStatic
-    fun shouldRender(screen: Screen): Boolean =
-        (screen as ContainerScreen).menu.items.find { DollCosmetics.validItem(it) } != null
+    fun shouldRender(screen: Screen): Boolean {
+        if (MCCIState.game != Game.HUB && MCCIState.game != Game.FISHING) return false
+        return (screen as? ContainerScreen ?: return false).menu.items.find {
+            DollCosmetics.validItem(
+                it
+            )
+        } != null
+    }
+
+    fun register() {
+        ContainerEvents.onOpen {
+            addWidgets(this)
+        }
+        ContainerEvents.onClose {
+            resetDoll()
+            DollCosmetics.resetCosmetics()
+        }
+        ClickEvents.onClick(::onClick)
+    }
 
     @JvmStatic
     fun render(graphics: GuiGraphics) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
 
-        val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
+        val screen = minecraft().screen as? ContainerScreen ?: return
         // If there's at least 1 item that can be previewed, we show the doll
         if (!shouldRender(screen)) return
 
-        val player = Minecraft.getInstance().player ?: return
-        val accessed = screen as AbstractContainerScreenAccessor
-        screen.hoveredSlot?.item?.let(DollCosmetics::setCosmetic)
-        wardrobePreview(screen)
+        withContainerCtx(screen) {
+            val player = minecraft().player ?: return@withContainerCtx
+            hoveredItem()?.let(DollCosmetics::setCosmetic)
+            wardrobePreview(this)
 
-        val size = accessed.imageHeight.toFloat() / 2.75f
-        val x0 = getLeftPos(screen)
-        val x1 = accessed.leftPos + 6
+            val size = imageHeight().toFloat() / 2.75f
+            val x0 = getLeftPos(this)
+            val x1 = leftPos() + 6
 
-        DollCosmetics.currentCosmetics.forEach { (_, v) -> v.slot.push(player) }
+            DollCosmetics.currentCosmetics.values.forEach { it.slot.push(player) }
 
-        renderDoll(
-            graphics, x0, 0, x1, screen.height, size, player
-        )
+            renderDoll(
+                graphics, x0, 0, x1, screenHeight(), size, player
+            )
 
-//        graphics.drawString(screen.font, "$dollYRot", x0, accessed.topPos, 0xffffff.opaqueColor())
-//        graphics.drawString(screen.font, "$dollXRot", x0, accessed.topPos + 10, 0xffffff.opaqueColor())
-//        graphics.drawString(screen.font, "${DollCosmetics.currentCosmetics.mapValues { it.value.slot.item?.hoverName?.string }}", x0, accessed.topPos + accessed.imageHeight + 64, 0xffffff.opaqueColor())
-
-        DollCosmetics.currentCosmetics.forEach { (_, v) -> v.slot.pop(player) }
+            DollCosmetics.currentCosmetics.values.forEach { it.slot.pop(player) }
+        }
     }
 
-    fun wardrobePreview(screen: ContainerScreen) {
-        if ("WARDROBE EDITOR" in screen.title.string) {
-            val item = screen.menu.items.getOrNull(29) ?: return
-            DollCosmetics.setCosmetic(item)
-        }
+    fun wardrobePreview(ctx: ContainerContext) = with(ctx) {
+        if (!titleContains("WARDROBE EDITOR")) return@with
+        DollCosmetics.setCosmetic(item(29) ?: return@with)
     }
 
     @JvmStatic
     fun modifyTooltip(consumer: Consumer<Component>) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
-        val screen = Minecraft.getInstance().screen as? ContainerScreen ?: return
+        val screen = minecraft().screen as? ContainerScreen ?: return
         val item = (screen as AbstractContainerScreenAccessor).hoveredSlot?.item ?: return
         if (!DollCosmetics.validItem(item)) return
 
@@ -268,12 +271,6 @@ object Doll {
         if (DollCosmetics.lockedSlots[type]?.slot?.item == slot.item) {
             SELECTED_TEXTURE.blit(graphics, slot.x - 2, slot.y - 4)
         }
-    }
-
-    @JvmStatic
-    fun onClose() {
-        resetDoll()
-        DollCosmetics.resetCosmetics()
     }
 
 }

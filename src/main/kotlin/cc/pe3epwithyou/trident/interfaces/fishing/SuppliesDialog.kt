@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.interfaces.fishing
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.AugmentStackWidget
 import cc.pe3epwithyou.trident.interfaces.fishing.widgets.OverclockStackWidget
 import cc.pe3epwithyou.trident.interfaces.shared.TridentDialog
@@ -12,13 +11,14 @@ import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
+import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.playerState
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.dialog.title.DialogTitleWidget
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.MultiLineTextWidget
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
@@ -39,7 +39,7 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
         val baseTitle = icon.append(text)
 
-        return if (Trident.playerState.supplies.baitDesynced) {
+        return if (playerState().supplies.baitDesynced) {
             val warn = Component.literal(" ⚠").defaultFont().withStyle(ChatFormatting.GOLD)
             val tooltip = Tooltip.create(Component.translatable("trident.dialog.supplies.desynced.tooltip"))
             DialogTitle(this, baseTitle.append(warn), TITLE_COLOR, tooltip = tooltip)
@@ -51,8 +51,8 @@ class SuppliesDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
     override var title = getWidgetTitle()
 
     override fun layout(): GridLayout = grid {
-        val mcFont = Minecraft.getInstance().font
-        val supplies = Trident.playerState.supplies
+        val mcFont = minecraft().font
+        val supplies = playerState().supplies
         val isBaitDesynced = supplies.baitDesynced
 
         if (supplies.needsUpdating) {

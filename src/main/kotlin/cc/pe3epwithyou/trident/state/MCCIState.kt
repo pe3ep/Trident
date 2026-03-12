@@ -4,12 +4,15 @@ import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiChecker
 import cc.pe3epwithyou.trident.feature.debug.DebugScreen
+import cc.pe3epwithyou.trident.feature.discord.EventActivity
+import cc.pe3epwithyou.trident.feature.doll.chroma.ChromaManger
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.ScoreboardUtils
 import cc.pe3epwithyou.trident.utils.TridentFont.ERROR
+import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.playerState
 import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 
 data class Climate(
@@ -17,9 +20,9 @@ data class Climate(
 ) {
     fun getCurrentWayfinderStatus(): WayfinderStatus {
         return when (this.climateType) {
-            ClimateType.TEMPERATE -> Trident.playerState.wayfinderData.temperate
-            ClimateType.TROPICAL -> Trident.playerState.wayfinderData.tropical
-            ClimateType.BARREN -> Trident.playerState.wayfinderData.barren
+            ClimateType.TEMPERATE -> playerState().wayfinderData.temperate
+            ClimateType.TROPICAL -> playerState().wayfinderData.tropical
+            ClimateType.BARREN -> playerState().wayfinderData.barren
         }
     }
 }
@@ -33,19 +36,22 @@ object MCCIState {
     var lobbyGame: Game = Game.HUB
     var gameState: ClientboundMccGameStatePacket? = null
     var gameTypes: List<String> = emptyList()
+    var currentServer: String = "lobby"
     var isPlobbyGame: Boolean = false
     var fishingState: FishingState = FishingState()
     fun isOnIsland(): Boolean {
         if (Config.Debug.bypassOnIsland) return true
-        val server = Minecraft.getInstance().currentServer ?: return false
+        val server = minecraft().currentServer ?: return false
         return server.ip.contains("mccisland.net", true)
     }
 
-    fun onJoin() = Minecraft.getInstance().execute {
+    fun onJoin() = minecraft().execute {
         UpdateChecker.checkForUpdates()
         ApiChecker.joinCheck()
         DebugScreen.fetchMessages()
-        LevelData.fetchData()
+        PlayerData.fetchData()
+        ChromaManger.fetchChromas()
+        EventActivity.fetchEventActivities()
         if (Trident.hasFailedToLoadConfig) {
             val component: Component =
                 Component.translatable("trident.failed_config").withStyle(ERROR.baseStyle)

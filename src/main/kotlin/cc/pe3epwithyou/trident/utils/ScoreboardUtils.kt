@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.utils
 
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.world.scores.DisplaySlot
 import net.minecraft.world.scores.Objective
@@ -27,7 +26,7 @@ object ScoreboardUtils {
     }
 
     private fun getScoreboard(): Scoreboard? {
-        val level = Minecraft.getInstance().level ?: return null
+        val level = minecraft().level ?: return null
         return level.scoreboard
     }
 }

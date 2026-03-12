@@ -1,16 +1,19 @@
 package cc.pe3epwithyou.trident.feature.exchange
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.click.ClickEvents
+import cc.pe3epwithyou.trident.events.container.ContainerContext
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter
+import cc.pe3epwithyou.trident.state.PlayerData
 import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import java.time.Instant
@@ -32,9 +35,10 @@ object ExchangeHandler {
 
     val ownedCosmetics = mutableSetOf<String>()
 
-    fun handleScreen(screen: Screen) {
-        if (!Config.Global.exchangeImprovements) return
-        val chest = screen as ContainerScreen
+    fun handleScreen(ctx: ContainerContext) = with(ctx) {
+        requireTitle("ISLAND EXCHANGE")
+        if (!Config.Global.exchangeImprovements) return@with
+
         val now = Instant.now().toEpochMilli()
 
         if (ExchangeLookup.exchangeLookupCacheExpiresIn != null && now >= ExchangeLookup.exchangeLookupCacheExpiresIn!!) {
@@ -48,7 +52,7 @@ object ExchangeHandler {
             updatePrices()
         }
 
-        chest.menu.slots.forEach { slot ->
+        handledScreen.menu.slots.forEach { slot ->
             if (!inSlotBoundary(slot)) return@forEach
             val item = slot.item
 
@@ -63,6 +67,22 @@ object ExchangeHandler {
         }
     }
 
+    fun register() {
+        ContainerEvents.onOpen(::handleScreen)
+        ClickEvents.onClick {
+            requireTitle("ISLAND EXCHANGE")
+            val clickedItem = clickedItem() ?: return@onClick
+            val itemName = clickedItem.displayName.string
+            if (itemName.contains("Refresh Listings", ignoreCase = true) && left) {
+                clickedItem.findInLore(Regex("Click to Refresh"))?.let {
+                    ExchangeLookup.clearCache()
+                    handleScreen(this)
+                }
+            }
+        }
+    }
+
+
     fun updatePrices() {
         ExchangeLookup.exchangeLookupCache!!.data.activeIslandExchangeListings.forEach { (cost, asset, amount) ->
             val name = "[${asset.name}]".replace(" Token", "")
@@ -74,8 +94,8 @@ object ExchangeHandler {
         }
     }
 
-    fun updateCosmetics() {
-        val collections = ExchangeLookup.exchangeLookupCache!!.data.player.collections ?: return
+    fun updateCosmetics() = PlayerData.fetchedData?.let {
+        val collections = it.data.player.collections
         val filtered = collections.cosmetics.filter { (owned, _) -> owned }
         ownedCosmetics.clear()
         filtered.forEach { (_, cosmetic) ->
@@ -85,7 +105,7 @@ object ExchangeHandler {
 
     fun shouldRenderTooltip(slot: Slot): Boolean {
         if (!Config.Global.exchangeImprovements) return true
-        val screen = Minecraft.getInstance().screen ?: return true
+        val screen = minecraft().screen ?: return true
         if ("ISLAND EXCHANGE" !in screen.title.string) return true
         if (!inSlotBoundary(slot)) return true
         if (fetchingProgress.isLoading()) return true
@@ -97,7 +117,7 @@ object ExchangeHandler {
 
     fun renderSlot(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Global.exchangeImprovements) return
-        val screen = Minecraft.getInstance().screen ?: return
+        val screen = minecraft().screen ?: return
         if ("ISLAND EXCHANGE" !in screen.title.string) return
         if (!inSlotBoundary(slot)) return
         if (fetchingProgress.isLoading()) return
@@ -137,7 +157,8 @@ object ExchangeHandler {
     }
 
     private fun inSlotBoundary(slot: Slot): Boolean {
-        return !(slot.index !in 10..16 && slot.index !in 19..25 && slot.index !in 28..34 && slot.index !in 37..43 && slot.index !in 46..52)
+        val index = slot.index
+        return !(index !in 10..16 && index !in 19..25 && index !in 28..34 && index !in 37..43 && index !in 46..52)
     }
 
     private fun getItemPrice(item: ItemStack): Long? {

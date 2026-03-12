@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.state.fishing
 
 import cc.pe3epwithyou.trident.state.AugmentContainer
 import cc.pe3epwithyou.trident.utils.Resources
-import cc.pe3epwithyou.trident.utils.extensions.StringExt.parseFormattedInt
+import cc.pe3epwithyou.trident.utils.parseFormattedInt
 import net.minecraft.resources.Identifier
 
 @Suppress("unused")
@@ -311,14 +311,13 @@ fun getAugmentByName(name: String): Augment? {
 fun getAugmentContainer(name: String, lore: List<String>): AugmentContainer? {
     Augment.entries.forEach { augment ->
         if (augment.augmentName == name) {
-            var isPaused = false
             val status = when {
                 "This item has previously been repaired." in lore -> AugmentStatus.REPAIRED
                 lore.find { "This item is out of uses! You can Repair" in it } != null -> AugmentStatus.NEEDS_REPAIRING
                 lore.find { "This item is out of uses! You've already" in it } != null -> AugmentStatus.BROKEN
                 else -> AugmentStatus.NEW
             }
-            isPaused = lore.find { "Paused: This item will not consume uses" in it } != null
+            val isPaused = lore.find { "Paused: This item will not consume uses" in it } != null
             var durability: Int? = null
             lore.forEach { s ->
                 Regex("""Uses Remaining: (.+)/(.+)""").matchEntire(s)?.let {

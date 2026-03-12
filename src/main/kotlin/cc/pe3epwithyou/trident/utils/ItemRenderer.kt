@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.utils
 
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.state.GuiItemRenderState
@@ -15,7 +14,7 @@ class ItemRenderer(
     val height: Int
 ) {
     fun render(guiGraphics: GuiGraphics, x: Int, y: Int) {
-        val client = Minecraft.getInstance()
+        val client = minecraft()
         val font = client.font
         guiGraphics.pose().pushMatrix()
         val trackingItemStackRenderState = TrackingItemStackRenderState()

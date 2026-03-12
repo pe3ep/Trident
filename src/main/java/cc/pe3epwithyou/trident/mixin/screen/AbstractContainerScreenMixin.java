@@ -1,9 +1,10 @@
-package cc.pe3epwithyou.trident.mixin;
+package cc.pe3epwithyou.trident.mixin.screen;
 
-import cc.pe3epwithyou.trident.client.listeners.ChestScreenListener;
 import cc.pe3epwithyou.trident.config.Config;
-import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications;
-import cc.pe3epwithyou.trident.feature.disguise.Disguise;
+import cc.pe3epwithyou.trident.events.click.ClickEvents;
+import cc.pe3epwithyou.trident.events.click.ContainerClickContext;
+import cc.pe3epwithyou.trident.events.container.ContainerContext;
+import cc.pe3epwithyou.trident.events.container.ContainerEvents;
 import cc.pe3epwithyou.trident.feature.doll.Doll;
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
 import cc.pe3epwithyou.trident.feature.fishing.TideWindIndicator;
@@ -16,7 +17,6 @@ import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter;
 import cc.pe3epwithyou.trident.interfaces.fishing.AugmentStatusInterface;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.DebugDraw;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -44,22 +44,19 @@ public class AbstractContainerScreenMixin extends Screen {
     @Nullable
     protected Slot hoveredSlot;
 
-    @Shadow
-    protected int imageHeight;
-
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
     }
 
     @Inject(method = "renderSlot", at = @At(value = "HEAD"))
-    public void renderSlot(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
+    public void injectRenderSlotHead(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         RaritySlot.INSTANCE.render(guiGraphics, slot);
         TideWindIndicator.INSTANCE.renderOutline(guiGraphics, slot);
     }
 
     @Inject(method = "renderSlot", at = @At(value = "TAIL"))
-    public void renderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
+    public void injectRenderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
             BlueprintIndicator.checkItem(guiGraphics, slot);
@@ -75,7 +72,7 @@ public class AbstractContainerScreenMixin extends Screen {
         if (Config.Global.INSTANCE.getExchangeImprovements()) {
             ExchangeHandler.INSTANCE.renderSlot(guiGraphics, slot);
         }
-        AugmentStatusInterface.INSTANCE.render(guiGraphics, slot);
+        AugmentStatusInterface.render(guiGraphics, slot);
         QuestLock.renderLock(guiGraphics, slot);
         Doll.renderSlot(guiGraphics, slot);
     }
@@ -83,17 +80,8 @@ public class AbstractContainerScreenMixin extends Screen {
     @Inject(method = "onClose", at = @At(value = "HEAD"))
     public void injectOnClose(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-        Minecraft client = Minecraft.getInstance();
-        if (client.screen instanceof ContainerScreen s) {
-            Doll.onClose();
-            Disguise.checkActionbar();
-            if (s.getTitle().getString().contains("FISHING SUPPLIES")) {
-                ChestScreenListener.INSTANCE.findAugments(s);
-            }
-            if (s.getTitle().getString().contains("ISLAND REWARDS")) {
-                ChestScreenListener.INSTANCE.findQuests(s);
-            }
-            CraftingNotifications.handleScreen(s);
+        if (minecraft.screen instanceof ContainerScreen s) {
+            ContainerEvents.INSTANCE.getCLOSE().invoker().invoke(new ContainerContext(s));
         }
     }
 
@@ -108,8 +96,7 @@ public class AbstractContainerScreenMixin extends Screen {
     @Inject(method = "renderBackground", at = @At(value = "TAIL"))
     public void injectRenderBackground(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
-        Minecraft client = Minecraft.getInstance();
-        if (client.screen instanceof ContainerScreen s) {
+        if (minecraft.screen instanceof ContainerScreen s) {
             if (s.getTitle().getString().contains("ISLAND EXCHANGE")) {
                 ExchangeHandler.INSTANCE.renderBackground(guiGraphics, leftPos, topPos);
             }
@@ -120,23 +107,21 @@ public class AbstractContainerScreenMixin extends Screen {
     public void init(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         String screenTitle = this.getTitle().getString();
-        if (screenTitle.contains("ISLAND EXCHANGE") && Config.Global.INSTANCE.getExchangeImprovements()) {
-            int x = this.leftPos + 32;
-            int y = this.topPos - 33;
-            this.addRenderableWidget(new ExchangeFilter(x, y));
-        }
-        if (screenTitle.contains("ISLAND REWARDS") && Config.Global.INSTANCE.getQuestLock()) {
-            int y = this.topPos + this.imageHeight;
-            QuestLock.Widget widget = new QuestLock.Widget(2, y);
-            widget.setX(this.width / 2 - widget.getWidth() / 2);
-            this.addRenderableWidget(widget);
+        if (minecraft.screen instanceof ContainerScreen screen){
+            ContainerEvents.INSTANCE.getINIT().invoker().invoke(new ContainerContext(screen));
+            if (screenTitle.contains("ISLAND EXCHANGE") && Config.Global.INSTANCE.getExchangeImprovements()) {
+                int x = this.leftPos + 32;
+                int y = this.topPos - 33;
+                this.addRenderableWidget(new ExchangeFilter(x, y));
+            }
         }
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void injectMouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl, CallbackInfoReturnable<Boolean> cir) {
-        QuestLock.handleClick(this.hoveredSlot, cir);
-        Doll.onClick(mouseButtonEvent);
+        ContainerScreen containerScreen = minecraft.screen instanceof ContainerScreen s ? s : null;
+        if (containerScreen == null) return;
+        ClickEvents.INSTANCE.getCLICK().invoker().invoke(new ContainerClickContext(bl, containerScreen, mouseButtonEvent, cir));
     }
 
     @Inject(method = "renderContents", at = @At("HEAD"))

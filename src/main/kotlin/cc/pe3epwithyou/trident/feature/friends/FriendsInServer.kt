@@ -4,25 +4,21 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
-import cc.pe3epwithyou.trident.utils.DelayedAction
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.SuggestionPacket
-import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundTabListPacket
 
 object FriendsInServer {
-    private val regex = Regex("""(?:INSTANCE|FISHTANCE) (\d+)""")
+    private val regex = Regex("""(?:INSTANCE|FISHTANCE) ([a-zA-Z0-9]+)""")
 
     var friends: List<String> = emptyList()
-    var prevInstance: Int? = null
-    var currentInstance: Int? = null
+    var prevInstance: String? = null
+    var currentInstance: String? = null
 
     fun request() = SuggestionPacket.requestSuggestions("/friend remove ", ::updateFriendsList)
 
@@ -30,7 +26,7 @@ object FriendsInServer {
         if (packet !is ClientboundTabListPacket) return
         val match = regex.find(packet.footer.string)
         if (match != null) {
-            val instance = match.groupValues[1].toIntOrNull()
+            val instance = match.groups[1]?.value
             prevInstance = currentInstance
             currentInstance = instance
         } else {
@@ -50,7 +46,7 @@ object FriendsInServer {
         if (!MCCIState.isOnIsland()) return@delayTicks
         if (!Config.Global.friendsInServer) return@delayTicks
         if (!check()) return@delayTicks
-        val connection = Minecraft.getInstance().connection ?: return@delayTicks
+        val connection = minecraft().connection ?: return@delayTicks
         val onlinePlayers = connection.onlinePlayers.mapNotNull { it.profile.name }
             .filter { !it.startsWith("MCCTabPlayer") && !it.startsWith("MCC_NPC") }
         val onlineFriends = onlinePlayers.filter { it in friends }

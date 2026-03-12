@@ -81,5 +81,8 @@ enum class DeathMessages(
     ),
     KNOCKED_BACK(
         Regex("^\\[.] .+ was knocked back by .+"), KillMethod.GENERIC
-    )
+    ),
+    HIT_FELL(
+        Regex("^\\[.] .+ hit the ground too hand whilst trying escape .+"), KillMethod.GENERIC
+    ),
 }

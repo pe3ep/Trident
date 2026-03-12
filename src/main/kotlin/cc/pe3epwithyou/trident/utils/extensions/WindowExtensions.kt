@@ -1,12 +1,12 @@
 package cc.pe3epwithyou.trident.utils.extensions
 
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.mojang.blaze3d.platform.Window
-import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
 
 object WindowExtensions {
     val isActive: Boolean
-        get() = Minecraft.getInstance().isWindowActive
+        get() = minecraft().isWindowActive
 
     val Window.isMaximized: Boolean
         get() = GLFW.glfwGetWindowAttrib(handle(), GLFW.GLFW_MAXIMIZED) != 0

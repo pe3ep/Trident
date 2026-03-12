@@ -97,6 +97,7 @@ object NoxesiumUtils {
             val server = packet.server
             val types = packet.types
             MCCIState.gameTypes = types
+            MCCIState.currentServer = server
             MCCIState.gameState = null
 
             val currentGame = getCurrentGame(server, types)

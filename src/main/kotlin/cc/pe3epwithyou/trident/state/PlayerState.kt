@@ -1,13 +1,14 @@
 package cc.pe3epwithyou.trident.state
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.ConfigUtil
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications.Notification
+import cc.pe3epwithyou.trident.feature.fishing.FishingType
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.state.fishing.Augment
 import cc.pe3epwithyou.trident.state.fishing.AugmentStatus
 import cc.pe3epwithyou.trident.state.fishing.OverclockTexture
 import cc.pe3epwithyou.trident.utils.Logger
+import cc.pe3epwithyou.trident.utils.playerState
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import net.fabricmc.loader.api.FabricLoader
@@ -102,7 +103,7 @@ data class WayfinderData(
 
 @Serializable
 data class Research(
-    var type: String,
+    var type: FishingType,
     var tier: Int = 1,
     var progressThroughTier: Int = 0,
     var totalForTier: Int = 1000
@@ -133,7 +134,7 @@ data class PlayerState(
     var research: FishingResearch = FishingResearch(),
     var hatesUpdates: Boolean = false,
     var arenaData: ArenaData = ArenaData(),
-    var levelData: LevelData? = null,
+    var levelData: CrownLevel? = null,
     var craftingNotifications: CraftingNotifications = CraftingNotifications()
 )
 
@@ -149,8 +150,7 @@ object PlayerStateIO {
     }
 
     fun save() {
-        val serializable = Trident.playerState
-        val text = json.encodeToString(serializable)
+        val text = json.encodeToString(playerState())
         ConfigUtil.writeToConfig(path, text)
     }
 

@@ -19,7 +19,7 @@ public abstract class OnlineServerEntryMixin {
     public abstract ServerData getServerData();
 
     @WrapMethod(method = "join")
-    private void joining(Operation<Void> original) {
+    private void wrapJoin(Operation<Void> original) {
         try {
             ServerData serverData = getServerData();
             if (!serverData.ip.toLowerCase().contains("mccisland.net")) {

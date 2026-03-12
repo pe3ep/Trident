@@ -1,7 +1,8 @@
 package cc.pe3epwithyou.trident.feature.crafting
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.events.container.ContainerContext
+import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.PlayerStateIO
 import cc.pe3epwithyou.trident.state.Rarity
@@ -10,7 +11,6 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import kotlinx.serialization.Serializable
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.navigation.ScreenRectangle
@@ -38,7 +38,7 @@ object CraftingNotifications {
     data class Notification(
         val source: Source,
         val itemName: String,
-        val rarity: Rarity,
+        val rarity: Rarity, val days: Int = 0,
         val hours: Int,
         val minutes: Int,
         var count: Int = 1,
@@ -49,8 +49,9 @@ object CraftingNotifications {
             if (isFinished) return
 
             val now = Instant.now().toEpochMilli()
-            endTime = now.plus(hours.toLong() * 60 * 60 * 1000 + minutes.toLong() * 60 * 1000)
-            Logger.debugLog("Started $source notification for ${itemName}, ends in ${hours}h ${minutes}m")
+            endTime =
+                now.plus(days.toLong() * 24 * 60 * 60 * 1000 + hours.toLong() * 60 * 60 * 1000 + minutes.toLong() * 60 * 1000)
+            Logger.debugLog("Started $source notification for $itemName x${count}, ends in ${hours}h ${minutes}m")
         }
 
         fun check() {
@@ -69,27 +70,29 @@ object CraftingNotifications {
     fun add(notifications: List<Notification>, source: Source) {
         notifications.forEach { it.start() }
         when (source) {
-            Source.ASSEMBLER -> Trident.playerState.craftingNotifications.assembler = notifications
-            Source.FUSION -> Trident.playerState.craftingNotifications.fusion = notifications
+            Source.ASSEMBLER -> playerState().craftingNotifications.assembler = notifications
+            Source.FUSION -> playerState().craftingNotifications.fusion = notifications
         }
         PlayerStateIO.save()
     }
 
     private fun fromItem(item: ItemStack, source: Source): Notification? {
         item.getLore().find { it.string.endsWith(" remaining") }?.let {
-            Regex("""(?:(\d+)h )?(\d+)m|< 1m""").find(it.string)?.let { matchResult ->
+            Regex("""(?:(\d+)d )?(?:(\d+)h )?(\d+)m|< 1m""").find(it.string)?.let { matchResult ->
                 val rarity = Rarity.getFromItem(item) ?: Rarity.COMMON
                 val itemName = item.hoverName.string
                 if (matchResult.value == "< 1m") return Notification(
                     source,
                     itemName, rarity, hours = 0, minutes = 1, count = item.count
                 )
-                val hours = matchResult.groups[1]?.value?.toIntOrNull() ?: 0
-                val minutes = matchResult.groups[2]?.value?.toIntOrNull() ?: 0
+                val days = matchResult.groups[1]?.value?.toIntOrNull() ?: 0
+                val hours = matchResult.groups[2]?.value?.toIntOrNull() ?: 0
+                val minutes = matchResult.groups[3]?.value?.toIntOrNull() ?: 0
                 return Notification(
                     source,
                     itemName,
                     rarity,
+                    days,
                     hours,
                     minutes + 1,
                     count = item.count
@@ -102,7 +105,8 @@ object CraftingNotifications {
     fun send(notification: Notification) {
         if (!Config.Global.craftingNotifications) return
         val nameComponent =
-            Component.literal(notification.itemName).withColor(notification.rarity.color)
+            Component.literal("${notification.itemName}${if (notification.count > 1) " x${notification.count}" else ""}")
+                .withColor(notification.rarity.color)
 
         val msg = Component.empty().append(
             nameComponent
@@ -112,27 +116,29 @@ object CraftingNotifications {
             )
         )
 
-        Minecraft.getInstance().toastManager.addToast(CraftingToast(notification))
+        minecraft().toastManager.addToast(CraftingToast(notification))
 
         Logger.sendMessage(msg)
     }
 
-    @JvmStatic
-    fun handleScreen(screen: ContainerScreen) {
-        if (!MCCIState.isOnIsland()) return
-        if (!Config.Global.craftingNotifications) return
-        if (!listOf("BLUEPRINT ASSEMBLER", "FUSION FORGE").any { it in screen.title.string }) return
+    fun handleScreen(ctx: ContainerContext) = with(ctx) {
+        if (!MCCIState.isOnIsland()) return@with
+        if (!Config.Global.craftingNotifications) return@with
+        if (!listOf("BLUEPRINT ASSEMBLER", "FUSION FORGE").any { it in handledScreen.title.string }) return@with
 
-        useScreen(screen) {
-            val items = mutableListOf<Notification>()
-            val source = Source.from(screen)
-            (19..25).forEach {
-                val item = getItem(it)
-                val notification = fromItem(item, source) ?: return@forEach
-                items.add(notification)
-            }
-            add(items, source)
+        val items = mutableListOf<Notification>()
+        val source = Source.from(handledScreen)
+        (19..25).forEach {
+            val item = item(it) ?: return@forEach
+            val notification = fromItem(item, source) ?: return@forEach
+            items.add(notification)
         }
+        add(items, source)
+    }
+
+    fun register() {
+        ContainerEvents.onOpen(::handleScreen)
+        ContainerEvents.onClose(::handleScreen)
     }
 
     private val FUSION_ICON =
@@ -151,7 +157,7 @@ object CraftingNotifications {
     ) {
         if (!Config.Global.craftingNotifications) return
         if (!serverData.ip.endsWith("mccisland.net")) return
-        val assembler = Trident.playerState.craftingNotifications.assembler.filter { it.isFinished }
+        val assembler = playerState().craftingNotifications.assembler.filter { it.isFinished }
         var yOffset = 0
         if (assembler.isNotEmpty()) {
             val x = x - 16
@@ -161,7 +167,7 @@ object CraftingNotifications {
             yOffset += 16
         }
 
-        val fusion = Trident.playerState.craftingNotifications.fusion.filter { it.isFinished }
+        val fusion = playerState().craftingNotifications.fusion.filter { it.isFinished }
         if (fusion.isNotEmpty()) {
             val x = x - 16
             val y = y + 2 + yOffset
@@ -174,7 +180,8 @@ object CraftingNotifications {
     fun getTooltip(notifications: List<Notification>): Tooltip {
         val c = Component.literal("Finished crafting:").withSwatch(TridentFont.TRIDENT_ACCENT).popped()
         notifications.map {
-            Component.literal(it.itemName).withColor(it.rarity.color)
+            Component.literal("${it.itemName}${if (it.count > 1) " x${it.count}" else ""}")
+                .withColor(it.rarity.color)
         }.forEach {
             c.append("\n").append(it)
         }
@@ -192,7 +199,7 @@ object CraftingNotifications {
         j: Int
     ) {
         val rectangle = ScreenRectangle(x, y, width, height)
-        val client = Minecraft.getInstance()
+        val client = minecraft()
         if (rectangle.containsPoint(i, j)) {
             graphics.setTooltipForNextFrame(
                 client.font,

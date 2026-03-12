@@ -9,12 +9,12 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.GridLayout
 import com.noxcrew.sheeplib.theme.Themed
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
@@ -40,7 +40,7 @@ class WayfinderWidget(
     }
 
     override val layout = GridLayout(themed.theme.dimensions.paddingInner) {
-        val mcFont = Minecraft.getInstance().font
+        val mcFont = minecraft().font
         val grotto = GROTTOS[wayfinderStatus.island]!!
         val islandName = Component.literal(" ${wayfinderStatus.island.uppercase()}").withColor(grotto.color).mccFont()
         val title = FontCollection.texture(grotto.icon).offset(y = 1f)

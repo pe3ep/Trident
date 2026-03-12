@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.mixin;
+package cc.pe3epwithyou.trident.mixin.connection;
 
 import cc.pe3epwithyou.trident.interfaces.DialogCollection;
 import cc.pe3epwithyou.trident.state.MCCIState;
@@ -14,13 +14,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientHandshakePacketListenerImpl.class)
-public class JoinIslandMixin {
+public class ClientHandshakePacketListenerImplMixin {
     @Shadow
     @Final
     private @Nullable ServerData serverData;
 
     @Inject(method = "handleLoginFinished", at = @At("HEAD"))
-    private void loginFinished(ClientboundLoginFinishedPacket clientboundLoginFinishedPacket, CallbackInfo ci) {
+    private void injectHandleLoginFinished(ClientboundLoginFinishedPacket clientboundLoginFinishedPacket, CallbackInfo ci) {
         DialogCollection.INSTANCE.clear();
         if (this.serverData == null) return;
         if (!this.serverData.ip.toLowerCase().contains("mccisland.net")) return;

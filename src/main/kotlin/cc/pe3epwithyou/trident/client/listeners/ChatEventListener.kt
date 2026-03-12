@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.client.listeners
 
-import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
@@ -10,15 +9,11 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.fishing.AugmentTrigger
 import cc.pe3epwithyou.trident.state.fishing.updateDurability
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.requestAttentionIfInactive
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
-import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
-import net.minecraft.sounds.SoundEvent
-import java.util.*
 
 // TODO: Rewrite this listener to be much cleaner
 object ChatEventListener {
@@ -27,12 +22,9 @@ object ChatEventListener {
     private var catchFinished = true
     var triggeredAugments: MutableList<AugmentTrigger> = mutableListOf()
 
-    private fun checkJunk(component: Component): Boolean {
-        val message = component.string
-        return listOf(
-            "Rusted Can", "Tangled Kelp", "Lost Shoe", "Royal Residue", "Forgotten Crown"
-        ).any { message.contains(it) }
-    }
+    private fun isJunk(component: Component): Boolean = listOf(
+        "Rusted Can", "Tangled Kelp", "Lost Shoe", "Royal Residue", "Forgotten Crown"
+    ).any { component.string.contains(it) }
 
     // Regex matchers for fishing messages taken from the amazing Jamboree mod <3
     // https://github.com/JamesMCo/jamboree
@@ -72,30 +64,26 @@ object ChatEventListener {
                 Regex("""You are now in the .+ chat.""").find(message.string)?.let {
                     if (ReplyLock.currentLock != null) {
                         ReplyLock.disableLock()
-                        Minecraft.getInstance()
-                            .setScreen(Minecraft.getInstance().screen)
+                        minecraft()
+                            .setScreen(minecraft().screen)
                     }
                 }
 
                 // PKW messages
                 if (message.isPKWLeapFinished() && Config.Games.autoFocus) {
-                    Minecraft.getInstance().window.focusWindowIfInactive()
+                    minecraft().window.focusWindowIfInactive()
                 }
 
                 // Fishing messages
                 if (message.isDepletedSpot() && Config.Fishing.flashIfDepleted) {
-                    Minecraft.getInstance().window.requestAttentionIfInactive()
-                    Minecraft.getInstance().player?.playSound(
-                        SoundEvent(
-                            Resources.mcc("games.fishing.stock_depleted"), Optional.empty()
-                        )
-                    )
+                    minecraft().window.requestAttentionIfInactive()
+                    minecraft().soundManager.playMaster(Resources.mcc("games.fishing.stock_depleted"))
                     DepletedDisplay.showDepletedTitle()
                 }
 
                 if (message.isOutOfGrotto()) {
                     if (Config.Fishing.flashIfDepleted) {
-                        Minecraft.getInstance().window.requestAttentionIfInactive()
+                        minecraft().window.requestAttentionIfInactive()
                     }
 
                     val wayfinderStatus = MCCIState.fishingState.climate.getCurrentWayfinderStatus()
@@ -108,8 +96,8 @@ object ChatEventListener {
 
                 // Check if the player received bait and mark supplies as desynced
                 if (message.isReceivedItem() && "Bait" in message.string) {
-                    if (!Trident.playerState.supplies.baitDesynced) {
-                        Trident.playerState.supplies.baitDesynced = true
+                    if (!playerState().supplies.baitDesynced) {
+                        playerState().supplies.baitDesynced = true
                         DialogCollection.refreshDialog("supplies")
                     }
                 }
@@ -125,7 +113,7 @@ object ChatEventListener {
 
                     catchFinished = false
                     isSupplyPreserve = false
-                    val isJunk = checkJunk(message)
+                    val isJunk = isJunk(message)
                     triggerBait = !isJunk
                 }
 
@@ -157,13 +145,13 @@ object ChatEventListener {
 
                     triggeredAugments.clear()
 
-                    Trident.playerState.supplies.line.uses?.let {
-                        if (it != 0) Trident.playerState.supplies.line.uses = it - 1
+                    playerState().supplies.line.uses?.let {
+                        if (it != 0) playerState().supplies.line.uses = it - 1
                     }
 
                     if (triggerBait) {
-                        Trident.playerState.supplies.bait.amount?.let {
-                            if (it != 0) Trident.playerState.supplies.bait.amount = it - 1
+                        playerState().supplies.bait.amount?.let {
+                            if (it != 0) playerState().supplies.bait.amount = it - 1
                         }
                     }
 

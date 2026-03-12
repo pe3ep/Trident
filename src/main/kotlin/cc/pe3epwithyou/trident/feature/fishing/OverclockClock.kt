@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
+import cc.pe3epwithyou.trident.utils.minecraft
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
@@ -74,7 +75,7 @@ object OverclockClock : ClientTickEvents.EndTick {
                             .withSwatch(TridentFont.TRIDENT_COLOR)
                     )
                 Logger.sendMessage(component, true)
-                Minecraft.getInstance().player?.playSound(
+                minecraft().player?.playSound(
                     SoundEvent(Resources.mcc("games.fishing.overclock_ready"), Optional.empty())
                 )
             }

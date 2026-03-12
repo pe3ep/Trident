@@ -3,16 +3,16 @@ package cc.pe3epwithyou.trident.interfaces.shared
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.dialog.Dialog
 import kotlinx.serialization.Serializable
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 
 abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x, y) {
     companion object {
         fun getDistances(x: Int, y: Int, width: Int, height: Int): SideDistances {
-            val screenWidth = Minecraft.getInstance().window.guiScaledWidth
-            val screenHeight = Minecraft.getInstance().window.guiScaledHeight
+            val screenWidth = minecraft().window.guiScaledWidth
+            val screenHeight = minecraft().window.guiScaledHeight
 
             val distanceR = screenWidth - width - x
             val distanceB = screenHeight - height - y
@@ -68,8 +68,8 @@ abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x
 
 
     fun applyQuadrantPositioning(quad: Quadrant, distances: SideDistances) {
-        val screenWidth = Minecraft.getInstance().window.guiScaledWidth
-        val screenHeight = Minecraft.getInstance().window.guiScaledHeight
+        val screenWidth = minecraft().window.guiScaledWidth
+        val screenHeight = minecraft().window.guiScaledHeight
         when (quad) {
             Quadrant.TOP_LEFT -> {
                 x = distances.left

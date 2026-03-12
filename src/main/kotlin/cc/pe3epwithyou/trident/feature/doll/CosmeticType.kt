@@ -1,13 +1,8 @@
 package cc.pe3epwithyou.trident.feature.doll
 
-import cc.pe3epwithyou.trident.feature.doll.slots.AccessorySlot
-import cc.pe3epwithyou.trident.feature.doll.slots.BackSlot
-import cc.pe3epwithyou.trident.feature.doll.slots.CosmeticSlot
-import cc.pe3epwithyou.trident.feature.doll.slots.HatSlot
-import cc.pe3epwithyou.trident.feature.doll.slots.SkinSlot
+import cc.pe3epwithyou.trident.feature.doll.slots.*
 import net.minecraft.world.item.ItemStack
 
-@Suppress("unused")
 enum class CosmeticType(
     val pathPrefixes: List<String>,
     val slot: (ItemStack) -> CosmeticSlot

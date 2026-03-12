@@ -21,7 +21,7 @@ public abstract class GuiMixin {
     protected abstract Player getCameraPlayer();
 
     @Inject(method = "renderItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/HumanoidArm;getOpposite()Lnet/minecraft/world/entity/HumanoidArm;", shift = At.Shift.AFTER))
-    public void renderLock(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    public void injectRenderItemHotbar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (getCameraPlayer() == null) return;
         ReplyLock.Icon.renderIcon(guiGraphics, getCameraPlayer());

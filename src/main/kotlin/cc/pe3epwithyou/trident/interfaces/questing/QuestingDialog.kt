@@ -12,12 +12,12 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.LayoutConstants
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.network.chat.Component
@@ -58,7 +58,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
     override var title = getTitleWidget()
 
     override fun layout(): GridLayout = grid {
-        val font = Minecraft.getInstance().font
+        val font = minecraft().font
         var game = currentGame
         // Since BB and BBA share quests, we treat BBA as BB
         if (game == Game.BATTLE_BOX_ARENA) game = Game.BATTLE_BOX

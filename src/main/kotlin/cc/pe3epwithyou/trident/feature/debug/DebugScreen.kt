@@ -5,8 +5,9 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider.TRIDENT
 import cc.pe3epwithyou.trident.utils.NetworkUtil
 import cc.pe3epwithyou.trident.utils.RequestMethod
+import cc.pe3epwithyou.trident.utils.minecraft
+import cc.pe3epwithyou.trident.utils.playerState
 import kotlinx.serialization.Serializable
-import net.minecraft.client.Minecraft
 
 object DebugScreen {
     private var customMessage: String? = null
@@ -18,11 +19,11 @@ object DebugScreen {
 
     fun fetchMessages() {
         if (!Config.Global.callToHome) return
-        val player = Minecraft.getInstance().gameProfile
+        val player = minecraft().gameProfile
 
         NetworkUtil.sendRequest<DebugResponse>(
             RequestMethod.GET,
-            "${TRIDENT.fetchUrl}/debug-screen?for=${player.id}"
+            "${TRIDENT.fetchUrl}/debugMessage?for=${player.id}"
         ) {
             onSuccess { response ->
                 customMessage = response.message.takeIf { response.success && response.hasMessage }
@@ -38,7 +39,7 @@ object DebugScreen {
     }
 
     fun getMessage(): String {
-        if (Trident.playerState.hatesUpdates) {
+        if (playerState().hatesUpdates) {
             return "i CANNOT BELIEVE you hate the cat..."
         }
         return customMessage ?: "Thank you for using Trident <3"
