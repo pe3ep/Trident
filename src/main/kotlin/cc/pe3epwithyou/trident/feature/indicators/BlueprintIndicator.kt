@@ -54,8 +54,8 @@ object BlueprintIndicator {
     }
 
     private fun parseTag(tag: CompoundTag): BlueprintData? {
-        tag.getCompound("PublicBukkitValues")?.getOrNull()?.let { pbv ->
-            pbv.getCompound("mcc_island:blueprint")?.getOrNull()?.let {
+        tag.getCompound("PublicBukkitValues").getOrNull()?.let { pbv ->
+            pbv.getCompound("mcc_island:blueprint").getOrNull()?.let {
                 return BlueprintData(
                     ownership = it.getBoolean("mcc_island:ownership").getOrNull() ?: return null,
                     donationsCurrent = it.getInt("mcc_island:donations_current").getOrNull() ?: return null,

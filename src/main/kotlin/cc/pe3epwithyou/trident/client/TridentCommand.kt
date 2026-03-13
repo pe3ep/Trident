@@ -10,6 +10,8 @@ import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
+import cc.pe3epwithyou.trident.feature.dojo.PlaybackManager
+import cc.pe3epwithyou.trident.feature.dojo.RecordingManager
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
@@ -525,6 +527,43 @@ object TridentCommand {
                             } else {
                                 ReplyLock.disableLock()
                             }
+                        }
+                    }
+                }
+            }
+
+            literal("dojo_ghost") {
+                literal("playback") {
+                    literal("start") {
+                        executes {
+                            PlaybackManager.startPlaying()
+                        }
+                    }
+                    literal("stop") {
+                        executes {
+                            PlaybackManager.stopPlaying()
+                        }
+                    }
+                    literal("unload") {
+                        executes {
+                            PlaybackManager.unload()
+                        }
+                    }
+                }
+                literal("recording") {
+                    literal("start") {
+                        executes {
+                            RecordingManager.startRecording()
+                        }
+                    }
+                    literal("stop") {
+                        executes {
+                            RecordingManager.stopRecording()
+                        }
+                    }
+                    literal("load") {
+                        executes {
+                            RecordingManager.loadRecording()
                         }
                     }
                 }
