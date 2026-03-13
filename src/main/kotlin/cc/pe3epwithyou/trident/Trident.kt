@@ -16,6 +16,9 @@ import cc.pe3epwithyou.trident.feature.debug.TridentDebugEntry
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
+import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
+import cc.pe3epwithyou.trident.feature.dojo.PlaybackManager
+import cc.pe3epwithyou.trident.feature.dojo.RecordingManager
 import cc.pe3epwithyou.trident.feature.doll.Doll
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
@@ -115,6 +118,8 @@ class Trident : ModInitializer {
         Disguise.register()
         QuestLock.register()
         Chatrooms.register()
+        RecordingManager.register()
+        PlaybackManager.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->
