@@ -77,6 +77,15 @@
       "chars": [
         "\uE016"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/your_best_marker.png",
+      "ascent": 20,
+      "height": 22,
+      "chars": [
+        "\uE017"
+      ]
     }
   ]
 }

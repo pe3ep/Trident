@@ -9,14 +9,15 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.player.PlayerSkin
+import net.minecraft.world.phys.Vec3
 import net.minecraft.world.scores.PlayerTeam
 
 class GhostPlayer(clientLevel: ClientLevel, gameProfile: GameProfile) : RemotePlayer(
     clientLevel, gameProfile
 ) {
     companion object {
-        private const val DISTANCE_LONG = 7.0
-        private const val DISTANCE_SHORT = 2.5
+        private const val DISTANCE_LONG = 8.0
+        private const val DISTANCE_SHORT = 3.5
     }
 
     init {
@@ -46,7 +47,13 @@ class GhostPlayer(clientLevel: ClientLevel, gameProfile: GameProfile) : RemotePl
         if (player == minecraft().player) {
             val delta = player.distanceTo(this)
             if (delta > DISTANCE_SHORT) {
+                PlaybackManager.ghostMarkerRef?.let {
+                    it.textOpacity = if (delta > DISTANCE_LONG) -1 else 127
+                }
                 return false
+            }
+            PlaybackManager.ghostMarkerRef?.let {
+                it.textOpacity = 0
             }
             return true
         }
@@ -69,4 +76,7 @@ class GhostPlayer(clientLevel: ClientLevel, gameProfile: GameProfile) : RemotePl
         return false
     }
 
+    override fun getPassengerRidingPosition(entity: Entity): Vec3 {
+        return super.getPassengerRidingPosition(entity).add(0.0, 0.5, 0.0)
+    }
 }

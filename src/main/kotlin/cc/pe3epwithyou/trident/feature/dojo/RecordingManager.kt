@@ -94,7 +94,7 @@ object RecordingManager {
                 val file = path.resolve("recording.nbt")
                 require(file.exists()) { "Recording File doesn't exist " }
 
-                val root = NbtIo.readCompressed(file, NbtAccounter.defaultQuota())
+                val root = NbtIo.readCompressed(file, NbtAccounter.uncompressedQuota())
                 val version = requireNotNull(root.getInt("version").getOrNull()) { "Recording version is null" }
                 require(version == RECORDING_VERSION) { "Recording version is not supported" }
                 val frames = requireNotNull(root.getList("frames").getOrNull())
