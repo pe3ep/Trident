@@ -15,7 +15,6 @@ fun questingCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("questing") {
         name(Component.translatable("config.trident.questing.name"))
 
-        lateinit var questingRarityColorName: Option<Boolean>
         lateinit var questingShowInLobby: Option<Boolean>
         lateinit var questingShowLeft: Option<Boolean>
         lateinit var questingHideIfNoQuests: Option<Boolean>
@@ -33,7 +32,6 @@ fun questingCategory(categoryRegistrar: CategoryRegistrar) {
             controller(tickBox())
             addListener { option, event ->
                 if (event == OptionEventListener.Event.STATE_CHANGE) {
-                    questingRarityColorName.setAvailable(option.pendingValue())
                     questingShowInLobby.setAvailable(option.pendingValue())
                     questingShowLeft.setAvailable(option.pendingValue())
                     questingHideIfNoQuests.setAvailable(option.pendingValue())
