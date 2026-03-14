@@ -42,7 +42,7 @@ class ResearchDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
     override fun layout(): GridLayout = grid {
         val mcFont = minecraft().font
-        val research = playerState().research
+        val research = playerState().fishingResearch
 
         if (research.needsUpdating or research.researchTypes.isEmpty()) {
             StringWidget(
@@ -68,7 +68,7 @@ class ResearchDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
             return@grid
         }
 
-        for (research in playerState().research.researchTypes) {
+        for (research in playerState().fishingResearch.researchTypes) {
             ResearchWidget(research, this@ResearchDialog).atBottom(
                 0,
                 settings = LayoutConstants.LEFT

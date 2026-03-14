@@ -150,8 +150,7 @@ class Trident : ModInitializer {
             playerState = PlayerStateIO.load()
         } catch (e: Exception) {
             hasFailedToLoadConfig = true
-            Logger.error("FATAL ERROR OCCURRED WHEN LOADING CONFIGS")
-            Logger.error(e.message ?: "No error message")
+            Logger.error("FATAL ERROR OCCURRED WHEN LOADING PLAYERSTATE", e)
         }
 
         ClientLifecycleEvents.CLIENT_STOPPING.register { onShutdownClient() }

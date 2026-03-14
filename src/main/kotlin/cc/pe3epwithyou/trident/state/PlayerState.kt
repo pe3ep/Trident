@@ -131,7 +131,7 @@ data class CraftingNotifications(
 data class PlayerState(
     var supplies: Supplies = Supplies(),
     var wayfinderData: WayfinderData = WayfinderData(),
-    var research: FishingResearch = FishingResearch(),
+    var fishingResearch: FishingResearch = FishingResearch(),
     var hatesUpdates: Boolean = false,
     var arenaData: ArenaData = ArenaData(),
     var levelData: CrownLevel? = null,
