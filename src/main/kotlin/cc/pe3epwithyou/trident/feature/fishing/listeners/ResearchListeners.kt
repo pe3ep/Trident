@@ -26,7 +26,7 @@ object ResearchListeners {
             index++
         }
 
-        playerState().research.apply {
+        playerState().fishingResearch.apply {
             researchTypes = types
             needsUpdating = false
         }
