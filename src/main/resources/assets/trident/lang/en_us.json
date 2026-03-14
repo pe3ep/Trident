@@ -127,7 +127,7 @@
   "key.trident.refresh_dialogs": "Refresh opened dialogs",
 
   "trident.not_island": "You are not currently playing on MCC Island",
-  "trident.failed_config": "Trident has failed to load the config. Your settings have been reset. Please contact developers to fix this issue.",
+  "trident.failed_config": "Something went wrong while loading your saved player data. Please let the developer team know about this issue.",
 
   "trident.dialog.update_cat.description": "please update Trident. this cat represents developer's emotions when people are using outdated versions",
   "trident.dialog.update_cat.buttons.ok": "ok, ill update",
