@@ -49,6 +49,7 @@ object NetworkUtil {
         val query: String
     )
 
+
     inline fun <reified T> sendGraphQL(
         url: String,
         body: String,
@@ -71,7 +72,7 @@ object NetworkUtil {
     ) {
         val request = Request<T>().apply(block)
 
-        val player = minecraft().player
+        val player = minecraft().gameProfile
         val req = HttpRequest.newBuilder().uri(URI.create(url))
 
         when (method) {
@@ -88,7 +89,7 @@ object NetworkUtil {
         req.setHeader("Content-Type", "application/json")
         req.setHeader(
             "User-Agent",
-            if (player != null) "trident-mc-mod/${player.name}" else "trident-mc-mod"
+            "trident-mc-mod/${player.name}"
         )
 
         client.sendAsync(req.build(), HttpResponse.BodyHandlers.ofString())
