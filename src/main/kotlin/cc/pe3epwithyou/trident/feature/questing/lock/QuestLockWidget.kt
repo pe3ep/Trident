@@ -17,6 +17,7 @@ class QuestLockWidget(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         games.remove(Game.HUB)
         games.remove(Game.FISHING)
         games.remove(Game.BATTLE_BOX_ARENA)
+        games.remove(Game.SKY_BATTLE_SOLO)
 
         var col = 0
         games.forEach {
