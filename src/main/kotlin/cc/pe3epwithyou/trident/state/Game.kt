@@ -23,6 +23,14 @@ enum class Game(
         icon = "_fonts/icon/game_icons/game_sky_battle_small.png",
         hasTeamChat = true
     ),
+    SKY_BATTLE_SOLO(
+        "Sky Battle Solo",
+        "sky_battle",
+        types = listOf("sky_battle", "solo"),
+        primaryColor = 0xaf64ff,
+        icon = "_fonts/icon/game_icons/game_sky_battle_solo_small.png",
+        hasTeamChat = false
+    ),
     BATTLE_BOX(
         "Battle Box",
         "battle_box",
