@@ -15,8 +15,8 @@ import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
-import cc.pe3epwithyou.trident.feature.dojo.PlaybackManager
-import cc.pe3epwithyou.trident.feature.dojo.RecordingManager
+import cc.pe3epwithyou.trident.feature.recording.PlaybackManager
+import cc.pe3epwithyou.trident.feature.recording.RecordingManager
 import cc.pe3epwithyou.trident.feature.doll.Doll
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
@@ -26,6 +26,7 @@ import cc.pe3epwithyou.trident.feature.fishing.listeners.WayfinderListeners
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
+import cc.pe3epwithyou.trident.feature.recording.DojoManager
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.mixin.accessors.DebugScreenEntriesAccessor
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
@@ -116,6 +117,7 @@ class Trident : ModInitializer {
         QuestLock.register()
         RecordingManager.register()
         PlaybackManager.register()
+        DojoManager.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->

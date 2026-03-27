@@ -10,8 +10,8 @@ import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
-import cc.pe3epwithyou.trident.feature.dojo.PlaybackManager
-import cc.pe3epwithyou.trident.feature.dojo.RecordingManager
+import cc.pe3epwithyou.trident.feature.recording.PlaybackManager
+import cc.pe3epwithyou.trident.feature.recording.RecordingManager
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
@@ -345,6 +345,8 @@ object TridentCommand {
                     Logger.sendMessage("CURRENT GAME: ${MCCIState.game}")
                     Logger.sendMessage("LOBBY GAME: ${MCCIState.lobbyGame}")
                     Logger.sendMessage("FISHING STATE: ${MCCIState.fishingState}")
+                    Logger.sendMessage("CURRENT TYPES: ${MCCIState.gameTypes}")
+                    Logger.sendMessage("CURRENT STATE: ${MCCIState.gameState}")
                     Logger.sendMessage("——————— ISLAND END ———————", false)
                 }
             }
@@ -552,18 +554,26 @@ object TridentCommand {
                 }
                 literal("recording") {
                     literal("start") {
-                        executes {
-                            RecordingManager.startRecording()
+                        argument("name") {
+                            executes {
+                                val nameArg = it.getArgument("name", String::class.java)
+                                RecordingManager.createAndStart(nameArg)
+                            }
                         }
                     }
                     literal("stop") {
                         executes {
-                            RecordingManager.stopRecording()
+                            RecordingManager.currentRecording?.stop()
                         }
                     }
                     literal("load") {
-                        executes {
-                            RecordingManager.loadRecording()
+                        argument("name") {
+                            executes {
+                                val nameArg = it.getArgument("name", String::class.java)
+                                val playerName = minecraft().gameProfile.name
+
+                                RecordingManager.loadRecording("$playerName-$nameArg.nbt")
+                            }
                         }
                     }
                 }
