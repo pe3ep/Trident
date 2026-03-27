@@ -37,7 +37,7 @@ object ExchangeLookup {
                     .withSwatch(TridentFont.TRIDENT_ACCENT)
                     .withStyle(
                         Style.EMPTY.withUnderlined(true)
-                            .withClickEvent(ClickEvent.OpenUrl(URI.create("https://trident.pe3epwithyou.cc/docs/setting-up-api#bringing-your-own-token")))
+                            .withClickEvent(ClickEvent.OpenUrl(URI.create("https://trident.pe3epwithyou.cc/docs/api-usage#bringing-your-own-token-from-gateway")))
                     )
             )
             ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
