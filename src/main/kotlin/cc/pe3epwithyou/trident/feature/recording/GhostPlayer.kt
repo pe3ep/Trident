@@ -1,7 +1,11 @@
-package cc.pe3epwithyou.trident.feature.dojo
+package cc.pe3epwithyou.trident.feature.recording
 
+import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.minecraft
+import com.google.common.collect.ImmutableMultimap
 import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
+import com.mojang.authlib.properties.PropertyMap
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.player.RemotePlayer
 import net.minecraft.client.resources.DefaultPlayerSkin
@@ -11,8 +15,9 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.player.PlayerSkin
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.scores.PlayerTeam
+import kotlin.jvm.optionals.getOrNull
 
-class GhostPlayer(clientLevel: ClientLevel, gameProfile: GameProfile) : RemotePlayer(
+class GhostPlayer(val recording: Recording, clientLevel: ClientLevel, gameProfile: GameProfile) : RemotePlayer(
     clientLevel, gameProfile
 ) {
     companion object {
@@ -20,11 +25,27 @@ class GhostPlayer(clientLevel: ClientLevel, gameProfile: GameProfile) : RemotePl
         private const val DISTANCE_SHORT = 3.5
     }
 
+    var playerSkin: PlayerSkin = DefaultPlayerSkin.getDefaultSkin()
+
     init {
         this.entityData.set(
             DATA_PLAYER_MODE_CUSTOMISATION,
             minecraft().player!!.entityData.get(DATA_PLAYER_MODE_CUSTOMISATION)
         )
+
+        recording.ownerSkin.let { skinData ->
+            val propertyMap = PropertyMap(ImmutableMultimap.of<String, Property>(
+                "textures", Property("textures", skinData)
+            ))
+            minecraft().skinManager.get(
+                GameProfile(recording.ownerUUID, recording.ownerUsername, propertyMap),
+            ).thenAccept { skin ->
+                this.playerSkin = skin.getOrNull() ?: return@thenAccept
+            }.exceptionally { t ->
+                Logger.error("Failed to load skin for ghost player", t)
+                null
+            }
+        }
     }
 
     override fun push(entity: Entity) {}
@@ -39,7 +60,7 @@ class GhostPlayer(clientLevel: ClientLevel, gameProfile: GameProfile) : RemotePl
     }
 
     override fun getSkin(): PlayerSkin {
-        return minecraft().player?.skin ?: DefaultPlayerSkin.getDefaultSkin()
+        return playerSkin
     }
 
     // If false, makes this entity translucent
@@ -47,12 +68,12 @@ class GhostPlayer(clientLevel: ClientLevel, gameProfile: GameProfile) : RemotePl
         if (player == minecraft().player) {
             val delta = player.distanceTo(this)
             if (delta > DISTANCE_SHORT) {
-                PlaybackManager.ghostMarkerRef?.let {
+                recording.markers.forEach {
                     it.textOpacity = if (delta > DISTANCE_LONG) -1 else 127
                 }
                 return false
             }
-            PlaybackManager.ghostMarkerRef?.let {
+            recording.markers.forEach {
                 it.textOpacity = 0
             }
             return true
