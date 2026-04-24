@@ -16,7 +16,7 @@ base {
     archivesName.set(project.property("archives_base_name") as String)
 }
 
-val targetJavaVersion = 21
+val targetJavaVersion = 25
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
 }
@@ -52,22 +52,21 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
-    mappings(loom.officialMojangMappings())
 
     // Fabric
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.language.kotlin)
-    modImplementation(libs.fabric.api)
+    implementation(libs.fabric.loader)
+    implementation(libs.fabric.language.kotlin)
+    implementation(libs.fabric.api)
 
     // Deps
-    modImplementation(libs.sheeplib.api)
+    implementation(libs.sheeplib.api)
     include(libs.sheeplib.api)
-    modImplementation(libs.yacl)
-    modImplementation(libs.modmenu)
-    modCompileOnly(libs.noxesium.fabric)
+    implementation(libs.yacl)
+    implementation(libs.modmenu)
+    compileOnly(libs.noxesium.fabric)
     implementation(libs.kpresence)
     include(libs.kpresence)
-    modRuntimeOnly(libs.dev.auth.fabric) // development-only
+    runtimeOnly(libs.dev.auth.fabric) // development-only
 
     // Kotlin
     implementation(libs.kotlinx.serialization.json)
@@ -109,7 +108,7 @@ tasks.jar {
     }
 }
 
-tasks.remapJar {
+tasks.jar {
     archiveFileName = "${project.property("archives_base_name")}-${version}+${project.property("minecraft_version")}.jar"
 }
 
