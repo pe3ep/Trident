@@ -11,7 +11,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import kotlinx.serialization.Serializable
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -148,7 +148,7 @@ object CraftingNotifications {
 
     @JvmStatic
     fun renderServerListIndicator(
-        graphics: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         i: Int,
         j: Int,
         x: Int,
@@ -189,7 +189,7 @@ object CraftingNotifications {
     }
 
     fun renderTooltip(
-        graphics: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         y: Int,
         width: Int,
