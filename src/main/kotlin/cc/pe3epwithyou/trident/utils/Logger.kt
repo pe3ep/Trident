@@ -31,10 +31,10 @@ object Logger {
 
     fun sendMessage(c: Component, prefix: Boolean = true) {
         if (prefix) {
-            minecraft().gui.chat.addMessage(TridentFont.withPrefix(c))
+            minecraft().gui.chat.addClientSystemMessage(TridentFont.withPrefix(c))
             return
         }
-        minecraft().gui.chat.addMessage(c)
+        minecraft().gui.chat.addClientSystemMessage(c)
     }
 
 }

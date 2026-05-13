@@ -9,7 +9,7 @@ import com.noxcrew.sheeplib.layout.linear
 import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LinearLayout
 import net.minecraft.network.chat.MutableComponent
@@ -37,7 +37,7 @@ class TabLong(
         +StringWidget(title, font)
     }
 
-    override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
+    override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
         graphics.fillRoundedAll(
             x, y, getWidth(), getHeight(), when {
                 isHovered() -> if (tab.isDetached) style.disabledColor else style.hoverColor
@@ -45,7 +45,7 @@ class TabLong(
                 else -> style.defaultColor
             }.get(TabbedDialogTheme.theme)
         )
-        super.renderWidget(graphics, i, j, f)
+        super.extractWidgetRenderState(graphics, i, j, f)
     }
 
     init {

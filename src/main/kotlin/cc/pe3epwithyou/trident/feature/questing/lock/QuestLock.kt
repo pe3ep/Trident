@@ -17,7 +17,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.playMaster
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.TextColor
@@ -102,7 +102,7 @@ object QuestLock {
     }
 
     @JvmStatic
-    fun renderLock(graphics: GuiGraphics, slot: Slot) {
+    fun renderLock(graphics: GuiGraphicsExtractor, slot: Slot) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.questLock) return
         val screen = minecraft().screen ?: return

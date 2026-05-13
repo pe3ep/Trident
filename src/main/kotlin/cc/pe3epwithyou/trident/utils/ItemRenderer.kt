@@ -1,8 +1,8 @@
 package cc.pe3epwithyou.trident.utils
 
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
-import net.minecraft.client.gui.render.state.GuiItemRenderState
+import net.minecraft.client.renderer.state.gui.GuiItemRenderState
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
@@ -13,7 +13,7 @@ class ItemRenderer(
     val width: Int,
     val height: Int
 ) {
-    fun render(guiGraphics: GuiGraphics, x: Int, y: Int) {
+    fun render(guiGraphics: GuiGraphicsExtractor, x: Int, y: Int) {
         val client = minecraft()
         val font = client.font
         guiGraphics.pose().pushMatrix()
@@ -33,9 +33,8 @@ class ItemRenderer(
         itemMatrix.scaleAround(scaleFactorX, scaleFactorY, x.toFloat(), y.toFloat(), itemMatrix)
         val matrix = Matrix3x2f(guiGraphics.pose())
 
-        guiGraphics.guiRenderState.submitItem(
+        guiGraphics.guiRenderState.addItem(
             GuiItemRenderState(
-                item.item.toString(),
                 matrix,
                 trackingItemStackRenderState,
                 x,
@@ -43,7 +42,7 @@ class ItemRenderer(
                 ScreenRectangle(x, y, width, height)
             )
         )
-        guiGraphics.renderItemDecorations(
+        guiGraphics.itemDecorations(
             font,
             item,
             x,

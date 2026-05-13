@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.interfaces.experiment.widgets
 
 import com.noxcrew.sheeplib.theme.Themed
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.MouseButtonEvent
@@ -19,8 +19,8 @@ class DetachIconWidget(
         const val FONT_HEIGHT: Int = 8
     }
 
-    override fun renderWidget(
-        graphics: GuiGraphics, i: Int, j: Int, f: Float
+    override fun extractWidgetRenderState(
+        graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
     ) {
         when {
             isHovered() -> if (tab.isDetached) Tab.ATTACH_ICON else Tab.DETACH_ICON

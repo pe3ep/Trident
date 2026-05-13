@@ -1,9 +1,9 @@
 package cc.pe3epwithyou.trident.utils.extensions
 
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 object GraphicsExtensions {
-    fun GuiGraphics.fillRoundedAll(x: Int, y: Int, width: Int, height: Int, color: Int) {
+    fun GuiGraphicsExtractor.fillRoundedAll(x: Int, y: Int, width: Int, height: Int, color: Int) {
         this.fill(
             x,
             y + 1,
@@ -27,7 +27,7 @@ object GraphicsExtensions {
         )
     }
 
-    fun GuiGraphics.fillRoundedLeft(x: Int, y: Int, width: Int, height: Int, color: Int) {
+    fun GuiGraphicsExtractor.fillRoundedLeft(x: Int, y: Int, width: Int, height: Int, color: Int) {
         this.fill(
             x,
             y + 1,
@@ -44,7 +44,7 @@ object GraphicsExtensions {
         )
     }
 
-    fun GuiGraphics.fillRoundedRight(x: Int, y: Int, width: Int, height: Int, color: Int) {
+    fun GuiGraphicsExtractor.fillRoundedRight(x: Int, y: Int, width: Int, height: Int, color: Int) {
         this.fill(
             x,
             y,
