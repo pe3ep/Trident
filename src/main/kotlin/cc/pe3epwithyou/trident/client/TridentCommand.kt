@@ -13,6 +13,7 @@ import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
+import cc.pe3epwithyou.trident.feature.killfeed.KillfeedLifecycle
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.debug.StateDialog
 import cc.pe3epwithyou.trident.interfaces.experiment.TabbedDialog
@@ -403,7 +404,7 @@ object TridentCommand {
                                 val self = minecraft().gameProfile
                                 val method =
                                     KillMethod.valueOf(it.getArgument("method", String::class.java))
-                                KillFeedDialog.addKill(
+                                KillfeedLifecycle.addKill(
                                     KillWidget(
                                         victim = self.name.toString(),
                                         killMethod = method,

@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.feature.rarityslot
 import cc.pe3epwithyou.trident.config.Config
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.TextColor
 import net.minecraft.world.inventory.Slot
 
@@ -16,7 +16,7 @@ object RaritySlot {
         TextColor.fromRgb(0x1EFF00),
     )
 
-    fun render(graphics: GuiGraphics, slot: Slot) {
+    fun render(graphics: GuiGraphicsExtractor, slot: Slot) {
         if (!Config.RaritySlot.enabled) return
 
         if (slot.item.isEmpty) return
@@ -27,7 +27,7 @@ object RaritySlot {
     }
 
     fun renderOutline(
-        graphics: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         x: Int,
         y: Int,
         color: TextColor,

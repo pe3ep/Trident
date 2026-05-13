@@ -6,7 +6,7 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.withCooldown
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.MouseButtonEvent
@@ -35,8 +35,8 @@ object ChatSwitcherButtons {
 
         private var texture = Texture(mode.sprite, WIDTH, HEIGHT)
 
-        override fun renderWidget(
-            graphics: GuiGraphics, i: Int, j: Int, f: Float
+        override fun extractWidgetRenderState(
+            graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
         ) {
             if (isHovered()) Texture(HOVERED_SPRITE, WIDTH, 2).blit(graphics, x, y + HEIGHT - 1)
             texture.blit(graphics, x, y)

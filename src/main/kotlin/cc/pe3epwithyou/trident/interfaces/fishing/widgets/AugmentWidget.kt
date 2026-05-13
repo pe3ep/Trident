@@ -9,7 +9,7 @@ import cc.pe3epwithyou.trident.utils.*
 import com.noxcrew.sheeplib.util.lighten
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -145,8 +145,8 @@ class AugmentWidget(
     }
 
     // don't look too close, this code stinks
-    override fun renderWidget(
-        graphics: GuiGraphics, i: Int, j: Int, f: Float
+    override fun extractWidgetRenderState(
+        graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
     ) {
         val client = minecraft()
         augmentTooltip?.let {
@@ -210,7 +210,7 @@ class AugmentWidget(
         }
     }
 
-    private fun renderRemainingUses(graphics: GuiGraphics) {
+    private fun renderRemainingUses(graphics: GuiGraphicsExtractor) {
         if (container.augment == Augment.EMPTY_AUGMENT) return
         graphics.pose().pushMatrix()
         val pose = graphics.pose()
@@ -232,7 +232,7 @@ class AugmentWidget(
             else -> 0xFFFFFF.opaqueColor()
         }
         pose.scaleAround(factor, factor, posX.toFloat(), posY.toFloat(), pose)
-        graphics.drawString(
+        graphics.text(
             minecraft().font,
             Component.literal("$durability").withColor(color),
             posX,
@@ -243,7 +243,7 @@ class AugmentWidget(
     }
 
     private fun drawAugmentBar(
-        graphics: GuiGraphics,
+        graphics: GuiGraphicsExtractor,
         isRepaired: Boolean,
         value: Float,
         status: AugmentStatus

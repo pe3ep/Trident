@@ -8,7 +8,7 @@ import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -27,8 +27,8 @@ class GameWidget(val game: Game) : AbstractWidget(0, 0, 14, 14, Component.empty(
         16, 16
     )
 
-    override fun renderWidget(
-        graphics: GuiGraphics,
+    override fun extractWidgetRenderState(
+        graphics: GuiGraphicsExtractor,
         i: Int,
         j: Int,
         f: Float

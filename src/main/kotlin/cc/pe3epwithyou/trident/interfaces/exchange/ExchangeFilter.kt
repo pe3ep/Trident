@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.interfaces.exchange
 
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -22,8 +22,8 @@ class ExchangeFilter(x: Int, y: Int) : AbstractWidget(x, y, 63, 15, Component.em
         setTooltip(Tooltip.create(Component.literal("Hide Owned Cosmetics")))
     }
 
-    override fun renderWidget(
-        graphics: GuiGraphics, i: Int, j: Int, f: Float
+    override fun extractWidgetRenderState(
+        graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
     ) {
         Texture(
             Resources.trident("textures/interface/exchange/${if (showOwnedItems) "hide_owned" else "hide_owned_pressed"}.png"),

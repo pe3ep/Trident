@@ -16,7 +16,7 @@ import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -170,7 +170,7 @@ object Doll {
     }
 
     @JvmStatic
-    fun render(graphics: GuiGraphics) {
+    fun render(graphics: GuiGraphicsExtractor) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
 
@@ -224,7 +224,7 @@ object Doll {
     }
 
     fun renderDoll(
-        guiGraphics: GuiGraphics,
+        guiGraphics: GuiGraphicsExtractor,
         x0: Int,
         y0: Int,
         x1: Int,
@@ -253,7 +253,7 @@ object Doll {
             renderState.scale = 1f
             renderState.walkAnimationSpeed = 0f
         }
-        guiGraphics.submitEntityRenderState(
+        guiGraphics.entity(
             renderState, size, vector3f, quaternion, quaternion2, x0, y0, x1, y1
         )
     }
@@ -263,7 +263,7 @@ object Doll {
     )
 
     @JvmStatic
-    fun renderSlot(graphics: GuiGraphics, slot: Slot) {
+    fun renderSlot(graphics: GuiGraphicsExtractor, slot: Slot) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.cosmeticPreview) return
         if (!DollCosmetics.validItem(slot.item)) return

@@ -12,7 +12,7 @@ import com.noxcrew.sheeplib.layout.CanvasLayout
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.widget.IconButton
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.navigation.ScreenRectangle
@@ -81,7 +81,7 @@ class DialogTitle(
         layout.visitWidgets(this::addChild)
     }
 
-    override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
+    override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
         graphics.fillRoundedAll(
             x,
             y,
@@ -89,7 +89,7 @@ class DialogTitle(
             getHeight(),
             color
         )
-        super.renderWidget(graphics, i, j, f)
+        super.extractWidgetRenderState(graphics, i, j, f)
     }
 
     override fun onDialogResize() {
