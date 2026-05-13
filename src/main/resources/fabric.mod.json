@@ -10,7 +10,8 @@
   ],
   "contributors": [
     "TheMysterys",
-    "James C."
+    "James C.",
+    "Moralts"
   ],
   "contact": {
     "issues": "https://github.com/pe3ep/Trident/issues",
@@ -43,14 +44,11 @@
     }
   },
   "depends": {
-    "yet_another_config_lib_v3": ">=3.7.1+1.21.5-fabric",
-    "noxesium": ">=3.0.0",
+    "yet_another_config_lib_v3": ">=3.9.3+26.1-fabric",
+    "noxesium": ">=3.1.0",
     "fabricloader": ">=${loader_version}",
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "fabric-api": "*",
     "minecraft": "${minecraft_version}"
-  },
-  "conflicts": {
-    "islandplusplus": ">=1.1.0"
   }
 }
