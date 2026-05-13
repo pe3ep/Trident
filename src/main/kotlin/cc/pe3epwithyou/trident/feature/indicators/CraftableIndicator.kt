@@ -7,7 +7,7 @@ import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.world.inventory.Slot
 
@@ -18,7 +18,7 @@ object CraftableIndicator {
         8,
     )
 
-    fun render(graphics: GuiGraphics, slot: Slot) {
+    fun render(graphics: GuiGraphicsExtractor, slot: Slot) {
         if (!Config.Global.craftableIndicators) return
         fusion(graphics, slot)
         val slotName = slot.item.hoverName.string
@@ -36,7 +36,7 @@ object CraftableIndicator {
         }
     }
 
-    fun fusion(graphics: GuiGraphics, slot: Slot) {
+    fun fusion(graphics: GuiGraphicsExtractor, slot: Slot) {
         val screen = (minecraft().screen as? ContainerScreen) ?: return
         withContainerCtx(screen) {
             requireTitle("FUSION FORGE")

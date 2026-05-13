@@ -12,7 +12,7 @@ import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.widget.ThemedButton
 import net.fabricmc.loader.api.Version
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.MultiLineTextWidget
 import net.minecraft.client.gui.components.StringWidget
@@ -58,8 +58,8 @@ class DisappointedCatDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, k
     }
 
     private class CatImageWidget : AbstractWidget(0, 0, 201, 110, Component.empty()) {
-        override fun renderWidget(
-            guiGraphics: GuiGraphics, i: Int, j: Int, f: Float
+        override fun extractWidgetRenderState(
+            guiGraphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
         ) {
             Texture(
                 Resources.trident("textures/interface/grumpycat.png"), 201, 110, 402, 219

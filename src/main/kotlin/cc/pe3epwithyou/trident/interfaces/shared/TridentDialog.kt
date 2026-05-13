@@ -6,7 +6,7 @@ import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAl
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.dialog.Dialog
 import kotlinx.serialization.Serializable
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x, y) {
     companion object {
@@ -37,7 +37,7 @@ abstract class TridentDialog(x: Int, y: Int, private val key: String) : Dialog(x
     @Serializable
     data class SideDistances(val top: Int, val left: Int, val right: Int, val bottom: Int)
 
-    override fun renderBackground(graphics: GuiGraphics) {
+    override fun renderBackground(graphics: GuiGraphicsExtractor) {
         val color =
             if (parent == null) theme.colors.dialogBackgroundAlt else theme.colors.dialogBackground
         graphics.fillRoundedAll(

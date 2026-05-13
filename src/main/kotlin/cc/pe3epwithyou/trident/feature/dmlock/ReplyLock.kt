@@ -14,7 +14,7 @@ import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
@@ -37,7 +37,7 @@ object ReplyLock {
         }
 
         @JvmStatic
-        fun renderIcon(graphics: GuiGraphics, cameraPlayer: Player) {
+        fun renderIcon(graphics: GuiGraphicsExtractor, cameraPlayer: Player) {
             if (!MCCIState.isOnIsland()) return
             if (!Config.Global.replyLock) return
             if (currentLock == null) return
@@ -73,7 +73,7 @@ object ReplyLock {
                 0x000000 opacity 128
             )
 
-            graphics.drawString(font, lock, x + 1, y, 0xffffff.opaqueColor())
+            graphics.text(font, lock, x + 1, y, 0xffffff.opaqueColor())
         }
     }
 

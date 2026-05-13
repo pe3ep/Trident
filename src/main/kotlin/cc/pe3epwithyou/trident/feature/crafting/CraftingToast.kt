@@ -8,7 +8,7 @@ import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAl
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.network.chat.Component
@@ -43,8 +43,8 @@ class CraftingToast(
             if (l > TOAST_DURATION_MS * toastManager.notificationDisplayTimeMultiplier) Toast.Visibility.HIDE else Toast.Visibility.SHOW
     }
 
-    override fun render(
-        guiGraphics: GuiGraphics,
+    override fun extractRenderState(
+        guiGraphics: GuiGraphicsExtractor,
         font: Font,
         l: Long
     ) {
@@ -54,8 +54,8 @@ class CraftingToast(
         val component =
             Component.literal("${notification.itemName}${if (notification.count > 1) " x${notification.count}" else ""}")
                 .withColor(notification.rarity.color)
-        guiGraphics.drawString(font, component, 26, 6, 0xFFFFFF.opaqueColor())
-        guiGraphics.drawString(
+        guiGraphics.text(font, component, 26, 6, 0xFFFFFF.opaqueColor())
+        guiGraphics.text(
             font, Component.literal("has finished crafting").withSwatch(
                 TridentFont.TRIDENT_COLOR
             ), 26, 15, 0xFFFFFF.opaqueColor()
