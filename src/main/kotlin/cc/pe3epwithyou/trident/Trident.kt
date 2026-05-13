@@ -21,6 +21,7 @@ import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
 import cc.pe3epwithyou.trident.feature.fishing.listeners.ResearchListeners
 import cc.pe3epwithyou.trident.feature.fishing.listeners.SuppliesListeners
 import cc.pe3epwithyou.trident.feature.fishing.listeners.WayfinderListeners
+import cc.pe3epwithyou.trident.feature.killfeed.KillfeedLifecycle
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
@@ -97,6 +98,7 @@ class Trident : ModInitializer {
         registerScreenEvents()
         ChatEventListener.register()
         KillChatListener.register()
+        KillfeedLifecycle.register()
         DelayedAction.init()
         QuestListener.register()
         OverclockClock.register()

@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.client.events.KillEvents
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.killfeed.DeathMessages
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
-import cc.pe3epwithyou.trident.interfaces.killfeed.KillFeedDialog
+import cc.pe3epwithyou.trident.feature.killfeed.KillfeedLifecycle
 import cc.pe3epwithyou.trident.interfaces.killfeed.widgets.KillWidget
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -37,12 +37,12 @@ object KillChatListener {
             if (!MCCIState.isOnIsland()) return@allowGame true
             try {
                 Regex("""^\[.] You assisted in eliminating (.+)!""").find(message.string)?.let {
-                    KillFeedDialog.applyKillAssist()
+                    KillfeedLifecycle.applyKillAssist()
                 }
 
                 Regex("""^\[.] (.+) is being revived by the Hero!""").find(message.string)?.let {
                     val revivedPlayer = findPlayersInComponent(message).getOrNull(0) ?: return@let
-                    KillFeedDialog.addKill(
+                    KillfeedLifecycle.addKill(
                         KillWidget(
                             revivedPlayer.string, KillMethod.REVIVE, killColors = Pair(0x874fff opacity 128, revivedPlayer.style.color?.value?.opacity(128) ?: fallbackColor)
                         )
@@ -86,7 +86,7 @@ object KillChatListener {
             // Streaks
             streaks[attacker.string] = (streaks[attacker.string] ?: 0) + 1
 
-            KillFeedDialog.addKill(
+            KillfeedLifecycle.addKill(
                 KillWidget(
                     victim.string,
                     killMethod,
@@ -97,7 +97,7 @@ object KillChatListener {
             )
         } else {
             val victimColor = victim.style.color?.value?.opacity(128) ?: fallbackColor
-            KillFeedDialog.addKill(
+            KillfeedLifecycle.addKill(
                 KillWidget(
                     victim.string, killMethod, killColors = Pair(0x606060 opacity 128, victimColor)
                 )

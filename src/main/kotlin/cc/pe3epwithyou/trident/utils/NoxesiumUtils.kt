@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.friends.FriendsInServer
+import cc.pe3epwithyou.trident.feature.killfeed.KillfeedLifecycle
 import cc.pe3epwithyou.trident.feature.questing.GameQuests
 import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -40,7 +41,7 @@ object NoxesiumUtils {
 
     fun updateGameDialogs(currentGame: Game, isPlobby: Boolean, types: List<String>) {
         DialogCollection.clear()
-        KillFeedDialog.clearKills()
+        KillfeedLifecycle.clearKills()
 
         if (currentGame == Game.FISHING && Config.Fishing.suppliesModule) {
             val k = "supplies"
@@ -83,7 +84,7 @@ object NoxesiumUtils {
         KillChatListener.resetStreaks()
         if (Config.KillFeed.enabled && Config.KillFeed.clearAfterRound) {
             if (packet.phaseType == "intermission" && (packet.stage == "countdownphase" || packet.stage == "preparationphase")) {
-                KillFeedDialog.clearKills()
+                KillfeedLifecycle.clearKills()
             }
         }
     }
@@ -110,7 +111,7 @@ object NoxesiumUtils {
             FriendsInServer.request()
 
             if (currentGame in KillChatListener.killfeedGames) {
-                KillFeedDialog.clearKills()
+                KillfeedLifecycle.clearKills()
             }
             if (currentGame != MCCIState.game) {
                 MCCIState.game = currentGame
