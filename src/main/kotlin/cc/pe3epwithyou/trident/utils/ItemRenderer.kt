@@ -1,7 +1,12 @@
 package cc.pe3epwithyou.trident.utils
 
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.navigation.ScreenRectangle
+import net.minecraft.client.renderer.state.gui.GuiItemRenderState
+import net.minecraft.client.renderer.item.TrackingItemStackRenderState
+import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
+import org.joml.Matrix3x2f
 
 class ItemRenderer(
     val item: ItemStack,
@@ -11,7 +16,38 @@ class ItemRenderer(
     fun render(guiGraphics: GuiGraphicsExtractor, x: Int, y: Int) {
         val client = minecraft()
         val font = client.font
-        guiGraphics.item(item, x, y)
-        guiGraphics.itemDecorations(font, item, x, y)
+        guiGraphics.pose().pushMatrix()
+        val trackingItemStackRenderState = TrackingItemStackRenderState()
+        client.itemModelResolver.updateForTopItem(
+            trackingItemStackRenderState,
+            item,
+            ItemDisplayContext.GUI,
+            client.level,
+            null,
+            0
+        )
+
+        val itemMatrix = guiGraphics.pose()
+        val scaleFactorX = width / 16F
+        val scaleFactorY = height / 16F
+        itemMatrix.scaleAround(scaleFactorX, scaleFactorY, x.toFloat(), y.toFloat(), itemMatrix)
+        val matrix = Matrix3x2f(guiGraphics.pose())
+
+        guiGraphics.guiRenderState.addItem(
+            GuiItemRenderState(
+                matrix,
+                trackingItemStackRenderState,
+                x,
+                y,
+                ScreenRectangle(x, y, width, height)
+            )
+        )
+        guiGraphics.itemDecorations(
+            font,
+            item,
+            x,
+            y
+        )
+        guiGraphics.pose().popMatrix()
     }
 }
