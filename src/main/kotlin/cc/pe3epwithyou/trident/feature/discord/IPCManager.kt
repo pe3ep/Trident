@@ -9,6 +9,7 @@ import io.github.vyfor.kpresence.event.ReadyEvent
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.milliseconds
 
 object IPCManager {
     private const val CLIENT_ID = 1464403445896314913
@@ -27,15 +28,23 @@ object IPCManager {
     fun submitBuilder(builder: ActivityBuilder?) {
         ipc?.let {
             if (builder == null) {
-                it.update(null)
+                try {
+                    it.update(null)
+                } catch (e: Exception) {
+                    Logger.error("Failed to clear Discord activity", e)
+                }
                 return
             }
 
             it.coroutineScope.launch {
-                withTimeoutOrNull(5_000L) {
-                    val builtActivity = builder.build()
-                    it.update(builtActivity)
-                    Logger.info("Submitted Discord activity: $builtActivity")
+                withTimeoutOrNull(5_000L.milliseconds) {
+                    try {
+                        val builtActivity = builder.build()
+                        it.update(builtActivity)
+                        Logger.info("Submitted Discord activity: $builtActivity")
+                    } catch (e: Exception) {
+                        Logger.error("Failed to submit Discord activity: $builder", e)
+                    }
                 } ?: run {
                     Logger.error("Failed to submit Discord activity: $builder")
                 }
