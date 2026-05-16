@@ -30,7 +30,6 @@ object QuestListener {
 
     fun register() {
         ClientReceiveMessageEvents.GAME.register eventHandler@{ message, _ ->
-            if (!Config.Questing.enabled) return@eventHandler
             handleRefreshTasksChat(message)
         }
 
