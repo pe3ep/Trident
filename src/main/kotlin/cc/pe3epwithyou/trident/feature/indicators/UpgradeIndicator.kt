@@ -35,6 +35,9 @@ object UpgradeIndicator {
             slot.item.findInLore(Regex("""Reach (Style|Fishing) Level \d+ to unlock"""))?.let {
                 return true
             }
+            slot.item.findInLore(Regex("""Reach .+ Tier \d+ to"""))?.let {
+                return true
+            }
         }
         return false
     }
