@@ -144,7 +144,6 @@ class AugmentWidget(
         return Tooltip.create(c)
     }
 
-    // don't look too close, this code stinks
     override fun extractWidgetRenderState(
         graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
     ) {
@@ -210,6 +209,7 @@ class AugmentWidget(
         }
     }
 
+    // don't look too close, this code stinks
     private fun renderRemainingUses(graphics: GuiGraphicsExtractor) {
         if (container.augment == Augment.EMPTY_AUGMENT) return
         graphics.pose().pushMatrix()
