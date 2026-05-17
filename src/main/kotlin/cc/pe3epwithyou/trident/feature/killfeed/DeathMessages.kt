@@ -85,4 +85,7 @@ enum class DeathMessages(
     HIT_FELL(
         Regex("^\\[.] .+ hit the ground too hard whilst trying escape .+"), KillMethod.GENERIC
     ),
+    CLEANSED(
+        Regex("^\\[.] .+ was cleansed by .+"), KillMethod.ORB
+    ),
 }

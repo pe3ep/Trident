@@ -4,14 +4,17 @@ import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.withCooldown
+import com.noxcrew.sheeplib.util.opacity
+import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.Identifier
 
 object ChatSwitcherButtons {
     fun getChatModes(): List<ChatMode> = buildList {
@@ -23,23 +26,36 @@ object ChatSwitcherButtons {
 
     fun getCurrentButtons(): List<Widget> = getChatModes().map(::Widget)
 
-    class Widget(val mode: ChatMode) : AbstractWidget(0, 0, WIDTH, HEIGHT, Component.empty()) {
+    class Widget(val mode: ChatMode) : AbstractWidget(0, 0, 0, HEIGHT, Component.empty()) {
         companion object {
             const val HEIGHT = 9
-            const val WIDTH = 44
+            const val PADDING = 2
 
             const val CHAT_HEIGHT = 16
-            private val HOVERED_SPRITE =
-                Resources.trident("textures/interface/chat_channels/hovered.png")
+            private val ICON_SPRITE =
+                Resources.trident("textures/interface/chat_channels/channel_icon.png")
         }
 
-        private var texture = Texture(mode.sprite, WIDTH, HEIGHT)
+        init {
+            val font = minecraft().font
+            width = font.width(Component.literal(mode.displayName).withoutShadow().mccFont()) + 9 + PADDING * 2 + 4
+        }
+
+        private var texture = Texture(ICON_SPRITE, 9, 7)
 
         override fun extractWidgetRenderState(
             graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
         ) {
-            if (isHovered()) Texture(HOVERED_SPRITE, WIDTH, 2).blit(graphics, x, y + HEIGHT - 1)
-            texture.blit(graphics, x, y)
+            val color = if (isHovered) 0x404040 opacity 192 else 0x000000 opacity 128
+            graphics.fillRoundedAll(x, y, width, height, color)
+            texture.blit(graphics, x + PADDING, y + 1)
+            graphics.text(
+                minecraft().font,
+                Component.literal(mode.displayName.uppercase()).mccFont().withoutShadow(),
+                PADDING + x + 9 + 4,
+                y,
+                mode.color.opaqueColor()
+            )
         }
 
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
@@ -54,17 +70,18 @@ object ChatSwitcherButtons {
 
     data class ChatMode(
         val commandName: String,
-        val sprite: Identifier,
+        val displayName: String,
+        val color: Int
     ) {
         companion object {
             val LOCAL =
-                ChatMode("local", Resources.trident("textures/interface/chat_channels/local.png"))
+                ChatMode("local", "LOCAL", 0xffffff)
             val PARTY =
-                ChatMode("party", Resources.trident("textures/interface/chat_channels/party.png"))
+                ChatMode("party", "PARTY", 0x7670e8)
             val TEAM =
-                ChatMode("team", Resources.trident("textures/interface/chat_channels/team.png"))
+                ChatMode("team", "TEAM", 0x1bff46)
             val PLOBBY =
-                ChatMode("plobby", Resources.trident("textures/interface/chat_channels/plobby.png"))
+                ChatMode("plobby", "PLOBBY", 0xffbc40)
         }
     }
 }
