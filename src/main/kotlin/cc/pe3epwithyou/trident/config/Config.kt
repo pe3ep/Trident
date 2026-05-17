@@ -6,7 +6,6 @@ import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
-import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderModuleDisplay
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
@@ -87,9 +86,6 @@ class Config {
 
     @SerialEntry
     var fishingWayfinderModule: Boolean = true
-
-    @SerialEntry
-    var fishingWayfinderModuleDisplay: WayfinderModuleDisplay = WayfinderModuleDisplay.FULL
 
     @SerialEntry
     var fishingFlashIfDepleted: Boolean = true
@@ -251,8 +247,6 @@ class Config {
             get() = handler.instance().fishingIslandIndicators
         val wayfinderModule: Boolean
             get() = handler.instance().fishingWayfinderModule
-        val wayfinderModuleDisplay: WayfinderModuleDisplay
-            get() = handler.instance().fishingWayfinderModuleDisplay
     }
 
     object Games {

@@ -88,18 +88,5 @@ fun fishingCategory(categoryRegistrar: CategoryRegistrar) {
                 }
             }
         }
-
-        wayfinderModuleDisplayOption = rootOptions.register("wayfinder_module_display") {
-            name(Component.translatable("config.trident.fishing.wayfinder_module.display.name"))
-            description(
-                OptionDescription.of(Component.translatable("config.trident.fishing.wayfinder_module.display.description"))
-            )
-            binding(
-                handler.instance()::fishingWayfinderModuleDisplay,
-                WayfinderModuleDisplay.FULL
-            )
-            controller(enumSwitch<WayfinderModuleDisplay> { v -> v.displayName })
-            available { handler.instance().fishingWayfinderModule }
-        }
     }
 }

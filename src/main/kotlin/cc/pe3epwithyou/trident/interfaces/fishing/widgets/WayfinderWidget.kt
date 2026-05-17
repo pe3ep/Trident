@@ -1,10 +1,7 @@
 package cc.pe3epwithyou.trident.interfaces.fishing.widgets
 
-import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderModuleDisplay
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.WayfinderStatus
-import cc.pe3epwithyou.trident.utils.ProgressBar
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
@@ -20,7 +17,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
-import kotlin.math.round
 
 class WayfinderWidget(
     wayfinderStatus: WayfinderStatus,
@@ -46,33 +42,16 @@ class WayfinderWidget(
         val title = FontCollection.texture(grotto.icon).offset(y = 1f)
             .append(islandName)
 
-        val display = Config.Fishing.wayfinderModuleDisplay
-
-        if (display == WayfinderModuleDisplay.COMPACT) {
-            title.append(Component.literal("∙").withStyle(ChatFormatting.GRAY).defaultFont())
-            title.append(progressLabelComponent(wayfinderStatus, true))
-        }
+        title.append(Component.literal("∙").withStyle(ChatFormatting.GRAY).defaultFont())
+        title.append(progressLabelComponent(wayfinderStatus))
 
         StringWidget(title, mcFont).atBottom(0, settings = LayoutConstants.LEFT)
-        if (display == WayfinderModuleDisplay.FULL) {
-            StringWidget(buildProgressBarComponent(wayfinderStatus), mcFont).atBottom(
-                0,
-                settings = LayoutConstants.LEFT
-            )
-        }
-    }
-
-    private fun progressComponent(wayfinderStatus: WayfinderStatus): MutableComponent {
-        val progressRatio =
-            if (wayfinderStatus.hasGrotto) wayfinderStatus.grottoStability / 100f else wayfinderStatus.data.toFloat() / 2000f
-        return ProgressBar.progressComponent(progressRatio, 25, 5)
     }
 
     private fun progressLabelComponent(
         wayfinderStatus: WayfinderStatus,
-        isCompact: Boolean = false
     ): MutableComponent {
-        if (wayfinderStatus.hasGrotto) return Component.literal(if (isCompact) " ${wayfinderStatus.grottoStability}%" else " ${wayfinderStatus.grottoStability}% Stability")
+        if (wayfinderStatus.hasGrotto) return Component.literal("${wayfinderStatus.grottoStability}%")
             .withStyle(
                 when {
                     wayfinderStatus.grottoStability >= 50 -> ChatFormatting.GREEN
@@ -85,26 +64,12 @@ class WayfinderWidget(
         val isCompleted = progressPercentage >= 100
 
         val c = Component.literal(" ${wayfinderStatus.data}")
-            .withStyle(if (isCompleted) ChatFormatting.GREEN else ChatFormatting.WHITE)
-
-        c.append(
-            Component.literal(if (isCompact) "/2K" else "/2000 ")
-                .withStyle(if (isCompleted) ChatFormatting.GREEN else ChatFormatting.GRAY)
-        )
-        if (!isCompact) {
-            c.append(
-                Component.literal("(${round(progressPercentage * 10) / 10.0}%)")
+            .withStyle(if (isCompleted) ChatFormatting.GREEN else ChatFormatting.WHITE).append(
+                Component.literal("/2K")
                     .withStyle(if (isCompleted) ChatFormatting.GREEN else ChatFormatting.GRAY)
             )
-        }
 
         return c
-    }
-
-    private fun buildProgressBarComponent(wayfinderStatus: WayfinderStatus): MutableComponent {
-        val progressBar = progressComponent(wayfinderStatus)
-        val progressLabel = progressLabelComponent(wayfinderStatus)
-        return progressBar.append(progressLabel)
     }
 
     init {
