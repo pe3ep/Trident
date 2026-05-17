@@ -3,13 +3,11 @@ package cc.pe3epwithyou.trident.utils
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.state.PlayerState
-import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import com.noxcrew.sheeplib.layout.GridLayoutBuilder
 import kotlinx.coroutines.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
-import net.minecraft.network.chat.Component
 import net.minecraft.util.Util
 
 inline fun gridLayout(spacing: Int, x: Int = 0, y: Int = 0, builder: GridLayoutBuilder.() -> Unit): GridLayout {
@@ -71,12 +69,6 @@ fun waitForItems(screen: ContainerScreen, block: () -> Unit) {
 
         ScreenManager.isWaitingForItems = false
         ScreenManager.waitingOnScreen = null
-        main {
-            Logger.sendMessage(
-                Component.literal("An error occurred while handling your current screen. Please try again.")
-                    .withSwatch(TridentFont.ERROR)
-            )
-            Logger.error("Timed out waiting for items")
-        }
+        Logger.error("Timed out waiting for items")
     }
 }
