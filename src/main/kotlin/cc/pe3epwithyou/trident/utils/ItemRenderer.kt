@@ -2,8 +2,8 @@ package cc.pe3epwithyou.trident.utils
 
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
-import net.minecraft.client.renderer.state.gui.GuiItemRenderState
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState
+import net.minecraft.client.renderer.state.gui.GuiItemRenderState
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import org.joml.Matrix3x2f

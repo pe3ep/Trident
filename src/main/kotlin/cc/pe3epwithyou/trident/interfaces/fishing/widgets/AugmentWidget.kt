@@ -268,10 +268,8 @@ class AugmentWidget(
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
 
-    override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
-        val connection = minecraft().connection ?: return
-        connection.sendCommand("anglr")
-    }
+    override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean): Unit =
+        minecraft().connection?.sendCommand("anglr") ?: Unit
 
     override fun playDownSound(soundManager: SoundManager) = Unit
 }
