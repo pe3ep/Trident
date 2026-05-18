@@ -4,6 +4,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons
 import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons.Widget.Companion.CHAT_HEIGHT
 import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons.Widget.Companion.HEIGHT
+import cc.pe3epwithyou.trident.feature.chatroom.Chatrooms
 import cc.pe3epwithyou.trident.feature.dmlock.CurrentLockedChatWidget
 import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import com.noxcrew.sheeplib.CompoundWidget
@@ -23,6 +24,11 @@ object ChatDecorations {
 
         if (Config.Global.chatChannelButtons && utilsCompatible()) {
             components.addAll(ChatSwitcherButtons.getCurrentButtons())
+        }
+
+        if (Config.Global.chatroomChannelButtons && utilsCompatible()) {
+            val rooms = playerState().activeChatrooms.toList()
+            components.addAll(rooms.map { Chatrooms.ChatroomWidget(it) })
         }
 
         return components

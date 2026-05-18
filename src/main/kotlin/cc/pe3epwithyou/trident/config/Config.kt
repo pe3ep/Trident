@@ -45,6 +45,9 @@ class Config {
     var globalChatChannelButtons: Boolean = true
 
     @SerialEntry
+    var globalChatroomChannelButtons: Boolean = true
+
+    @SerialEntry
     var globalReplyLock: Boolean = true
 
     @SerialEntry
@@ -190,6 +193,8 @@ class Config {
             get() = handler.instance().globalBlueprintIndicators
         val chatChannelButtons: Boolean
             get() = handler.instance().globalChatChannelButtons
+        val chatroomChannelButtons: Boolean
+            get() = handler.instance().globalChatroomChannelButtons
         val currentTheme: TridentThemes
             get() = handler.instance().globalCurrentTheme
         val craftableIndicators: Boolean

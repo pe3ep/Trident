@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.client.listeners.registerScreenEvents
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.chatroom.Chatrooms
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.crafting.NotificationLifecycle
 import cc.pe3epwithyou.trident.feature.debug.TridentDebugEntry
@@ -114,6 +115,7 @@ class Trident : ModInitializer {
         CraftingNotifications.register()
         Disguise.register()
         QuestLock.register()
+        Chatrooms.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->
