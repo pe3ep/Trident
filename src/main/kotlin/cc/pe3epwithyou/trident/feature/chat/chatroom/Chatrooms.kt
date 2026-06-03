@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.feature.chatroom
+package cc.pe3epwithyou.trident.feature.chat.chatroom
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.events.click.ClickEvents
@@ -37,7 +37,7 @@ object Chatrooms {
 
     @Serializable
     data class Chatroom(val id: String, val color: ChatroomColor) {
-        fun toChatMode(): ChatSwitcherButtons.ChatMode = ChatSwitcherButtons.ChatMode("cr $id", id, color.color)
+        fun toWidget(): ChatSwitcherButtons.ChatMode = ChatSwitcherButtons.ChatMode("cr $id", id, color.color)
     }
 
     @Suppress("unused")
@@ -55,7 +55,7 @@ object Chatrooms {
         fun getItemModel() = Resources.mcc("island_interface/settings/chat_bubble_${this.name.lowercase()}")
     }
 
-    class ChatroomWidget(val chatroom: Chatroom) : ChatSwitcherButtons.Widget(chatroom.toChatMode()) {
+    class ChatroomWidget(val chatroom: Chatroom) : ChatSwitcherButtons.Widget(chatroom.toWidget()) {
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
             if (activeChatroom == chatroom) {
                 activeChatroom = null

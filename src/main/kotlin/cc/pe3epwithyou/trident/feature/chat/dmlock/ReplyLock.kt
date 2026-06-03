@@ -1,6 +1,7 @@
-package cc.pe3epwithyou.trident.feature.dmlock
+package cc.pe3epwithyou.trident.feature.chat.dmlock
 
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
 import cc.pe3epwithyou.trident.mixin.accessors.GuiAccessor
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -12,10 +13,8 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentF
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
@@ -23,7 +22,8 @@ import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.entity.player.Player
 
 object ReplyLock {
-    var currentLock: String? = null
+    fun getReplyLockUser(): String? =
+        (ChatControllerManager.getController() as? ReplyLockController)?.user
 
     object Icon {
         val xpBonusCharCache = mutableSetOf<String>()
@@ -40,7 +40,7 @@ object ReplyLock {
         fun renderIcon(graphics: GuiGraphicsExtractor, cameraPlayer: Player) {
             if (!MCCIState.isOnIsland()) return
             if (!Config.Global.replyLock) return
-            if (currentLock == null) return
+            if (getReplyLockUser() == null) return
             val gui = minecraft().gui
             val actionBar = (gui as GuiAccessor).overlayMessageString ?: return
 
@@ -77,38 +77,6 @@ object ReplyLock {
         }
     }
 
-
-    fun register() {
-        ClientSendMessageEvents.ALLOW_CHAT.register allowChat@{ message ->
-            if (!MCCIState.isOnIsland()) return@allowChat true
-            if (!Config.Global.replyLock) return@allowChat true
-            val user = currentLock
-            if (user != null) {
-                val connection = minecraft().connection ?: return@allowChat true
-                connection.sendCommand("msg $user $message")
-                return@allowChat false
-            }
-
-            return@allowChat true
-        }
-
-        ClientSendMessageEvents.MODIFY_COMMAND.register modifyCmd@{ command ->
-            if (!MCCIState.isOnIsland()) return@modifyCmd command
-            if (!Config.Global.replyLock) return@modifyCmd command
-
-            var modified = command
-
-            if (modified.startsWith("r ") || modified.startsWith("reply ")) {
-                if (currentLock == null) return@modifyCmd command
-                modified = modified.removePrefix("reply ")
-                modified = modified.removePrefix("r ")
-                modified = "msg $currentLock $modified"
-            }
-
-            return@modifyCmd modified
-        }
-    }
-
     fun enableLock(user: String, showMessage: Boolean = true) {
         if (!Config.Global.replyLock) return
         val self = minecraft().gameProfile.name
@@ -119,8 +87,7 @@ object ReplyLock {
             return
         }
 
-        currentLock = user
-        refreshChatScreen()
+        ChatControllerManager.setController(ReplyLockController(user))
         if (!showMessage) return
         val component = Component.literal("Enabled Reply Lock for ").withColor(0xfc7dfc)
             .append(Component.literal(user).withColor(0xffffff))
@@ -129,23 +96,13 @@ object ReplyLock {
 
     fun disableLock(showMessage: Boolean = true) {
         if (!Config.Global.replyLock) return
-        currentLock = null
-        refreshChatScreen()
+        if (ChatControllerManager.getController() is ReplyLockController) {
+            ChatControllerManager.clearController()
+        }
 
         if (!showMessage) return
         val component = Component.literal("Disabled Reply Lock.").withColor(0xfc7dfc)
         Logger.sendMessage(component)
-    }
-
-    /**
-     * re-inits chat screen (hacky, but works)
-     */
-    private fun refreshChatScreen() {
-        val client = minecraft()
-        val screen = client.screen
-        if (screen is ChatScreen) {
-            client.setScreen(screen)
-        }
     }
 
     fun modifyComponent(component: Component): Component {
@@ -159,10 +116,10 @@ object ReplyLock {
             val user = cleanupOther(items)
 
             val type = it.groupValues[1]
-            val isLocked = currentLock.equals(user?.string, ignoreCase = true)
+            val isLocked = getReplyLockUser().equals(user?.string, ignoreCase = true)
 
             val modified = Component.literal("[").withStyle(removed.style)
-            if (currentLock != null && isLocked) {
+            if (getReplyLockUser() != null && isLocked) {
                 modified.append(
                     Component.literal("\uE016").withTridentFont().withStyle(
                         ChatFormatting.WHITE

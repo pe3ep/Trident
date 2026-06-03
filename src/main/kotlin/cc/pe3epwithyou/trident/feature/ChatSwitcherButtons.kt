@@ -8,6 +8,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.withCooldown
+import com.noxcrew.sheeplib.util.lighten
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -43,8 +44,8 @@ object ChatSwitcherButtons {
 
         open val backgroundColor: Int
             get() = when {
-                isHovered -> 0x404040 opacity 192
-                else -> 0x000000 opacity 128
+                isHovered -> mode.color.lighten(-0.4f) opacity 192
+                else -> mode.color.lighten(-0.75f) opacity 128
             }
 
         open val textColor: Int
