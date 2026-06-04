@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.playerState
 import kotlinx.serialization.Serializable
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.core.component.DataComponents
 
 object Chatrooms {
@@ -31,10 +32,26 @@ object Chatrooms {
                 Logger.sendMessage("Added chatroom $chatroom")
             }
         }
+
+        // This will correct the color of the chatroom to make sure it's always up to date
+        ClientReceiveMessageEvents.ALLOW_CHAT.register allowGame@{ component, _, _, _, _ ->
+            playerState().activeChatrooms.forEach { chatroom ->
+                Regex("""\[${chatroom.id.uppercase()}] .+""").matchEntire(component.string)?.let {
+                    val color = component.toFlatList().first().style.color?.value ?: return@let
+                    if (color != chatroom.color.color) {
+                        chatroom.color =
+                            ChatroomColor.entries.find { it.color == color } ?: chatroom.color
+                    }
+                }
+
+            }
+
+            true
+        }
     }
 
     @Serializable
-    data class Chatroom(val id: String, val color: ChatroomColor)
+    data class Chatroom(val id: String, var color: ChatroomColor)
 
     @Suppress("unused")
     enum class ChatroomColor(
