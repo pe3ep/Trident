@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons
 import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons.Widget.Companion.CHAT_HEIGHT
 import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons.Widget.Companion.HEIGHT
 import cc.pe3epwithyou.trident.feature.chat.SeparatorWidget
-import cc.pe3epwithyou.trident.feature.chat.chatroom.Chatrooms
+import cc.pe3epwithyou.trident.feature.chat.chatroom.ChatroomWidget
 import cc.pe3epwithyou.trident.feature.chat.dmlock.CurrentLockedChatWidget
 import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
 import com.noxcrew.sheeplib.CompoundWidget
@@ -35,7 +35,7 @@ object ChatDecorations {
             if (rooms.isNotEmpty()) {
                 components.add(SeparatorWidget())
             }
-            components.addAll(rooms.map { Chatrooms.ChatroomWidget(it) })
+            components.addAll(rooms.map { ChatroomWidget(it) })
         }
 
         return components

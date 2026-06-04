@@ -2,18 +2,16 @@ package cc.pe3epwithyou.trident.feature.chat.chatroom
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.events.click.ClickEvents
-import cc.pe3epwithyou.trident.feature.ChatSwitcherButtons
+import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.playerState
-import com.noxcrew.sheeplib.util.opacity
-import com.noxcrew.sheeplib.util.opaqueColor
 import kotlinx.serialization.Serializable
-import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.core.component.DataComponents
 
 object Chatrooms {
-    var activeChatroom: Chatroom? = null
+    fun getActiveChatroom(): Chatroom? =
+        (ChatControllerManager.getController() as? ChatroomController)?.chatroom
 
     fun register() {
         ClickEvents.onClick {
@@ -36,9 +34,7 @@ object Chatrooms {
     }
 
     @Serializable
-    data class Chatroom(val id: String, val color: ChatroomColor) {
-        fun toWidget(): ChatSwitcherButtons.ChatMode = ChatSwitcherButtons.ChatMode("cr $id", id, color.color)
-    }
+    data class Chatroom(val id: String, val color: ChatroomColor)
 
     @Suppress("unused")
     enum class ChatroomColor(
@@ -53,24 +49,5 @@ object Chatrooms {
         TEAL(0x55FFFF);
 
         fun getItemModel() = Resources.mcc("island_interface/settings/chat_bubble_${this.name.lowercase()}")
-    }
-
-    class ChatroomWidget(val chatroom: Chatroom) : ChatSwitcherButtons.Widget(chatroom.toWidget()) {
-        override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
-            if (activeChatroom == chatroom) {
-                activeChatroom = null
-                return
-            }
-            activeChatroom = chatroom
-        }
-
-        override val backgroundColor: Int
-            get() = when {
-                activeChatroom == chatroom -> 0x000000 opacity 160
-                isHovered -> chatroom.color.color opacity 128
-                else -> chatroom.color.color opacity 96
-            }
-
-        override val textColor: Int = 0xffffff.opaqueColor()
     }
 }

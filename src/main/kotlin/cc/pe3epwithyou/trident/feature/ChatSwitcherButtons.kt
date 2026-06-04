@@ -44,7 +44,7 @@ object ChatSwitcherButtons {
 
         open val backgroundColor: Int
             get() = when {
-                isHovered -> mode.color.lighten(-0.4f) opacity 192
+                isHovered -> mode.color.lighten(-0.5f) opacity 128
                 else -> mode.color.lighten(-0.75f) opacity 128
             }
 
