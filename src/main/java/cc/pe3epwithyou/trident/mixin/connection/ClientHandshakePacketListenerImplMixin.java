@@ -24,6 +24,6 @@ public class ClientHandshakePacketListenerImplMixin {
         DialogCollection.INSTANCE.clear();
         if (this.serverData == null) return;
         if (!this.serverData.ip.toLowerCase().contains("mccisland.net")) return;
-        MCCIState.INSTANCE.onJoin();
+        MCCIState.onJoin();
     }
 }

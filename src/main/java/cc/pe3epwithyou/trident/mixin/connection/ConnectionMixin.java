@@ -1,12 +1,7 @@
 package cc.pe3epwithyou.trident.mixin.connection;
 
 import cc.pe3epwithyou.trident.client.PacketHandler;
-import cc.pe3epwithyou.trident.feature.discord.ActivityManager;
-import cc.pe3epwithyou.trident.interfaces.DialogCollection;
-import cc.pe3epwithyou.trident.state.FontCollection;
-import cc.pe3epwithyou.trident.state.PlayerStateIO;
-import cc.pe3epwithyou.trident.utils.DelayedAction;
-import cc.pe3epwithyou.trident.utils.Logger;
+import cc.pe3epwithyou.trident.state.MCCIState;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.Connection;
@@ -40,14 +35,7 @@ public abstract class ConnectionMixin {
             if (ip == null) return;
             Minecraft minecraft = Minecraft.getInstance();
             if (ip.contains("mccisland.net") && packetListener == minecraft.getConnection()) {
-                minecraft.execute(() -> {
-                    DelayedAction.INSTANCE.closeAllPendingTasks();
-                    DialogCollection.INSTANCE.saveAllDialogs();
-                    PlayerStateIO.INSTANCE.save();
-                    ActivityManager.INSTANCE.hideActivity();
-                    FontCollection.INSTANCE.clear();
-                    Logger.INSTANCE.info("Disconnected from MCC Island at IP: " + ip);
-                });
+                minecraft.execute(MCCIState::onDisconnect);
             }
         }
     }

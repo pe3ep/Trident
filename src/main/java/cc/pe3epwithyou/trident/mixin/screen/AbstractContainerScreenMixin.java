@@ -109,7 +109,7 @@ public class AbstractContainerScreenMixin extends Screen {
     public void init(CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         String screenTitle = this.getTitle().getString();
-        if (minecraft.screen instanceof ContainerScreen screen){
+        if (minecraft.screen instanceof ContainerScreen screen) {
             ContainerEvents.INSTANCE.getINIT().invoker().invoke(new ContainerContext(screen));
             if (screenTitle.contains("ISLAND EXCHANGE") && Config.Global.INSTANCE.getExchangeImprovements()) {
                 int x = this.leftPos + 32;
