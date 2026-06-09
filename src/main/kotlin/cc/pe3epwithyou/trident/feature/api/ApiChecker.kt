@@ -23,13 +23,11 @@ object ApiChecker {
                 if (Config.Global.apiProvider == ApiProvider.TRIDENT) {
                     Logger.error("Failed to ping Trident API", throwable)
                     Logger.sendMessage(
-                        Component.literal("Trident API is down. Switching to self-hosted token.")
+                        Component.literal("Could not connect to Trident Web. Try rejoining or try again later.")
                             .withSwatch(
                                 TridentFont.ERROR
                             )
                     )
-                    Config.handler.instance().globalApiProvider = ApiProvider.SELF_TOKEN
-                    Config.handler.save()
                 }
             }
         }
