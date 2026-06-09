@@ -299,24 +299,21 @@ object TridentCommand {
                     }
 
                     if (chatroom == null) {
-                        Logger.sendMessage("Room is not pinned!")
+                        Logger.sendMessage(Component.literal("Room is not pinned!").withSwatch(TridentFont.ERROR))
                         return@executes
                     }
 
                     if (Chatrooms.getActiveChatroom()?.id == id) {
-                        Chatrooms.disableLock()
-                        Logger.sendMessage("Disabled cr lock")
+                        Chatrooms.disableLock(true)
                         return@executes
                     }
 
-                    Chatrooms.enableLock(chatroom)
-                    Logger.sendMessage("Enabled cr lock for $id")
+                    Chatrooms.enableLock(chatroom, true)
                 }
             }
 
             executes {
-                ChatControllerManager.clearController()
-                Logger.sendMessage("Disabled cr lock")
+                Chatrooms.disableLock(true)
             }
         }.register(dispatcher)
 

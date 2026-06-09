@@ -9,6 +9,7 @@ import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import kotlinx.serialization.Serializable
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -35,12 +36,26 @@ object Chatrooms {
                 val color = ChatroomColor.entries.find {it.getItemModel() == model} ?: ChatroomColor.WHITE
                 val chatroom = Chatroom(id, color)
                 if (playerState().activeChatrooms.removeIf { chatroom.id == it.id }) {
-                    Logger.sendMessage("Unpinned chatroom $chatroom")
+                    Logger.sendMessage(
+                        Component.literal("Unpinned chatroom ").withColor(chatroom.color.color)
+                            .append(
+                                Component.literal(chatroom.id).withStyle(
+                                    ChatFormatting.WHITE
+                                )
+                            )
+                    )
                     return@onClick
                 }
 
                 playerState().activeChatrooms.add(chatroom)
-                Logger.sendMessage("Pinned chatroom $chatroom")
+                Logger.sendMessage(
+                    Component.literal("Pinned chatroom ").withColor(chatroom.color.color)
+                        .append(
+                            Component.literal(chatroom.id).withStyle(
+                                ChatFormatting.WHITE
+                            )
+                        )
+                )
             }
         }
     }
@@ -49,11 +64,9 @@ object Chatrooms {
     fun modifyComponent(component: Component): Component {
         playerState().activeChatrooms.forEach { chatroom ->
             Regex("""\[${chatroom.id.uppercase()}] .+""").find(component.string)?.let {
-                Logger.sendMessage("found")
 
                 // This will correct the color of the chatroom to make sure it's always up to date
                 val color = component.toFlatList().first().style.color?.value ?: return@let
-                Logger.sendMessage("color: $color")
                 if (color != chatroom.color.color) {
                     chatroom.color =
                         ChatroomColor.entries.find { it.color == color } ?: chatroom.color
@@ -92,10 +105,25 @@ object Chatrooms {
             add(0, chatroom)
         }
         ChatControllerManager.setController(ChatroomController(chatroom))
+        if (sendMessage) {
+            Logger.sendMessage(
+                Component.literal("Enabled Chatroom Lock for ").withColor(chatroom.color.color)
+                    .append(
+                        Component.literal(
+                            chatroom.id
+                        ).withStyle(ChatFormatting.WHITE)
+                    )
+            )
+        }
     }
 
     fun disableLock(sendMessage: Boolean = false) {
         ChatControllerManager.clearController()
+        if (sendMessage) {
+            Logger.sendMessage(
+                Component.literal("Disabled Chatroom Lock").withSwatch(TridentFont.TRIDENT_COLOR)
+            )
+        }
     }
 
     private val SPRITE = Texture(

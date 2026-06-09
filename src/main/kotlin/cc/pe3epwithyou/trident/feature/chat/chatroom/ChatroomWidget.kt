@@ -58,11 +58,11 @@ class ChatroomWidget(val chatroom: Chatrooms.Chatroom) : AbstractWidget(0, 0, 0,
 
     override fun onClick(event: MouseButtonEvent, doubleClick: Boolean) {
         if (Chatrooms.getActiveChatroom() == chatroom) {
-            Chatrooms.disableLock()
+            Chatrooms.disableLock(true)
             return
         }
 
-        Chatrooms.enableLock(chatroom)
+        Chatrooms.enableLock(chatroom, true)
     }
 
     override fun updateWidgetNarration(output: NarrationElementOutput) = Unit
