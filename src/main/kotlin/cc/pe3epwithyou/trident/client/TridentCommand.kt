@@ -6,11 +6,12 @@ import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
+import cc.pe3epwithyou.trident.feature.chat.chatroom.Chatrooms
+import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
-import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
@@ -278,6 +279,44 @@ object TridentCommand {
                 }
 
                 Logger.sendMessage("Usage: /replylock <player>")
+            }
+        }.register(dispatcher)
+
+        Command("chatroomlock") {
+            argument("room", StringArgumentType.string()) {
+                suggests { _, builder ->
+                    playerState().activeChatrooms.forEach { builder.suggest(it.id) }
+                    builder.buildFuture()
+                }
+                executes {
+                    val id = it.getArgument("room", String::class.java)
+
+                    val chatroom = playerState().activeChatrooms.find { pinnedRoom ->
+                        pinnedRoom.id.equals(
+                            id,
+                            ignoreCase = true
+                        )
+                    }
+
+                    if (chatroom == null) {
+                        Logger.sendMessage("Room is not pinned!")
+                        return@executes
+                    }
+
+                    if (Chatrooms.getActiveChatroom()?.id == id) {
+                        Chatrooms.disableLock()
+                        Logger.sendMessage("Disabled cr lock")
+                        return@executes
+                    }
+
+                    Chatrooms.enableLock(chatroom)
+                    Logger.sendMessage("Enabled cr lock for $id")
+                }
+            }
+
+            executes {
+                ChatControllerManager.clearController()
+                Logger.sendMessage("Disabled cr lock")
             }
         }.register(dispatcher)
 

@@ -10,12 +10,14 @@ import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import kotlinx.serialization.Serializable
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.HoverEvent
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.inventory.Slot
 import java.util.function.Consumer
 
@@ -33,29 +35,67 @@ object Chatrooms {
                 val color = ChatroomColor.entries.find {it.getItemModel() == model} ?: ChatroomColor.WHITE
                 val chatroom = Chatroom(id, color)
                 if (playerState().activeChatrooms.removeIf { chatroom.id == it.id }) {
-                    Logger.sendMessage("Removed chatroom $chatroom")
+                    Logger.sendMessage("Unpinned chatroom $chatroom")
                     return@onClick
                 }
 
                 playerState().activeChatrooms.add(chatroom)
-                Logger.sendMessage("Added chatroom $chatroom")
+                Logger.sendMessage("Pinned chatroom $chatroom")
             }
         }
+    }
 
-        ClientReceiveMessageEvents.MODIFY_GAME.register { component, _ ->
-            playerState().activeChatrooms.forEach { chatroom ->
-                Regex("""\[${chatroom.id.uppercase()}] .+""").matchEntire(component.string)?.let {
-                    // This will correct the color of the chatroom to make sure it's always up to date
-                    val color = component.toFlatList().first().style.color?.value ?: return@let
-                    if (color != chatroom.color.color) {
-                        chatroom.color =
-                            ChatroomColor.entries.find { it.color == color } ?: chatroom.color
-                    }
+    @JvmStatic
+    fun modifyComponent(component: Component): Component {
+        playerState().activeChatrooms.forEach { chatroom ->
+            Regex("""\[${chatroom.id.uppercase()}] .+""").find(component.string)?.let {
+                Logger.sendMessage("found")
+
+                // This will correct the color of the chatroom to make sure it's always up to date
+                val color = component.toFlatList().first().style.color?.value ?: return@let
+                Logger.sendMessage("color: $color")
+                if (color != chatroom.color.color) {
+                    chatroom.color =
+                        ChatroomColor.entries.find { it.color == color } ?: chatroom.color
                 }
-            }
+                val mutable = component as MutableComponent
+                // Add a click action to lock chatroom
+                mutable.style = mutable.style
+                    .withClickEvent(ClickEvent.RunCommand("chatroomlock ${chatroom.id}"))
+                    .withHoverEvent(HoverEvent.ShowText(getTooltip()))
 
-            component
+                return mutable
+            }
         }
+
+        return component
+    }
+
+    private fun getTooltip(): Component {
+        return FontCollection.get("_fonts/icon/click_action_left.png", 7, 7).withColor(0xffffff)
+            .append(Component.literal(" > ").withStyle(ChatFormatting.DARK_GRAY).defaultFont())
+            .append(
+                Component.literal("Click to ")
+                    .withColor(0xe9d282)
+                    .defaultFont()
+            )
+            .append(
+                Component.literal("Toggle Chatroom Lock")
+                    .withColor(0xfbe460)
+                    .defaultFont()
+            )
+    }
+
+    fun enableLock(chatroom: Chatroom, sendMessage: Boolean = false) {
+        playerState().activeChatrooms.apply {
+            remove(chatroom)
+            add(0, chatroom)
+        }
+        ChatControllerManager.setController(ChatroomController(chatroom))
+    }
+
+    fun disableLock(sendMessage: Boolean = false) {
+        ChatControllerManager.clearController()
     }
 
     private val SPRITE = Texture(

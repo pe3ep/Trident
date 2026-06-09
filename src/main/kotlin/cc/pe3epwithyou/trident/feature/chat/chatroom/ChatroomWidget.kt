@@ -1,11 +1,9 @@
 package cc.pe3epwithyou.trident.feature.chat.chatroom
 
-import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.minecraft
-import cc.pe3epwithyou.trident.utils.playerState
 import com.noxcrew.sheeplib.util.lighten
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
@@ -60,15 +58,11 @@ class ChatroomWidget(val chatroom: Chatrooms.Chatroom) : AbstractWidget(0, 0, 0,
 
     override fun onClick(event: MouseButtonEvent, doubleClick: Boolean) {
         if (Chatrooms.getActiveChatroom() == chatroom) {
-            ChatControllerManager.clearController()
+            Chatrooms.disableLock()
             return
         }
 
-        playerState().activeChatrooms.apply {
-            remove(chatroom)
-            add(0, chatroom)
-        }
-        ChatControllerManager.setController(ChatroomController(chatroom))
+        Chatrooms.enableLock(chatroom)
     }
 
     override fun updateWidgetNarration(output: NarrationElementOutput) = Unit
