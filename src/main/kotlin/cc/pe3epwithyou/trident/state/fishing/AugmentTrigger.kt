@@ -27,7 +27,7 @@ fun updateDurability(trigger: AugmentTrigger) {
         if (!it.augment.worksInGrotto && MCCIState.fishingState.isGrotto) return@forEach
 
         it.durability -= 1
-        it.durability = it.durability.coerceIn(0, it.augment.uses)
+        it.durability = it.durability.coerceAtLeast(0)
 
         if (it.durability == 0 && it.status == AugmentStatus.NEW)
             it.status = AugmentStatus.NEEDS_REPAIRING
