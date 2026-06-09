@@ -2,6 +2,10 @@ package cc.pe3epwithyou.trident.feature.discord
 
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.utils.Logger
+import cc.pe3epwithyou.trident.utils.TridentFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
+import cc.pe3epwithyou.trident.utils.main
+import cc.pe3epwithyou.trident.utils.nonCriticalIO
 import io.github.vyfor.kpresence.RichClient
 import io.github.vyfor.kpresence.event.ActivityUpdateEvent
 import io.github.vyfor.kpresence.event.DisconnectEvent
@@ -9,6 +13,7 @@ import io.github.vyfor.kpresence.event.ReadyEvent
 import io.github.vyfor.kpresence.rpc.ActivityBuilder
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import net.minecraft.network.chat.Component
 import kotlin.time.Duration.Companion.milliseconds
 
 object IPCManager {
@@ -27,16 +32,17 @@ object IPCManager {
      */
     fun submitBuilder(builder: ActivityBuilder?) {
         ipc?.let {
-            if (builder == null) {
-                try {
-                    it.update(null)
-                } catch (e: Exception) {
-                    Logger.error("Failed to clear Discord activity", e)
-                }
-                return
-            }
-
             it.coroutineScope.launch {
+                if (builder == null) {
+                    try {
+                        it.update(null)
+                    } catch (e: Exception) {
+                        Logger.error("Failed to clear Discord activity, restarting IPC", e)
+                        restart()
+                    }
+                    return@launch
+                }
+
                 withTimeoutOrNull(5_000L.milliseconds) {
                     try {
                         val builtActivity = builder.build()
@@ -79,7 +85,43 @@ object IPCManager {
             ipc?.update(null)
             ipc?.shutdown()
         } catch (t: Throwable) {
-            Trident.LOGGER.warn("[Trident] Failed to disconnect from Discord IPC", t)
+            Logger.error("[Trident] Failed to disconnect from Discord IPC", t)
+        }
+    }
+
+    fun restart(sendMessage: Boolean = false) {
+        nonCriticalIO().launch {
+            try {
+                withTimeoutOrNull(3_000) {
+                    stop()
+                    init()
+                    main {
+                        if (sendMessage) {
+                            Logger.sendMessage(
+                                Component.literal("Successfully reconnected to Discord")
+                                    .withSwatch(TridentFont.TRIDENT_ACCENT)
+                            )
+                        }
+                        ActivityManager.updateCurrentActivity()
+                    }
+                } ?: main {
+                    if (sendMessage) {
+                        Logger.sendMessage(
+                            Component.literal("Timed out when reconnecting to Discord. Check your internet connection.")
+                                .withSwatch(TridentFont.ERROR)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                main {
+                    Logger.error("Failed to reconnect to Discord", e)
+                    if (sendMessage) {
+                        Logger.sendMessage(
+                            Component.literal("Failed to reconnect to Discord. Check your game console for errors.")
+                        )
+                    }
+                }
+            }
         }
     }
 }

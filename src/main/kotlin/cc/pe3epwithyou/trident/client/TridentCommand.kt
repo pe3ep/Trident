@@ -187,33 +187,7 @@ object TridentCommand {
 
             literal("reconnectDiscord") {
                 executes {
-                    nonCriticalIO().launch {
-                        try {
-                            withTimeoutOrNull(3_000) {
-                                IPCManager.stop()
-                                IPCManager.init()
-                                main {
-                                    Logger.sendMessage(
-                                        Component.literal("Successfully reconnected to Discord")
-                                            .withSwatch(TridentFont.TRIDENT_ACCENT)
-                                    )
-                                    ActivityManager.updateCurrentActivity()
-                                }
-                            } ?: main {
-                                Logger.sendMessage(
-                                    Component.literal("Timed out when reconnecting to Discord. Check your internet connection.")
-                                        .withSwatch(TridentFont.ERROR)
-                                )
-                            }
-                        } catch (e: Exception) {
-                            main {
-                                Logger.error("Failed to reconnect to Discord", e)
-                                Logger.sendMessage(
-                                    Component.literal("Failed to reconnect to Discord. Check your game console for errors.")
-                                )
-                            }
-                        }
-                    }
+                    IPCManager.restart()
                 }
             }
 
