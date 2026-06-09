@@ -3,6 +3,7 @@ package cc.pe3epwithyou.trident.state
 import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiChecker
+import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
 import cc.pe3epwithyou.trident.feature.debug.DebugScreen
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.EventActivity
@@ -66,6 +67,7 @@ object MCCIState {
         PlayerStateIO.save()
         ActivityManager.hideActivity()
         FontCollection.clear()
+        ChatControllerManager.clearController()
         Logger.info("Disconnected from MCC Island")
     }
 
