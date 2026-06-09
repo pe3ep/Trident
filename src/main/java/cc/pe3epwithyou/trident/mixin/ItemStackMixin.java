@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
+import cc.pe3epwithyou.trident.feature.chat.chatroom.Chatrooms;
 import cc.pe3epwithyou.trident.feature.doll.Doll;
 import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock;
 import cc.pe3epwithyou.trident.state.MCCIState;
@@ -24,5 +25,6 @@ public class ItemStackMixin {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         Doll.modifyTooltip(consumer);
         QuestLock.modifyTooltip(consumer);
+        Chatrooms.modifyTooltip(consumer);
     }
 }

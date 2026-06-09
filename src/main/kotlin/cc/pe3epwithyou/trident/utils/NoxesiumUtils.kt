@@ -95,6 +95,7 @@ object NoxesiumUtils {
             this,
             ClientboundMccServerPacket::class.java
         ) { _, packet, _ ->
+            if (!MCCIState.isOnIsland()) return@addListener
             val server = packet.server
             val types = packet.types
             MCCIState.gameTypes = types
@@ -124,6 +125,7 @@ object NoxesiumUtils {
         MccPackets.CLIENTBOUND_MCC_GAME_STATE.addListener(
             this, ClientboundMccGameStatePacket::class.java
         ) { _, packet, _ ->
+            if (!MCCIState.isOnIsland()) return@addListener
             MCCIState.gameState = packet
             removeKillsIfNeeded(packet)
             if (packet.stage == "inround" || packet.stage == "countdownphase" || packet.stage == "preparationphase" || packet.stage == "podiumphase" || packet.stage == "postgame") {
@@ -134,6 +136,7 @@ object NoxesiumUtils {
         MccPackets.CLIENTBOUND_MCC_STATISTIC.addListener(
             this, ClientboundMccStatisticPacket::class.java
         ) { _, packet, _ ->
+            if (!MCCIState.isOnIsland()) return@addListener
             handleQuests(packet.statistic, packet.value)
             handleFishCaught(packet.statistic, packet.value)
         }

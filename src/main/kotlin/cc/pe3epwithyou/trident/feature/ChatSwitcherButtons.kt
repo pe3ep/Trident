@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature
 
+import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Resources
@@ -8,6 +9,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.withCooldown
+import com.noxcrew.sheeplib.util.lighten
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -26,7 +28,7 @@ object ChatSwitcherButtons {
 
     fun getCurrentButtons(): List<Widget> = getChatModes().map(::Widget)
 
-    class Widget(val mode: ChatMode) : AbstractWidget(0, 0, 0, HEIGHT, Component.empty()) {
+    open class Widget(val mode: ChatMode) : AbstractWidget(0, 0, 0, HEIGHT, Component.empty()) {
         companion object {
             const val HEIGHT = 9
             const val PADDING = 2
@@ -41,28 +43,37 @@ object ChatSwitcherButtons {
             width = font.width(Component.literal(mode.displayName).withoutShadow().mccFont()) + 9 + PADDING * 2 + 4
         }
 
+        open val backgroundColor: Int
+            get() = when {
+                isHovered -> mode.color.lighten(-0.5f) opacity 128
+                else -> mode.color.lighten(-0.75f) opacity 128
+            }
+
+        open val textColor: Int
+            get() = mode.color.opaqueColor()
+
         private var texture = Texture(ICON_SPRITE, 9, 7)
 
         override fun extractWidgetRenderState(
             graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
         ) {
-            val color = if (isHovered) 0x404040 opacity 192 else 0x000000 opacity 128
-            graphics.fillRoundedAll(x, y, width, height, color)
+            graphics.fillRoundedAll(x, y, width, height, backgroundColor)
             texture.blit(graphics, x + PADDING, y + 1)
             graphics.text(
                 minecraft().font,
                 Component.literal(mode.displayName.uppercase()).mccFont().withoutShadow(),
                 PADDING + x + 9 + 4,
                 y,
-                mode.color.opaqueColor()
+                textColor
             )
         }
 
         override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
             withCooldown(mode, 1_000) {
                 val connection = minecraft().connection ?: return@withCooldown
-                connection.sendCommand("chat ${mode.commandName}")
+                connection.sendCommand(mode.commandName)
             }
+            ChatControllerManager.clearController()
         }
 
         override fun updateWidgetNarration(narratigonElementOutput: NarrationElementOutput) = Unit
@@ -75,13 +86,13 @@ object ChatSwitcherButtons {
     ) {
         companion object {
             val LOCAL =
-                ChatMode("local", "LOCAL", 0xffffff)
+                ChatMode("chat local", "LOCAL", 0xffffff)
             val PARTY =
-                ChatMode("party", "PARTY", 0x7670e8)
+                ChatMode("chat party", "PARTY", 0x7670e8)
             val TEAM =
-                ChatMode("team", "TEAM", 0x1bff46)
+                ChatMode("chat team", "TEAM", 0x1bff46)
             val PLOBBY =
-                ChatMode("plobby", "PLOBBY", 0xffbc40)
+                ChatMode("chat plobby", "PLOBBY", 0xffbc40)
         }
     }
 }

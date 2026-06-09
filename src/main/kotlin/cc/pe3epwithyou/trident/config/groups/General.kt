@@ -84,6 +84,16 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
             available(utilsCompatible())
         }
 
+        rootOptions.register("chat_room_channel_buttons") {
+            name(Component.translatable("config.trident.global.chat_room_channel_buttons.name"))
+            description(
+                OptionDescription.of(Component.translatable("config.trident.global.chat_room_channel_buttons.description"))
+            )
+            binding(handler.instance()::globalChatroomChannelButtons, true)
+            controller(tickBox())
+            available(utilsCompatible())
+        }
+
         rootOptions.register("auto_focus") {
             name(Component.translatable("config.trident.games.auto_focus.name"))
             description(OptionDescription.of(Component.translatable("config.trident.games.auto_focus.description")))

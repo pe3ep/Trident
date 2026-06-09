@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
-import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
+import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont

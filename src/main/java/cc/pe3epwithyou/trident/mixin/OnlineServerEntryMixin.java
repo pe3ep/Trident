@@ -34,7 +34,7 @@ public abstract class OnlineServerEntryMixin {
 
     @Inject(method = "extractContent", at = @At("HEAD"))
     void injectRenderContent(GuiGraphicsExtractor guiGraphics, int i, int j, boolean bl, float f, CallbackInfo ci) {
-        ServerSelectionList.OnlineServerEntry thisEntry = (ServerSelectionList.OnlineServerEntry)(Object) this;
+        ServerSelectionList.OnlineServerEntry thisEntry = (ServerSelectionList.OnlineServerEntry) (Object) this;
         CraftingNotifications.renderServerListIndicator(guiGraphics, i, j, thisEntry.getContentX(), thisEntry.getContentY(), getServerData());
     }
 }

@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock;
+import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock;
 import cc.pe3epwithyou.trident.feature.statusbar.EffectBar;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import net.minecraft.client.DeltaTracker;

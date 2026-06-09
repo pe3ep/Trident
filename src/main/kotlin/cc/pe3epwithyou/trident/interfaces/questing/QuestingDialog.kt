@@ -30,24 +30,22 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
     }
 
     private fun getTitleWidget(): QuestDialogTitle {
-        val icon = FontCollection.get("_fonts/icon/quest_log.png").withStyle(
-            Style.EMPTY.withShadowColor(0x0 opacity 0)
-        )
-        val titleText = " QUESTS"
-        val title = Component.literal(titleText).mccFont().offset(y = -0.5f)
+        val title = FontCollection.get("_fonts/icon/quest_log.png").withStyle(
+            Style.EMPTY.withoutShadow()
+        ).append(Component.literal(" QUESTS").mccFont().offset(y = -0.5f))
 
         val backgroundColor = 0x038AFF opacity 127
         val gameIcon = FontCollection.get(
             currentGame.icon
         ).withStyle(
-            Style.EMPTY.withShadowColor(0x0 opacity 0).withColor(ChatFormatting.WHITE)
+            Style.EMPTY.withColor(ChatFormatting.WHITE).withoutShadow()
         )
 
         val gameColor = currentGame.primaryColor opacity 127
 
         return QuestDialogTitle(
             this,
-            icon.append(title),
+            title,
             backgroundColor,
             true,
             game = gameIcon,

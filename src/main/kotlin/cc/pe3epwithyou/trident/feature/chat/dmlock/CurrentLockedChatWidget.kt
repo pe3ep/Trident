@@ -1,7 +1,5 @@
-package cc.pe3epwithyou.trident.feature.dmlock
+package cc.pe3epwithyou.trident.feature.chat.dmlock
 
-import cc.pe3epwithyou.trident.config.Config
-import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock.currentLock
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
@@ -37,7 +35,7 @@ class CurrentLockedChatWidget(val user: String) : AbstractWidget(0, 0, 0, 9, Com
 
         width = minecraft().font.width(
             displayedComponent
-        ) + PADDING * 2 + 3
+        ) + PADDING * 2
     }
 
     override fun extractWidgetRenderState(
@@ -47,7 +45,7 @@ class CurrentLockedChatWidget(val user: String) : AbstractWidget(0, 0, 0, 9, Com
         f: Float
     ) {
         graphics.fillRoundedAll(
-            x, y, width - 3, height,
+            x, y, width, height,
             when {
                 isHovered -> 0xa81bb7 opacity 128
                 else -> 0x521d59 opacity 128
@@ -60,21 +58,10 @@ class CurrentLockedChatWidget(val user: String) : AbstractWidget(0, 0, 0, 9, Com
             y,
             0xFFFFFF.opaqueColor()
         )
-        if (!Config.Global.chatChannelButtons) return
-        graphics.fill(
-            x + width - 1,
-            y + height / 2 - 2,
-            x + width,
-            y + height / 2 + 3,
-            0x000000 opacity 64
-        )
     }
 
     override fun onClick(mouseButtonEvent: MouseButtonEvent, bl: Boolean) {
-        val screen = minecraft().screen
-        minecraft().connection?.sendCommand("replylock $user")
-        currentLock = null
-        minecraft().setScreen(screen) // re-init screen (hacky, but works)
+        ReplyLock.disableLock()
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit

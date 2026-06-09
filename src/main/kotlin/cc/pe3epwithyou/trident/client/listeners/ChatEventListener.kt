@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.client.listeners
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
-import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
+import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.fishing.DepletedDisplay
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.MCCIState
@@ -62,7 +62,7 @@ object ChatEventListener {
                 }
 
                 Regex("""You are now in the .+ chat.""").find(message.string)?.let {
-                    if (ReplyLock.currentLock != null) {
+                    if (ReplyLock.getReplyLockUser() != null) {
                         ReplyLock.disableLock()
                         minecraft()
                             .setScreen(minecraft().screen)

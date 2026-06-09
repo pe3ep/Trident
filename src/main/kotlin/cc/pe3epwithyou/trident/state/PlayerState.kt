@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.state
 
 import cc.pe3epwithyou.trident.config.ConfigUtil
+import cc.pe3epwithyou.trident.feature.chat.chatroom.Chatrooms
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications.Notification
 import cc.pe3epwithyou.trident.feature.fishing.FishingType
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
@@ -135,7 +136,8 @@ data class PlayerState(
     var hatesUpdates: Boolean = false,
     var arenaData: ArenaData = ArenaData(),
     var levelData: CrownLevel? = null,
-    var craftingNotifications: CraftingNotifications = CraftingNotifications()
+    var craftingNotifications: CraftingNotifications = CraftingNotifications(),
+    var activeChatrooms: MutableList<Chatrooms.Chatroom> = mutableListOf(),
 )
 
 object PlayerStateIO {

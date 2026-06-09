@@ -4,14 +4,13 @@ import cc.pe3epwithyou.trident.Trident
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiChecker
 import cc.pe3epwithyou.trident.feature.debug.DebugScreen
+import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.EventActivity
 import cc.pe3epwithyou.trident.feature.doll.chroma.ChromaManger
+import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.ScoreboardUtils
+import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.TridentFont.ERROR
-import cc.pe3epwithyou.trident.utils.minecraft
-import cc.pe3epwithyou.trident.utils.playerState
 import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import net.minecraft.network.chat.Component
 
@@ -45,6 +44,7 @@ object MCCIState {
         return server.ip.contains("mccisland.net", true)
     }
 
+    @JvmStatic
     fun onJoin() = minecraft().execute {
         UpdateChecker.checkForUpdates()
         ApiChecker.joinCheck()
@@ -57,6 +57,16 @@ object MCCIState {
                 Component.translatable("trident.failed_config").withStyle(ERROR.baseStyle)
             Logger.sendMessage(component, true)
         }
+    }
+
+    @JvmStatic
+    fun onDisconnect() {
+        DelayedAction.closeAllPendingTasks()
+        DialogCollection.saveAllDialogs()
+        PlayerStateIO.save()
+        ActivityManager.hideActivity()
+        FontCollection.clear()
+        Logger.info("Disconnected from MCC Island")
     }
 
     fun isInPlobby(): Boolean {

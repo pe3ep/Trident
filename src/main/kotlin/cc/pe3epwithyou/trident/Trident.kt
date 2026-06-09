@@ -8,13 +8,14 @@ import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
 import cc.pe3epwithyou.trident.client.listeners.registerScreenEvents
 import cc.pe3epwithyou.trident.config.Config
+import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
+import cc.pe3epwithyou.trident.feature.chat.chatroom.Chatrooms
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.crafting.NotificationLifecycle
 import cc.pe3epwithyou.trident.feature.debug.TridentDebugEntry
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
-import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.doll.Doll
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockClock
@@ -103,7 +104,7 @@ class Trident : ModInitializer {
         QuestListener.register()
         OverclockClock.register()
         IPCManager.init()
-        ReplyLock.register()
+        ChatControllerManager.register()
         NotificationLifecycle.register()
         SuppliesListeners.register()
         WayfinderListeners.register()
@@ -114,6 +115,7 @@ class Trident : ModInitializer {
         CraftingNotifications.register()
         Disguise.register()
         QuestLock.register()
+        Chatrooms.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->

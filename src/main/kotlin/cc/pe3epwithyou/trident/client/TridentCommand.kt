@@ -5,11 +5,13 @@ import cc.pe3epwithyou.trident.client.TridentCommand.debugDialogs
 import cc.pe3epwithyou.trident.client.listeners.FishingSpotListener
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.api.ApiProvider
+import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
+import cc.pe3epwithyou.trident.feature.chat.chatroom.Chatrooms
+import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
-import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
@@ -260,7 +262,8 @@ object TridentCommand {
                 }
                 executes {
                     val user = it.getArgument("user", String::class.java)
-                    if (ReplyLock.currentLock != null) {
+                    if (ReplyLock.getReplyLockUser() != null && ReplyLock.getReplyLockUser()
+                            .equals(user, ignoreCase = true)) {
                         ReplyLock.disableLock()
                         return@executes
                     }
@@ -270,12 +273,47 @@ object TridentCommand {
             }
             // If present, we disable the lock
             executes {
-                if (ReplyLock.currentLock != null) {
+                if (ReplyLock.getReplyLockUser() != null) {
                     ReplyLock.disableLock()
                     return@executes
                 }
 
                 Logger.sendMessage("Usage: /replylock <player>")
+            }
+        }.register(dispatcher)
+
+        Command("chatroomlock") {
+            argument("room", StringArgumentType.string()) {
+                suggests { _, builder ->
+                    playerState().activeChatrooms.forEach { builder.suggest(it.id) }
+                    builder.buildFuture()
+                }
+                executes {
+                    val id = it.getArgument("room", String::class.java)
+
+                    val chatroom = playerState().activeChatrooms.find { pinnedRoom ->
+                        pinnedRoom.id.equals(
+                            id,
+                            ignoreCase = true
+                        )
+                    }
+
+                    if (chatroom == null) {
+                        Logger.sendMessage(Component.literal("Room is not pinned!").withSwatch(TridentFont.ERROR))
+                        return@executes
+                    }
+
+                    if (Chatrooms.getActiveChatroom()?.id == id) {
+                        Chatrooms.disableLock(true)
+                        return@executes
+                    }
+
+                    Chatrooms.enableLock(chatroom, true)
+                }
+            }
+
+            executes {
+                Chatrooms.disableLock(true)
             }
         }.register(dispatcher)
 
@@ -527,6 +565,24 @@ object TridentCommand {
                                 ReplyLock.disableLock()
                             }
                         }
+                    }
+                }
+            }
+
+            literal("chat_controller") {
+                literal("current") {
+                    executes {
+                        ChatControllerManager.getController()?.let {
+                            Logger.sendMessage("Current chat controller: ${it::class.simpleName}")
+                            return@executes
+                        }
+                        Logger.sendMessage("No chat controller is currently active")
+                    }
+                }
+                literal("clear") {
+                    executes {
+                        ChatControllerManager.clearController()
+                        Logger.sendMessage("Cleared current chat controller")
                     }
                 }
             }

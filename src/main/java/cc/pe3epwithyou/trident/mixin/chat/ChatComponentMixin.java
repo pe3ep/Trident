@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.mixin.chat;
 
-import cc.pe3epwithyou.trident.feature.dmlock.ReplyLock;
+import cc.pe3epwithyou.trident.feature.chat.chatroom.Chatrooms;
+import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.gui.components.ChatComponent;
@@ -13,7 +14,10 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(ChatComponent.class)
 public class ChatComponentMixin {
     @WrapMethod(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageSource;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)V")
-    public void wrapAddMessage(Component component, MessageSignature messageSignature, GuiMessageSource guiMessageSource, GuiMessageTag guiMessageTag, Operation<Void> original) {
-        original.call(ReplyLock.INSTANCE.modifyComponent(component), messageSignature, guiMessageSource, guiMessageTag);
+    public void wrapAddMessage(Component contents, MessageSignature signature, GuiMessageSource source, GuiMessageTag tag, Operation<Void> original) {
+        Component modified = ReplyLock.INSTANCE.modifyComponent(contents);
+        modified = Chatrooms.modifyComponent(modified);
+
+        original.call(modified, signature, source, tag);
     }
 }
