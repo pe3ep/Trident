@@ -23,6 +23,8 @@
   "config.trident.global.exchange_improvements.description": "Shows an indicator on best priced listings and gives the ability to hide owned cosmetics. Requires API",
   "config.trident.global.chat_channel_buttons.name": "Chat Channel Switcher Buttons",
   "config.trident.global.chat_channel_buttons.description": "Shows buttons for switching between chat channels above the chat input.\n\n§6Disabled if Island Utils is installed",
+  "config.trident.global.chat_room_channel_buttons.name": "Chatroom Lock",
+  "config.trident.global.chat_room_channel_buttons.description": "Shows buttons for switching between pinned Chatrooms above the chat input, acting as a \"channel\" for them.\n\n§bYou can pin/unpin a Chatroom by Middle-Clicking it inside the Social menu.§r\n\nTo use, click on a message from a pinned chatroom or use the buttons above the chat input.\n\n§6Disabled if Island Utils is installed",
   "config.trident.global.theme.name": "Module theme",
   "config.trident.global.theme.description": "Changes the current theme that Modules are using.",
   "config.trident.global.reply_lock.name": "Reply Lock",

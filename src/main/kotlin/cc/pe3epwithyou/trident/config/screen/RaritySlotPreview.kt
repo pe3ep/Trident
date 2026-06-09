@@ -3,8 +3,8 @@ package cc.pe3epwithyou.trident.config.screen
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.feature.rarityslot.RaritySlot
-import cc.pe3epwithyou.trident.utils.Model
 import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.Texture
 import com.noxcrew.sheeplib.util.opaqueColor
 import dev.isxander.yacl3.gui.image.ImageRenderer
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -23,11 +23,11 @@ class RaritySlotPreview : ImageRenderer {
     ): Int {
         val colors = RaritySlot.ALLOWED_COLORS
         val models = listOf(
-            Resources.minecraft("diamond"),
-            Resources.minecraft("redstone"),
-            Resources.minecraft("iron_ingot"),
-            Resources.minecraft("ender_pearl"),
-            Resources.minecraft("paper"),
+            Resources.minecraft("textures/item/diamond.png"),
+            Resources.minecraft("textures/item/redstone.png"),
+            Resources.minecraft("textures/item/iron_ingot.png"),
+            Resources.minecraft("textures/item/ender_pearl.png"),
+            Resources.minecraft("textures/item/paper.png"),
         )
         val height = 128
 
@@ -48,11 +48,11 @@ class RaritySlotPreview : ImageRenderer {
                 0x404040.opaqueColor()
             )
             RaritySlot.renderOutline(graphics, startX, startY, color, RARITY_DISPLAY_TYPE)
-            Model(
+            Texture(
                 models[index],
                 slotWidth,
                 slotWidth
-            ).render(graphics, startX, startY)
+            ).blit(graphics, startX, startY)
 
             startX += slotWidth + gap
         }
