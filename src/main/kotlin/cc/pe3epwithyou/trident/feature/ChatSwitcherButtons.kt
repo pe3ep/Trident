@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature
 
+import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Resources
@@ -72,6 +73,7 @@ object ChatSwitcherButtons {
                 val connection = minecraft().connection ?: return@withCooldown
                 connection.sendCommand(mode.commandName)
             }
+            ChatControllerManager.clearController()
         }
 
         override fun updateWidgetNarration(narratigonElementOutput: NarrationElementOutput) = Unit

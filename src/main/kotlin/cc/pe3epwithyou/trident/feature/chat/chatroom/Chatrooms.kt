@@ -2,13 +2,22 @@ package cc.pe3epwithyou.trident.feature.chat.chatroom
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.events.click.ClickEvents
+import cc.pe3epwithyou.trident.events.container.withContainerCtx
 import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
-import cc.pe3epwithyou.trident.utils.Logger
-import cc.pe3epwithyou.trident.utils.Resources
-import cc.pe3epwithyou.trident.utils.playerState
+import cc.pe3epwithyou.trident.state.FontCollection
+import cc.pe3epwithyou.trident.state.MCCIState
+import cc.pe3epwithyou.trident.utils.*
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import kotlinx.serialization.Serializable
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
+import net.minecraft.ChatFormatting
+import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
+import net.minecraft.world.inventory.Slot
+import java.util.function.Consumer
 
 object Chatrooms {
     fun getActiveChatroom(): Chatroom? =
@@ -33,20 +42,78 @@ object Chatrooms {
             }
         }
 
-        // This will correct the color of the chatroom to make sure it's always up to date
-        ClientReceiveMessageEvents.ALLOW_CHAT.register allowGame@{ component, _, _, _, _ ->
+        ClientReceiveMessageEvents.MODIFY_GAME.register { component, _ ->
             playerState().activeChatrooms.forEach { chatroom ->
                 Regex("""\[${chatroom.id.uppercase()}] .+""").matchEntire(component.string)?.let {
+                    // This will correct the color of the chatroom to make sure it's always up to date
                     val color = component.toFlatList().first().style.color?.value ?: return@let
                     if (color != chatroom.color.color) {
                         chatroom.color =
                             ChatroomColor.entries.find { it.color == color } ?: chatroom.color
                     }
                 }
-
             }
 
-            true
+            component
+        }
+    }
+
+    private val SPRITE = Texture(
+        Resources.trident("textures/interface/pin_icon.png"),
+        10,
+        10
+    )
+
+    @JvmStatic
+    fun renderPinIcon(graphics: GuiGraphicsExtractor, slot: Slot) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.chatroomChannelButtons) return
+        val screen = minecraft().screen as? ContainerScreen ?: return
+        if (slot.index in 19..25 ||
+            slot.index in 28..34 ||
+            slot.index in 37..43
+        ) {
+            withContainerCtx(screen) {
+                requireTitle("CHAT ROOMS")
+                val chatroomID = slot.item.hoverName?.string?.uppercase() ?: return@withContainerCtx
+
+                playerState().activeChatrooms.forEach {
+                    if (it.id == chatroomID) {
+                        SPRITE.blit(graphics, slot.x + 8, slot.y - 2)
+                    }
+                }
+            }
+
+        }
+    }
+
+    @JvmStatic
+    fun modifyTooltip(consumer: Consumer<Component>) {
+        if (!MCCIState.isOnIsland()) return
+        if (!Config.Global.chatroomChannelButtons) return
+        val screen = minecraft().screen as? ContainerScreen ?: return
+
+        withContainerCtx(screen) {
+            requireTitle("CHAT ROOMS")
+            val item = hoveredItem() ?: return@withContainerCtx
+            val chatroomID = item.hoverName?.string?.uppercase() ?: return@withContainerCtx
+
+            val isPinned = playerState().activeChatrooms.firstOrNull { it.id == chatroomID } != null
+
+            val component =
+                FontCollection.get("_fonts/icon/click_action_middle.png", 7, 7).withColor(0xffffff)
+                    .mccFont("icon")
+                    .append(
+                        Component.literal(" > ").withStyle(ChatFormatting.DARK_GRAY).defaultFont()
+                    )
+                    .append(
+                        Component.literal("Middle-Click to ").withColor(0xe9d282).defaultFont()
+                    ).append(
+                        Component.literal("${if (isPinned) "Unpin" else "Pin"} chatroom")
+                            .withColor(0xfbe460).defaultFont()
+                    )
+
+            consumer.accept(component)
         }
     }
 
@@ -66,5 +133,6 @@ object Chatrooms {
         TEAL(0x55FFFF);
 
         fun getItemModel() = Resources.mcc("island_interface/settings/chat_bubble_${this.name.lowercase()}")
+        fun getChatIconTexture() = Resources.trident("textures/interface/chat_channels/channel_${this.name.lowercase()}.png")
     }
 }
