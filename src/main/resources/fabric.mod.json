@@ -48,7 +48,7 @@
     "noxesium": ">=3.1.0",
     "fabricloader": ">=${loader_version}",
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
-    "fabric-api": "*",
+    "fabric": "*",
     "minecraft": "${minecraft_version}"
   },
   "conflicts": {
