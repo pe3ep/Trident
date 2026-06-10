@@ -1,14 +1,14 @@
 package cc.pe3epwithyou.trident.feature.chat
 
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 
 class SeparatorWidget : AbstractWidget(0, 0, 1, 5, Component.empty()) {
-    override fun extractWidgetRenderState(
-        graphics: GuiGraphicsExtractor,
+    override fun renderWidget(
+        graphics: GuiGraphics,
         mouseX: Int,
         mouseY: Int,
         a: Float

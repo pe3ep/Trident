@@ -13,7 +13,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import kotlinx.serialization.Serializable
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.ClickEvent
@@ -157,7 +157,7 @@ object Chatrooms {
     )
 
     @JvmStatic
-    fun renderPinIcon(graphics: GuiGraphicsExtractor, slot: Slot) {
+    fun renderPinIcon(graphics: GuiGraphics, slot: Slot) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.chatroomChannelButtons) return
         val screen = minecraft().screen as? ContainerScreen ?: return

@@ -7,7 +7,7 @@ import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.lighten
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.MouseButtonEvent
@@ -27,8 +27,8 @@ class ChatroomWidget(val chatroom: Chatrooms.Chatroom) : AbstractWidget(0, 0, 0,
         width = textWidth + PADDING * 2 + 9 + 3
     }
 
-    override fun extractWidgetRenderState(
-        graphics: GuiGraphicsExtractor,
+    override fun renderWidget(
+        graphics: GuiGraphics,
         mouseX: Int,
         mouseY: Int,
         a: Float
@@ -45,7 +45,7 @@ class ChatroomWidget(val chatroom: Chatrooms.Chatroom) : AbstractWidget(0, 0, 0,
 
         val texture = Texture(chatroom.color.getChatIconTexture(), 9, 7)
         texture.blit(graphics, x + PADDING, y + 1)
-        graphics.text(font, textComponent, x + 9 + PADDING + 3, y, chatroom.color.color.lighten(1f).opaqueColor())
+        graphics.drawString(font, textComponent, x + 9 + PADDING + 3, y, chatroom.color.color.lighten(1f).opaqueColor())
 
         if (isActive) {
             graphics.fill(x, y + height + 3, x + width, y + height + 2, chatroom.color.color.lighten(1.5f).opaqueColor())

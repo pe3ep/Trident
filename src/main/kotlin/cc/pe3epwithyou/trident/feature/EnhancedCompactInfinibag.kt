@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -23,7 +23,7 @@ object EnhancedCompactInfinibag {
     }
 
     @JvmStatic
-    fun render(graphics: GuiGraphicsExtractor, slot: Slot) {
+    fun render(graphics: GuiGraphics, slot: Slot) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.enhancedCompactInfinibag) return
         val tag = slot.item.components.get(DataComponents.CUSTOM_DATA)?.copyTag() ?: return
@@ -38,7 +38,7 @@ object EnhancedCompactInfinibag {
         val pose = graphics.pose()
         val factor = ((16f / width) * 0.9f).coerceAtMost(1f)
         pose.scaleAround(factor, factor, slot.x.toFloat() + width, slot.y.toFloat() + 9, pose)
-        graphics.text(font, formatted, slot.x + 15 - width, slot.y + 9, 0xffffff.opaqueColor())
+        graphics.drawString(font, formatted, slot.x + 15 - width, slot.y + 9, 0xffffff.opaqueColor())
 
         graphics.pose().popMatrix()
     }

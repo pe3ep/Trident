@@ -44,8 +44,8 @@
     }
   },
   "depends": {
-    "yet_another_config_lib_v3": ">=3.9.3+26.1-fabric",
-    "noxesium": ">=3.1.0",
+    "yet_another_config_lib_v3": ">=3.8.1+1.21.11-fabric",
+    "noxesium": ">=3.0.0",
     "fabricloader": ">=${loader_version}",
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "fabric": "*",
