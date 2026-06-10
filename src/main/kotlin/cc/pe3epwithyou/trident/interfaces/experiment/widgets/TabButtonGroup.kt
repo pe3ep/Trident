@@ -6,7 +6,7 @@ import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.grid
 import com.noxcrew.sheeplib.theme.Themed
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 
 class TabButtonGroup(
     tabs: List<Tab>, currentTab: Tab, val view: TabView
@@ -36,11 +36,11 @@ class TabButtonGroup(
         }
     }
 
-    override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
+    override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
         graphics.fillRoundedAll(
             x, y, getWidth(), getHeight(), 0x111111 opacity 64
         )
-        super.extractWidgetRenderState(graphics, i, j, f)
+        super.renderWidget(graphics, i, j, f)
     }
 
     init {

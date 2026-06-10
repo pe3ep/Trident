@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.minecraft
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.world.inventory.Slot
 
@@ -42,7 +42,7 @@ object UpgradeIndicator {
         return false
     }
 
-    fun render(graphics: GuiGraphicsExtractor, slot: Slot) {
+    fun render(graphics: GuiGraphics, slot: Slot) {
         val screen = minecraft().screen ?: return
         if (checkUpgrade(screen, slot)) upgradeTexture.blit(graphics, slot.x - 1, slot.y + 9)
         if (checkLocked(screen, slot)) lockedTexture.blit(

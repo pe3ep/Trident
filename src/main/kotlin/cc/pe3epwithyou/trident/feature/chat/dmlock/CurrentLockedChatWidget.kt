@@ -9,7 +9,7 @@ import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAl
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.MouseButtonEvent
@@ -38,8 +38,8 @@ class CurrentLockedChatWidget(val user: String) : AbstractWidget(0, 0, 0, 9, Com
         ) + PADDING * 2
     }
 
-    override fun extractWidgetRenderState(
-        graphics: GuiGraphicsExtractor,
+    override fun renderWidget(
+        graphics: GuiGraphics,
         i: Int,
         j: Int,
         f: Float
@@ -51,7 +51,7 @@ class CurrentLockedChatWidget(val user: String) : AbstractWidget(0, 0, 0, 9, Com
                 else -> 0x521d59 opacity 128
             }
         )
-        graphics.text(
+        graphics.drawString(
             minecraft().font,
             displayedComponent,
             x + PADDING,

@@ -13,7 +13,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import java.time.Instant
@@ -115,7 +115,7 @@ object ExchangeHandler {
         return !ownedCosmetics.contains(itemName)
     }
 
-    fun renderSlot(graphics: GuiGraphicsExtractor, slot: Slot) {
+    fun renderSlot(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Global.exchangeImprovements) return
         val screen = minecraft().screen ?: return
         if ("ISLAND EXCHANGE" !in screen.title.string) return
@@ -144,7 +144,7 @@ object ExchangeHandler {
         }
     }
 
-    fun renderBackground(graphics: GuiGraphicsExtractor, left: Int, top: Int) {
+    fun renderBackground(graphics: GuiGraphics, left: Int, top: Int) {
         if (!Config.Global.exchangeImprovements) return
         if (!fetchingProgress.isLoading()) return
         Model(

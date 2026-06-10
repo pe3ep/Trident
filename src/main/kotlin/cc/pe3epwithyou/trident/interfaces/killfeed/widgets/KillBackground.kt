@@ -10,7 +10,7 @@ import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedRi
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.layout.LinearLayout
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.layouts.LayoutSettings
 import net.minecraft.client.gui.layouts.LinearLayout
@@ -64,7 +64,7 @@ class KillBackground(
         layout.visitWidgets(this::addChild)
     }
 
-    override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
+    override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
         if (isLeft) {
             graphics.fillRoundedLeft(
                 x, y, layout.width, layout.height, color
@@ -75,7 +75,7 @@ class KillBackground(
             )
 
         }
-        super.extractWidgetRenderState(graphics, i, j, f)
+        super.renderWidget(graphics, i, j, f)
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit

@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.feature.indicators
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.minecraft
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
@@ -13,12 +13,12 @@ import kotlin.jvm.optionals.getOrNull
 
 object BlueprintIndicator {
     @JvmStatic
-    fun checkItem(graphics: GuiGraphicsExtractor, slot: Slot) {
+    fun checkItem(graphics: GuiGraphics, slot: Slot) {
         if (minecraft().screen !is ContainerScreen) return
         checkLore(graphics, slot)
     }
 
-    private fun checkLore(graphics: GuiGraphicsExtractor, slot: Slot) {
+    private fun checkLore(graphics: GuiGraphics, slot: Slot) {
         if (slot.item.isEmpty) return
         val tag = slot.item.components.get(DataComponents.CUSTOM_DATA)?.copyTag() ?: return
         parseTag(tag)?.let {
@@ -33,7 +33,7 @@ object BlueprintIndicator {
         }
     }
 
-    private fun renderIcon(graphics: GuiGraphicsExtractor, slot: Slot, icon: Icons) {
+    private fun renderIcon(graphics: GuiGraphics, slot: Slot, icon: Icons) {
         val x = slot.x
         val y = slot.y
         val texture = Texture(

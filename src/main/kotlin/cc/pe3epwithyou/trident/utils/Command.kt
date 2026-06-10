@@ -8,7 +8,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.suggestion.Suggestions
 import com.mojang.brigadier.suggestion.SuggestionsBuilder
-import net.fabricmc.fabric.api.client.command.v2.ClientCommands
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import java.util.concurrent.CompletableFuture
 
@@ -39,7 +39,7 @@ class Command(
     name: String, block: Builder.() -> Unit
 ) {
     private val root: LiteralArgumentBuilder<FabricClientCommandSource> =
-        ClientCommands.literal(name)
+        ClientCommandManager.literal(name)
 
     init {
         Builder(root).block()
@@ -66,7 +66,7 @@ class Command(
         fun literal(
             name: String, block: Builder.() -> Unit
         ) {
-            val literal = ClientCommands.literal(name)
+            val literal = ClientCommandManager.literal(name)
             Builder(literal).block()
             node.then(literal)
         }
@@ -74,7 +74,7 @@ class Command(
         fun <T : Any> argument(
             name: String, type: ArgumentType<T>, block: ArgumentBuilder<T>.() -> Unit
         ) {
-            val argNode = ClientCommands.argument<T>(name, type)
+            val argNode = ClientCommandManager.argument<T>(name, type)
             ArgumentBuilder(argNode).block()
             node.then(argNode)
         }
@@ -106,7 +106,7 @@ class Command(
         fun literal(
             name: String, block: Builder.() -> Unit
         ) {
-            val literal = ClientCommands.literal(name)
+            val literal = ClientCommandManager.literal(name)
             Builder(literal).block()
             node.then(literal)
         }
@@ -114,7 +114,7 @@ class Command(
         fun <U : Any> argument(
             name: String, type: ArgumentType<U>, block: ArgumentBuilder<U>.() -> Unit
         ) {
-            val argNode = ClientCommands.argument<U>(name, type)
+            val argNode = ClientCommandManager.argument<U>(name, type)
             ArgumentBuilder(argNode).block()
             node.then(argNode)
         }

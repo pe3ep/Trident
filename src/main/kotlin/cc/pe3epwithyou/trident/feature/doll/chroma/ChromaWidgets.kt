@@ -10,7 +10,7 @@ import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.MouseButtonEvent
@@ -32,7 +32,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         }
     }
 
-    override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
+    override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val screen = minecraft().screen ?: return
         if (!Doll.shouldRender(screen)) return
         if (ChromaManger.fetchedChromas == null) return
@@ -43,7 +43,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         val notSelected = Component.literal("Select Chroma").withStyle(ChatFormatting.GRAY)
         val selected = DollCosmetics.currentChroma?.displayName?.let { Component.literal(it) }
 
-        graphics.centeredText(
+        graphics.drawCenteredString(
             minecraft().font,
             selected ?: notSelected,
             (x + width / 2),
@@ -51,7 +51,7 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
             0xffffff.opaqueColor()
         )
         graphics.fillRoundedAll(x - 1, y - 1, width + 2, height + 2, 0x111111 opacity 128)
-        super.extractWidgetRenderState(graphics, i, j, f)
+        super.renderWidget(graphics, i, j, f)
     }
 
     init {
@@ -74,8 +74,8 @@ class ChromaWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
             10, 10, 16, 16
         )
 
-        override fun extractWidgetRenderState(
-            graphics: GuiGraphicsExtractor,
+        override fun renderWidget(
+            graphics: GuiGraphics,
             i: Int,
             j: Int,
             f: Float

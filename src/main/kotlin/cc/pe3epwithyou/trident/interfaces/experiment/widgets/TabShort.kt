@@ -3,7 +3,7 @@ package cc.pe3epwithyou.trident.interfaces.experiment.widgets
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.theme.Theme
 import com.noxcrew.sheeplib.theme.Themed
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.MouseButtonEvent
@@ -14,8 +14,8 @@ class TabShort(
     val view: TabView,
     val style: Theme.ButtonStyle = theme.theme.buttonStyles.standard,
 ) : AbstractWidget(0, 0, 14, 14, tab.title) {
-    override fun extractWidgetRenderState(
-        graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
+    override fun renderWidget(
+        graphics: GuiGraphics, i: Int, j: Int, f: Float
     ) {
         graphics.fillRoundedAll(
             x, y, getWidth(), getHeight(), when {

@@ -6,12 +6,12 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.minecraft
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.resources.Identifier
 import net.minecraft.world.inventory.Slot
 
 object TideWindIndicator {
-    fun renderOutline(graphics: GuiGraphicsExtractor, slot: Slot) {
+    fun renderOutline(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Fishing.islandIndicators) return
         val client = minecraft()
         val screen = client.screen ?: return
@@ -25,7 +25,7 @@ object TideWindIndicator {
         }
     }
 
-    fun render(graphics: GuiGraphicsExtractor, slot: Slot) {
+    fun render(graphics: GuiGraphics, slot: Slot) {
         if (!Config.Fishing.islandIndicators) return
         val client = minecraft()
         val screen = client.screen ?: return
@@ -53,7 +53,7 @@ object TideWindIndicator {
         }
     }
 
-    private fun renderWind(graphics: GuiGraphicsExtractor, slot: Slot, winds: Winds) {
+    private fun renderWind(graphics: GuiGraphics, slot: Slot, winds: Winds) {
         Texture(
             winds.texture, 8, 8, 16, 16
         ).blit(
@@ -61,7 +61,7 @@ object TideWindIndicator {
         )
     }
 
-    private fun renderTide(graphics: GuiGraphicsExtractor, slot: Slot, tide: Tide) {
+    private fun renderTide(graphics: GuiGraphics, slot: Slot, tide: Tide) {
         Texture(
             tide.path, 8, 8, 16, 16
         ).blit(

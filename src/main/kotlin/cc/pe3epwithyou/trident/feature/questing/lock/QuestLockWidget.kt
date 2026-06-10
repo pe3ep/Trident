@@ -8,7 +8,7 @@ import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
 class QuestLockWidget(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
@@ -26,9 +26,9 @@ class QuestLockWidget(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         }
     }
 
-    override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
+    override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
         graphics.fillRoundedAll(x - 1, y - 1, width + 2, height + 2, 0x111111 opacity 128)
-        super.extractWidgetRenderState(graphics, i, j, f)
+        super.renderWidget(graphics, i, j, f)
         val x = graphics.guiWidth() / 2
 
         var c =
@@ -41,7 +41,7 @@ class QuestLockWidget(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
             c = Component.literal("Select Game to Lock").withStyle(ChatFormatting.GRAY)
         }
 
-        graphics.centeredText(
+        graphics.drawCenteredString(
             minecraft().font,
             c,
             x,

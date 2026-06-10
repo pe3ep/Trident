@@ -10,7 +10,7 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.offset
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.data.AtlasIds
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
@@ -54,7 +54,7 @@ object EffectBar {
     }
 
     @JvmStatic
-    fun render(graphics: GuiGraphicsExtractor) {
+    fun render(graphics: GuiGraphics) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.effectBar) return
         if (MCCIState.game == Game.FISHING) return
@@ -71,7 +71,7 @@ object EffectBar {
         }
         val width = font.width(c) / 2
         val offset = if (checkEliminationBanner()) 62 else 0
-        graphics.text(font, c, x - width, graphics.guiHeight() - 86 - offset, 0xFFFFFF.opaqueColor())
+        graphics.drawString(font, c, x - width, graphics.guiHeight() - 86 - offset, 0xFFFFFF.opaqueColor())
     }
 
     fun getCurrentActiveEffects(): List<Effect> {

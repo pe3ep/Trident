@@ -12,7 +12,7 @@ import cc.pe3epwithyou.trident.utils.withCooldown
 import com.noxcrew.sheeplib.util.lighten
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.MouseButtonEvent
@@ -54,12 +54,12 @@ object ChatSwitcherButtons {
 
         private var texture = Texture(ICON_SPRITE, 9, 7)
 
-        override fun extractWidgetRenderState(
-            graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
+        override fun renderWidget(
+            graphics: GuiGraphics, i: Int, j: Int, f: Float
         ) {
             graphics.fillRoundedAll(x, y, width, height, backgroundColor)
             texture.blit(graphics, x + PADDING, y + 1)
-            graphics.text(
+            graphics.drawString(
                 minecraft().font,
                 Component.literal(mode.displayName.uppercase()).mccFont().withoutShadow(),
                 PADDING + x + 9 + 4,

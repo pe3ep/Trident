@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
@@ -22,7 +22,7 @@ class KillStreak(
         )
     }
 
-    override fun extractWidgetRenderState(guiGraphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
+    override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         if (!Config.KillFeed.showKillstreaks || streak < 2) {
             return
         }

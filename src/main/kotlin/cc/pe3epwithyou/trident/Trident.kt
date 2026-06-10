@@ -41,7 +41,7 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
@@ -73,7 +73,7 @@ class Trident : ModInitializer {
         val entries = DebugScreenEntriesAccessor.getEntries()
         entries[tridentDebugEntry] = TridentDebugEntry()
 
-        settingsKeymapping = KeyMappingHelper.registerKeyMapping(
+        settingsKeymapping = KeyBindingHelper.registerKeyBinding(
             KeyMapping(
                 "key.trident.config",
                 InputConstants.Type.KEYSYM,
@@ -83,7 +83,7 @@ class Trident : ModInitializer {
         )
 
         if (Config.Debug.developerMode) {
-            refreshDialogsKeymapping = KeyMappingHelper.registerKeyMapping(
+            refreshDialogsKeymapping = KeyBindingHelper.registerKeyBinding(
                 KeyMapping(
                     "key.trident.refresh_dialogs",
                     InputConstants.Type.KEYSYM,

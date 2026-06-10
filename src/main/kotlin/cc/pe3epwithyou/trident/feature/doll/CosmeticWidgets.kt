@@ -7,7 +7,7 @@ import cc.pe3epwithyou.trident.utils.gridLayout
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.CompoundWidget
 import com.noxcrew.sheeplib.util.opacity
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.sounds.SoundManager
@@ -24,10 +24,10 @@ class CosmeticWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
         }
     }
 
-    override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
+    override fun renderWidget(graphics: GuiGraphics, i: Int, j: Int, f: Float) {
         val screen = minecraft().screen ?: return
         if (!Doll.shouldRender(screen)) return
-        super.extractWidgetRenderState(graphics, i, j, f)
+        super.renderWidget(graphics, i, j, f)
     }
 
     init {
@@ -44,8 +44,8 @@ class CosmeticWidgets(x: Int, y: Int) : CompoundWidget(x, y, 0, 0) {
 
     class CosmeticItemWidget(val type: CosmeticType) :
         AbstractWidget(0, 0, 18, 18, Component.empty()) {
-        override fun extractWidgetRenderState(
-            guiGraphics: GuiGraphicsExtractor,
+        override fun renderWidget(
+            guiGraphics: GuiGraphics,
             i: Int,
             j: Int,
             f: Float

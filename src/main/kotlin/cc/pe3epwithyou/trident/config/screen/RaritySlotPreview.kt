@@ -7,7 +7,7 @@ import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import com.noxcrew.sheeplib.util.opaqueColor
 import dev.isxander.yacl3.gui.image.ImageRenderer
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 
 class RaritySlotPreview : ImageRenderer {
     companion object {
@@ -15,7 +15,7 @@ class RaritySlotPreview : ImageRenderer {
     }
 
     override fun render(
-        graphics: GuiGraphicsExtractor,
+        graphics: GuiGraphics,
         x: Int,
         y: Int,
         renderWidth: Int,
