@@ -19,7 +19,7 @@ import cc.pe3epwithyou.trident.interfaces.exchange.ExchangeFilter;
 import cc.pe3epwithyou.trident.interfaces.fishing.AugmentStatusInterface;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import cc.pe3epwithyou.trident.utils.DebugDraw;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -50,15 +50,15 @@ public class AbstractContainerScreenMixin extends Screen {
         super(component);
     }
 
-    @Inject(method = "extractSlot", at = @At(value = "HEAD"))
-    public void injectRenderSlotHead(GuiGraphicsExtractor guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
+    @Inject(method = "renderSlot", at = @At(value = "HEAD"))
+    public void injectRenderSlotHead(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         RaritySlot.INSTANCE.render(guiGraphics, slot);
         TideWindIndicator.INSTANCE.renderOutline(guiGraphics, slot);
     }
 
-    @Inject(method = "extractSlot", at = @At(value = "TAIL"))
-    public void injectRenderSlotTail(GuiGraphicsExtractor guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
+    @Inject(method = "renderSlot", at = @At(value = "TAIL"))
+    public void injectRenderSlotTail(GuiGraphics guiGraphics, Slot slot, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (Config.Global.INSTANCE.getBlueprintIndicators()) {
             BlueprintIndicator.checkItem(guiGraphics, slot);
@@ -89,16 +89,16 @@ public class AbstractContainerScreenMixin extends Screen {
         }
     }
 
-    @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)
-    public void injectRenderTooltip(GuiGraphicsExtractor guiGraphics, int i, int j, CallbackInfo ci) {
+    @Inject(method = "renderTooltip", at = @At("HEAD"), cancellable = true)
+    public void injectRenderTooltip(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
             if (!ExchangeHandler.INSTANCE.shouldRenderTooltip(hoveredSlot)) ci.cancel();
         }
     }
 
-    @Inject(method = "extractContents", at = @At(value = "TAIL"))
-    public void injectRenderBackground(GuiGraphicsExtractor guiGraphics, int i, int j, float f, CallbackInfo ci) {
+    @Inject(method = "renderBackground", at = @At(value = "TAIL"))
+    public void injectRenderBackground(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (minecraft.screen instanceof ContainerScreen s) {
             if (s.getTitle().getString().contains("ISLAND EXCHANGE")) {
@@ -128,8 +128,8 @@ public class AbstractContainerScreenMixin extends Screen {
         ClickEvents.INSTANCE.getCLICK().invoker().invoke(new ContainerClickContext(bl, containerScreen, mouseButtonEvent, cir));
     }
 
-    @Inject(method = "extractContents", at = @At("HEAD"))
-    public void injectRender(GuiGraphicsExtractor guiGraphics, int i, int j, float f, CallbackInfo ci) {
+    @Inject(method = "renderContents", at = @At("HEAD"))
+    public void injectRender(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
         Doll.render(guiGraphics);
     }
 

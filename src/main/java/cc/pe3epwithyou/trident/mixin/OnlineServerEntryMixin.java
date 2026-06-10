@@ -4,7 +4,7 @@ import cc.pe3epwithyou.trident.feature.Introduction;
 import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.multiplayer.ServerSelectionList;
 import net.minecraft.client.multiplayer.ServerData;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,9 +32,9 @@ public abstract class OnlineServerEntryMixin {
         }
     }
 
-    @Inject(method = "extractContent", at = @At("HEAD"))
-    void injectRenderContent(GuiGraphicsExtractor guiGraphics, int i, int j, boolean bl, float f, CallbackInfo ci) {
-        ServerSelectionList.OnlineServerEntry thisEntry = (ServerSelectionList.OnlineServerEntry) (Object) this;
+    @Inject(method = "renderContent", at = @At("HEAD"))
+    void injectRenderContent(GuiGraphics guiGraphics, int i, int j, boolean bl, float f, CallbackInfo ci) {
+        ServerSelectionList.OnlineServerEntry thisEntry = (ServerSelectionList.OnlineServerEntry)(Object) this;
         CraftingNotifications.renderServerListIndicator(guiGraphics, i, j, thisEntry.getContentX(), thisEntry.getContentY(), getServerData());
     }
 }

@@ -5,7 +5,7 @@ import cc.pe3epwithyou.trident.feature.statusbar.EffectBar;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,8 +20,8 @@ public abstract class GuiMixin {
     @Nullable
     protected abstract Player getCameraPlayer();
 
-    @Inject(method = "extractItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/HumanoidArm;getOpposite()Lnet/minecraft/world/entity/HumanoidArm;", shift = At.Shift.AFTER))
-    public void injectRenderItemHotbar(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "renderItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/HumanoidArm;getOpposite()Lnet/minecraft/world/entity/HumanoidArm;", shift = At.Shift.AFTER))
+    public void injectRenderItemHotbar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (getCameraPlayer() == null) return;
         ReplyLock.Icon.renderIcon(guiGraphics, getCameraPlayer());
