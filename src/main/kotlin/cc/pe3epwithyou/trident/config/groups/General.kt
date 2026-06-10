@@ -183,6 +183,13 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
             controller(tickBox())
         }
 
+        rootOptions.register("enhanced_compact_infinibag") {
+            name(Component.translatable("config.trident.global.enhanced_compact_infinibag.name"))
+            description(OptionDescription.of(Component.translatable("config.trident.global.enhanced_compact_infinibag.description")))
+            binding(handler.instance()::globalEnhancedCompactInfinibag, true)
+            controller(tickBox())
+        }
+
         groups.register("rarity_slot") {
             name(Component.translatable("config.trident.rarity_slot.name"))
             description(

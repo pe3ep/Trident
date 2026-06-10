@@ -69,6 +69,9 @@ class Config {
     var globalAutoWhoami: Boolean = true
 
     @SerialEntry
+    var globalEnhancedCompactInfinibag: Boolean = true
+
+    @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
 
 
@@ -217,6 +220,8 @@ class Config {
             get() = handler.instance().globalFriendsInServer
         val autoWhoami: Boolean
             get() = handler.instance().globalAutoWhoami
+        val enhancedCompactInfinibag: Boolean
+            get() = handler.instance().globalEnhancedCompactInfinibag
     }
 
     object RaritySlot {

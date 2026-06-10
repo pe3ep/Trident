@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.events.click.ClickEvents;
 import cc.pe3epwithyou.trident.events.click.ContainerClickContext;
 import cc.pe3epwithyou.trident.events.container.ContainerContext;
 import cc.pe3epwithyou.trident.events.container.ContainerEvents;
+import cc.pe3epwithyou.trident.feature.EnhancedCompactInfinibag;
 import cc.pe3epwithyou.trident.feature.chat.chatroom.Chatrooms;
 import cc.pe3epwithyou.trident.feature.doll.Doll;
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler;
@@ -77,6 +78,7 @@ public class AbstractContainerScreenMixin extends Screen {
         QuestLock.renderLock(guiGraphics, slot);
         Doll.renderSlot(guiGraphics, slot);
         Chatrooms.renderPinIcon(guiGraphics, slot);
+        EnhancedCompactInfinibag.render(guiGraphics, slot);
     }
 
     @Inject(method = "onClose", at = @At(value = "HEAD"))

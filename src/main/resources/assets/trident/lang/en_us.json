@@ -41,6 +41,8 @@
   "config.trident.global.friends_in_server.description": "Sends a message when joining a server (lobby, fishtance, game, etc.), showing a list of friends currently in that server. Highlights players in your party.\n\n§6Disabled if Island Utils is installed",
   "config.trident.global.auto_whoami.name": "Auto /whoami",
   "config.trident.global.auto_whoami.description": "Automatically runs the /whoami command when joining a game while being disguised.",
+  "config.trident.global.enhanced_compact_infinibag.name": "Enhanced Compact Infinibag",
+  "config.trident.global.enhanced_compact_infinibag.description": "When enabled, item quantities greater than 99 are displayed in a shortened format, if \"Compact Infinibag\" option is enabled in the server settings.",
 
   "config.trident.discord.name": "Discord Integration",
   "config.trident.discord.enabled.name": "Enabled",
