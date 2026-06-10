@@ -21,7 +21,7 @@ fun fishingCategory(categoryRegistrar: CategoryRegistrar) {
                 OptionDescription.createBuilder()
                     .text(Component.translatable("config.trident.fishing.supplies_module.description"))
                     .image(
-                        Resources.trident("textures/config/supplies.png"), 507, 333
+                        Resources.trident("textures/config/supplies.png"), 224, 208
                     ).build()
             )
             binding(handler.instance()::fishingSuppliesModule, true)
@@ -77,7 +77,7 @@ fun fishingCategory(categoryRegistrar: CategoryRegistrar) {
                 OptionDescription.createBuilder()
                     .text(Component.translatable("config.trident.fishing.wayfinder_module.description"))
                     .image(
-                        Resources.trident("textures/config/wayfinder.png"), 768, 310
+                        Resources.trident("textures/config/wayfinder.png"), 262, 104
                     ).build()
             )
             binding(handler.instance()::fishingWayfinderModule, true)

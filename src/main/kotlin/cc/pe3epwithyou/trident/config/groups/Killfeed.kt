@@ -30,7 +30,7 @@ fun killfeedCategory(categoryRegistrar: CategoryRegistrar) {
                 OptionDescription.createBuilder()
                     .text(Component.translatable("config.trident.killfeed.enabled.description"))
                     .image(
-                        Resources.trident("textures/config/killfeed.png"), 618, 332
+                        Resources.trident("textures/config/killfeed.png"), 413, 155
                     ).build()
             )
             binding(handler.instance()::killfeedEnabled, true)

@@ -25,7 +25,7 @@ fun questingCategory(categoryRegistrar: CategoryRegistrar) {
                 OptionDescription.createBuilder()
                     .text(Component.translatable("config.trident.questing.enabled.description"))
                     .image(
-                        Resources.trident("textures/config/questing.png"), 414, 338
+                        Resources.trident("textures/config/questing.png"), 707, 502
                     ).build()
             )
             binding(handler.instance()::questingEnabled, true)

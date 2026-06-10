@@ -52,7 +52,7 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
                 OptionDescription.createBuilder()
                     .text(Component.translatable("config.trident.global.theme.description"))
                     .image(
-                        Resources.trident("textures/config/theme.png"), 497, 329
+                        Resources.trident("textures/config/theme.png"), 542, 502
                     ).build()
             )
             binding(handler.instance()::globalCurrentTheme, TridentThemes.DEFAULT)
@@ -87,7 +87,13 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
         rootOptions.register("chat_room_channel_buttons") {
             name(Component.translatable("config.trident.global.chat_room_channel_buttons.name"))
             description(
-                OptionDescription.of(Component.translatable("config.trident.global.chat_room_channel_buttons.description"))
+                OptionDescription.createBuilder()
+                    .text(Component.translatable("config.trident.global.chat_room_channel_buttons.description"))
+                    .image(
+                        Resources.trident(
+                            "textures/config/chatrooms.png"
+                        ), 136, 64
+                    ).build()
             )
             binding(handler.instance()::globalChatroomChannelButtons, true)
             controller(tickBox())
@@ -103,7 +109,15 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
 
         rootOptions.register("reply_lock") {
             name(Component.translatable("config.trident.global.reply_lock.name"))
-            description(OptionDescription.of(Component.translatable("config.trident.global.reply_lock.description")))
+            description(
+                OptionDescription.createBuilder()
+                    .text(Component.translatable("config.trident.global.reply_lock.description"))
+                    .image(
+                        Resources.trident(
+                            "textures/config/replylock.png"
+                        ), 242, 60
+                    ).build()
+            )
             binding(handler.instance()::globalReplyLock, true)
             controller(tickBox())
         }
@@ -117,7 +131,15 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
 
         rootOptions.register("cosmetic_preview") {
             name(Component.translatable("config.trident.global.cosmetic_preview.name"))
-            description(OptionDescription.of(Component.translatable("config.trident.global.cosmetic_preview.description")))
+            description(
+                OptionDescription.createBuilder()
+                    .text(Component.translatable("config.trident.global.cosmetic_preview.description"))
+                    .image(
+                        Resources.trident(
+                            "textures/config/cosmetic_preview.png"
+                        ), 463, 690
+                    ).build()
+            )
             binding(handler.instance()::globalCosmeticPreview, true)
             controller(tickBox())
             available(utilsCompatible())
@@ -133,7 +155,15 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
 
         rootOptions.register("quest_lock") {
             name(Component.translatable("config.trident.global.quest_lock.name"))
-            description(OptionDescription.of(Component.translatable("config.trident.global.quest_lock.description")))
+            description(
+                OptionDescription.createBuilder()
+                    .text(Component.translatable("config.trident.global.quest_lock.description"))
+                    .image(
+                        Resources.trident(
+                            "textures/config/questlock.png"
+                        ), 294, 94
+                    ).build()
+            )
             binding(handler.instance()::globalQuestLock, true)
             controller(tickBox())
         }
