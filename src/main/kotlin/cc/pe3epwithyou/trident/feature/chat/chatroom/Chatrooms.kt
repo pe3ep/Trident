@@ -11,6 +11,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
 import kotlinx.serialization.Serializable
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
@@ -27,6 +28,23 @@ object Chatrooms {
         (ChatControllerManager.getController() as? ChatroomController)?.chatroom
 
     fun register() {
+        fun unpinRemoved(id: String) {
+            if ((ChatControllerManager.getController() as? ChatroomController)?.chatroom?.id?.equals(id, true) ?: false) {
+                disableLock(false)
+            }
+            playerState().activeChatrooms.removeIf { chatroom -> chatroom.id.equals(id, true) }
+        }
+
+        ClientReceiveMessageEvents.ALLOW_GAME.register { component, _ ->
+            Regex("""You have left the '(.+)' chat room.""").find(component.string)?.let { match ->
+                match.groupValues.getOrNull(1)?.let {
+                    unpinRemoved(it)
+                }
+            }
+
+            true
+        }
+
         ClickEvents.onClick {
             if (!Config.Global.chatroomChannelButtons) return@onClick
             requireTitle("CHAT ROOMS")
@@ -56,6 +74,12 @@ object Chatrooms {
                             )
                         )
                 )
+            }
+
+            // User left chatroom, unpin if needed
+            if (shift && right) {
+                val id = clickedItem()?.hoverName?.string ?: return@onClick
+                unpinRemoved(id)
             }
         }
     }
