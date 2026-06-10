@@ -50,8 +50,5 @@
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}"
-  },
-  "conflicts": {
-    "islandplusplus": ">=1.1.0"
   }
 }
