@@ -2,7 +2,6 @@ package cc.pe3epwithyou.trident.interfaces.questing.widgets
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.questing.Quest
-import cc.pe3epwithyou.trident.feature.questing.QuestHolder
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestSubtype
 import cc.pe3epwithyou.trident.state.FontCollection
@@ -78,7 +77,7 @@ class QuestWidget(
         val currentCompletions = quest.progress.coerceIn(0, totalCompletions)
 
         val holder = quest.questHolder ?: return@GridLayout
-        val holderProgress = holder.totalProgress().toFloat().coerceIn(0f, 100f)
+        val holderProgress = holder.totalProgress().coerceIn(0f, 100f)
         val remainingHolderPercent = (100f - holderProgress).coerceIn(0f, 100f)
         val percentPerCompletion = 100f / totalCompletions.toFloat()
         val usefulExtraCompletions = ceil(remainingHolderPercent / percentPerCompletion).toInt()

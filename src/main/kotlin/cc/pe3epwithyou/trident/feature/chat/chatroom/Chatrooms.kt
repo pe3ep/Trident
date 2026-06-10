@@ -143,7 +143,7 @@ object Chatrooms {
         ) {
             withContainerCtx(screen) {
                 requireTitle("CHAT ROOMS")
-                val chatroomID = slot.item.hoverName?.string?.uppercase() ?: return@withContainerCtx
+                val chatroomID = slot.item.hoverName.string.uppercase()
 
                 playerState().activeChatrooms.forEach {
                     if (it.id == chatroomID) {
@@ -164,7 +164,7 @@ object Chatrooms {
         withContainerCtx(screen) {
             requireTitle("CHAT ROOMS")
             val item = hoveredItem() ?: return@withContainerCtx
-            val chatroomID = item.hoverName?.string?.uppercase() ?: return@withContainerCtx
+            val chatroomID = item.hoverName.string.uppercase()
 
             val isPinned = playerState().activeChatrooms.firstOrNull { it.id == chatroomID } != null
 

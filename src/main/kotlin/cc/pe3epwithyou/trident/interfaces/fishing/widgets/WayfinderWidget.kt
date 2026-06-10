@@ -51,7 +51,7 @@ class WayfinderWidget(
     private fun progressLabelComponent(
         wayfinderStatus: WayfinderStatus,
     ): MutableComponent {
-        if (wayfinderStatus.hasGrotto) return Component.literal("${wayfinderStatus.grottoStability}%")
+        if (wayfinderStatus.hasGrotto) return Component.literal(" ${wayfinderStatus.grottoStability}%")
             .withStyle(
                 when {
                     wayfinderStatus.grottoStability >= 50 -> ChatFormatting.GREEN
