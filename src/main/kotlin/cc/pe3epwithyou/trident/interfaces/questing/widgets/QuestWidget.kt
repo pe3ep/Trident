@@ -80,7 +80,7 @@ class QuestWidget(
         val holderProgress = holder.totalProgress().coerceIn(0f, 100f)
         val remainingHolderPercent = (100f - holderProgress).coerceIn(0f, 100f)
         val percentPerCompletion = 100f / totalCompletions.toFloat()
-        val usefulExtraCompletions = ceil(remainingHolderPercent / percentPerCompletion).toInt()
+        val usefulExtraCompletions = ceil((remainingHolderPercent / percentPerCompletion) - 0.0001f).toInt() // floating point go brrr
             .coerceIn(0, totalCompletions - currentCompletions)
         val effectiveTotalCompletions =
             (currentCompletions + usefulExtraCompletions).coerceAtMost(totalCompletions)
