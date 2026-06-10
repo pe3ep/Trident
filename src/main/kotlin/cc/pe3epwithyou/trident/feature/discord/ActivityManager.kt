@@ -68,7 +68,7 @@ object ActivityManager {
     fun hideActivity() {
         currentActivityBuilder = null
         startTime = null
-        IPCManager.submitBuilder(null)
+        IPCManager.stop()
     }
 
     fun updateCurrentActivity() {

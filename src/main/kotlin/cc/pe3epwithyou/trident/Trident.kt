@@ -103,7 +103,6 @@ class Trident : ModInitializer {
         DelayedAction.init()
         QuestListener.register()
         OverclockClock.register()
-        IPCManager.init()
         ChatControllerManager.register()
         NotificationLifecycle.register()
         SuppliesListeners.register()

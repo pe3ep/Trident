@@ -50,19 +50,28 @@ object IPCManager {
                         Logger.info("Submitted Discord activity: $builtActivity")
                     } catch (e: Exception) {
                         Logger.error("Failed to submit Discord activity: $builder", e)
+                        stop()
                     }
                 } ?: run {
                     Logger.error("Failed to submit Discord activity: $builder")
                 }
             }
+            return
         }
+
+        // IPC is not initialized, initialize and submit again
+        Logger.info("Discord IPC connection not established, initializing...")
+        init(builder)
     }
 
-    fun init() {
+    fun init(initialBuilder: ActivityBuilder? = null) = nonCriticalIO().launch {
         try {
             ipc = RichClient(CLIENT_ID)
             ipc!!.on<ReadyEvent> {
                 Logger.info("Discord Presence Ready")
+                initialBuilder?.let {
+                    submitBuilder(it)
+                }
             }
 
             ipc!!.on<DisconnectEvent> {
@@ -79,11 +88,10 @@ object IPCManager {
         }
     }
 
-    fun stop() {
+    fun stop() = nonCriticalIO().launch {
         try {
-            ActivityManager.hideActivity()
-            ipc?.update(null)
             ipc?.shutdown()
+            ipc = null
         } catch (t: Throwable) {
             Logger.error("[Trident] Failed to disconnect from Discord IPC", t)
         }
@@ -93,8 +101,9 @@ object IPCManager {
         nonCriticalIO().launch {
             try {
                 withTimeoutOrNull(3_000) {
-                    stop()
-                    init()
+                    ipc?.shutdown()
+                    ipc = null
+                    ActivityManager.updateCurrentActivity()
                     main {
                         if (sendMessage) {
                             Logger.sendMessage(
@@ -102,7 +111,6 @@ object IPCManager {
                                     .withSwatch(TridentFont.TRIDENT_ACCENT)
                             )
                         }
-                        ActivityManager.updateCurrentActivity()
                     }
                 } ?: main {
                     if (sendMessage) {

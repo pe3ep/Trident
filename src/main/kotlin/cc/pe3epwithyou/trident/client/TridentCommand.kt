@@ -187,7 +187,7 @@ object TridentCommand {
 
             literal("reconnectDiscord") {
                 executes {
-                    IPCManager.restart()
+                    IPCManager.restart(true)
                 }
             }
 
