@@ -13,7 +13,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.getLore
 import cc.pe3epwithyou.trident.utils.minecraft
 import cc.pe3epwithyou.trident.utils.parseFormattedInt
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.world.inventory.Slot
 
@@ -21,7 +21,7 @@ object AugmentStatusInterface {
     private val AUGMENT_SLOTS = listOf(30, 31, 32, 33, 34, 39, 40, 41, 42, 43)
 
     @JvmStatic
-    fun render(graphics: GuiGraphicsExtractor, slot: Slot) {
+    fun render(graphics: GuiGraphics, slot: Slot) {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Fishing.showAugmentStatusInInterface) return
         withContainerCtx(minecraft().screen as? ContainerScreen ?: return) {
@@ -30,7 +30,7 @@ object AugmentStatusInterface {
         }
     }
 
-    private fun crabPots(ctx: ContainerContext, graphics: GuiGraphicsExtractor, slot: Slot) = with(ctx) {
+    private fun crabPots(ctx: ContainerContext, graphics: GuiGraphics, slot: Slot) = with(ctx) {
         if (!titleContains("CRAB POTS")) return@with
         slot.item.findInLore(Regex("""Durability: (\d+)/(\d+)"""))?.let {
             val durability = it.groups[1]?.value?.parseFormattedInt() ?: return@let
@@ -43,7 +43,7 @@ object AugmentStatusInterface {
         }
     }
 
-    private fun supplies(ctx: ContainerContext, graphics: GuiGraphicsExtractor, slot: Slot) = with(ctx) {
+    private fun supplies(ctx: ContainerContext, graphics: GuiGraphics, slot: Slot) = with(ctx) {
         if (!titleContains("FISHING SUPPLIES")) return@with
         if (slot.index !in AUGMENT_SLOTS) return@with
         val x = slot.x

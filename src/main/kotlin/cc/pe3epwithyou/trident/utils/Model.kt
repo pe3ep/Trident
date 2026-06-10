@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.utils
 
-import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
@@ -28,9 +28,9 @@ data class Model(
     /**
      * Blits the item model onto the screen.
      *
-     * @param guiGraphics a [GuiGraphicsExtractor] instance to render with
+     * @param guiGraphics a [GuiGraphics] instance to render with
      * @param x the X coordinate to blit to (left edge)
      * @param y the Y coordinate to blit to (top edge)
      */
-    fun render(guiGraphics: GuiGraphicsExtractor, x: Int, y: Int) = renderer.render(guiGraphics, x, y)
+    fun render(guiGraphics: GuiGraphics, x: Int, y: Int) = renderer.render(guiGraphics, x, y)
 }
