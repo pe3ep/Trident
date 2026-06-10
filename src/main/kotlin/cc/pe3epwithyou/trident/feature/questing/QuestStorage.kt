@@ -5,54 +5,48 @@ import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Logger
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 object QuestStorage {
-    private val store: MutableMap<Game, MutableList<Quest>> = ConcurrentHashMap()
+    private val store: MutableList<QuestHolder> = CopyOnWriteArrayList()
+
     var dailyRemaining: Int = 0
     var weeklyRemaining: Int = 0
 
-    init {
-        for (g in Game.entries) store[g] = CopyOnWriteArrayList()
-    }
+    fun getActiveQuestHolders(game: Game): List<QuestHolder> =
+        store.filter { holder -> holder.quests.any { it.game == game } }
 
-    fun getActiveQuests(game: Game): List<Quest> = store[game]?.toList() ?: emptyList()
+    fun getActiveQuests(game: Game): List<Quest> =
+        getActiveQuestHolders(game).flatMap { holder ->
+            holder.quests.filter { it.game == game }
+        }
 
-    /**
-     * Clear all current stored quests and replace them with the provided list.
-     * Each quest will be added to the list for its `quest.game`.
-     */
     fun loadQuests(quests: List<Quest>) {
-        // Clear each game's list (preserves map keys)
-        for (g in Game.entries) {
-            store[g]?.clear() ?: store.put(g, CopyOnWriteArrayList())
-        }
-
-        // Distribute provided quests into their corresponding game lists
-        for (q in quests) {
-            val list = store.computeIfAbsent(q.game) { CopyOnWriteArrayList() }
-            list.add(q)
-        }
+        store.clear()
+        store.addAll(quests.chunked(3).map {
+            QuestHolder.create(it)
+        })
         if (!Config.Questing.enabled) return
         DialogCollection.refreshDialog("questing")
     }
 
-    /**
-     * Apply the increment described by ctx to all matching quests for the given game.
-     * Returns true if any quest was updated.
-     */
     fun applyIncrement(ctx: IncrementContext): Boolean {
-        Logger.debugLog("Received increment from context ${ctx.sourceTag}, criteria: ${ctx.criteria}: amount: ${ctx.amount}")
-        val quests = store[ctx.game] ?: return false
+        Logger.debugLog(
+            "Received increment from context ${ctx.sourceTag}, criteria: ${ctx.criteria}: amount: ${ctx.amount}"
+        )
         if (MCCIState.isPlobbyGame) return false
+
         var updated = false
-        for (q in quests) {
-            if (q.criteria == ctx.criteria && !q.isCompleted) {
-                q.increment(ctx.amount)
-                updated = true
+
+        for (holder in store) {
+            for (quest in holder.quests) {
+                if (quest.game == ctx.game && quest.criteria == ctx.criteria && !quest.isCompleted) {
+                    quest.increment(ctx.amount)
+                    updated = true
+                }
             }
         }
+
         if (updated) DialogCollection.refreshDialog("questing")
         return updated
     }

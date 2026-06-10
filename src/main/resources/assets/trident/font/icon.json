@@ -77,6 +77,15 @@
       "chars": [
         "\uE016"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/progress_half.png",
+      "ascent": 7,
+      "height": 7,
+      "chars": [
+        "\uE017"
+      ]
     }
   ]
 }

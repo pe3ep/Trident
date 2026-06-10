@@ -14,7 +14,8 @@ data class Quest(
     val criteria: QuestCriteria,
     var progress: Int,
     val totalProgress: Int,
-    val slot: Int
+    val slot: Int,
+    var questHolder: QuestHolder? = null,
 ) {
     val sprite: Identifier
         get() {
@@ -26,7 +27,12 @@ data class Quest(
     val displayName: String = criteria.shortName
 
     val isCompleted: Boolean
-        get() = progress >= totalProgress
+        get() {
+            questHolder?.let {
+                return it.totalProgress() >= 100
+            }
+            return false
+        }
 
     /**
      * Increment progress by amount, clamp to totalProgress, and return true if

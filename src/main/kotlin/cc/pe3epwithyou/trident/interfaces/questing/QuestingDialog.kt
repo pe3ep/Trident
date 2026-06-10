@@ -96,9 +96,13 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
             ).atBottom(0)
             return@grid
         }
-        quests.sortedBy { quest -> quest.isCompleted }.forEach { q ->
-            QuestWidget(q, this@QuestingDialog).atBottom(0, settings = LayoutConstants.LEFT)
+
+        quests.sortedBy { it.isCompleted }.forEach { quest ->
+            QuestWidget(
+                quest, this@QuestingDialog
+            ).atBottom(0, settings = LayoutConstants.LEFT)
         }
+
     }
 
     override fun refresh() {
