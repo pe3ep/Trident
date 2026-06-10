@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.events.click.ContainerClickContext
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.events.container.withContainerCtx
+import cc.pe3epwithyou.trident.feature.doll.back.CosmeticDollRenderState
 import cc.pe3epwithyou.trident.feature.doll.chroma.ChromaWidgets
 import cc.pe3epwithyou.trident.mixin.accessors.AbstractContainerScreenAccessor
 import cc.pe3epwithyou.trident.mixin.accessors.InventoryScreenAccessor
@@ -253,6 +254,8 @@ object Doll {
             renderState.scale = 1f
             renderState.walkAnimationSpeed = 0f
         }
+
+        (renderState as? CosmeticDollRenderState ?: return).`trident$setCosmeticDoll`(true)
         guiGraphics.entity(
             renderState, size, vector3f, quaternion, quaternion2, x0, y0, x1, y1
         )

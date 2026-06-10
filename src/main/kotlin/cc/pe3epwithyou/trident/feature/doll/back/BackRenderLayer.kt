@@ -41,10 +41,11 @@ class BackRenderLayer(
         f: Float,
         g: Float
     ) {
+        val state = entityRenderState as? CosmeticDollRenderState ?: return
+        if (!state.`trident$isCosmeticDoll`()) return
+
         val player = playerForNextPass ?: return
-        playerForNextPass = null
         val item = itemForNextPass ?: return
-        itemForNextPass = null
 
         val entityModel = this.parentModel
         poseStack.pushPose()
