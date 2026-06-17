@@ -341,8 +341,8 @@ class Config {
             if (!utilsCompatible()) {
                 handler.instance().discordEnabled = false
                 handler.instance().globalChatChannelButtons = false
+                handler.instance().globalChatroomChannelButtons = false
                 handler.instance().globalCosmeticPreview = false
-                handler.instance().globalQuestLock = false
                 handler.instance().globalCraftingNotifications = false
                 handler.instance().globalFriendsInServer = false
                 handler.instance().globalUpgradeIndicators = false
