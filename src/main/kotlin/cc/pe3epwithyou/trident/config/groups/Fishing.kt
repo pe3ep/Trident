@@ -77,7 +77,7 @@ fun fishingCategory(categoryRegistrar: CategoryRegistrar) {
                 OptionDescription.createBuilder()
                     .text(Component.translatable("config.trident.fishing.wayfinder_module.description"))
                     .image(
-                        Resources.trident("textures/config/wayfinder.png"), 262, 104
+                        Resources.trident("textures/config/wayfinder.png"), 290, 200
                     ).build()
             )
             binding(handler.instance()::fishingWayfinderModule, true)
