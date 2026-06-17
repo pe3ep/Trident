@@ -1,12 +1,14 @@
 package cc.pe3epwithyou.trident.config.groups
 
 import cc.pe3epwithyou.trident.config.Config.Companion.handler
-import cc.pe3epwithyou.trident.interfaces.fishing.WayfinderModuleDisplay
 import cc.pe3epwithyou.trident.utils.Resources
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionEventListener
-import dev.isxander.yacl3.dsl.*
+import dev.isxander.yacl3.dsl.CategoryRegistrar
+import dev.isxander.yacl3.dsl.available
+import dev.isxander.yacl3.dsl.binding
+import dev.isxander.yacl3.dsl.tickBox
 import net.minecraft.network.chat.Component
 
 fun fishingCategory(categoryRegistrar: CategoryRegistrar) {
@@ -69,8 +71,6 @@ fun fishingCategory(categoryRegistrar: CategoryRegistrar) {
             controller(tickBox())
         }
 
-        lateinit var wayfinderModuleDisplayOption: Option<WayfinderModuleDisplay>
-
         rootOptions.register("wayfinder_module") {
             name(Component.translatable("config.trident.fishing.wayfinder_module.name"))
             description(
@@ -82,11 +82,6 @@ fun fishingCategory(categoryRegistrar: CategoryRegistrar) {
             )
             binding(handler.instance()::fishingWayfinderModule, true)
             controller(tickBox())
-            addListener { option, event ->
-                if (event == OptionEventListener.Event.STATE_CHANGE) {
-                    wayfinderModuleDisplayOption.setAvailable(option.pendingValue())
-                }
-            }
         }
     }
 }
