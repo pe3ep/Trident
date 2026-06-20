@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.feature.discord
 
 import cc.pe3epwithyou.trident.Trident
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.TridentFont
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withSwatch
@@ -31,6 +32,10 @@ object IPCManager {
      *                 or null to clear the current activity.
      */
     fun submitBuilder(builder: ActivityBuilder?) {
+        if (!Config.Discord.enabled) {
+            stop()
+            return
+        }
         ipc?.let {
             it.coroutineScope.launch {
                 if (builder == null) {
