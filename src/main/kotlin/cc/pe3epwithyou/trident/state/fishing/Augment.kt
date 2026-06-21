@@ -9,7 +9,7 @@ import net.minecraft.resources.Identifier
 enum class Augment(
     val augmentName: String,
     val modelPath: Identifier,
-    val uses: Int,
+    val defaultUses: Int,
     val useTrigger: AugmentTrigger,
     val textureWidth: Int = 16,
     val textureHeight: Int = textureWidth,
@@ -319,13 +319,15 @@ fun getAugmentContainer(name: String, lore: List<String>): AugmentContainer? {
             }
             val isPaused = lore.find { "Paused: This item will not consume uses" in it } != null
             var durability: Int? = null
+            var uses: Int? = null
             lore.forEach { s ->
                 Regex("""Uses Remaining: (.+)/(.+)""").matchEntire(s)?.let {
                     durability = it.groups[1]?.value?.parseFormattedInt()
+                    uses = it.groups[2]?.value?.parseFormattedInt()
                     return@forEach
                 }
             }
-            return AugmentContainer(augment, status, durability ?: augment.uses, isPaused)
+            return AugmentContainer(augment, status, durability ?: augment.defaultUses, uses ?: augment.defaultUses, isPaused)
         }
     }
     return null

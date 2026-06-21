@@ -26,7 +26,8 @@ data class Line(var type: Rarity = Rarity.COMMON, var uses: Int? = null, var amo
 data class AugmentContainer(
     var augment: Augment,
     var status: AugmentStatus = AugmentStatus.NEW,
-    var durability: Int = augment.uses,
+    var durability: Int = augment.defaultUses,
+    var totalUses: Int = augment.defaultUses,
     var paused: Boolean = false
 )
 
