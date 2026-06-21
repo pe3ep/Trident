@@ -20,8 +20,7 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 
 class WayfinderWidget(
-    wayfinderStatus: WayfinderStatus,
-    themed: Themed
+    wayfinderStatus: WayfinderStatus, themed: Themed
 ) : CompoundWidget(0, 0, 0, 0) {
     override fun getWidth(): Int = layout.width
     override fun getHeight(): Int = layout.height
@@ -30,9 +29,18 @@ class WayfinderWidget(
 
     private companion object {
         val GROTTOS = hashMapOf(
-            "Temperate" to Grotto(Resources.mcc("island_interface/fishing/island/grotto_temperate"), 0x7ed85c),
-            "Tropical" to Grotto(Resources.mcc("island_interface/fishing/island/grotto_tropical"), 0xf095b5),
-            "Barren" to Grotto(Resources.mcc("island_interface/fishing/island/grotto_barren"), 0xff5f6e)
+            "Temperate" to Grotto(
+                Resources.mcc("island_interface/fishing/island/grotto_temperate"),
+                0x7ed85c
+            ),
+            "Tropical" to Grotto(
+                Resources.mcc("island_interface/fishing/island/grotto_tropical"),
+                0xf095b5
+            ),
+            "Barren" to Grotto(
+                Resources.mcc("island_interface/fishing/island/grotto_barren"),
+                0xff5f6e
+            )
         )
     }
 
@@ -46,27 +54,27 @@ class WayfinderWidget(
     override val layout = GridLayout(themed.theme.dimensions.paddingInner) {
         val mcFont = minecraft().font
         val grotto = GROTTOS[wayfinderStatus.island]!!
-        val islandName = Component.literal(" ${wayfinderStatus.island.uppercase()}").withColor(grotto.color).mccFont()
-        val title = FontCollection.texture(grotto.icon).offset(y = 1f)
-            .append(islandName)
-
-    //        title.append(Component.literal("∙").withStyle(ChatFormatting.GRAY).defaultFont())
-    //        title.append(progressLabelComponent(wayfinderStatus))
+        val islandName =
+            Component.literal(" ${wayfinderStatus.island.uppercase()}").withColor(grotto.color)
+                .mccFont()
+        val title = FontCollection.texture(grotto.icon).offset(y = 1f).append(islandName)
 
         StringWidget(title, mcFont).at(0, 0, settings = LayoutConstants.LEFT)
-        StringWidget(progressLabelComponent(wayfinderStatus), mcFont).at(0, 1, settings = LayoutConstants.RIGHT)
+        StringWidget(progressLabelComponent(wayfinderStatus), mcFont).at(
+            0,
+            1,
+            settings = LayoutConstants.RIGHT
+        )
 
         var currentProgress = 0f
         currentProgress = if (wayfinderStatus.hasGrotto) {
-            wayfinderStatus.grottoStability/100f
+            wayfinderStatus.grottoStability / 100f
         } else {
             wayfinderStatus.data / 2000f
         }
 
         fun colorFunc(
-            progress: Float,
-            leftHalfPercent: Float,
-            rightHalfPercent: Float
+            progress: Float, leftHalfPercent: Float, rightHalfPercent: Float
         ): Pair<Int, Int> {
             fun colorAt(percent: Float): Int {
                 val color = TridentColor.lerpList(grottoLerpColors.reversed(), progress).color
@@ -80,8 +88,7 @@ class WayfinderWidget(
         }
 
         val progressComponent = ProgressBar.progressComponent(
-            currentProgress,
-            40, 10, ::colorFunc
+            currentProgress, 40, 10, ::colorFunc
         )
 
         StringWidget(progressComponent, mcFont).at(1, 0, 1, 2, LayoutConstants.LEFT)
@@ -92,7 +99,10 @@ class WayfinderWidget(
     ): MutableComponent {
         if (wayfinderStatus.hasGrotto) return Component.literal("${wayfinderStatus.grottoStability}%")
             .withColor(
-                TridentColor.lerpList(grottoLerpColors.reversed(), wayfinderStatus.grottoStability / 100f).color,
+                TridentColor.lerpList(
+                    grottoLerpColors.reversed(),
+                    wayfinderStatus.grottoStability / 100f
+                ).color,
             )
 
         val progressPercentage = (wayfinderStatus.data.toDouble() / 2000) * 100

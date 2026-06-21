@@ -442,6 +442,13 @@ object TridentCommand {
                 }
             }
 
+            literal("force_load_playerstate") {
+                executes {
+                    playerState = PlayerStateIO.load()
+                    Logger.sendMessage("Successfully loaded playerstate")
+                }
+            }
+
             literal("discord_presence") {
                 literal("update_activity") {
                     executes {
