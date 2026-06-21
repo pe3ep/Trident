@@ -36,9 +36,9 @@ object EnhancedCompactInfinibag {
         graphics.pose().pushMatrix()
 
         val pose = graphics.pose()
-        val factor = ((16f / width) * 0.9f).coerceAtMost(1f)
-        pose.scaleAround(factor, factor, slot.x.toFloat() + width, slot.y.toFloat() + 9, pose)
-        graphics.text(font, formatted, slot.x + 15 - width, slot.y + 9, 0xffffff.opaqueColor())
+        val factor = ((16f / width) * 0.9f).coerceAtMost(0.9f)
+        pose.scaleAround(factor, factor, slot.x.toFloat(), slot.y.toFloat() + (8 * (2 - factor)), pose)
+        graphics.text(font, formatted, slot.x + (16-((width * factor).toInt()))/2, slot.y + 9, 0xffffff.opaqueColor())
 
         graphics.pose().popMatrix()
     }
