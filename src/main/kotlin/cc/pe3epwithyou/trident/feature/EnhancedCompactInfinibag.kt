@@ -29,10 +29,18 @@ object EnhancedCompactInfinibag {
         val tag = slot.item.components.get(DataComponents.CUSTOM_DATA)?.copyTag() ?: return
         val amount = parseTag(tag) ?: return
         if (amount <= 99) return
-        val formatted = Component.literal(formatNumber(amount)).withoutShadow()
+        val formatted = Component.literal(formatNumber(amount)).apply {
+            if (Config.Global.enhancedCompactInfinibagContrast) {
+                withoutShadow()
+            }
+        }
         val font = minecraft().font
         val width = font.width(formatted)
-        graphics.fill(slot.x, slot.y + 8, slot.x + 16, slot.y + 16, 0x000 opacity 192)
+
+        if (Config.Global.enhancedCompactInfinibagContrast) {
+            graphics.fill(slot.x, slot.y + 8, slot.x + 16, slot.y + 16, 0x000 opacity 160)
+        }
+
         graphics.pose().pushMatrix()
 
         val pose = graphics.pose()

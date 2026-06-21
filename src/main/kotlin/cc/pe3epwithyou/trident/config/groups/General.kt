@@ -183,11 +183,37 @@ fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
             controller(tickBox())
         }
 
-        rootOptions.register("enhanced_compact_infinibag") {
-            name(Component.translatable("config.trident.global.enhanced_compact_infinibag.name"))
-            description(OptionDescription.of(Component.translatable("config.trident.global.enhanced_compact_infinibag.description")))
-            binding(handler.instance()::globalEnhancedCompactInfinibag, true)
-            controller(tickBox())
+        groups.register("enhanced_compact_infinibag_group") {
+            name(Component.translatable("config.trident.global.enhanced_compact_infinibag_group.name"))
+            description(
+                OptionDescription.of(
+                    Component.translatable("config.trident.global.enhanced_compact_infinibag_group.description")
+                )
+            )
+
+            lateinit var increasedContrast: Option<Boolean>
+
+            options.register("enhanced_compact_infinibag") {
+                name(Component.translatable("config.trident.global.enhanced_compact_infinibag.name"))
+                description(OptionDescription.of(Component.translatable("config.trident.global.enhanced_compact_infinibag.description")))
+                binding(handler.instance()::globalEnhancedCompactInfinibag, true)
+                controller(tickBox())
+                addListener { option, event ->
+                    if (event == OptionEventListener.Event.STATE_CHANGE) {
+                        increasedContrast.setAvailable(option.pendingValue())
+                    }
+                }
+            }
+
+            increasedContrast = options.register("enhanced_compact_infinibag_contrast") {
+                name(Component.translatable("config.trident.global.enhanced_compact_infinibag_contrast.name"))
+                description(OptionDescription.of(Component.translatable("config.trident.global.enhanced_compact_infinibag_contrast.description")))
+                binding(handler.instance()::globalEnhancedCompactInfinibagContrast, true)
+                controller(tickBox())
+                available {
+                    handler.instance().globalEnhancedCompactInfinibag
+                }
+            }
         }
 
         groups.register("rarity_slot") {

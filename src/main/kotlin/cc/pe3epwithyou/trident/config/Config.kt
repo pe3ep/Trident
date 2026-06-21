@@ -72,6 +72,9 @@ class Config {
     var globalEnhancedCompactInfinibag: Boolean = true
 
     @SerialEntry
+    var globalEnhancedCompactInfinibagContrast: Boolean = true
+
+    @SerialEntry
     var globalCurrentTheme: TridentThemes = TridentThemes.DEFAULT
 
 
@@ -222,6 +225,8 @@ class Config {
             get() = handler.instance().globalAutoWhoami
         val enhancedCompactInfinibag: Boolean
             get() = handler.instance().globalEnhancedCompactInfinibag
+        val enhancedCompactInfinibagContrast: Boolean
+            get() = handler.instance().globalEnhancedCompactInfinibagContrast
     }
 
     object RaritySlot {
