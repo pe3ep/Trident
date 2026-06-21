@@ -59,7 +59,7 @@ class AugmentWidget(
         val uses = Component.literal(" ▪ ").withColor(0x505050.opaqueColor()).append(
             Component.literal("Uses: ").withColor(0xA8B0B0.opaqueColor())
         ).append(
-            Component.literal("${container.augment.uses}\n").withColor(0xFFFFFF.opaqueColor())
+            Component.literal("${container.totalUses}\n").withColor(0xFFFFFF.opaqueColor())
         )
 
         val trigger = Component.literal(" ▪ ").withColor(0x505050.opaqueColor()).append(
@@ -98,11 +98,11 @@ class AugmentWidget(
                     Component.literal("Uses Remaining: ").withColor(0xFEE761.opaqueColor()).append(
                         Component.literal("${container.durability}")
                             .withColor(0xffffff.opaqueColor()).append(
-                                Component.literal("/${container.augment.uses}\n")
+                                Component.literal("/${container.totalUses}\n")
                                     .withColor(0x505050.opaqueColor())
                             ).append(
                                 ProgressBar.progressComponent(
-                                    container.durability / container.augment.uses.toFloat(), 50, 10
+                                    container.durability / container.totalUses.toFloat(), 50, 10
                                 )
                             )
                     )
@@ -180,7 +180,7 @@ class AugmentWidget(
         if (!container.paused) drawAugmentBar(
             graphics,
             container.status == AugmentStatus.REPAIRED,
-            container.durability / container.augment.uses.toFloat(),
+            container.durability / container.totalUses.toFloat(),
             container.status
         )
 
@@ -224,7 +224,7 @@ class AugmentWidget(
             else -> x + 4
         }
         val posY = y + 15
-        val percent = durability / container.augment.uses.toFloat()
+        val percent = durability / container.totalUses.toFloat()
         val color = when {
             container.paused -> WARNING_COLOR.opaqueColor()
             durability == 0 -> 0xA8B0B0.opaqueColor()
