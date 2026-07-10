@@ -55,10 +55,10 @@ object ExchangeLookup {
             }
 
             onError { _, throwable ->
-                Logger.error("Something went wrong when fetching Exchange API", throwable)
+                Logger.error("Something went wrong when fetching Trident Web Exchange API", throwable)
                 ExchangeHandler.fetchingProgress = ExchangeHandler.FetchProgress.FAILED
                 Logger.sendMessage(
-                    Component.literal("Something went wrong when fetching Exchange API. Please contact developers to fix this issue")
+                    Component.literal("Something went wrong when fetching Trident Exchange API. Please contact the mod's developers to fix this issue")
                         .withSwatch(TridentFont.ERROR)
                 )
             }

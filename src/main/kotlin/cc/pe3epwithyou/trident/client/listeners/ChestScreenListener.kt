@@ -25,7 +25,7 @@ fun registerScreenEvents() {
             Logger.debugLog("Screen title: ${screen.title.string}")
         } catch (e: Exception) {
             Logger.sendMessage(
-                Component.literal("Something went wrong when opening screen, please contact developers about this issue")
+                Component.literal("Something went wrong when opening screen, please contact Trident developers about this issue")
                     .withSwatch(TridentFont.ERROR)
             )
             Logger.error("Something went wrong when opening screen, ${e.message}")
