@@ -48,9 +48,12 @@ object Chatrooms {
         ClickEvents.onClick {
             if (!Config.Global.chatroomChannelButtons) return@onClick
             requireTitle("CHAT ROOMS")
+            val clickedSlot = clickedSlot() ?: return@onClick
+            val clickedItem = clickedSlot.item
+            if (!isInBoundary(clickedSlot.index)) return@onClick
             if (middle) {
-                val id = clickedItem()?.hoverName?.string ?: return@onClick
-                val model = clickedItem()?.components?.get(DataComponents.ITEM_MODEL) ?: return@onClick
+                val id = clickedItem.hoverName?.string ?: return@onClick
+                val model = clickedItem.components?.get(DataComponents.ITEM_MODEL) ?: return@onClick
                 val color = ChatroomColor.entries.find {it.getItemModel() == model} ?: ChatroomColor.WHITE
                 val chatroom = Chatroom(id, color)
                 if (playerState().activeChatrooms.removeIf { chatroom.id == it.id }) {
@@ -78,7 +81,7 @@ object Chatrooms {
 
             // User left chatroom, unpin if needed
             if (shift && right) {
-                val id = clickedItem()?.hoverName?.string ?: return@onClick
+                val id = clickedItem.hoverName?.string ?: return@onClick
                 unpinRemoved(id)
             }
         }
@@ -161,10 +164,7 @@ object Chatrooms {
         if (!MCCIState.isOnIsland()) return
         if (!Config.Global.chatroomChannelButtons) return
         val screen = minecraft().screen as? ContainerScreen ?: return
-        if (slot.index in 19..25 ||
-            slot.index in 28..34 ||
-            slot.index in 37..43
-        ) {
+        if (isInBoundary(slot.index)) {
             withContainerCtx(screen) {
                 requireTitle("CHAT ROOMS")
                 val chatroomID = slot.item.hoverName.string.uppercase()
@@ -179,6 +179,12 @@ object Chatrooms {
         }
     }
 
+    private fun isInBoundary(index: Int): Boolean {
+        return index in 19..25 ||
+                index in 28..34 ||
+                index in 37..43
+    }
+
     @JvmStatic
     fun modifyTooltip(consumer: Consumer<Component>) {
         if (!MCCIState.isOnIsland()) return
@@ -187,11 +193,12 @@ object Chatrooms {
 
         withContainerCtx(screen) {
             requireTitle("CHAT ROOMS")
-            val item = hoveredItem() ?: return@withContainerCtx
+            val slot = hoveredSlot() ?: return@withContainerCtx
+            val item = slot.item
             val chatroomID = item.hoverName.string.uppercase()
 
             val isPinned = playerState().activeChatrooms.firstOrNull { it.id == chatroomID } != null
-
+            if (!isInBoundary(slot.index)) return@withContainerCtx
             val component =
                 FontCollection.get("_fonts/icon/click_action_middle.png", 7, 7).withColor(0xffffff)
                     .mccFont("icon")
