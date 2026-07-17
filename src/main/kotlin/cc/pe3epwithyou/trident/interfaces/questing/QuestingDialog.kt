@@ -60,6 +60,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
         var game = currentGame
         // Since BB and BBA share quests, we treat BBA as BB
         if (game == Game.BATTLE_BOX_ARENA) game = Game.BATTLE_BOX
+        if (game == Game.SKY_BATTLE_SOLO) game = Game.SKY_BATTLE
 
         val quests = QuestStorage.getActiveQuests(game)
 

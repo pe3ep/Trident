@@ -109,32 +109,32 @@ enum class QuestCriteria(
     SKY_BATTLE_QUADS_SURVIVED_TWO_MINUTE(
         "Survive 2m",
         Regex("Survive at least 2m in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survived_two_minute")
+        listOf("sky_battle_quads_survived_two_minute", "sky_battle_solos_survived_two_minute")
     ),
     SKY_BATTLE_QUADS_SURVIVED_MINUTE(
         "Survive 1m",
         Regex("Survive at least 60s in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survived_minute")
+        listOf("sky_battle_quads_survived_minute", "sky_battle_solos_survived_minute")
     ),
     SKY_BATTLE_QUADS_SURVIVAL_TOP_TEN(
         "Survive Top 10",
         Regex("Reach a Survival Placement of 10 or higher in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survival_top_ten")
+        listOf("sky_battle_quads_survival_top_ten", "sky_battle_solos_survival_top_ten")
     ),
     SKY_BATTLE_QUADS_SURVIVAL_TOP_FIVE(
         "Survive Top 5",
         Regex("Reach a Survival Placement of 5 or higher in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survival_top_five")
+        listOf("sky_battle_quads_survival_top_five", "sky_battle_solos_survival_top_five")
     ),
     SKY_BATTLE_QUADS_SURVIVAL_TOP_THREE(
         "Survive Top 3",
         Regex("Reach a Survival Placement of 3 or higher in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survival_top_three")
+        listOf("sky_battle_quads_survival_top_three", "sky_battle_solos_survival_top_three")
     ),
     SKY_BATTLE_QUADS_PLAYERS_KILLED(
         "Kill players",
         Regex("Eliminate (\\d+) players in Sky Battle"),
-        listOf("sky_battle_quads_players_killed")
+        listOf("sky_battle_quads_players_killed", "sky_battle_solos_players_killed")
     ),
 
     PW_SURVIVAL_OBSTACLES_COMPLETED(
