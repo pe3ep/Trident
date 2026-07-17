@@ -11,5 +11,8 @@ enum class TridentThemes(val theme: Theme) : NameableEnum {
     },
     OPAQUE(OpaqueTheme) {
         override fun getDisplayName(): Component = Component.literal("Opaque theme")
+    },
+    MATCH_CHAT(MatchChatTheme) {
+        override fun getDisplayName(): Component = Component.literal("Match chat background")
     }
 }
