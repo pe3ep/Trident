@@ -66,7 +66,6 @@ object MCCIState {
         DialogCollection.saveAllDialogs()
         PlayerStateIO.save()
         ActivityManager.hideActivity()
-        FontCollection.clear()
         ChatControllerManager.clearController()
         Logger.info("Disconnected from MCC Island")
     }

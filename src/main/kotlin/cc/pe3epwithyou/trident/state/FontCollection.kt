@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.state
 
-import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
+import cc.pe3epwithyou.trident.feature.disguise.Disguise
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
@@ -27,32 +27,48 @@ object FontCollection {
     private val fallbackComponent = Component.literal("?").defaultFont()
 
     fun get(icon: Icon): MutableComponent {
-        if (!minecraft().isRunning) return fallbackComponent
+        if (!isGameRunning()) return fallbackComponent
         val char = collection[icon]
         if (char == null) {
             Logger.error("Failed to get a char ${icon.path} from the font collection")
             return fallbackComponent
         }
-        val comp = Component.literal(char).mccFont("icon")
-        return comp
+        return Component.literal(char).mccFont("icon")
     }
 
     fun clear() {
-        collection.clear()
-        clearCache()
+        try {
+            collection.clear()
+            clearCache()
+        } catch (t: Throwable) {
+            Logger.error("Failed to clear the font collection: ${t.message}")
+        }
     }
 
-    fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) = minecraft().execute {
-        /*
-         * Sometimes when force-quitting the game using ⌘Q (or Alt+F4), the process would
-         * crash since it's trying to access memory that has been unloaded. This should
-         * hopefully prevent this issue from happening.
-         */
-        if (!minecraft().isRunning) return@execute
+    fun loadDefinition(location: Identifier, char: String, ascent: Int, height: Int) {
+        if (!isGameRunning()) return
+        minecraft().execute {
+            /*
+             * Sometimes when force-quitting the game using ⌘Q (or Alt+F4), the process would
+             * crash since it's trying to access memory that has been unloaded. We check both
+             * before scheduling this task and again right before touching anything, since the
+             * game can finish shutting down in the gap between the two.
+             */
+            try {
+                if (!isGameRunning()) return@execute
+                val i = Icon(location, ascent, height)
+                collection[i] = char
+                populateCache(i)
+            } catch (t: Throwable) {
+                Logger.error("Failed to load font definition $location: ${t.message}")
+            }
+        }
+    }
 
-        val i = Icon(location, ascent, height)
-        collection[i] = char
-        populateCache(i)
+    fun isGameRunning(): Boolean = try {
+        minecraft().isRunning
+    } catch (_: Throwable) {
+        false
     }
 
     data class Icon(
@@ -62,7 +78,7 @@ object FontCollection {
     fun texture(path: String): MutableComponent = texture(Resources.mcc(path))
 
     fun texture(resource: Identifier, atlas: Identifier = AtlasSprite.DEFAULT_ATLAS): MutableComponent {
-        if (!minecraft().isRunning) return fallbackComponent
+        if (!isGameRunning()) return fallbackComponent
         if (!Identifier.isValidPath(resource.path)) return fallbackComponent
         return Component.`object`(AtlasSprite(atlas, resource))
     }
