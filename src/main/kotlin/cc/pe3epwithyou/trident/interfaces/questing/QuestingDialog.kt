@@ -101,6 +101,7 @@ class QuestingDialog(x: Int, y: Int, key: String) : TridentDialog(x, y, key),
 
         quests.sortedBy { it.isCompleted }.forEach { quest ->
             QuestWidget(
+                currentGame,
                 quest, this@QuestingDialog
             ).atBottom(0, settings = LayoutConstants.LEFT)
         }

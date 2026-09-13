@@ -5,6 +5,7 @@ import cc.pe3epwithyou.trident.feature.questing.Quest
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.QuestSubtype
 import cc.pe3epwithyou.trident.state.FontCollection
+import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.utils.ProgressBar
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
@@ -23,6 +24,7 @@ import net.minecraft.resources.Identifier
 import kotlin.math.ceil
 
 class QuestWidget(
+    game: Game,
     quest: Quest,
     themed: Themed
 ) : CompoundWidget(0, 0, 0, 0) {
@@ -39,7 +41,7 @@ class QuestWidget(
         val mcFont = minecraft().font
         val isCompleted = quest.isCompleted
 
-        val questName = Component.literal(quest.displayName.uppercase())
+        val questName = Component.literal(quest.criteria.getQuestName(game).uppercase())
             .mccFont()
         questName.withColor(quest.rarity.color)
         if (isCompleted) {

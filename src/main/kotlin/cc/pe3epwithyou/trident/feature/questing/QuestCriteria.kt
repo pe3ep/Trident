@@ -1,5 +1,8 @@
 package cc.pe3epwithyou.trident.feature.questing
 
+import cc.pe3epwithyou.trident.state.Game
+import cc.pe3epwithyou.trident.state.MCCIState
+
 enum class QuestCriteria(
     val shortName: String, val regexPattern: Regex, val statisticKeys: List<String>
 ) {
@@ -58,83 +61,72 @@ enum class QuestCriteria(
         listOf("tgttos_round_top_three")
     ),
 
-    BATTLE_BOX_QUADS_GAMES_PLAYED(
+    BATTLE_BOX_GAMES_PLAYED(
         "Play Games",
         Regex("Complete (\\d+) games of Battle Box"),
-        listOf("battle_box_quads_games_played", "battle_box_arena_games_played")
+        listOf("battle_box_games_played")
     ),
-    BATTLE_BOX_QUADS_TEAM_ROUNDS_WON(
-        "Win Rounds",
-        Regex("Win (\\d+) rounds of Battle Box"),
-        listOf("battle_box_arena_team_rounds_won", "battle_box_quads_team_rounds_won")
+    BATTLE_BOX_TEAM_ROUNDS_WON(
+        "Win Rounds", Regex("Win (\\d+) rounds of Battle Box"),
+        listOf("battle_box_team_rounds_won")
     ),
-    BATTLE_BOX_QUADS_ROUNDS_PLAYED(
-        "Play Rounds",
-        Regex("Play (\\d+) rounds of Battle Box"),
-        listOf("battle_box_arena_rounds_played", "battle_box_quads_rounds_played")
+    BATTLE_BOX_ROUNDS_PLAYED(
+        "Play Rounds", Regex("Play (\\d+) rounds of Battle Box"),
+        listOf("battle_box_rounds_played")
     ),
-    BATTLE_BOX_QUADS_TEAM_FIRST_PLACE(
+    BATTLE_BOX_TEAM_FIRST_PLACE(
         "Team 1st",
         Regex("Place 1st as a team in (\\d+) games of Battle Box"),
-        listOf("battle_box_quads_team_first_place", "battle_box_arena_team_first_place")
+        listOf("battle_box_team_first_place")
     ),
-    BATTLE_BOX_QUADS_TEAM_SECOND_PLACE(
+    BATTLE_BOX_TEAM_SECOND_PLACE(
         "Team 2nd",
         Regex("Place 2nd or higher as a team in (\\d+) games of Battle Box"),
-        listOf("battle_box_quads_team_second_place", "battle_box_arena_team_second_place")
-
+        listOf("battle_box_team_second_place")
     ),
-    BATTLE_BOX_QUADS_PLAYERS_KILLED(
-        "Kill players", Regex("Eliminate (\\d+) players in Battle Box"), listOf(
-            "battle_box_quads_players_killed",
-            "battle_box_arena_players_killed",
+    BATTLE_BOX_PLAYERS_KILLED(
+        "Kill players", Regex("Eliminate (\\d+) players in Battle Box"),
+        listOf(
+            "battle_box_players_killed",
         )
     ),
-    BATTLE_BOX_QUADS_PLAYERS_KILLED_OR_ASSISTED(
+    BATTLE_BOX_PLAYERS_KILLED_OR_ASSISTED(
         "Kills or Assists",
         Regex("Eliminate or assist in eliminating (\\d+) players in Battle Box"),
         listOf(
-            "battle_box_quads_players_killed",
-            "battle_box_quads_player_kills_assisted",
-            "battle_box_arena_players_killed",
-            "battle_box_arena_player_kills_assisted",
+            "battle_box_players_eliminated"
         )
     ),
-    BATTLE_BOX_QUADS_RANGED_KILLS(
+    BATTLE_BOX_RANGED_KILLS(
         "Ranged kills",
         Regex("Eliminate (\\d+) players in Battle Box using a ranged weapon"),
-        listOf("battle_box_arena_ranged_kills", "battle_box_quads_ranged_kills")
+        listOf("battle_box_ranged_kills")
     ),
 
-    SKY_BATTLE_QUADS_SURVIVED_TWO_MINUTE(
+    SKY_BATTLE_SURVIVED_TWO_MINUTE(
         "Survive 2m",
         Regex("Survive at least 2m in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survived_two_minute", "sky_battle_solos_survived_two_minute")
+        listOf("sky_battle_survived_two_minute")
     ),
-    SKY_BATTLE_QUADS_SURVIVED_MINUTE(
+    SKY_BATTLE_SURVIVED_MINUTE(
         "Survive 1m",
         Regex("Survive at least 60s in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survived_minute", "sky_battle_solos_survived_minute")
+        listOf("sky_battle_survived_minute")
     ),
-    SKY_BATTLE_QUADS_SURVIVAL_TOP_TEN(
+    SKY_BATTLE_SURVIVAL_QUEST(
         "Survive Top 10",
-        Regex("Reach a Survival Placement of 10 or higher in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survival_top_ten", "sky_battle_solos_survival_top_ten")
+        Regex("Reach a Survival Placement of 10 \\(Quads\\) / 3 \\(Solos\\) or higher in (\\d+) games of Sky Battle"),
+        listOf("sky_battle_survival_quest")
     ),
-    SKY_BATTLE_QUADS_SURVIVAL_TOP_FIVE(
-        "Survive Top 5",
-        Regex("Reach a Survival Placement of 5 or higher in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survival_top_five", "sky_battle_solos_survival_top_five")
-    ),
-    SKY_BATTLE_QUADS_SURVIVAL_TOP_THREE(
-        "Survive Top 3",
-        Regex("Reach a Survival Placement of 3 or higher in (\\d+) games of Sky Battle"),
-        listOf("sky_battle_quads_survival_top_three", "sky_battle_solos_survival_top_three")
-    ),
-    SKY_BATTLE_QUADS_PLAYERS_KILLED(
+    SKY_BATTLE_PLAYERS_KILLED(
         "Kill players",
         Regex("Eliminate (\\d+) players in Sky Battle"),
-        listOf("sky_battle_quads_players_killed", "sky_battle_solos_players_killed")
+        listOf("sky_battle_players_killed")
+    ),
+    SKY_BATTLE_PLAYERS_KILLED_OR_ASSISTED(
+        "Kills or Assists",
+        Regex("Eliminate or assist in eliminating (\\d+) players in Sky Battle"),
+        listOf("sky_battle_players_eliminated")
     ),
 
     PW_SURVIVAL_OBSTACLES_COMPLETED(
@@ -277,5 +269,12 @@ enum class QuestCriteria(
         "Direct hits",
         Regex("Land (\\d+) direct rocket hits on players during games of Rocket Spleef Rush"),
         listOf("rocket_spleef_direct_hits")
-    )
+    );
+
+    fun getQuestName(game: Game = MCCIState.game): String {
+        if (this == SKY_BATTLE_SURVIVAL_QUEST && game == Game.SKY_BATTLE_SOLO) {
+            return "Survive Top 3"
+        }
+        return this.shortName
+    }
 }

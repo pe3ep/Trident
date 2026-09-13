@@ -148,8 +148,11 @@ object NoxesiumUtils {
         try {
             val criteria = GameQuests.valueOf(currentGame.toString()).list
             criteria.filter { stat in it.statisticKeys }.forEach {
-                val game =
-                    if (currentGame == Game.BATTLE_BOX_ARENA) Game.BATTLE_BOX else currentGame
+                val game = when (currentGame) {
+                    Game.BATTLE_BOX_ARENA -> Game.BATTLE_BOX
+                    Game.SKY_BATTLE_SOLO -> Game.SKY_BATTLE
+                    else -> currentGame
+                }
                 val ctx = IncrementContext(
                     game, it, value, stat
                 )
