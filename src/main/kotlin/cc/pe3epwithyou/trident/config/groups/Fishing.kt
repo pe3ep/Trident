@@ -71,17 +71,46 @@ fun fishingCategory(categoryRegistrar: CategoryRegistrar) {
             controller(tickBox())
         }
 
-        rootOptions.register("wayfinder_module") {
-            name(Component.translatable("config.trident.fishing.wayfinder_module.name"))
+        groups.register("wayfinder_group") {
+            name(Component.translatable("config.trident.fishing.wayfinder.name"))
             description(
                 OptionDescription.createBuilder()
-                    .text(Component.translatable("config.trident.fishing.wayfinder_module.description"))
+                    .text(Component.translatable("config.trident.fishing.wayfinder.description"))
                     .image(
                         Resources.trident("textures/config/wayfinder.png"), 290, 200
                     ).build()
             )
-            binding(handler.instance()::fishingWayfinderModule, true)
-            controller(tickBox())
+
+            lateinit var compactMode: Option<Boolean>
+
+            options.register("wayfinder_module") {
+                name(Component.translatable("config.trident.fishing.wayfinder_module.name"))
+                description(
+                    OptionDescription.of(Component.translatable("config.trident.fishing.wayfinder_module.description"))
+                )
+                binding(handler.instance()::fishingWayfinderModule, true)
+                controller(tickBox())
+                addListener { option, event ->
+                    if (event == OptionEventListener.Event.STATE_CHANGE) {
+                        compactMode.setAvailable(option.pendingValue())
+                    }
+                }
+            }
+
+            compactMode = options.register("wayfinder_module_compact") {
+                name(Component.translatable("config.trident.fishing.wayfinder_module_compact.name"))
+                description(
+                    OptionDescription.createBuilder()
+                        .text(Component.translatable("config.trident.fishing.wayfinder_module_compact.description"))
+                        .image(
+                            Resources.trident("textures/config/wayfinder_compact.png"), 372, 150
+                        ).build()
+                )
+                binding(handler.instance()::fishingWayfinderModuleCompact, false)
+                controller(tickBox())
+                available { handler.instance().fishingWayfinderModule }
+            }
         }
+
     }
 }
