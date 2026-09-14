@@ -21,6 +21,7 @@ object KillChatListener {
         Game.BATTLE_BOX_ARENA,
         Game.DYNABALL,
         Game.SKY_BATTLE,
+        Game.SKY_BATTLE_SOLO,
         Game.ROCKET_SPLEEF_RUSH
     )
 
