@@ -74,7 +74,7 @@ class Command(
         fun <T : Any> argument(
             name: String, type: ArgumentType<T>, block: ArgumentBuilder<T>.() -> Unit
         ) {
-            val argNode = ClientCommands.argument<T>(name, type)
+            val argNode = ClientCommands.argument(name, type)
             ArgumentBuilder(argNode).block()
             node.then(argNode)
         }
@@ -114,7 +114,7 @@ class Command(
         fun <U : Any> argument(
             name: String, type: ArgumentType<U>, block: ArgumentBuilder<U>.() -> Unit
         ) {
-            val argNode = ClientCommands.argument<U>(name, type)
+            val argNode = ClientCommands.argument(name, type)
             ArgumentBuilder(argNode).block()
             node.then(argNode)
         }

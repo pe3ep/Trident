@@ -172,7 +172,7 @@ object PlayerStateIO {
         serializable.supplies.overclocks.supreme.state.cooldownDuration = 60 * 60
 
         // Migration from 1.0.8.1 -> 1.0.9
-        if (!serializable.supplies.augments.isEmpty()) {
+        if (serializable.supplies.augments.isNotEmpty()) {
             serializable.supplies.augmentContainers.clear()
 
             serializable.supplies.augments.forEach {

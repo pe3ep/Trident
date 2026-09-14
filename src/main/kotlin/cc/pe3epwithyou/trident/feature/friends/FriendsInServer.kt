@@ -92,8 +92,7 @@ object FriendsInServer {
     }
 
     private fun check(): Boolean {
-        if (MCCIState.game == Game.FISHING || MCCIState.game == Game.HUB) return currentInstance != null && currentInstance != prevInstance
-        return true
+        return !(MCCIState.game == Game.FISHING || MCCIState.game == Game.HUB) || currentInstance != null && currentInstance != prevInstance
     }
 
     private fun getServerName(): String {

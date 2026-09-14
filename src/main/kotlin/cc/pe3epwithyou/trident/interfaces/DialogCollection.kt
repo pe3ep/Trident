@@ -166,36 +166,36 @@ object DialogCollection {
         val candidates = mutableSetOf<Pair<Int, Int>>()
         candidates.add(cornerPos)
 
-        for (dialog in existingDialogs) {
-            candidates.add(Pair(dialog.x + dialog.width + DIALOG_GAP, dialog.y)) // Right
+        for ((x, y, width, height) in existingDialogs) {
+            candidates.add(Pair(x + width + DIALOG_GAP, y)) // Right
             candidates.add(
                 Pair(
-                    maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP),
-                    dialog.y
+                    maxOf(cornerPos.first, x - newWidth - DIALOG_GAP),
+                    y
                 )
             ) // Left
-            candidates.add(Pair(dialog.x, dialog.y + dialog.height + DIALOG_GAP)) // Below
+            candidates.add(Pair(x, y + height + DIALOG_GAP)) // Below
             candidates.add(
                 Pair(
-                    dialog.x,
-                    maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP)
+                    x,
+                    maxOf(cornerPos.second, y - newHeight - DIALOG_GAP)
                 )
             ) // Above
             candidates.add(
                 Pair(
-                    dialog.x + dialog.width + DIALOG_GAP, dialog.y + dialog.height + DIALOG_GAP
+                    x + width + DIALOG_GAP, y + height + DIALOG_GAP
                 )
             ) // Bottom-right
             candidates.add(
                 Pair(
-                    maxOf(cornerPos.first, dialog.x - newWidth - DIALOG_GAP),
-                    dialog.y + dialog.height + DIALOG_GAP
+                    maxOf(cornerPos.first, x - newWidth - DIALOG_GAP),
+                    y + height + DIALOG_GAP
                 )
             ) // Bottom-left
             candidates.add(
                 Pair(
-                    dialog.x + dialog.width + DIALOG_GAP,
-                    maxOf(cornerPos.second, dialog.y - newHeight - DIALOG_GAP)
+                    x + width + DIALOG_GAP,
+                    maxOf(cornerPos.second, y - newHeight - DIALOG_GAP)
                 )
             ) // Top-right
         }
@@ -238,12 +238,12 @@ object DialogCollection {
     private fun isOverlapping(
         existingDialogs: List<Dialog>, x: Int, y: Int, width: Int, height: Int
     ): Boolean {
-        for (dialog in existingDialogs) {
+        for ((x1, y1, width1, height1) in existingDialogs) {
             if (rectanglesOverlap(
-                    dialog.x,
-                    dialog.y,
-                    dialog.width,
-                    dialog.height,
+                    x1,
+                    y1,
+                    width1,
+                    height1,
                     x,
                     y,
                     width,

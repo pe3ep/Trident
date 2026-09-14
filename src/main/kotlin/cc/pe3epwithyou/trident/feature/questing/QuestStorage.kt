@@ -38,8 +38,8 @@ object QuestStorage {
 
         var updated = false
 
-        for (holder in store) {
-            for (quest in holder.quests) {
+        for ((quests) in store) {
+            for (quest in quests) {
                 if (quest.game == ctx.game && quest.criteria == ctx.criteria && !quest.isCompleted) {
                     quest.increment(ctx.amount)
                     updated = true

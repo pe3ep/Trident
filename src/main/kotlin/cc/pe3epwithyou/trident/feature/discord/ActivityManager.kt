@@ -185,19 +185,19 @@ object ActivityManager {
 
         EventActivity.fetchedActivities?.let { activityList ->
             Logger.debugLog("Fetched activities: $activityList")
-            for (fetchedActivity in activityList) {
-                fetchedActivity.noxesiumServer.let {
+            for ((hideInAutoPrivateMode, _, noxesiumServer, rpc) in activityList) {
+                noxesiumServer.let {
                     if (MCCIState.currentServer != it.server) continue
                     if (MCCIState.gameTypes != it.types) continue
                 }
-                if (fetchedActivity.hideInAutoPrivateMode && shouldHideActivity()) {
+                if (hideInAutoPrivateMode && shouldHideActivity()) {
                     hideActivity()
                     return
                 }
 
-                activity.details = fetchedActivity.rpc.details.takeIf { it.isNotEmpty() }
-                activity.state = fetchedActivity.rpc.state.takeIf { it.isNotEmpty() }
-                assetsBuilder.largeImage = fetchedActivity.rpc.largeImage
+                activity.details = rpc.details.takeIf { it.isNotEmpty() }
+                activity.state = rpc.state.takeIf { it.isNotEmpty() }
+                assetsBuilder.largeImage = rpc.largeImage
             }
         }
 

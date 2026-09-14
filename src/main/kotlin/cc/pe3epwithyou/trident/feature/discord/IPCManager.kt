@@ -105,7 +105,7 @@ object IPCManager {
     fun restart(sendMessage: Boolean = false) {
         nonCriticalIO().launch {
             try {
-                withTimeoutOrNull(3_000) {
+                withTimeoutOrNull(3_000.milliseconds) {
                     ipc?.shutdown()
                     ipc = null
                     ActivityManager.updateCurrentActivity()

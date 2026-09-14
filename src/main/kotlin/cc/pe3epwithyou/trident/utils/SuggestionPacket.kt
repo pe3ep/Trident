@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.ClientboundCommandSuggestionsPacket
 import net.minecraft.network.protocol.game.ServerboundCommandSuggestionPacket
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration.Companion.milliseconds
 
 object SuggestionPacket {
     val tasks: ConcurrentHashMap<Int, SuggestionTask> = ConcurrentHashMap()
@@ -27,7 +28,7 @@ object SuggestionPacket {
         tasks[id] = task
         sendPacket(id, command)
         CoroutineScope(Dispatchers.IO).launch {
-            delay(1_500)
+            delay(1_500.milliseconds)
             val task = tasks.remove(id) ?: return@launch
             Logger.debugLog("Failed to get suggestions for command $command")
             task.processSuggestions(emptyList())

@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.layouts.GridLayout
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.util.Util
+import kotlin.time.Duration.Companion.milliseconds
 
 inline fun gridLayout(spacing: Int, x: Int = 0, y: Int = 0, builder: GridLayoutBuilder.() -> Unit): GridLayout {
     return GridLayoutBuilder(x, y, spacing).also(builder).build()
@@ -51,9 +52,9 @@ fun waitForItems(screen: ContainerScreen, block: () -> Unit) {
     ScreenManager.isWaitingForItems = true
     ScreenManager.waitingOnScreen = screen
     background().launch {
-        val completed = withTimeoutOrNull(3_000) {
+        val completed = withTimeoutOrNull(3_000.milliseconds) {
             while (ScreenManager.isWaitingForItems) {
-                delay(50)
+                delay(50.milliseconds)
             }
             true
         } ?: false

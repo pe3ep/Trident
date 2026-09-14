@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration.Companion.milliseconds
 
 object DelayedAction {
     private val tasks: ConcurrentHashMap<UUID, Job> = ConcurrentHashMap()
@@ -44,7 +45,7 @@ object DelayedAction {
     fun delay(delayMs: Long, action: () -> Unit): DelayedTask {
         val id = UUID.randomUUID()
         val future = background().launch {
-            delay(delayMs)
+            delay(delayMs.milliseconds)
             tasks.remove(id)
             main(action)
         }

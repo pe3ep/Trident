@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec3
 import java.time.Instant
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
+import kotlin.time.Duration.Companion.milliseconds
 
 object DepletedDisplay {
     private const val DEPLETED_COLOR = 0xf27500
@@ -41,7 +42,7 @@ object DepletedDisplay {
 
             this.job = background().launch {
                 while (true) {
-                    delay(ticks)
+                    delay(ticks.milliseconds)
                     ticks = 100
                     val currentPos =
                         minecraft().player?.position() ?: Vec3(0.0, 0.0, 0.0)

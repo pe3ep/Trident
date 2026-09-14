@@ -8,7 +8,7 @@ import net.minecraft.network.chat.TextColor
 import net.minecraft.world.inventory.Slot
 
 object RaritySlot {
-    val ALLOWED_COLORS = listOf<TextColor>(
+    val ALLOWED_COLORS = listOf(
         TextColor.fromRgb(0xF94242),
         TextColor.fromRgb(0xFF8000),
         TextColor.fromRgb(0xA335EE),

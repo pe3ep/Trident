@@ -44,6 +44,7 @@ import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
+import kotlin.time.Duration.Companion.milliseconds
 
 object TridentCommand {
     private val debugDialogs = mutableMapOf(
@@ -146,17 +147,17 @@ object TridentCommand {
                                 Logger.sendMessage("Requesting autofish.jar...")
                             }
 
-                            delay(4000)
+                            delay(4000.milliseconds)
                             main {
                                 Logger.sendMessage("Received a response from the server")
                             }
 
-                            delay(2000)
+                            delay(2000.milliseconds)
                             main {
                                 Logger.sendMessage("It says the following:")
                             }
 
-                            delay(3000)
+                            delay(3000.milliseconds)
                             main {
                                 Logger.sendMessage(
                                     Component.literal("Did you really just try to enable autofishing?")
@@ -164,7 +165,7 @@ object TridentCommand {
                                 )
                             }
 
-                            delay(3000)
+                            delay(3000.milliseconds)
                             main {
                                 Logger.sendMessage(
                                     Component.literal("Are we serious right meow bro?")
@@ -172,7 +173,7 @@ object TridentCommand {
                                 )
                             }
 
-                            delay(3000)
+                            delay(3000.milliseconds)
                             main {
                                 Logger.sendMessage(
                                     Component.literal("This incident will be reported.")

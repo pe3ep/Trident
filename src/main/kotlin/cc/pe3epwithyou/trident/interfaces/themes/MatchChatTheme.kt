@@ -17,7 +17,7 @@ object MatchChatTheme : Theme by DefaultTheme {
     }
 
     private fun getOpacity(): Int {
-        val opacityValue = minecraft().options?.textBackgroundOpacity()?.get() ?: 0.5
+        val opacityValue = minecraft().options.textBackgroundOpacity().get()
         if (opacityValue == 1.0) {
             return 0x000.opaqueColor()
         }

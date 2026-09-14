@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 
 object DollCosmetics {
-    var currentCosmetics = mutableMapOf<CosmeticType, Cosmetic>(
+    var currentCosmetics = mutableMapOf(
         CosmeticType.HAT to Cosmetic(HatSlot(null)),
         CosmeticType.ACCESSORY to Cosmetic(AccessorySlot(null)),
         CosmeticType.CLOAK to Cosmetic(BackSlot(null)),
