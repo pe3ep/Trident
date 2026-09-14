@@ -1,6 +1,6 @@
 package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 
-import cc.pe3epwithyou.trident.utils.NoxesiumUtils
+import cc.pe3epwithyou.trident.client.NoxesiumManager
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opaqueColor
@@ -15,7 +15,7 @@ class KillAssist(val color: Int) : AbstractWidget(0, 0, 13, 9, Component.empty()
     init {
         val client = minecraft()
         val uuid = client.gameProfile.id
-        skullComponent = NoxesiumUtils.skullComponent(
+        skullComponent = NoxesiumManager.skullComponent(
             uuid = uuid, scale = 0.75f
         )
     }

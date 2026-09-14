@@ -1,4 +1,4 @@
-package cc.pe3epwithyou.trident.utils
+package cc.pe3epwithyou.trident.client
 
 import cc.pe3epwithyou.trident.client.listeners.ChatEventListener
 import cc.pe3epwithyou.trident.client.listeners.KillChatListener
@@ -18,6 +18,7 @@ import cc.pe3epwithyou.trident.state.ClimateType
 import cc.pe3epwithyou.trident.state.Game
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.state.fishing.AugmentTrigger
+import cc.pe3epwithyou.trident.utils.Logger
 import com.noxcrew.noxesium.core.fabric.feature.sprite.SkullSprite
 import com.noxcrew.noxesium.core.mcc.ClientboundMccGameStatePacket
 import com.noxcrew.noxesium.core.mcc.ClientboundMccServerPacket
@@ -28,7 +29,7 @@ import net.minecraft.network.chat.MutableComponent
 import java.util.*
 
 
-object NoxesiumUtils {
+object NoxesiumManager {
     fun skullComponent(
         uuid: UUID, advance: Int = 0, ascent: Int = 0, scale: Float = 1.0F, hat: Boolean = true
     ): MutableComponent {

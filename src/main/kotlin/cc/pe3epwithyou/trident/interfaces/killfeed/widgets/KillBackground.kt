@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.interfaces.killfeed.widgets
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
-import cc.pe3epwithyou.trident.utils.NoxesiumUtils
+import cc.pe3epwithyou.trident.client.NoxesiumManager
 import cc.pe3epwithyou.trident.utils.TridentColor
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedLeft
@@ -43,7 +43,7 @@ class KillBackground(
             return@LinearLayout
         }
         val playerUUID = client.playerSocialManager.getDiscoveredUUID(player!!)
-        val c = NoxesiumUtils.skullComponent(playerUUID).append(
+        val c = NoxesiumManager.skullComponent(playerUUID).append(
             Component.literal((if (isSelf && Config.KillFeed.showYouInKill) " (YOU) " else " ") + player.uppercase())
                 .mccFont().withStyle(
                     Style.EMPTY.withColor(TridentColor(0xFFFFFF).textColor)
