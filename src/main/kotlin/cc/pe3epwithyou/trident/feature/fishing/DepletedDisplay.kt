@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.fishing
 
+import cc.pe3epwithyou.trident.mixin.accessors.HudAccessor
 import cc.pe3epwithyou.trident.utils.Title
 import cc.pe3epwithyou.trident.utils.background
 import cc.pe3epwithyou.trident.utils.main
@@ -51,9 +52,11 @@ object DepletedDisplay {
                         break
                     }
                     main {
-                        Title.sendTitle(
-                            Component.empty(), title, 0, 10, 5, false
-                        )
+                        if ((minecraft().gui.hud as? HudAccessor)?.title?.string?.isBlank() == true) {
+                            Title.sendTitle(
+                                Component.empty(), title, 0, 10, 5, false
+                            )
+                        }
                     }
                 }
             }
