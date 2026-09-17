@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.feature.fishing
 
-import cc.pe3epwithyou.trident.mixin.accessors.HudAccessor
 import cc.pe3epwithyou.trident.utils.Title
 import cc.pe3epwithyou.trident.utils.background
 import cc.pe3epwithyou.trident.utils.main
@@ -8,6 +7,7 @@ import cc.pe3epwithyou.trident.utils.minecraft
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.phys.Vec3
 import java.time.Instant
@@ -21,10 +21,14 @@ object DepletedDisplay {
     private val depletedTitle = Component.literal("This spot is ").withColor(DEPLETED_COLOR)
         .append(Component.literal("depleted").withColor(DEPLETED_COLOR_ALT))
 
+    private fun shouldSendTitle() = minecraft().gui.screen() as? ContainerScreen == null
+
     fun showDepletedTitle() {
-        Title.sendTitle(
-            Component.empty(), depletedTitle, 5, 20, 15
-        )
+        if (shouldSendTitle()) {
+            Title.sendTitle(
+                Component.empty(), depletedTitle, 5, 20, 15
+            )
+        }
         DepletedTimer.startLoop(depletedTitle, 10)
     }
 
@@ -52,7 +56,7 @@ object DepletedDisplay {
                         break
                     }
                     main {
-                        if ((minecraft().gui.hud as? HudAccessor)?.title?.string?.isBlank() == true) {
+                        if (shouldSendTitle()) {
                             Title.sendTitle(
                                 Component.empty(), title, 0, 10, 5, false
                             )
