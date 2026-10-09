@@ -2,14 +2,17 @@ package cc.pe3epwithyou.trident.utils.extensions
 
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.mojang.blaze3d.platform.Window
-import org.lwjgl.glfw.GLFW
+import org.lwjgl.sdl.SDLVideo
 
 object WindowExtensions {
     val isActive: Boolean
         get() = minecraft().isWindowActive
 
     val Window.isMaximized: Boolean
-        get() = GLFW.glfwGetWindowAttrib(handle(), GLFW.GLFW_MAXIMIZED) != 0
+        get() = SDLVideo.SDL_GetWindowFlags(handle()) and SDLVideo.SDL_WINDOW_MAXIMIZED != 0L
+
+    val Window.isFullscreen: Boolean
+        get() = SDLVideo.SDL_GetWindowFlags(handle()) and SDLVideo.SDL_WINDOW_FULLSCREEN != 0L
 
     fun Window.focusWindowIfInactive() {
         if (!isActive) {
@@ -23,7 +26,7 @@ object WindowExtensions {
     }
 
     fun Window.requestAttention() {
-        GLFW.glfwRequestWindowAttention(handle())
+        SDLVideo.SDL_FlashWindow(handle(), SDLVideo.SDL_FLASH_UNTIL_FOCUSED)
     }
 
     fun Window.requestAttentionIfInactive() {
@@ -31,7 +34,7 @@ object WindowExtensions {
     }
 
     fun Window.focusWindow() {
-        if (isIconified) GLFW.glfwRestoreWindow(handle())
-        GLFW.glfwFocusWindow(handle())
+        if (isIconified) SDLVideo.SDL_RestoreWindow(handle())
+        SDLVideo.SDL_RaiseWindow(handle())
     }
 }
