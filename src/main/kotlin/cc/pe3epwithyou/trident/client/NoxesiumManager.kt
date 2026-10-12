@@ -216,11 +216,6 @@ object NoxesiumManager {
 
 
     private fun getCurrentGame(server: String, types: List<String>): Game {
-        if (types.size < 2) {
-            Logger.error("Returned server types were too short")
-            return Game.HUB
-        }
-
         // Fishing
         if (server == "fishing") {
             val island = types.getOrNull(2) ?: "temperate_1"
