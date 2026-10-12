@@ -18,7 +18,7 @@ enum class Game(
     SKY_BATTLE(
         "Sky Battle",
         "sky_battle",
-        types = listOf("sky_battle", "team", "quad"),
+        types = listOf("sky_battle", "quad"),
         primaryColor = 0xEE2700,
         icon = "_fonts/icon/game_icons/game_sky_battle_small.png",
         hasTeamChat = true
@@ -34,7 +34,7 @@ enum class Game(
     BATTLE_BOX(
         "Battle Box",
         "battle_box",
-        types = listOf("battle_box", "team"),
+        types = listOf("battle_box"),
         primaryColor = 0x88B932,
         icon = "_fonts/icon/game_icons/game_battle_box_small.png",
         hasTeamChat = true
@@ -42,7 +42,7 @@ enum class Game(
     BATTLE_BOX_ARENA(
         "Battle Box Arena",
         "battle_box",
-        types = listOf("battle_box", "team", "arena"),
+        types = listOf("battle_box", "arena"),
         primaryColor = 0xbf0023,
         icon = "_fonts/icon/game_icons/game_battle_box_arena_small.png",
         hasTeamChat = true
@@ -50,7 +50,7 @@ enum class Game(
     PARKOUR_WARRIOR_SURVIVOR(
         "Parkour Warrior Survivor",
         "parkour_warrior",
-        types = listOf("parkour_warrior", "solo", "survival"),
+        types = listOf("parkour_warrior", "survival"),
         primaryColor = 0x6ABD19,
         icon = "_fonts/icon/game_icons/game_parkour_warrior_small.png"
     ),
@@ -63,21 +63,21 @@ enum class Game(
     TGTTOS(
         "TGTTOS",
         "tgttos",
-        types = listOf("tgttos", "solo"),
+        types = listOf("tgttos"),
         primaryColor = 0xC11D1D,
         icon = "_fonts/icon/game_icons/game_tgttos_small.png"
     ),
     ROCKET_SPLEEF_RUSH(
         "Rocket Spleef Rush",
         "rocket_spleef",
-        types = listOf("rocket_spleef", "solo"),
+        types = listOf("rocket_spleef"),
         primaryColor = 0xC1CCFF,
         icon = "_fonts/icon/game_icons/game_rocket_spleef_small.png"
     ),
     DYNABALL(
         "Dynaball",
         "dynaball",
-        types = listOf("dynaball", "team"),
+        types = listOf("dynaball"),
         primaryColor = 0x4A42A0,
         icon = "_fonts/icon/game_icons/game_dynaball_small.png",
         hasTeamChat = true
@@ -85,7 +85,7 @@ enum class Game(
     HITW(
         "HITW",
         "hole_in_the_wall",
-        types = listOf("hole_in_the_wall", "solo"),
+        types = listOf("hole_in_the_wall"),
         primaryColor = 0x42D940,
         icon = "_fonts/icon/game_icons/game_hole_in_the_wall_small.png"
     ),
