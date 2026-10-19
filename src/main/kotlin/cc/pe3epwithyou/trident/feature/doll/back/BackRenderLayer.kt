@@ -52,7 +52,7 @@ class BackRenderLayer(
         entityModel.root().translateAndRotate(poseStack)
         entityModel.body.translateAndRotate(poseStack)
         poseStack.translate(0f, -2.1f, 0f)
-        poseStack.rotate(Axis.YP.rotationDegrees(180.0f))
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0f))
         poseStack.scale(0.625f, -0.625f, -0.625f)
         resolver.updateForLiving(itemRenderState, item, ItemDisplayContext.HEAD, player)
         itemRenderState.submit(poseStack, submitNodeCollector, i, OverlayTexture.NO_OVERLAY, entityRenderState.outlineColor)

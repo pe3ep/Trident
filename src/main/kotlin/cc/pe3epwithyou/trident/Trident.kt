@@ -44,6 +44,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
+import org.lwjgl.glfw.GLFW
 import org.slf4j.LoggerFactory
 
 class Trident : ModInitializer {
@@ -75,8 +76,8 @@ class Trident : ModInitializer {
         settingsKeymapping = KeyMappingHelper.registerKeyMapping(
             KeyMapping(
                 "key.trident.config",
-                InputConstants.Type.KEYBOARD,
-                InputConstants.KEY_U,
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_U,
                 keymappingCategory
             )
         )
@@ -85,8 +86,8 @@ class Trident : ModInitializer {
             refreshDialogsKeymapping = KeyMappingHelper.registerKeyMapping(
                 KeyMapping(
                     "key.trident.refresh_dialogs",
-                    InputConstants.Type.KEYBOARD,
-                    InputConstants.KEY_K,
+                    InputConstants.Type.KEYSYM,
+                    GLFW.GLFW_KEY_K,
                     keymappingCategory
                 )
             )
