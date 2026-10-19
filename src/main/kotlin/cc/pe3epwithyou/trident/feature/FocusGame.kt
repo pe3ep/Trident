@@ -10,7 +10,6 @@ import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.focusWindowIfInactive
 import cc.pe3epwithyou.trident.utils.extensions.WindowExtensions.isMaximized
 import cc.pe3epwithyou.trident.utils.minecraft
-import org.lwjgl.glfw.GLFW
 
 object FocusGame {
     fun handleSubtitle(subtitle: String) {
@@ -21,19 +20,7 @@ object FocusGame {
                     """
                         isActive: ${WindowExtensions.isActive}
                         isMaximized: ${minecraft().window.isMaximized}
-                        
-                        IconifiedValue: ${
-                        GLFW.glfwGetWindowAttrib(
-                            minecraft().window.handle(),
-                            GLFW.GLFW_ICONIFIED
-                        )
-                    }
-                        MaximizedValue: ${
-                        GLFW.glfwGetWindowAttrib(
-                            minecraft().window.handle(),
-                            GLFW.GLFW_MAXIMIZED
-                        )
-                    }
+                        isIconified: ${minecraft().window.isIconified}
                     """.trimIndent()
                 )
 

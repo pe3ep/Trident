@@ -1,21 +1,21 @@
 [versions]
 # Kotlin
-kotlin = "2.4.10"
-kotlin-serialization-plugin = "2.4.10"
+kotlin = "2.4.21"
+kotlin-serialization-plugin = "2.4.21"
 kotlinx-serialization = "1.11.0"
 kotlinx-coroutines = "1.11.0"
 
 # Fabric
-loom = "1.17-SNAPSHOT"
-fabric-loader = "0.19.3"
-fabric-kotlin-loader = "1.13.13+kotlin.2.4.10"
-fabric-api = "0.158.0+26.2"
+loom = "1.18-SNAPSHOT"
+fabric-loader = "0.19.5"
+fabric-kotlin-loader = "1.14.2+kotlin.2.4.21"
+fabric-api = "0.162.0+26.3"
 
 # Deps
-yacl = "3.9.6+26.2-fabric"
-modmenu = "20.0.1"
-sheeplib = "1.5.3+26.2"
-noxesium = "3.2.4"
+yacl = "3.9.7+26.3-fabric"
+modmenu = "21.0.0"
+sheeplib = "1.5.4+26.3"
+noxesium = "3.3.0"
 kpresence = "0.6.6"
 dev-auth = "1.2.2"
 
