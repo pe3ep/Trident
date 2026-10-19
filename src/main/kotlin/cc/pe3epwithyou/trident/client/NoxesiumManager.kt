@@ -57,6 +57,10 @@ object NoxesiumManager {
             DialogCollection.open(k, KillFeedDialog(10, 10, k))
         }
         if (currentGame != Game.FISHING) {
+            // Set before any early return, so a dialog opened later (e.g. via /trident open) isn't stale
+            val game = if (currentGame == Game.HUB) MCCIState.lobbyGame else currentGame
+            QuestingDialog.currentGame = game
+
             if (!Config.Questing.enabled) return
             val k = "questing"
             if (isPlobby) {
@@ -70,11 +74,8 @@ object NoxesiumManager {
                 return
             }
 
-            val game = if (currentGame == Game.HUB) MCCIState.lobbyGame else currentGame
-
             if ("lobby" in types && !Config.Questing.showInLobby) return
             if (game == Game.HUB) return
-            QuestingDialog.currentGame = game
             DialogCollection.open(k, QuestingDialog(10, 10, k))
             DialogCollection.refreshDialog(k)
         }
@@ -215,11 +216,6 @@ object NoxesiumManager {
 
 
     private fun getCurrentGame(server: String, types: List<String>): Game {
-        if (types.size < 2) {
-            Logger.error("Returned server types were too short")
-            return Game.HUB
-        }
-
         // Fishing
         if (server == "fishing") {
             val island = types.getOrNull(2) ?: "temperate_1"
