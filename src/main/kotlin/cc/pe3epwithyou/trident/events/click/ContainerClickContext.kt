@@ -11,9 +11,9 @@ annotation class ContainerClickDsl
 @Suppress("unused")
 @ContainerClickDsl
 class ContainerClickContext(val doubleClick: Boolean, val screen: ContainerScreen, val mouseEvent: MouseButtonEvent, val cir: CallbackInfoReturnable<Boolean>) : ContainerContext(screen) {
-    val left: Boolean = key == 0
-    val right: Boolean = key == 1
+    val left: Boolean = key == 1
     val middle: Boolean = key == 2
+    val right: Boolean = key == 3
     val alt: Boolean = mouseEvent.hasAltDown()
     val ctrl: Boolean = mouseEvent.hasControlDown()
     val shift: Boolean = mouseEvent.hasShiftDown()
