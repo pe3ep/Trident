@@ -39,7 +39,8 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.noxcrew.sheeplib.DialogContainer
 import com.noxcrew.sheeplib.util.opacity
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
@@ -484,7 +485,6 @@ object TridentCommand {
                 literal("dump_cached_icons") {
                     executes {
                         Logger.sendMessage("Disguised: ${Disguise.disguiseIconCache}")
-                        Logger.sendMessage("XP: ${ReplyLock.Icon.xpBonusCharCache}")
                     }
                 }
             }

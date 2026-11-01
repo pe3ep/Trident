@@ -1,11 +1,10 @@
 package cc.pe3epwithyou.trident.mixin;
 
-import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock;
 import cc.pe3epwithyou.trident.feature.statusbar.EffectBar;
 import cc.pe3epwithyou.trident.state.MCCIState;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.Hud;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +23,6 @@ public abstract class GuiMixin {
     public void trident$extractItemHotbar(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!MCCIState.INSTANCE.isOnIsland()) return;
         if (getCameraPlayer() == null) return;
-        ReplyLock.Icon.renderIcon(graphics, getCameraPlayer());
         EffectBar.render(graphics);
     }
 }
