@@ -1,6 +1,8 @@
 package cc.pe3epwithyou.trident.config.groups
 
 import cc.pe3epwithyou.trident.config.Config.Companion.handler
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionEventListener
@@ -12,7 +14,7 @@ import net.minecraft.network.chat.Component
 
 fun debugCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("debug") {
-        name(Component.translatable("config.trident.debug"))
+        name(Component.literal("\uE018 ").withTridentFont().popped().append(Component.translatable("config.trident.debug")))
 
         lateinit var incompatibility: Option<Boolean>
         lateinit var compatibility: Option<Boolean>

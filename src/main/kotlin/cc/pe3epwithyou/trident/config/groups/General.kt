@@ -6,6 +6,8 @@ import cc.pe3epwithyou.trident.feature.api.ApiProvider
 import cc.pe3epwithyou.trident.feature.rarityslot.DisplayType
 import cc.pe3epwithyou.trident.interfaces.themes.TridentThemes
 import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import cc.pe3epwithyou.trident.utils.utilsCompatible
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
@@ -15,7 +17,7 @@ import net.minecraft.network.chat.Component
 
 fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
     categoriesRegistrar.register("general") {
-        name(Component.translatable("config.trident.global.name"))
+        name(Component.literal("\uE01B ").withTridentFont().popped().append(Component.translatable("config.trident.global.name")))
 
         lateinit var apiOption: Option<ApiProvider>
 
