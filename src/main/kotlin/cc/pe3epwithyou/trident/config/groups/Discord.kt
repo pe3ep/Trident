@@ -1,6 +1,8 @@
 package cc.pe3epwithyou.trident.config.groups
 
 import cc.pe3epwithyou.trident.config.Config.Companion.handler
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import cc.pe3epwithyou.trident.utils.utilsCompatible
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
@@ -13,7 +15,7 @@ import net.minecraft.network.chat.Component
 
 fun discordCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("discord") {
-        name(Component.translatable("config.trident.discord.name"))
+        name(Component.literal("\uE019 ").withTridentFont().popped().append(Component.translatable("config.trident.discord.name")))
 
         lateinit var privateMode: Option<Boolean>
         lateinit var autoPrivateMode: Option<Boolean>

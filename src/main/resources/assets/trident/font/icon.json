@@ -86,6 +86,69 @@
       "chars": [
         "\uE017"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/debug.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE018"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/discord.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE019"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/fishing.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE01A"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/general.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE01B"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/indicators.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE01C"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/killfeed.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE01D"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/questing.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE01E"
+      ]
     }
   ]
 }

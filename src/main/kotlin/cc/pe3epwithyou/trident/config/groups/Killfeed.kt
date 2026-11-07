@@ -3,6 +3,8 @@ package cc.pe3epwithyou.trident.config.groups
 import cc.pe3epwithyou.trident.config.Config.Companion.handler
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedPosition
 import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionEventListener
@@ -11,7 +13,7 @@ import net.minecraft.network.chat.Component
 
 fun killfeedCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("killfeed") {
-        name(Component.translatable("config.trident.killfeed.name"))
+        name(Component.literal("\uE01D ").withTridentFont().popped().append(Component.translatable("config.trident.killfeed.name")))
 
         lateinit var killfeedHideKills: Option<Boolean>
         lateinit var killfeedShowKillStreaks: Option<Boolean>

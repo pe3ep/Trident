@@ -2,6 +2,8 @@ package cc.pe3epwithyou.trident.config.groups
 
 import cc.pe3epwithyou.trident.config.Config.Companion.handler
 import cc.pe3epwithyou.trident.utils.Resources
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionEventListener
@@ -13,7 +15,7 @@ import net.minecraft.network.chat.Component
 
 fun questingCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("questing") {
-        name(Component.translatable("config.trident.questing.name"))
+        name(Component.literal("\uE01E ").withTridentFont().popped().append(Component.translatable("config.trident.questing.name")))
 
         lateinit var questingShowInLobby: Option<Boolean>
         lateinit var questingShowLeft: Option<Boolean>
