@@ -42,25 +42,29 @@ object WeeklyVault : Meter(60) {
         val font = minecraft().font
         val text = Component.literal("$currentClaim/$totalClaims").mccFont().withoutShadow()
 
+        val isComplete = currentClaim >= totalClaims
+
         val progress = when {
             totalClaims <= 0 -> 0f
-            currentClaim >= totalClaims -> 1f
+            isComplete -> 1f
             else -> (totalXP.toFloat() / claimXPSolver(currentClaim + 1).toFloat()).coerceIn(0f, 1f)
         }
 
+        val progressBarOffset = if (!isComplete) 5 + 2 else -1
+
         // pad + vertical progress + pad + icon + pad + text + pad
-        val width = 2 + 5 + 2 + 10 + 2 + font.width(text) + 2
+        val width = 2 + progressBarOffset + 9 + 2 + font.width(text) + 2
 
         graphics.fill(
             x0, y0, x0 + width, y0 + 9, 0x000000.opacity(128)
         )
 
-        renderVerticalProgress(graphics, x0 + 2, y0 + 2, progress)
+        if (!isComplete) renderVerticalProgress(graphics, x0 + 2, y0 + 2, progress)
 
-        val iconX = x0 + 2 + 5 + 2
+        val iconX = x0 + 2 + progressBarOffset
         val iconY = y0 + 1
 
-        if (currentClaim >= totalClaims) {
+        if (isComplete) {
             VAULT_ICON_FULL.blit(graphics, iconX, iconY)
         } else if (currentClaim == 0) {
             VAULT_ICON_EMPTY.blit(graphics, iconX, iconY)
@@ -69,7 +73,7 @@ object WeeklyVault : Meter(60) {
         }
 
         graphics.text(
-            font, text, x0 + 2 + 5 + 2 + 10 + 2, y0, 0xFFFFFF.opaqueColor()
+            font, text, x0 + 2 + progressBarOffset + 9 + 2, y0, 0xFFFFFF.opaqueColor()
         )
 
         width

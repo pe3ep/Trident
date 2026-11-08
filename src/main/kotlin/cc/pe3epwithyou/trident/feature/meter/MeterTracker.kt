@@ -16,6 +16,11 @@ object MeterTracker {
 
         // Daily meter
         item(13)?.let { item ->
+            // Ignore the slot if it's about to be claimed
+            if (item.findInLore(Regex("""Click to Claim""")) != null) {
+                return@let
+            }
+
             item.findInLore(Regex("""Daily Claims: (.+)/(.+)"""))?.let { result ->
                 val currentClaim = result.groups[1]?.value?.parseFormattedInt() ?: return@let
                 DailyMeter.setCurrentClaim(currentClaim)
@@ -32,6 +37,11 @@ object MeterTracker {
 
         // Weekly vault
         item(16)?.let { item ->
+            // Ignore the slot if it's about to be claimed
+            if (item.findInLore(Regex("""Click to Claim""")) != null) {
+                return@let
+            }
+
             item.findInLore(Regex("""Stored Rewards: (.+)/(.+)"""))?.let { result ->
                 val currentClaim = result.groups[1]?.value?.parseFormattedInt() ?: return@let
                 WeeklyVault.setCurrentClaim(currentClaim)
