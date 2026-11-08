@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.interfaces.hotbar
 
 import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
-import cc.pe3epwithyou.trident.feature.meter.MeterTracker
+import cc.pe3epwithyou.trident.feature.meter.DailyMeter
 import cc.pe3epwithyou.trident.mixin.accessors.HudAccessor
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.minecraft
@@ -15,7 +15,7 @@ object HotbarDecorationManager {
     private const val HOTBAR_OFFSET_Y = 12
     private val decorations = buildSet {
         add(ReplyLock.getDecoration())
-        add(MeterTracker.getDecoration())
+        add(DailyMeter.getDecoration())
     }
 
     fun register() {
