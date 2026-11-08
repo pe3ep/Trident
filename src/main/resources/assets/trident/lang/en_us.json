@@ -48,7 +48,7 @@
   "config.trident.global.enhanced_compact_infinibag_contrast.name": "Increased contrast",
   "config.trident.global.enhanced_compact_infinibag_contrast.description": "Increases the contrast by adding a black background behind the text to make it more readable.",
 
-  "config.trident.discord.name": "Discord Integration",
+  "config.trident.discord.name": "Discord",
   "config.trident.discord.enabled.name": "Enabled",
   "config.trident.discord.enabled.description": "Enables the Discord Activity Integration.\n\n§6Disabled if Island Utils is installed",
   "config.trident.discord.private_mode.name": "Private Mode",
@@ -76,7 +76,7 @@
   "config.trident.rarity_slot.display_type.name": "Overlay type",
   "config.trident.rarity_slot.display_type.description": "Changes the visual style of the overlay.",
 
-  "config.trident.fishing.name": "Fishing Modules",
+  "config.trident.fishing.name": "Fishing",
   "config.trident.fishing.supplies_module.name": "Supplies Module",
   "config.trident.fishing.supplies_module.description": "Shows a window that displays your current Bait, Line durability, your equipped Augments, and your active Overclocks.",
   "config.trident.fishing.supplies_module.durability.name": "Show Augment Durability",
@@ -99,7 +99,7 @@
   "config.trident.games.auto_focus.name": "Focus game on countdown",
   "config.trident.games.auto_focus.description": "Automatically focuses Minecraft when your game is about to start.",
 
-  "config.trident.questing.name": "Questing Module",
+  "config.trident.questing.name": "Questing",
   "config.trident.questing.enabled.name": "Enabled",
   "config.trident.questing.enabled.description": "Turns on the Questing Module to be shown in games with live-updating progress.",
   "config.trident.questing.show_in_lobby.name": "Show in game lobby",
