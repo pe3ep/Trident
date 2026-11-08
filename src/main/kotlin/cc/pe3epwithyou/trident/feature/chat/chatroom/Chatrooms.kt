@@ -52,8 +52,8 @@ object Chatrooms {
             val clickedItem = clickedSlot.item
             if (!isInBoundary(clickedSlot.index)) return@onClick
             if (middle) {
-                val id = clickedItem.hoverName?.string ?: return@onClick
-                val model = clickedItem.components?.get(DataComponents.ITEM_MODEL) ?: return@onClick
+                val id = clickedItem.hoverName.string
+                val model = clickedItem.components.get(DataComponents.ITEM_MODEL) ?: return@onClick
                 val color = ChatroomColor.entries.find {it.getItemModel() == model} ?: ChatroomColor.WHITE
                 val chatroom = Chatroom(id, color)
                 if (playerState().activeChatrooms.removeIf { chatroom.id == it.id }) {
@@ -81,7 +81,7 @@ object Chatrooms {
 
             // User left chatroom, unpin if needed
             if (shift && right) {
-                val id = clickedItem.hoverName?.string ?: return@onClick
+                val id = clickedItem.hoverName.string
                 unpinRemoved(id)
             }
         }
@@ -180,7 +180,7 @@ object Chatrooms {
     }
 
     private fun isInBoundary(index: Int): Boolean {
-        return index in 19..25 ||
+        return index in 20..25 ||
                 index in 28..34 ||
                 index in 37..43
     }
