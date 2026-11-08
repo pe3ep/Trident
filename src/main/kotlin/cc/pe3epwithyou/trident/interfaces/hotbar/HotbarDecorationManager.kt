@@ -2,6 +2,7 @@ package cc.pe3epwithyou.trident.interfaces.hotbar
 
 import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.meter.DailyMeter
+import cc.pe3epwithyou.trident.feature.meter.WeeklyVault
 import cc.pe3epwithyou.trident.mixin.accessors.HudAccessor
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.minecraft
@@ -16,6 +17,7 @@ object HotbarDecorationManager {
     private val decorations = buildSet {
         add(ReplyLock.getDecoration())
         add(DailyMeter.getDecoration())
+        add(WeeklyVault.getDecoration())
     }
 
     fun register() {
