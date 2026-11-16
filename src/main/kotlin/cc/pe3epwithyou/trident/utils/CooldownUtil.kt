@@ -1,6 +1,11 @@
 package cc.pe3epwithyou.trident.utils
 
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * A thread-safe map for managing cooldowns associated with specific keys.
@@ -9,6 +14,9 @@ import java.util.concurrent.ConcurrentHashMap
  * which can be used to track the time remaining before an action associated with the key can be performed again.
  */
 val cooldowns = ConcurrentHashMap<Any, Long>()
+
+private val debounceJobs = HashMap<Any, Job>()
+private val debounceLock = Any()
 
 /**
  * Indicates the outcome of an action with a cooldown time.
@@ -32,7 +40,6 @@ class CooldownResult(
     val didExecute: Boolean
         get() = executed
 }
-
 
 /**
  * Executes a block of code if the specified reference is not on cooldown and applies a cooldown period to the reference if executed.
@@ -61,4 +68,59 @@ inline fun withCooldown(
 
     if (execute) block()
     return CooldownResult(execute)
+}
+
+/**
+ * Debounces a block of code using coroutines.
+ *
+ * Each call resets the timer for the specified reference.
+ * The block is executed only after [debounceMillis] milliseconds
+ * have passed without another call.
+ *
+ * The first execution is also delayed by the full debounce period.
+ *
+ * @param reference An object used to identify the debounce context.
+ * @param debounceMillis The debounce duration in milliseconds.
+ * @param block The code block to execute after the debounce period.
+ */
+fun debounce(
+    reference: Any,
+    debounceMillis: Long,
+    block: () -> Unit
+) {
+    require(debounceMillis >= 0L) {
+        "Debounce duration cannot be negative."
+    }
+
+    val job = background().launch(start = CoroutineStart.LAZY) {
+        try {
+            delay(debounceMillis.milliseconds)
+
+            val shouldExecute = synchronized(debounceLock) {
+                if (debounceJobs[reference] === coroutineContext[Job]) {
+                    debounceJobs.remove(reference)
+                    true
+                } else {
+                    false
+                }
+            }
+
+            if (shouldExecute) {
+                main {
+                    block()
+                }
+            }
+        } finally {
+            synchronized(debounceLock) {
+                if (debounceJobs[reference] === coroutineContext[Job]) {
+                    debounceJobs.remove(reference)
+                }
+            }
+        }
+    }
+
+    synchronized(debounceLock) {
+        debounceJobs.put(reference, job)?.cancel()
+        job.start()
+    }
 }

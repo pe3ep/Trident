@@ -16,6 +16,7 @@ import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedLifecycle
+import cc.pe3epwithyou.trident.feature.meter.daily.DailyMeterXPAnimation
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
 import cc.pe3epwithyou.trident.interfaces.debug.StateDialog
 import cc.pe3epwithyou.trident.interfaces.experiment.TabbedDialog
@@ -39,7 +40,8 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.noxcrew.sheeplib.DialogContainer
 import com.noxcrew.sheeplib.util.opacity
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.ChatFormatting
@@ -484,7 +486,6 @@ object TridentCommand {
                 literal("dump_cached_icons") {
                     executes {
                         Logger.sendMessage("Disguised: ${Disguise.disguiseIconCache}")
-                        Logger.sendMessage("XP: ${ReplyLock.Icon.xpBonusCharCache}")
                     }
                 }
             }
@@ -565,6 +566,25 @@ object TridentCommand {
                     executes {
                         ChatControllerManager.clearController()
                         Logger.sendMessage("Cleared current chat controller")
+                    }
+                }
+            }
+
+            literal("trigger_animation") {
+                literal("daily_meter_expand_only") {
+                    argument("amount", IntegerArgumentType.integer(0)) {
+                        executes {
+                            Logger.sendMessage("Triggering animation in 1 second")
+                            val xp = it.getArgument("amount", Int::class.java)
+                            background().launch {
+                                delay(1000.milliseconds)
+                                main {
+                                    DailyMeterXPAnimation.trigger(xp)
+                                    Logger.sendMessage("Daily meter animation triggered")
+                                }
+                            }
+                        }
+
                     }
                 }
             }

@@ -48,7 +48,7 @@
   "config.trident.global.enhanced_compact_infinibag_contrast.name": "Increased contrast",
   "config.trident.global.enhanced_compact_infinibag_contrast.description": "Increases the contrast by adding a black background behind the text to make it more readable.",
 
-  "config.trident.discord.name": "Discord Integration",
+  "config.trident.discord.name": "Discord",
   "config.trident.discord.enabled.name": "Enabled",
   "config.trident.discord.enabled.description": "Enables the Discord Activity Integration.\n\n§6Disabled if Island Utils is installed",
   "config.trident.discord.private_mode.name": "Private Mode",
@@ -61,7 +61,7 @@
   "config.trident.discord.display_party.description": "Displays your current party size in the activity.",
 
 
-  "config.trident.indicators.name": "Item Indicators",
+  "config.trident.indicators.name": "Indicators",
   "config.trident.indicators.craftable_indicators.name": "Craftable Indicators",
   "config.trident.indicators.craftable_indicators.description": "Shows an indicator if a blueprint is not craftable (missing materials).",
   "config.trident.indicators.blueprint_indicators.name": "Ownership Indicators",
@@ -76,7 +76,7 @@
   "config.trident.rarity_slot.display_type.name": "Overlay type",
   "config.trident.rarity_slot.display_type.description": "Changes the visual style of the overlay.",
 
-  "config.trident.fishing.name": "Fishing Modules",
+  "config.trident.fishing.name": "Fishing",
   "config.trident.fishing.supplies_module.name": "Supplies Module",
   "config.trident.fishing.supplies_module.description": "Shows a window that displays your current Bait, Line durability, your equipped Augments, and your active Overclocks.",
   "config.trident.fishing.supplies_module.durability.name": "Show Augment Durability",
@@ -99,7 +99,7 @@
   "config.trident.games.auto_focus.name": "Focus game on countdown",
   "config.trident.games.auto_focus.description": "Automatically focuses Minecraft when your game is about to start.",
 
-  "config.trident.questing.name": "Questing Module",
+  "config.trident.questing.name": "Questing",
   "config.trident.questing.enabled.name": "Enabled",
   "config.trident.questing.enabled.description": "Turns on the Questing Module to be shown in games with live-updating progress.",
   "config.trident.questing.show_in_lobby.name": "Show in game lobby",
@@ -130,6 +130,18 @@
   "config.trident.killfeed.show_you_in_kill.description": "When enabled, adds a §o(YOU)§r prefix to your kills.",
   "config.trident.killfeed.reverse_order.name": "Reverse kill order",
   "config.trident.killfeed.reverse_order.description": "Reverses the order kills in the kill feed.\n\n§o§7When enabled, kills come from the top instead of the bottom",
+
+  "config.trident.meter_tracker.name": "XP Trackers",
+  "config.trident.meter_tracker.daily.name": "Daily Meter",
+  "config.trident.meter_tracker.daily.enabled.name": "Enabled",
+  "config.trident.meter_tracker.daily.enabled.description": "Turns on a HUD element next to your hotbar that displays your Daily Meter progress.",
+  "config.trident.meter_tracker.daily.xp_animation.name": "Animation",
+  "config.trident.meter_tracker.daily.xp_animation.description": "Toggle the Animation that plays when you get 60 or more X.P",
+  "config.trident.meter_tracker.daily.sound_effects.name": "Sound Effects",
+  "config.trident.meter_tracker.daily.sound_effects.description": "Enable sound effects that play with the animation.",
+  "config.trident.meter_tracker.weekly.name": "Weekly Vault",
+  "config.trident.meter_tracker.weekly.enabled.name": "Enabled",
+  "config.trident.meter_tracker.weekly.enabled.description": "Turns on a HUD element next to your hotbar that displays your Weekly Vault progress.",
 
   "key.category.trident.keys": "Trident",
   "key.trident.config": "Open Trident settings",

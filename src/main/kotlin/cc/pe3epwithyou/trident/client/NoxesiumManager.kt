@@ -6,6 +6,7 @@ import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.friends.FriendsInServer
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedLifecycle
+import cc.pe3epwithyou.trident.feature.meter.MeterTracker
 import cc.pe3epwithyou.trident.feature.questing.GameQuests
 import cc.pe3epwithyou.trident.feature.questing.IncrementContext
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
@@ -141,6 +142,7 @@ object NoxesiumManager {
             if (!MCCIState.isOnIsland()) return@addListener
             handleQuests(packet.statistic, packet.value)
             handleFishCaught(packet.statistic, packet.value)
+            if (packet.statistic == "total_xp_earned") MeterTracker.handleXP(packet.value)
         }
     }
 

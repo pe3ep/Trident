@@ -86,6 +86,78 @@
       "chars": [
         "\uE017"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/debug.png",
+      "ascent": 8,
+      "height": 10,
+      "chars": [
+        "\uE018"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/discord.png",
+      "ascent": 8,
+      "height": 10,
+      "chars": [
+        "\uE019"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/fishing.png",
+      "ascent": 8,
+      "height": 10,
+      "chars": [
+        "\uE01A"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/general.png",
+      "ascent": 8,
+      "height": 10,
+      "chars": [
+        "\uE01B"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/indicators.png",
+      "ascent": 8,
+      "height": 10,
+      "chars": [
+        "\uE01C"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/killfeed.png",
+      "ascent": 8,
+      "height": 10,
+      "chars": [
+        "\uE01D"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/questing.png",
+      "ascent": 8,
+      "height": 10,
+      "chars": [
+        "\uE01E"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/xp_tracker.png",
+      "ascent": 8,
+      "height": 10,
+      "chars": [
+        "\uE01F"
+      ]
     }
   ]
 }

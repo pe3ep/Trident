@@ -1,7 +1,7 @@
 package cc.pe3epwithyou.trident.state
 
-import cc.pe3epwithyou.trident.feature.chat.dmlock.ReplyLock
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
+import cc.pe3epwithyou.trident.interfaces.hotbar.HotbarDecorationManager
 import cc.pe3epwithyou.trident.utils.Logger
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.defaultFont
@@ -86,7 +86,7 @@ object FontCollection {
     fun populateCache(icon: Icon) {
         if ("_fonts/icon/xp_bonus" in icon.path.path) {
             val char = collection[icon] ?: return
-            ReplyLock.Icon.xpBonusCharCache.add(char)
+            HotbarDecorationManager.addXPBonusCharacter(char)
         }
         if ("_fonts/icon/chat_channel/disguised" in icon.path.path) {
             val char = collection[icon] ?: return
@@ -95,7 +95,7 @@ object FontCollection {
     }
 
     fun clearCache() {
-        ReplyLock.Icon.xpBonusCharCache.clear()
+        HotbarDecorationManager.clearXPBonusCharacters()
         Disguise.disguiseIconCache = null
     }
 }

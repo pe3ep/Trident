@@ -2,7 +2,7 @@ package cc.pe3epwithyou.trident.feature.chat.dmlock
 
 import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.feature.chat.ChatControllerManager
-import cc.pe3epwithyou.trident.mixin.accessors.HudAccessor
+import cc.pe3epwithyou.trident.interfaces.hotbar.HotbarDecoration
 import cc.pe3epwithyou.trident.state.FontCollection
 import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Logger
@@ -14,66 +14,30 @@ import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
-import net.minecraft.world.entity.HumanoidArm
-import net.minecraft.world.entity.player.Player
 
 object ReplyLock {
     fun getReplyLockUser(): String? =
         (ChatControllerManager.getController() as? ReplyLockController)?.user
 
-    object Icon {
-        val xpBonusCharCache = mutableSetOf<String>()
+    fun getDecoration() = HotbarDecoration deco@{ graphics, _, x0, y0 ->
+        if (!MCCIState.isOnIsland()) return@deco 0
+        if (!Config.Global.replyLock) return@deco 0
+        if (getReplyLockUser() == null) return@deco 0
 
-        fun containsChar(actionbar: String): Boolean {
-            if (xpBonusCharCache.isEmpty()) return false
-            for (c in actionbar) {
-                if (c.toString() in xpBonusCharCache) return true
-            }
-            return false
-        }
+        val lock = Component.literal("\uE016").withTridentFont().popped().withoutShadow()
 
-        @JvmStatic
-        fun renderIcon(graphics: GuiGraphicsExtractor, cameraPlayer: Player) {
-            if (!MCCIState.isOnIsland()) return
-            if (!Config.Global.replyLock) return
-            if (getReplyLockUser() == null) return
-            val actionBar = (minecraft().gui.hud as HudAccessor).overlayMessageString ?: return
+        val font = minecraft().font
 
-            val middle: Int = graphics.guiWidth() / 2
-            val hotbarHalf = 91
-            val hand = cameraPlayer.mainArm.opposite
-            var offset = 0
+        val width = 9
+        graphics.fill(
+            x0, y0, x0 + width, y0 + width, 0x000000 opacity 128
+        )
 
-            if (containsChar(actionBar.string)) {
-                offset += 40
-            }
-
-            if (hand == HumanoidArm.RIGHT && !cameraPlayer.offhandItem.isEmpty) {
-                offset += 29
-            }
-
-            val x = middle + hotbarHalf + 1 + offset
-            val y = graphics.guiHeight() - 12
-
-            val lock = Component.literal("\uE016").withTridentFont().popped()
-                .withoutShadow()
-
-            val font = minecraft().font
-
-            graphics.fill(
-                x,
-                y,
-                x + 9,
-                y + 9,
-                0x000000 opacity 128
-            )
-
-            graphics.text(font, lock, x + 1, y, 0xffffff.opaqueColor())
-        }
+        graphics.text(font, lock, x0 + 1, y0, 0xffffff.opaqueColor())
+        return@deco width
     }
 
     fun enableLock(user: String, showMessage: Boolean = true) {

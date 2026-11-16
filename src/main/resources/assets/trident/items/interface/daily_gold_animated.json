@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "trident:interface/daily_gold_animated"
+  },
+  "oversized_in_gui": true
+}

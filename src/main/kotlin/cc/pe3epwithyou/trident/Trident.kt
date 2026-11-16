@@ -23,10 +23,12 @@ import cc.pe3epwithyou.trident.feature.fishing.listeners.ResearchListeners
 import cc.pe3epwithyou.trident.feature.fishing.listeners.SuppliesListeners
 import cc.pe3epwithyou.trident.feature.fishing.listeners.WayfinderListeners
 import cc.pe3epwithyou.trident.feature.killfeed.KillfeedLifecycle
+import cc.pe3epwithyou.trident.feature.meter.MeterTracker
 import cc.pe3epwithyou.trident.feature.questing.QuestListener
 import cc.pe3epwithyou.trident.feature.questing.QuestStorage
 import cc.pe3epwithyou.trident.feature.questing.lock.QuestLock
 import cc.pe3epwithyou.trident.interfaces.DialogCollection
+import cc.pe3epwithyou.trident.interfaces.hotbar.HotbarDecorationManager
 import cc.pe3epwithyou.trident.mixin.accessors.DebugScreenEntriesAccessor
 import cc.pe3epwithyou.trident.modrinth.UpdateChecker
 import cc.pe3epwithyou.trident.state.Game
@@ -114,6 +116,8 @@ class Trident : ModInitializer {
         Disguise.register()
         QuestLock.register()
         Chatrooms.register()
+        HotbarDecorationManager.register()
+        MeterTracker.register()
 
 //        Register keybinding
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client: Minecraft ->
