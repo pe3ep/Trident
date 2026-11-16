@@ -61,7 +61,7 @@
   "config.trident.discord.display_party.description": "Displays your current party size in the activity.",
 
 
-  "config.trident.indicators.name": "Item Indicators",
+  "config.trident.indicators.name": "Indicators",
   "config.trident.indicators.craftable_indicators.name": "Craftable Indicators",
   "config.trident.indicators.craftable_indicators.description": "Shows an indicator if a blueprint is not craftable (missing materials).",
   "config.trident.indicators.blueprint_indicators.name": "Ownership Indicators",
