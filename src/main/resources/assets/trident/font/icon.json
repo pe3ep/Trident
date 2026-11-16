@@ -149,6 +149,15 @@
       "chars": [
         "\uE01E"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/config/xp_tracker.png",
+      "ascent": 8,
+      "height": 10,
+      "chars": [
+        "\uE01F"
+      ]
     }
   ]
 }

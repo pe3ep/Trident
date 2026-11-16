@@ -1,6 +1,8 @@
 package cc.pe3epwithyou.trident.config.groups
 
 import cc.pe3epwithyou.trident.config.Config.Companion.handler
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.popped
+import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.withTridentFont
 import dev.isxander.yacl3.api.Option
 import dev.isxander.yacl3.api.OptionDescription
 import dev.isxander.yacl3.api.OptionEventListener
@@ -11,7 +13,7 @@ import net.minecraft.network.chat.Component
 
 fun meterTrackerCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("meter_tracker") {
-        name(Component.translatable("config.trident.meter_tracker.name"))
+        name(Component.literal("\uE01F ").withTridentFont().withoutShadow().popped().append(Component.translatable("config.trident.meter_tracker.name")))
 
         groups.register("daily") {
             name(Component.translatable("config.trident.meter_tracker.daily.name"))
