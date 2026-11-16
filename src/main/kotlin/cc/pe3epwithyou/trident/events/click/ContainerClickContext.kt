@@ -1,6 +1,7 @@
 package cc.pe3epwithyou.trident.events.click
 
 import cc.pe3epwithyou.trident.events.container.ContainerContext
+import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.client.input.MouseButtonEvent
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
@@ -11,9 +12,9 @@ annotation class ContainerClickDsl
 @Suppress("unused")
 @ContainerClickDsl
 class ContainerClickContext(val doubleClick: Boolean, val screen: ContainerScreen, val mouseEvent: MouseButtonEvent, val cir: CallbackInfoReturnable<Boolean>) : ContainerContext(screen) {
-    val left: Boolean = key == 1
-    val middle: Boolean = key == 2
-    val right: Boolean = key == 3
+    val left: Boolean = key == InputConstants.MOUSE_BUTTON_LEFT
+    val middle: Boolean = key == InputConstants.MOUSE_BUTTON_MIDDLE
+    val right: Boolean = key == InputConstants.MOUSE_BUTTON_RIGHT
     val alt: Boolean = mouseEvent.hasAltDown()
     val ctrl: Boolean = mouseEvent.hasControlDown()
     val shift: Boolean = mouseEvent.hasShiftDown()

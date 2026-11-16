@@ -30,7 +30,7 @@ object QuestLock {
     )
 
     var lockedGames: MutableSet<Game> = mutableSetOf()
-    val questContainers = mutableMapOf<Int, QuestContainer>(
+    val questContainers = mutableMapOf(
         37 to QuestContainer(), 39 to QuestContainer(), 41 to QuestContainer()
     )
 
