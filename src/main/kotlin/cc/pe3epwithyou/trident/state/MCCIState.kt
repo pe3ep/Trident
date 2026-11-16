@@ -39,10 +39,19 @@ object MCCIState {
     var currentServer: String = "lobby"
     var isPlobbyGame: Boolean = false
     var fishingState: FishingState = FishingState()
+
+    private var cachedIp: String? = null
+    private var cachedIsIsland = false
     fun isOnIsland(): Boolean {
         if (Config.Debug.bypassOnIsland) return true
-        val server = minecraft().currentServer ?: return false
-        return server.ip.contains("mccisland.net", true)
+        val ip = minecraft().currentServer?.ip ?: return false
+
+        if (ip != cachedIp) {
+            cachedIp = ip
+            cachedIsIsland = ip.contains("mccisland.net", ignoreCase = true)
+        }
+
+        return cachedIsIsland
     }
 
     @JvmStatic
