@@ -186,6 +186,9 @@ class Config {
     @SerialEntry
     var discordDisplayParty: Boolean = true
 
+    @SerialEntry
+    var meterTrackerEnabled: Boolean = true
+
 
     @SerialEntry
     var apiKey: String = ""
@@ -321,6 +324,11 @@ class Config {
             get() = handler.instance().discordDisplayParty
     }
 
+    object MeterTracker {
+        val enabled: Boolean
+            get() = handler.instance().meterTrackerEnabled
+    }
+
     object Api {
         val key: String
             get() = handler.instance().apiKey
@@ -376,6 +384,7 @@ class Config {
             generalCategory(categories)
             discordCategory(categories)
             indicatorsCategory(categories)
+            meterTrackerCategory(categories)
             killfeedCategory(categories)
             questingCategory(categories)
             fishingCategory(categories)
