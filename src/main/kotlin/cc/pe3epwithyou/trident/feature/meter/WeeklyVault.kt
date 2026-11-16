@@ -42,7 +42,7 @@ object WeeklyVault : Meter(60) {
 
     override fun getDecoration() = HotbarDecoration { graphics, _, x0, y0 ->
         if (!MCCIState.isOnIsland()) return@HotbarDecoration 0
-        if (!Config.MeterTracker.enabled) return@HotbarDecoration 0
+        if (!Config.MeterTracker.Weekly.enabled) return@HotbarDecoration 0
 
         val font = minecraft().font
         val text = Component.literal("$currentClaim/$totalClaims").mccFont().withoutShadow()

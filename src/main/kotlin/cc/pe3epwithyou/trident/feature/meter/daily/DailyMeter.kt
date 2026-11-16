@@ -45,7 +45,7 @@ object DailyMeter : Meter() {
 
     override fun getDecoration() = HotbarDecoration { graphics, _, x0, y0 ->
         if (!MCCIState.isOnIsland()) return@HotbarDecoration 0
-        if (!Config.MeterTracker.enabled) return@HotbarDecoration 0
+        if (!Config.MeterTracker.Daily.enabled) return@HotbarDecoration 0
 
         val width = expandAnimation.render(graphics, x0, y0) ?: renderDecoration(graphics, x0, y0)
         DailyMeterXPAnimation.render(graphics, x0, y0)

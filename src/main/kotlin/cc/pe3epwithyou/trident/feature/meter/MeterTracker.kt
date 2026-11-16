@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.meter
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.events.container.ContainerEvents
 import cc.pe3epwithyou.trident.feature.meter.daily.DailyMeter
@@ -60,7 +61,7 @@ object MeterTracker {
     }
 
     fun handleXP(amount: Int) {
-        DailyMeterXPAnimation.trigger(amount)
-        WeeklyVault.handleIncomingXP(amount)
+        if (Config.MeterTracker.Daily.enabled) DailyMeterXPAnimation.trigger(amount)
+        if (Config.MeterTracker.Weekly.enabled) WeeklyVault.handleIncomingXP(amount)
     }
 }

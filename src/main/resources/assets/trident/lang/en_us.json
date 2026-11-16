@@ -131,6 +131,18 @@
   "config.trident.killfeed.reverse_order.name": "Reverse kill order",
   "config.trident.killfeed.reverse_order.description": "Reverses the order kills in the kill feed.\n\n§o§7When enabled, kills come from the top instead of the bottom",
 
+  "config.trident.meter_tracker.name": "XP Trackers",
+  "config.trident.meter_tracker.daily.name": "Daily Meter",
+  "config.trident.meter_tracker.daily.enabled.name": "Enabled",
+  "config.trident.meter_tracker.daily.enabled.description": "Turns on a HUD element next to your hotbar that displays your Daily Meter progress.",
+  "config.trident.meter_tracker.daily.xp_animation.name": "Animation",
+  "config.trident.meter_tracker.daily.xp_animation.description": "Toggle the Animation that plays when you get 60 or more X.P",
+  "config.trident.meter_tracker.daily.sound_effects.name": "Sound Effects",
+  "config.trident.meter_tracker.daily.sound_effects.description": "Enable sound effects that play with the animation.",
+  "config.trident.meter_tracker.weekly.name": "Weekly Vault",
+  "config.trident.meter_tracker.weekly.enabled.name": "Enabled",
+  "config.trident.meter_tracker.weekly.enabled.description": "Turns on a HUD element next to your hotbar that displays your Weekly Vault progress.",
+
   "key.category.trident.keys": "Trident",
   "key.trident.config": "Open Trident settings",
   "key.trident.refresh_dialogs": "Refresh opened dialogs",

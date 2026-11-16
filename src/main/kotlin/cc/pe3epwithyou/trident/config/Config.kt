@@ -186,8 +186,18 @@ class Config {
     @SerialEntry
     var discordDisplayParty: Boolean = true
 
+
     @SerialEntry
-    var meterTrackerEnabled: Boolean = true
+    var meterTrackerDailyMeterEnabled: Boolean = true
+
+    @SerialEntry
+    var meterTrackerDailyMeterAnimation: Boolean = true
+
+    @SerialEntry
+    var meterTrackerDailyMeterSound: Boolean = true
+
+    @SerialEntry
+    var meterTrackerWeeklyMeterEnabled: Boolean = true
 
 
     @SerialEntry
@@ -325,8 +335,18 @@ class Config {
     }
 
     object MeterTracker {
-        val enabled: Boolean
-            get() = handler.instance().meterTrackerEnabled
+        object Daily {
+            val enabled: Boolean
+                get() = handler.instance().meterTrackerDailyMeterEnabled
+            val animation: Boolean
+                get() = handler.instance().meterTrackerDailyMeterAnimation
+            val sound: Boolean
+                get() = handler.instance().meterTrackerDailyMeterSound
+        }
+        object Weekly {
+            val enabled: Boolean
+                get() = handler.instance().meterTrackerWeeklyMeterEnabled
+        }
     }
 
     object Api {

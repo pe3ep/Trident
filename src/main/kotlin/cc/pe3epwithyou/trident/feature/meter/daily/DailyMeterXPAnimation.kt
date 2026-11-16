@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.feature.meter.daily
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.utils.*
 import cc.pe3epwithyou.trident.utils.animation.KeyframeAnimator
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
@@ -41,9 +42,9 @@ object DailyMeterXPAnimation {
     fun trigger(xpReceived: Int) {
         accumulatedXp.addAndGet(xpReceived)
 
-        debounce(this, 1_000L) {
+        debounce(this, 300L) {
             val totalXp = accumulatedXp.getAndSet(0)
-            if (totalXp < 60 || DailyMeter.currentClaim >= DailyMeter.totalClaims) {
+            if (!Config.MeterTracker.Daily.animation || totalXp < 60 || DailyMeter.currentClaim >= DailyMeter.totalClaims) {
                 DailyMeter.handleIncomingXP(totalXp)
                 return@debounce
             }
@@ -92,10 +93,12 @@ object DailyMeterXPAnimation {
         drawWhiteBoxFrame()
         animation.frame(1500L) {
             onFrameStart {
-                minecraft().soundManager.playMaster(
-                    sound = Resources.mcc("ui.ranking_points_gain"),
-                    volume = 0.5f,
-                )
+                if (Config.MeterTracker.Daily.sound) {
+                    minecraft().soundManager.playMaster(
+                        sound = Resources.mcc("ui.ranking_points_gain"),
+                        volume = 0.5f,
+                    )
+                }
             }
             draw { graphics, x0, y0, _ ->
                 val x = x0 + xOffset + 24 - ((textWidth + 3) / 2)
@@ -114,11 +117,14 @@ object DailyMeterXPAnimation {
             animation.frame(if (index == OUTRO_FRAMES.size - 1) 50 else 30) {
                 if (index == OUTRO_FRAMES.size - 1) {
                     onFrameEnd {
-                        minecraft().soundManager.playMaster(
-                            sound = Resources.mcc("ui.experience_receive"),
-                            volume = 0.25f,
-                            pitch = 1.25f,
-                        )
+                        if (Config.MeterTracker.Daily.sound) {
+                            minecraft().soundManager.playMaster(
+                                sound = Resources.mcc("ui.experience_receive"),
+                                volume = 0.25f,
+                                pitch = 1.25f,
+                            )
+                        }
+
                         DailyMeter.handleIncomingXP(xpReceived)
                         DailyMeter.animateExpand()
                     }
