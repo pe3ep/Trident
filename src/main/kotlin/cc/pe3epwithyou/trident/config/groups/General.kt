@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component
 
 fun generalCategory(categoriesRegistrar: CategoryRegistrar) {
     categoriesRegistrar.register("general") {
-        name(Component.literal("\uE01B ").withTridentFont().popped().append(Component.translatable("config.trident.global.name")))
+        name(Component.literal("\uE01B ").withTridentFont().withoutShadow().popped().append(Component.translatable("config.trident.global.name")))
 
         lateinit var apiOption: Option<ApiProvider>
 

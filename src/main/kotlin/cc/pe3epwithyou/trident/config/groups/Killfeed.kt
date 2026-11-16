@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component
 
 fun killfeedCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("killfeed") {
-        name(Component.literal("\uE01D ").withTridentFont().popped().append(Component.translatable("config.trident.killfeed.name")))
+        name(Component.literal("\uE01D ").withTridentFont().withoutShadow().popped().append(Component.translatable("config.trident.killfeed.name")))
 
         lateinit var killfeedHideKills: Option<Boolean>
         lateinit var killfeedShowKillStreaks: Option<Boolean>

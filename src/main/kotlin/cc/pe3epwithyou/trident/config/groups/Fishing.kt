@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component
 
 fun fishingCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("fishing") {
-        name(Component.literal("\uE01A ").withTridentFont().popped().append(Component.translatable("config.trident.fishing.name")))
+        name(Component.literal("\uE01A ").withTridentFont().withoutShadow().popped().append(Component.translatable("config.trident.fishing.name")))
 
         lateinit var suppliesModuleDurability: Option<Boolean>
 

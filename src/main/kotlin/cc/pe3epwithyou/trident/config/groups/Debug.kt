@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component
 
 fun debugCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("debug") {
-        name(Component.literal("\uE018 ").withTridentFont().popped().append(Component.translatable("config.trident.debug")))
+        name(Component.literal("\uE018 ").withTridentFont().withoutShadow().popped().append(Component.translatable("config.trident.debug")))
 
         lateinit var incompatibility: Option<Boolean>
         lateinit var compatibility: Option<Boolean>

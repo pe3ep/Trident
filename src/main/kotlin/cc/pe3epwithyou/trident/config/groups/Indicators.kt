@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component
 
 fun indicatorsCategory(categoriesRegistrar: CategoryRegistrar) {
     categoriesRegistrar.register("indicators") {
-        name(Component.literal("\uE01C ").withTridentFont().popped().append(Component.translatable("config.trident.indicators.name")))
+        name(Component.literal("\uE01C ").withTridentFont().withoutShadow().popped().append(Component.translatable("config.trident.indicators.name")))
 
         rootOptions.register("blueprint_indicators") {
             name(Component.translatable("config.trident.indicators.blueprint_indicators.name"))

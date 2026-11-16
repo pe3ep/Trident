@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component
 
 fun discordCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("discord") {
-        name(Component.literal("\uE019 ").withTridentFont().popped().append(Component.translatable("config.trident.discord.name")))
+        name(Component.literal("\uE019 ").withTridentFont().withoutShadow().popped().append(Component.translatable("config.trident.discord.name")))
 
         lateinit var privateMode: Option<Boolean>
         lateinit var autoPrivateMode: Option<Boolean>

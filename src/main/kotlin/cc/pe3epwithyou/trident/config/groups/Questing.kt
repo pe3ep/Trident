@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component
 
 fun questingCategory(categoryRegistrar: CategoryRegistrar) {
     categoryRegistrar.register("questing") {
-        name(Component.literal("\uE01E ").withTridentFont().popped().append(Component.translatable("config.trident.questing.name")))
+        name(Component.literal("\uE01E ").withTridentFont().withoutShadow().popped().append(Component.translatable("config.trident.questing.name")))
 
         lateinit var questingShowInLobby: Option<Boolean>
         lateinit var questingShowLeft: Option<Boolean>
