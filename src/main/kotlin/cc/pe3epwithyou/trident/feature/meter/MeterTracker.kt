@@ -2,6 +2,8 @@ package cc.pe3epwithyou.trident.feature.meter
 
 import cc.pe3epwithyou.trident.events.container.ContainerContext
 import cc.pe3epwithyou.trident.events.container.ContainerEvents
+import cc.pe3epwithyou.trident.feature.meter.daily.DailyMeter
+import cc.pe3epwithyou.trident.feature.meter.daily.DailyMeterXPAnimation
 import cc.pe3epwithyou.trident.utils.extensions.ItemStackExtensions.findInLore
 import cc.pe3epwithyou.trident.utils.parseFormattedInt
 
@@ -58,6 +60,7 @@ object MeterTracker {
     }
 
     fun handleXP(amount: Int) {
-        DailyMeter.handleIncomingXP(amount)
+        DailyMeterXPAnimation.trigger(amount)
+        WeeklyVault.handleIncomingXP(amount)
     }
 }

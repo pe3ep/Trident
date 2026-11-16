@@ -11,13 +11,13 @@ abstract class Meter(
         require(maxSupportedClaims > 0)
     }
 
-    protected var totalXP: Int = 0
+    var totalXP: Int = 0
         private set
 
-    protected var currentClaim: Int = 0
+    var currentClaim: Int = 0
         private set
 
-    protected var totalClaims: Int = 0
+    var totalClaims: Int = 0
         private set
 
     protected var hasUnclaimedReward: Boolean = false
