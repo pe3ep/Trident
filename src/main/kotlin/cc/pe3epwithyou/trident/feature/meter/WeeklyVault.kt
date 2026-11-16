@@ -1,6 +1,8 @@
 package cc.pe3epwithyou.trident.feature.meter
 
+import cc.pe3epwithyou.trident.config.Config
 import cc.pe3epwithyou.trident.interfaces.hotbar.HotbarDecoration
+import cc.pe3epwithyou.trident.state.MCCIState
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
@@ -39,6 +41,9 @@ object WeeklyVault : Meter(60) {
     }
 
     override fun getDecoration() = HotbarDecoration { graphics, _, x0, y0 ->
+        if (!MCCIState.isOnIsland()) return@HotbarDecoration 0
+        if (!Config.MeterTracker.enabled) return@HotbarDecoration 0
+
         val font = minecraft().font
         val text = Component.literal("$currentClaim/$totalClaims").mccFont().withoutShadow()
 
@@ -53,7 +58,7 @@ object WeeklyVault : Meter(60) {
         val progressBarOffset = if (!isComplete) 5 + 2 else -1
 
         // pad + vertical progress + pad + icon + pad + text + pad
-        val width = 2 + progressBarOffset + 9 + 2 + font.width(text) + 2
+        val width = 2 + progressBarOffset + 10 + 2 + font.width(text) + 2
 
         graphics.fill(
             x0, y0, x0 + width, y0 + 9, 0x000000.opacity(128)
@@ -73,7 +78,7 @@ object WeeklyVault : Meter(60) {
         }
 
         graphics.text(
-            font, text, x0 + 2 + progressBarOffset + 9 + 2, y0, 0xFFFFFF.opaqueColor()
+            font, text, x0 + 2 + progressBarOffset + 10 + 2, y0, 0xFFFFFF.opaqueColor()
         )
 
         width
