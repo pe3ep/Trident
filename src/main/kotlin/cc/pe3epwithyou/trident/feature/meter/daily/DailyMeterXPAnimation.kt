@@ -7,9 +7,15 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.withTimeoutOrNull
+import kotlinx.coroutines.withTimeoutOrNull
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.gui.screens.DeathScreen
 import net.minecraft.network.chat.Component
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 object DailyMeterXPAnimation {
     private val accumulatedXp = AtomicInteger(0)
@@ -42,14 +48,23 @@ object DailyMeterXPAnimation {
     fun trigger(xpReceived: Int) {
         accumulatedXp.addAndGet(xpReceived)
 
-        debounce(this, 300L) {
+        debounce(this, 500L) {
             val totalXp = accumulatedXp.getAndSet(0)
             if (!Config.MeterTracker.Daily.animation || totalXp < 60 || DailyMeter.currentClaim >= DailyMeter.totalClaims) {
                 DailyMeter.handleIncomingXP(totalXp)
                 return@debounce
             }
 
-            triggerFrames(totalXp)
+            background().launch {
+                withTimeoutOrNull(10.seconds) {
+                    while (true) {
+                        if (minecraft().gui.screen() is DeathScreen) continue
+
+                        triggerFrames(totalXp)
+                        break
+                    }
+                }
+            }
         }
     }
 
