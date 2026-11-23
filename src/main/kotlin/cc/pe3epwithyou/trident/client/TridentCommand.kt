@@ -12,6 +12,7 @@ import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
+import cc.pe3epwithyou.trident.feature.dojo.DojoInterface
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
 import cc.pe3epwithyou.trident.feature.killfeed.KillMethod
@@ -571,20 +572,62 @@ object TridentCommand {
             }
 
             literal("trigger_animation") {
+                fun delayAnimation(block: () -> Unit) {
+                    Logger.sendMessage("Triggering animation in 1 second")
+                    background().launch {
+                        delay(1000.milliseconds)
+                        main {
+                            block()
+                            Logger.sendMessage("Animation triggered")
+                        }
+                    }
+                }
+
                 literal("daily_meter_expand_only") {
                     argument("amount", IntegerArgumentType.integer(0)) {
                         executes {
-                            Logger.sendMessage("Triggering animation in 1 second")
                             val xp = it.getArgument("amount", Int::class.java)
-                            background().launch {
-                                delay(1000.milliseconds)
-                                main {
-                                    DailyMeterXPAnimation.trigger(xp)
-                                    Logger.sendMessage("Daily meter animation triggered")
-                                }
-                            }
+                            delayAnimation { DailyMeterXPAnimation.trigger(xp) }
                         }
 
+                    }
+                }
+
+                literal("pkw_dojo") {
+                    literal("run_started") {
+                        executes {
+                            delayAnimation {
+                                DojoInterface.onRunStarted()
+                            }
+                        }
+                    }
+                    literal("course_started") {
+                        executes {
+                            delayAnimation {
+                                DojoInterface.onCourseStarted("B1-1")
+                            }
+                        }
+                    }
+                    literal("course_completed") {
+                        executes {
+                            delayAnimation {
+                                DojoInterface.onCourseCompleted("B1-1")
+                            }
+                        }
+                    }
+                    literal("course_left") {
+                        executes {
+                            delayAnimation {
+                                DojoInterface.onCourseLeft()
+                            }
+                        }
+                    }
+                    literal("run_ended") {
+                        executes {
+                            delayAnimation {
+                                DojoInterface.onRunEnded()
+                            }
+                        }
                     }
                 }
             }

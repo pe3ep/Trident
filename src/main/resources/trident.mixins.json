@@ -12,6 +12,7 @@
   "client": [
     "AvatarRendererMixin",
     "AvatarRenderStateMixin",
+    "BossHealthOverlayMixin",
     "DebugScreenEntriesMixin",
     "FontLoaderMixin",
     "FontReloadMixin",
