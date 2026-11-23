@@ -47,10 +47,10 @@ object DailyMeter : Meter() {
         if (!MCCIState.isOnIsland()) return@HotbarDecoration 0
         if (!Config.MeterTracker.Daily.enabled) return@HotbarDecoration 0
 
-        val width = expandAnimation.render(graphics, x0, y0) ?: renderDecoration(graphics, x0, y0)
+        val size = expandAnimation.render(graphics, x0, y0) ?: renderDecoration(graphics, x0, y0)
         DailyMeterXPAnimation.render(graphics, x0, y0)
 
-        width
+        size.first
     }
 
     fun animateExpand() {
@@ -101,7 +101,7 @@ object DailyMeter : Meter() {
                 renderProgressAndIcon(graphics, x0, y0)
 
 
-                width
+                width to 9
             }
         }
 
@@ -115,7 +115,7 @@ object DailyMeter : Meter() {
                     font, text, x0 + targetWidth - textWidth - 2, y0, 0xFFFFFF.opaqueColor()
                 )
 
-                targetWidth
+                targetWidth to 9
             }
         }
 
@@ -150,7 +150,7 @@ object DailyMeter : Meter() {
                 graphics.scissorStack.pop()
                 renderProgressAndIcon(graphics, x0, y0)
 
-                width
+                width to 9
             }
         }
     }
@@ -184,7 +184,7 @@ object DailyMeter : Meter() {
 
     private fun renderDecoration(
         graphics: GuiGraphicsExtractor, x0: Int, y0: Int
-    ): Int {
+    ): Pair<Int, Int> {
         val font = minecraft().font
         val text = createDecorationText()
         val textWidth = font.width(text)
@@ -200,7 +200,7 @@ object DailyMeter : Meter() {
             font, text, x0 + width - textWidth - 2, y0, 0xFFFFFF.opaqueColor()
         )
 
-        return width
+        return width to 9
     }
 
     private fun renderProgressAndIcon(

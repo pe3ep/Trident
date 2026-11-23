@@ -16,7 +16,7 @@ class KeyframeAnimator(
 
         internal var drawBlock: ((
             GuiGraphicsExtractor, Int, Int, Float
-        ) -> Int)? = null
+        ) -> Pair<Int, Int>)? = null
 
         fun onFrameStart(block: () -> Unit) {
             onStart = block
@@ -29,7 +29,7 @@ class KeyframeAnimator(
         fun draw(
             block: (
                 graphics: GuiGraphicsExtractor, x0: Int, y0: Int, frameProgress: Float
-            ) -> Int
+            ) -> Pair<Int, Int>
         ) {
             drawBlock = block
         }
@@ -38,7 +38,7 @@ class KeyframeAnimator(
     private data class Keyframe(
         val durationMs: Long, val onStart: (() -> Unit)?, val onEnd: (() -> Unit)?, val draw: (
             GuiGraphicsExtractor, Int, Int, Float
-        ) -> Int
+        ) -> Pair<Int, Int>
     )
 
     var defaultDurationMs = defaultDurationMs
@@ -87,7 +87,7 @@ class KeyframeAnimator(
 
     fun render(
         graphics: GuiGraphicsExtractor, x: Int, y: Int
-    ): Int? {
+    ): Pair<Int, Int>? {
         if (frames.isEmpty()) return null
 
         val now = System.nanoTime() / 1_000_000L

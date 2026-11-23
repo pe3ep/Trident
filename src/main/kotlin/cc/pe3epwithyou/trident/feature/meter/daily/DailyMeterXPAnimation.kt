@@ -61,6 +61,8 @@ object DailyMeterXPAnimation {
         val xOffset = DailyMeter.getIconXOffset() - 19
         val yOffset = 111 - 20
 
+        val frameSize = 48 to 112
+
         val text = Component.literal("+${xpReceived}XP").mccFont().withoutShadow()
         val font = minecraft().font
         val textWidth = font.width(text)
@@ -71,7 +73,7 @@ object DailyMeterXPAnimation {
                 draw { graphics, x0, y0, _ ->
                     introTexture.blit(graphics, x0 + xOffset, y0 - yOffset)
 
-                    48
+                    frameSize
                 }
             }
         }
@@ -85,7 +87,7 @@ object DailyMeterXPAnimation {
 
                     graphics.fillRoundedAll(x, y, textWidth + 3, 9, 0xFFFFFF.opaqueColor())
 
-                    48
+                    frameSize
                 }
             }
         }
@@ -107,7 +109,7 @@ object DailyMeterXPAnimation {
                 graphics.fillRoundedAll(x, y, textWidth + 3, 9, 0x000000 opacity 128)
                 graphics.text(font, text, x + 2, y, 0xffc211.opaqueColor())
 
-                48
+                frameSize
             }
         }
         drawWhiteBoxFrame()
@@ -133,7 +135,7 @@ object DailyMeterXPAnimation {
                 draw { graphics, x0, y0, _ ->
                     outroTexture.blit(graphics, x0 + xOffset, y0 - yOffset)
 
-                    48
+                    frameSize
                 }
             }
         }
