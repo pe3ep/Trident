@@ -19,10 +19,8 @@ object HiddenState : DojoHudState {
         when (nextState) {
             VanillaState -> {
                 // Hidden -> Vanilla
-            }
 
-            is CourseState -> {
-                // Hidden -> Course
+                // TODO: Add a smooth opening animation for the UI
             }
         }
 

@@ -68,6 +68,4 @@ class DojoHudStateMachine {
     }
 
     private var transitionTarget: DojoHudState = HiddenState
-
-    fun currentCourseElapsedMs(): Long? = getCourseState()?.elapsedMs()
 }

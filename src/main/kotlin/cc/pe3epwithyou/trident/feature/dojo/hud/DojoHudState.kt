@@ -5,6 +5,11 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 
 interface DojoHudState {
 
+    /**
+     * Renders this state when there's nothing to animate
+     *
+     * @return the width and height of the state as [Pair]
+     */
     fun renderIdle(
         graphics: GuiGraphicsExtractor,
         x0: Int,
@@ -12,15 +17,12 @@ interface DojoHudState {
     ): Pair<Int, Int>
 
     /**
-     * Define transitions FROM this state.
+     * Defines transitions FROM this state.
      *
-     * @return true if an animation was added to the animator.
+     * @return true if an animation was added to the [KeyframeAnimator].
      */
     fun transitionTo(
         nextState: DojoHudState,
         animator: KeyframeAnimator
     ): Boolean
 }
-
-internal fun currentTimeMs(): Long =
-    System.nanoTime() / 1_000_000L

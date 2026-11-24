@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.feature.dojo.hud.states
 
-import cc.pe3epwithyou.trident.feature.dojo.DojoInterface
 import cc.pe3epwithyou.trident.feature.dojo.DojoStorage
 import cc.pe3epwithyou.trident.feature.dojo.hud.DojoHudState
 import cc.pe3epwithyou.trident.utils.Resources
@@ -17,6 +16,7 @@ object VanillaState : DojoHudState {
     const val WIDTH = 130
     const val HEIGHT = 14
 
+    // TODO: Make each asset use Trident's textures and add an asset for "currently on this course"
     private object Assets {
 
         private fun bonusPointAsset(completedPoints: Int): Texture {
@@ -76,6 +76,7 @@ object VanillaState : DojoHudState {
         return WIDTH to HEIGHT
     }
 
+    // TODO: Add the completion type icon at the end
     internal fun renderStatic(
         graphics: GuiGraphicsExtractor,
         x0: Int,
@@ -91,13 +92,13 @@ object VanillaState : DojoHudState {
         graphics.fillRoundedAll(x0 + 80, y0, 10, HEIGHT, bgAlt)
         graphics.fillRoundedAll(x0 + 120, y0, 10, HEIGHT, bgAlt)
 
-        Assets.bonusPoints(DojoStorage.completedCount("B1"))
+        Assets.bonusPoints(DojoStorage.completedCourseCount("B1"))
             .blit(graphics, x0 + 1, y0)
 
-        Assets.bonusPoints(DojoStorage.completedCount("B2"))
+        Assets.bonusPoints(DojoStorage.completedCourseCount("B2"))
             .blit(graphics, x0 + 41, y0)
 
-        Assets.bonusPoints(DojoStorage.completedCount("B3"))
+        Assets.bonusPoints(DojoStorage.completedCourseCount("B3"))
             .blit(graphics, x0 + 81, y0)
 
         fun drawMainPath(x: Int, completed: Int) {
@@ -108,9 +109,9 @@ object VanillaState : DojoHudState {
             Assets.mainPoint(completed >= 3).blit(graphics, x + 18, y0 + 3)
         }
 
-        drawMainPath(x0 + 12, DojoStorage.completedCount("M1"))
-        drawMainPath(x0 + 52, DojoStorage.completedCount("M2"))
-        drawMainPath(x0 + 92, DojoStorage.completedCount("M3"))
+        drawMainPath(x0 + 12, DojoStorage.completedCourseCount("M1"))
+        drawMainPath(x0 + 52, DojoStorage.completedCourseCount("M2"))
+        drawMainPath(x0 + 92, DojoStorage.completedCourseCount("M3"))
     }
 
     override fun transitionTo(

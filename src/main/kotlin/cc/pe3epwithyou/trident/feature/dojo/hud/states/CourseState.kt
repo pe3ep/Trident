@@ -1,7 +1,8 @@
 package cc.pe3epwithyou.trident.feature.dojo.hud.states
 
+import cc.pe3epwithyou.trident.feature.dojo.DojoStorage
+import cc.pe3epwithyou.trident.feature.dojo.DojoTickCounter
 import cc.pe3epwithyou.trident.feature.dojo.hud.DojoHudState
-import cc.pe3epwithyou.trident.feature.dojo.hud.currentTimeMs
 import cc.pe3epwithyou.trident.feature.dojo.hud.states.CompletedCourseState.Companion.completedCourseStateFrame
 import cc.pe3epwithyou.trident.utils.animation.CubicBezier
 import cc.pe3epwithyou.trident.utils.animation.KeyframeAnimator
@@ -10,20 +11,17 @@ import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedBo
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.renderWithInverseScissor
 import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
-import kotlinx.serialization.Serializable
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 
-@Serializable
 data class CourseState(
     val courseId: String,
-    val startedAtMs: Long,
-    val bestAtStartMs: Long?,
-    val completedElapsedMs: Long? = null
+    val startedAtTick: Long,
+    var completedElapsedTicks: Long? = null
 ) : DojoHudState {
 
-    fun elapsedMs(now: Long = currentTimeMs()): Long {
-        return completedElapsedMs ?: (now - startedAtMs).coerceAtLeast(0L)
+    fun elapsedTicks(now: Long = DojoTickCounter.ticks): Long {
+        return completedElapsedTicks ?: (now - startedAtTick).coerceAtLeast(0L)
     }
 
     override fun renderIdle(
@@ -51,11 +49,13 @@ data class CourseState(
     ): Boolean {
         when (nextState) {
             HiddenState -> {
+                // Course -> Hidden
                 transitionTo(VanillaState, animator)
                 VanillaState.transitionTo(nextState, animator)
             }
 
             VanillaState -> {
+                // Course -> Vanilla
                 animator.frame(600) {
                     draw { graphics, x0, y0, frameProgress ->
                         VanillaState.renderStatic(graphics, x0, y0)
@@ -74,19 +74,16 @@ data class CourseState(
             }
 
             is CompletedCourseState -> {
+                // Course -> Completed
                 animator.frame(500) {
                     draw { graphics, x0, y0, frameProgress ->
                         VanillaState.renderStatic(graphics, x0, y0)
                         val y = y0 + VanillaState.HEIGHT
                         courseStateFrame(graphics, x0, y, 1f, this@CourseState)
 
-                        completedCourseStateFrame(graphics, x0, y0, frameProgress, true)
+                        completedCourseStateFrame(graphics, x0, y0, frameProgress, this@CourseState, true)
                     }
                 }
-            }
-
-            is CourseState -> {
-                // Course -> Course
             }
         }
 
@@ -126,7 +123,6 @@ data class CourseState(
                 graphics.disableScissor()
             }
 
-
             return VanillaState.WIDTH to height
         }
 
@@ -134,11 +130,16 @@ data class CourseState(
             graphics: GuiGraphicsExtractor, x0: Int, y: Int, opacity: Float, state: CourseState
         ) {
             val stage = Component.literal(state.courseId.uppercase()).mccFont().withoutShadow()
-            val time = Component.literal("56.125".uppercase()).mccFont().withoutShadow()
+
+            val time = Component.literal(
+                DojoStorage.formattedTime(state.elapsedTicks())
+            ).mccFont().withoutShadow()
+
+            // TODO: Use these colors for diff time
+            // 0xFF1212
+            // 0x1EFF00
             val stageDiff =
-                //            Component.literal("+12.345".uppercase()).withColor(0xFF1212).mccFont().withoutShadow()
-                Component.literal("".uppercase()).withColor(0xFFFFFF).mccFont().withoutShadow()
-            //            Component.literal("-0.670".uppercase()).withColor(0x1EFF00).mccFont().withoutShadow()
+                Component.literal("").withColor(0xFFFFFF).mccFont().withoutShadow()
 
             val font = minecraft().font
             val white = 0xFFFFFF.opacity((255 * opacity).toInt())

@@ -12,8 +12,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import kotlin.math.roundToInt
 
-data class CompletedCourseState(val prevState: CourseState,
-) : DojoHudState {
+data class CompletedCourseState(val prevState: CourseState) : DojoHudState {
     override fun renderIdle(
         graphics: GuiGraphicsExtractor, x0: Int, y0: Int
     ): Pair<Int, Int> {
@@ -21,7 +20,7 @@ data class CompletedCourseState(val prevState: CourseState,
         val x0 = (graphics.guiWidth() - VanillaState.WIDTH) / 2
         val y = y0 + VanillaState.HEIGHT
 
-        val bgColor = BONUS_COLOR.opaqueColor()
+        val bgColor = getColor(prevState).opaqueColor()
         graphics.fill(x0, y - 1, x0 + 1, y, bgColor)
         graphics.fill(x0 + VanillaState.WIDTH - 1, y - 1, x0 + VanillaState.WIDTH, y, bgColor)
         graphics.fillRoundedBottom(x0, y, VanillaState.WIDTH, 9, bgColor)
@@ -38,17 +37,19 @@ data class CompletedCourseState(val prevState: CourseState,
     ): Boolean {
         when (nextState) {
             is CourseState -> {
+                // Completed -> Course
                 animator.frame(500) {
                     draw { graphics, x0, y0, frameProgress ->
                         VanillaState.renderStatic(graphics, x0, y0)
                         val y = y0 + VanillaState.HEIGHT
                         CourseState.courseStateFrame(graphics, x0, y, 1f, nextState)
-                        completedCourseStateFrame(graphics, x0, y0, frameProgress)
+                        completedCourseStateFrame(graphics, x0, y0, frameProgress, prevState)
                     }
                 }
             }
 
             VanillaState -> {
+                // Completed -> Vanilla
                 animator.frame(600) {
                     draw { graphics, x0, y0, frameProgress ->
                         VanillaState.renderStatic(graphics, x0, y0)
@@ -71,7 +72,7 @@ data class CompletedCourseState(val prevState: CourseState,
                                 y - 1,
                                 VanillaState.WIDTH,
                                 height,
-                                BONUS_COLOR.opaqueColor()
+                                getColor(prevState).opaqueColor()
                             )
                         }
 
@@ -96,6 +97,7 @@ data class CompletedCourseState(val prevState: CourseState,
             }
 
             HiddenState -> {
+                // Completed -> Hidden
                 transitionTo(VanillaState, animator)
                 VanillaState.transitionTo(nextState, animator)
             }
@@ -108,6 +110,7 @@ data class CompletedCourseState(val prevState: CourseState,
         private const val BONUS_COLOR: Int = 0xc700ff
         private const val MAIN_COLOR: Int = 0x29974c
 
+        fun getColor(courseState: CourseState): Int = if (courseState.courseId.startsWith("M")) MAIN_COLOR else BONUS_COLOR
 
         // this is a mess XD
         fun completedCourseStateFrame(
@@ -115,12 +118,13 @@ data class CompletedCourseState(val prevState: CourseState,
             x0: Int,
             y0: Int,
             frameProgress: Float,
+            courseState: CourseState,
             isReversed: Boolean = false
         ): Pair<Int, Int> {
             val y = y0 + VanillaState.HEIGHT
 
             // Overlay
-            val bgColor = BONUS_COLOR.opaqueColor()
+            val bgColor = getColor(courseState).opaqueColor()
 
             val transformed = CubicBezier.SMOOTH.transform(frameProgress)
             val d = 1f - transformed
@@ -162,7 +166,7 @@ data class CompletedCourseState(val prevState: CourseState,
             graphics.disableScissor()
 
 
-            return VanillaState.WIDTH to (VanillaState.WIDTH + 9)
+            return VanillaState.WIDTH to (VanillaState.HEIGHT + 9)
         }
 
 

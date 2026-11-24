@@ -611,7 +611,7 @@ object TridentCommand {
                     literal("course_completed") {
                         executes {
                             delayAnimation {
-                                DojoInterface.onCourseCompleted("B1-1")
+                                DojoInterface.onCourseCompleted()
                             }
                         }
                     }

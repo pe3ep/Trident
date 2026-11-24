@@ -1,29 +1,22 @@
 package cc.pe3epwithyou.trident.feature.dojo
 
 import cc.pe3epwithyou.trident.feature.dojo.hud.DojoHudStateMachine
+import cc.pe3epwithyou.trident.feature.dojo.hud.states.CompletedCourseState
 import cc.pe3epwithyou.trident.feature.dojo.hud.states.CourseState
 import cc.pe3epwithyou.trident.feature.dojo.hud.states.HiddenState
 import cc.pe3epwithyou.trident.feature.dojo.hud.states.VanillaState
-import cc.pe3epwithyou.trident.feature.dojo.hud.currentTimeMs
-import cc.pe3epwithyou.trident.feature.dojo.hud.states.CompletedCourseState
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
+// TODO: Add support for Practice mode
 object DojoInterface {
-
     const val UI_OFFSET_Y = 8
-
     private val stateMachine = DojoHudStateMachine()
 
     @JvmStatic
     fun extractRenderState(
         graphics: GuiGraphicsExtractor,
         y0: Int
-    ): Pair<Int, Int> {
-        return stateMachine.render(
-            graphics,
-            y0 - UI_OFFSET_Y
-        )
-    }
+    ): Pair<Int, Int> = stateMachine.render(graphics, y0 - UI_OFFSET_Y)
 
     @JvmStatic
     fun onRunStarted() {
@@ -32,6 +25,7 @@ object DojoInterface {
 
     @JvmStatic
     fun onRunEnded() {
+        DojoStorage.clear()
         stateMachine.requestState(HiddenState)
     }
 
@@ -40,8 +34,9 @@ object DojoInterface {
         stateMachine.requestState(
             CourseState(
                 courseId = courseId,
-                startedAtMs = currentTimeMs(),
-                bestAtStartMs = DojoStorage.bestTimeMs(courseId)
+
+                // Start 30 ticks earlier because that's how much the course title is delayed by
+                startedAtTick = DojoTickCounter.ticks - 30
             )
         )
     }
@@ -52,17 +47,17 @@ object DojoInterface {
     }
 
     @JvmStatic
-    fun onCourseCompleted(courseId: String): Boolean {
-        val state = stateMachine.getCourseState() ?: return false
-        val time = state.elapsedMs()
+    fun onCourseCompleted(): Long? {
+        val state = stateMachine.getCourseState() ?: return null
 
-        DojoStorage.markCourseCompleted(courseId)
-        DojoStorage.recordBestTimeMs(courseId, time)
+        val elapsedTicks = state.elapsedTicks()
+        state.completedElapsedTicks = elapsedTicks
 
+        DojoStorage.recordCoursePersonalBest(state.courseId, elapsedTicks)
         stateMachine.requestState(CompletedCourseState(state))
 
-        return true
+        return elapsedTicks
     }
 
-    fun getCourseState() = stateMachine.getCourseState()
+    fun getCurrentCourseState() = stateMachine.getCourseState()
 }
