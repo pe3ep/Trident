@@ -23,6 +23,7 @@ interface DojoHudState {
      */
     fun transitionTo(
         nextState: DojoHudState,
-        animator: KeyframeAnimator
+        animator: KeyframeAnimator,
+        runAfterTransition: () -> Unit = {}
     ): Boolean
 }

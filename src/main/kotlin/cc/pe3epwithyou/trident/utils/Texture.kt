@@ -1,5 +1,6 @@
 package cc.pe3epwithyou.trident.utils
 
+import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.resources.Identifier
@@ -21,7 +22,7 @@ data class Texture(
      * @param y the Y coordinate to blit to (top edge)
      * @param scale a factor to scale the icon up by. Defaults to 1.
      */
-    fun blit(guiGraphics: GuiGraphicsExtractor, x: Int, y: Int, scale: Int = 1) {
+    fun blit(guiGraphics: GuiGraphicsExtractor, x: Int, y: Int, scale: Int = 1, alpha: Float = 1f) {
         guiGraphics.blit(
             RenderPipelines.GUI_TEXTURED,
             location,
@@ -34,7 +35,8 @@ data class Texture(
             textureWidth * scale,
             textureHeight * scale,
             textureWidth,
-            textureHeight
+            textureHeight,
+            0xFFFFFF.opacity((255 * alpha).toInt())
         )
     }
 }

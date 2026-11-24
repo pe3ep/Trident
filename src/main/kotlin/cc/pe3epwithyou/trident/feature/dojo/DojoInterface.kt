@@ -25,8 +25,9 @@ object DojoInterface {
 
     @JvmStatic
     fun onRunEnded() {
-        DojoStorage.clear()
-        stateMachine.requestState(HiddenState)
+        stateMachine.requestState(HiddenState) {
+            DojoStorage.clear()
+        }
     }
 
     @JvmStatic

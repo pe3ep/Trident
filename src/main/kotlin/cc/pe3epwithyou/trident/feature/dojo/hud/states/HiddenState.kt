@@ -14,7 +14,8 @@ object HiddenState : DojoHudState {
 
     override fun transitionTo(
         nextState: DojoHudState,
-        animator: KeyframeAnimator
+        animator: KeyframeAnimator,
+        runAfterTransition: () -> Unit
     ): Boolean {
         when (nextState) {
             VanillaState -> {

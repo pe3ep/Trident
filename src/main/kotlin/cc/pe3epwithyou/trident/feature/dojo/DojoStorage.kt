@@ -105,3 +105,10 @@ data class SavedCourseSplits(
     val sectionTimes: Map<String, List<Long>>,
     val expiresAt: Long
 )
+
+enum class CompletionType {
+    NONE,
+    STANDARD,
+    ADVANCED,
+    EXPERT;
+}

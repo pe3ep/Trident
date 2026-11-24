@@ -7,6 +7,7 @@ import cc.pe3epwithyou.trident.utils.extensions.ComponentExtensions.mccFont
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedBottom
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.renderWithInverseScissor
 import cc.pe3epwithyou.trident.utils.minecraft
+import com.noxcrew.sheeplib.util.opacity
 import com.noxcrew.sheeplib.util.opaqueColor
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
@@ -33,12 +34,15 @@ data class CompletedCourseState(val prevState: CourseState) : DojoHudState {
     }
 
     override fun transitionTo(
-        nextState: DojoHudState, animator: KeyframeAnimator
+        nextState: DojoHudState,
+        animator: KeyframeAnimator,
+        runAfterTransition: () -> Unit
     ): Boolean {
         when (nextState) {
             is CourseState -> {
                 // Completed -> Course
                 animator.frame(500) {
+                    onFrameEnd(runAfterTransition)
                     draw { graphics, x0, y0, frameProgress ->
                         VanillaState.renderStatic(graphics, x0, y0)
                         val y = y0 + VanillaState.HEIGHT
@@ -51,6 +55,7 @@ data class CompletedCourseState(val prevState: CourseState) : DojoHudState {
             VanillaState -> {
                 // Completed -> Vanilla
                 animator.frame(600) {
+                    onFrameEnd(runAfterTransition)
                     draw { graphics, x0, y0, frameProgress ->
                         VanillaState.renderStatic(graphics, x0, y0)
 
@@ -98,8 +103,13 @@ data class CompletedCourseState(val prevState: CourseState) : DojoHudState {
 
             HiddenState -> {
                 // Completed -> Hidden
-                transitionTo(VanillaState, animator)
-                VanillaState.transitionTo(nextState, animator)
+                animator.frame(300) {
+                    onFrameEnd(runAfterTransition)
+                    draw { graphics, x0, y0, frameProgress ->
+                        VanillaState.renderStatic(graphics, x0, y0, alpha = 1f - frameProgress)
+                        completedCourseStateFrame(graphics, x0, y0, 0f, prevState, alpha = 1f - frameProgress)
+                    }
+                }
             }
         }
 
@@ -119,12 +129,13 @@ data class CompletedCourseState(val prevState: CourseState) : DojoHudState {
             y0: Int,
             frameProgress: Float,
             courseState: CourseState,
-            isReversed: Boolean = false
+            isReversed: Boolean = false,
+            alpha: Float = 1f
         ): Pair<Int, Int> {
             val y = y0 + VanillaState.HEIGHT
 
             // Overlay
-            val bgColor = getColor(courseState).opaqueColor()
+            val bgColor = getColor(courseState).opacity((255 * alpha).toInt())
 
             val transformed = CubicBezier.SMOOTH.transform(frameProgress)
             val d = 1f - transformed
@@ -160,7 +171,7 @@ data class CompletedCourseState(val prevState: CourseState) : DojoHudState {
                 text,
                 x0 + VanillaState.WIDTH / 2,
                 y,
-                0xFFFFFF.opaqueColor()
+                0xFFFFFF.opacity((255 * alpha).toInt())
             )
 
             graphics.disableScissor()

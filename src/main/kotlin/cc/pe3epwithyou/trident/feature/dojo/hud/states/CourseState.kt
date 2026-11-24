@@ -45,18 +45,37 @@ data class CourseState(
     }
 
     override fun transitionTo(
-        nextState: DojoHudState, animator: KeyframeAnimator
+        nextState: DojoHudState,
+        animator: KeyframeAnimator,
+        runAfterTransition: () -> Unit
     ): Boolean {
         when (nextState) {
             HiddenState -> {
                 // Course -> Hidden
-                transitionTo(VanillaState, animator)
-                VanillaState.transitionTo(nextState, animator)
+                animator.frame(300) {
+                    onFrameEnd(runAfterTransition)
+                    draw { graphics, x0, y0, frameProgress ->
+                        VanillaState.renderStatic(graphics, x0, y0, alpha = 1f - frameProgress)
+
+                        val (_, courseStateHeight) = courseStateFrame(
+                            graphics,
+                            x0,
+                            y0 + VanillaState.HEIGHT,
+                            0f,
+                            this@CourseState,
+                            true,
+                            alpha = 1f - frameProgress
+                        )
+
+                        VanillaState.WIDTH to (VanillaState.HEIGHT + courseStateHeight)
+                    }
+                }
             }
 
             VanillaState -> {
                 // Course -> Vanilla
                 animator.frame(600) {
+                    onFrameEnd(runAfterTransition)
                     draw { graphics, x0, y0, frameProgress ->
                         VanillaState.renderStatic(graphics, x0, y0)
                         val (_, courseStateHeight) = courseStateFrame(
@@ -76,6 +95,7 @@ data class CourseState(
             is CompletedCourseState -> {
                 // Course -> Completed
                 animator.frame(500) {
+                    onFrameEnd(runAfterTransition)
                     draw { graphics, x0, y0, frameProgress ->
                         VanillaState.renderStatic(graphics, x0, y0)
                         val y = y0 + VanillaState.HEIGHT
@@ -97,9 +117,10 @@ data class CourseState(
             y: Int,
             frameProgress: Float,
             courseState: CourseState,
-            isInversed: Boolean = false
+            isInversed: Boolean = false,
+            alpha: Float = 1f
         ): Pair<Int, Int> {
-            val bgColor = 0x000000 opacity 77
+            val bgColor = 0x000000.opacity((77 * alpha).toInt())
             val eased = CubicBezier.SMOOTH.transform(frameProgress)
             val d = if (isInversed) 1f - eased else eased
 
@@ -111,12 +132,12 @@ data class CourseState(
                 graphics.enableScissor(x0, y, x0 + VanillaState.WIDTH, y + height)
 
                 val font = minecraft().font
-                val textOpacity = (frameProgress * 1.33f).coerceIn(0f, 1f)
+                val textOpacity = (if (isInversed) 1f - frameProgress else frameProgress).coerceIn(0f, 1f)
                 renderText(
                     graphics,
                     x0,
                     y + height - font.lineHeight - 1,
-                    if (isInversed) 1f - textOpacity else textOpacity,
+                    textOpacity * alpha,
                     courseState
                 )
 

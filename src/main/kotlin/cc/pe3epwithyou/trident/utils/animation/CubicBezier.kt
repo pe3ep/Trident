@@ -11,6 +11,7 @@ data class CubicBezier(
 
     fun transform(progress: Float): Float {
         val x = progress.coerceIn(0f, 1f)
+        if (progress == 1f || progress == 0f) return progress
 
         fun coordinate(t: Float, p1: Float, p2: Float): Float {
             val inverse = 1f - t

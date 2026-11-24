@@ -9,33 +9,34 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 class DojoHudStateMachine {
 
     private var currentState: DojoHudState = HiddenState
-    private var pendingState: DojoHudState? = null
+    private var pendingState: Pair<DojoHudState, () -> Unit>? = null
     private var isTransitioning = false
 
     private val animator = KeyframeAnimator()
 
-    fun requestState(nextState: DojoHudState) {
+    fun requestState(nextState: DojoHudState, runAfterTransition: () -> Unit = {}) {
         if (isTransitioning) {
-            pendingState = nextState
+            pendingState = nextState to runAfterTransition
             return
         }
 
-        beginTransition(nextState)
+        beginTransition(nextState, runAfterTransition)
     }
 
     fun getCourseState() = currentState as? CourseState
 
-    private fun beginTransition(nextState: DojoHudState) {
+    private fun beginTransition(nextState: DojoHudState, runAfterTransition: () -> Unit = {}) {
         if (currentState == nextState) return
 
         animator.clear()
-        val animated = currentState.transitionTo(nextState, animator)
+        val animated = currentState.transitionTo(nextState, animator, runAfterTransition)
 
         if (animated) {
             transitionTarget = nextState
             isTransitioning = true
         } else {
             currentState = nextState
+            runAfterTransition()
         }
     }
 
@@ -60,7 +61,7 @@ class DojoHudStateMachine {
             pendingState = null
 
             if (pending != null) {
-                beginTransition(pending)
+                beginTransition(pending.first, pending.second)
             }
         }
 
