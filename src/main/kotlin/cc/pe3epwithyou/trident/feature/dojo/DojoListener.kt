@@ -23,7 +23,7 @@ object DojoListener {
                 DojoInterface.onRunStarted()
             }
 
-            Regex("""\[.] Run ended!""").matchEntire(component.string)?.let {
+            Regex("""\[.] (Run ended!|You restarted the course!)""").matchEntire(component.string)?.let {
                 DojoInterface.onRunEnded()
             }
 
