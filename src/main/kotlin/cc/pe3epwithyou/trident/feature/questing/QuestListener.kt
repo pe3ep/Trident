@@ -24,7 +24,7 @@ object QuestListener {
     fun handleRefreshTasksItem(item: ItemStack) {
         if (!isWaitingRefresh) return
         if ("Quest" !in item.hoverName.string) return
-        val screen = (minecraft().gui.screen() ?: return) as ContainerScreen
+        val screen = (minecraft().gui.screen() as? ContainerScreen) ?: return
         withContainerCtx(screen) { findQuests(this) }
     }
 

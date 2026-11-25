@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack
 
 object Back {
     fun getPlayerBackItem(player: LivingEntity): ItemStack? {
-        val armorStand = (player.passengers.firstOrNull()?.passengers?.firstOrNull() ?: return null) as ArmorStand
+        val armorStand = player.passengers.firstOrNull()?.passengers?.firstOrNull() as? ArmorStand ?: return null
         return armorStand.getItemBySlot(EquipmentSlot.HEAD)
     }
 }

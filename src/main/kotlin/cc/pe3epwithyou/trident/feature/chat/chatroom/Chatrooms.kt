@@ -19,7 +19,6 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.inventory.Slot
 import java.util.function.Consumer
 
@@ -98,7 +97,7 @@ object Chatrooms {
                     chatroom.color =
                         ChatroomColor.entries.find { it.color == color } ?: chatroom.color
                 }
-                val mutable = component as MutableComponent
+                val mutable = component.copy()
                 // Add a click action to lock chatroom
                 mutable.style = mutable.style
                     .withClickEvent(ClickEvent.RunCommand("chatroomlock ${chatroom.id}"))

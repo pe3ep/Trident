@@ -27,7 +27,7 @@ class TabLong(
     ) {
         val font = minecraft().font
 
-        val title: MutableComponent = tab.title as MutableComponent
+        val title: MutableComponent = tab.title.copy()
 
         if (tab.isDetached) {
             title.withColor(0xFFFFFF opacity 128)
