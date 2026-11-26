@@ -23,11 +23,14 @@ object DojoListener {
                 DojoInterface.onRunStarted()
             }
 
-            Regex("""\[.] (Run ended!|You restarted the course!)""").matchEntire(component.string)?.let {
-                DojoInterface.onRunEnded()
-            }
+            Regex("""\[.] (Run ended!|You restarted the course!)""").matchEntire(component.string)
+                ?.let {
+                    DojoInterface.onRunEnded()
+                }
 
-            Regex("""\[.] You've been teleported back to your last intersection.""").matchEntire(component.string)?.let {
+            Regex("""\[.] You've been teleported back to your last intersection.""").matchEntire(
+                component.string
+            )?.let {
                 DojoInterface.onCourseLeft()
             }
 
@@ -43,17 +46,23 @@ object DojoListener {
             val state = DojoInterface.onCourseCompleted() ?: return component
             val elapsed = state.completedElapsedTicks ?: return component
 
-            val formattedTime = DojoStorage.formattedTime(elapsed, true)
+            val elapsedTime = Component.literal(
+                DojoStorage.formattedTime(elapsed, true)
+            ).withStyle(ChatFormatting.YELLOW)
+
+            val formattedTime =
+                if (state.bestTime != null) state.getFullStageDiff() else elapsedTime
+
             val modified = component.copy().popped().append(
-                Component.literal("  $formattedTime").withStyle(
-                    ChatFormatting.YELLOW)
+                Component.literal("  ").append(formattedTime)
             )
 
             // Leave the current course if user doesn't enter another one in 2.5s
             background().launch {
                 delay(2500.milliseconds)
-                val course = DojoInterface.getCurrentCourseState()
-                if (course == null) {
+                val run = DojoStorage.getCurrentRun() ?: return@launch
+
+                if (run.courseState == null) {
                     main {
                         DojoInterface.onCourseLeft()
                     }
@@ -63,9 +72,15 @@ object DojoListener {
             return modified
         }
 
-        Regex("""\[(\w\d-\d)] """).find(component.string)?.let { matchResult ->
+        Regex("""\[(\w\d-\d)] (.+)""").find(component.string)?.let { matchResult ->
             val courseId = matchResult.groupValues[1].takeIf { it.isNotBlank() } ?: return component
-            DojoInterface.onCourseStarted(courseId)
+            val courseName =
+                matchResult.groupValues[2].takeIf { it.isNotBlank() } ?: return component
+
+            val difficultyColor = component.siblings.lastOrNull()?.style?.color ?: return component
+            val courseDifficulty = CourseDifficulty.fromTextColor(difficultyColor)
+
+            DojoInterface.onCourseStarted(courseId, courseName, courseDifficulty)
         }
 
         return component
@@ -76,6 +91,7 @@ object DojoListener {
     fun checkTitle(component: Component) {
         if (MCCIState.game != Game.PARKOUR_WARRIOR_DOJO) return
         if (component.string == "Run Complete!") {
+            val state = DojoInterface.onCourseCompleted() ?: return
             DojoInterface.onRunEnded()
         }
     }

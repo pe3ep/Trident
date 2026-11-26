@@ -30,10 +30,13 @@ object ComponentExtensions {
         swatch: TridentFont.Swatch, type: SwatchType = SwatchType.BASE
     ): MutableComponent = this.withStyle(type.getStyle(swatch))
 
-    fun MutableComponent.offset(x: Float = 0f, y: Float = 0f): MutableComponent {
+    fun MutableComponent.offset(x: Float = 0f, y: Float = 0f, popped: Boolean = true): MutableComponent {
         val styledChild = this.copy().withStyle(Style.EMPTY.withInsertion(getOffset(x, y)))
-        val root = Component.literal("").resetStyle()
-        return root.append(styledChild)
+        if (popped) {
+            val root = Component.literal("").resetStyle()
+            return root.append(styledChild)
+        }
+        return styledChild
     }
 
     fun MutableComponent.popped(): MutableComponent {

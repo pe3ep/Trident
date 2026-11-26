@@ -1,13 +1,16 @@
 package cc.pe3epwithyou.trident.feature.dojo.hud.states
 
 import cc.pe3epwithyou.trident.feature.dojo.CompletionType
+import cc.pe3epwithyou.trident.feature.dojo.CourseDifficulty
 import cc.pe3epwithyou.trident.feature.dojo.DojoStorage
 import cc.pe3epwithyou.trident.feature.dojo.hud.DojoHudState
+import cc.pe3epwithyou.trident.mixin.accessors.HudAccessor
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
 import cc.pe3epwithyou.trident.utils.animation.CubicBezier
 import cc.pe3epwithyou.trident.utils.animation.KeyframeAnimator
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
+import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.math.roundToInt
@@ -126,8 +129,9 @@ object VanillaState : DojoHudState {
         Assets.bonusPoints(DojoStorage.completedCourseCount("B3"))
             .blit(graphics, x0 + 81, y0, alpha = alpha)
 
-        Assets.completion(CompletionType.NONE)
-            .blit(graphics, x0 + 121, y0 + 3, alpha = alpha)
+        val completionType = getCompletionType()
+        Assets.completion(completionType)
+            .blit(graphics, x0 + 121, y0 + 3, alpha = (if (completionType != CompletionType.NONE) alpha * 0.5f else alpha))
 
         fun drawMainPath(x: Int, completed: Int) {
             require(completed in 0..3)
@@ -140,6 +144,26 @@ object VanillaState : DojoHudState {
         drawMainPath(x0 + 12, DojoStorage.completedCourseCount("M1"))
         drawMainPath(x0 + 52, DojoStorage.completedCourseCount("M2"))
         drawMainPath(x0 + 92, DojoStorage.completedCourseCount("M3"))
+    }
+
+    fun getCompletionType(): CompletionType {
+        val currentRun = DojoStorage.getCurrentRun() ?: return CompletionType.NONE
+        val state = currentRun.courseState ?: return CompletionType.NONE
+
+        val actionBar = (minecraft().gui.hud as HudAccessor).overlayMessageString?.string ?: return CompletionType.NONE
+        if (state.courseId != "B4-1") return CompletionType.NONE
+        val elapsedRunMinutes = Regex("""(\d{2}):\d{2}\.\d{3}""").find(actionBar)?.groupValues[1]?.takeIf { it.isNotBlank() }?.toInt() ?: return CompletionType.NONE
+        if (elapsedRunMinutes >= 5) return CompletionType.STANDARD
+
+        return when (state.courseDifficulty) {
+            CourseDifficulty.EASY -> if (currentRun.collectedMedals + 1 >= 16) CompletionType.ADVANCED else CompletionType.STANDARD
+            CourseDifficulty.MEDIUM -> if (currentRun.collectedMedals + 2 >= 16) CompletionType.ADVANCED else CompletionType.STANDARD
+            CourseDifficulty.HARD -> when (currentRun.collectedMedals + 3) {
+                21 -> CompletionType.EXPERT
+                in 16..20 -> CompletionType.ADVANCED
+                else -> CompletionType.STANDARD
+            }
+        }
     }
 
     override fun transitionTo(

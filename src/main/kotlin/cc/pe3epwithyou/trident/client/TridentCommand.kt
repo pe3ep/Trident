@@ -12,6 +12,7 @@ import cc.pe3epwithyou.trident.feature.crafting.CraftingNotifications
 import cc.pe3epwithyou.trident.feature.discord.ActivityManager
 import cc.pe3epwithyou.trident.feature.discord.IPCManager
 import cc.pe3epwithyou.trident.feature.disguise.Disguise
+import cc.pe3epwithyou.trident.feature.dojo.CourseDifficulty
 import cc.pe3epwithyou.trident.feature.dojo.DojoInterface
 import cc.pe3epwithyou.trident.feature.exchange.ExchangeHandler
 import cc.pe3epwithyou.trident.feature.fishing.OverclockHandlers
@@ -604,7 +605,7 @@ object TridentCommand {
                     literal("course_started") {
                         executes {
                             delayAnimation {
-                                DojoInterface.onCourseStarted("B1-1")
+                                DojoInterface.onCourseStarted("B1-1", "Six Seven", CourseDifficulty.EASY)
                             }
                         }
                     }

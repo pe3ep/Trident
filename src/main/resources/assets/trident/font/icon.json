@@ -158,6 +158,15 @@
       "chars": [
         "\uE01F"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "trident:_font/split_down.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uE020"
+      ]
     }
   ]
 }

@@ -1,6 +1,5 @@
 package cc.pe3epwithyou.trident.feature.dojo.hud
 
-import cc.pe3epwithyou.trident.feature.dojo.hud.states.CourseState
 import cc.pe3epwithyou.trident.feature.dojo.hud.states.HiddenState
 import cc.pe3epwithyou.trident.feature.dojo.hud.states.VanillaState
 import cc.pe3epwithyou.trident.utils.animation.KeyframeAnimator
@@ -22,8 +21,6 @@ class DojoHudStateMachine {
 
         beginTransition(nextState, runAfterTransition)
     }
-
-    fun getCourseState() = currentState as? CourseState
 
     private fun beginTransition(nextState: DojoHudState, runAfterTransition: () -> Unit = {}) {
         if (currentState == nextState) return
