@@ -5,10 +5,12 @@ import cc.pe3epwithyou.trident.feature.dojo.DojoStorage
 import cc.pe3epwithyou.trident.feature.dojo.hud.DojoHudState
 import cc.pe3epwithyou.trident.utils.Resources
 import cc.pe3epwithyou.trident.utils.Texture
+import cc.pe3epwithyou.trident.utils.animation.CubicBezier
 import cc.pe3epwithyou.trident.utils.animation.KeyframeAnimator
 import cc.pe3epwithyou.trident.utils.extensions.GraphicsExtensions.fillRoundedAll
 import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import kotlin.math.roundToInt
 
 object VanillaState : DojoHudState {
 
@@ -149,11 +151,16 @@ object VanillaState : DojoHudState {
             HiddenState -> {
                 // Vanilla -> Hidden
                 animator.frame(300) {
-                    onFrameEnd(runAfterTransition)
                     draw { graphics, x0, y0, frameProgress ->
                         renderStatic(graphics, x0, y0, alpha = 1f - frameProgress)
 
                         WIDTH to HEIGHT
+                    }
+                }
+                animator.frame(300) {
+                    onFrameEnd(runAfterTransition)
+                    draw { _, _, _, frameProgress ->
+                        WIDTH to (HEIGHT * (1f - (CubicBezier.SMOOTH.transform(frameProgress)))).roundToInt()
                     }
                 }
             }

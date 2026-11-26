@@ -110,6 +110,10 @@ data class CompletedCourseState(val prevState: CourseState) : DojoHudState {
                         completedCourseStateFrame(graphics, x0, y0, 0f, prevState, alpha = 1f - frameProgress)
                     }
                 }
+                animator.frame(300) {
+                    onFrameEnd(runAfterTransition)
+                    draw { _, _, _, frameProgress -> VanillaState.WIDTH to ((VanillaState.HEIGHT + 9) * (1f - (CubicBezier.SMOOTH.transform(frameProgress)))).roundToInt() }
+                }
             }
         }
 

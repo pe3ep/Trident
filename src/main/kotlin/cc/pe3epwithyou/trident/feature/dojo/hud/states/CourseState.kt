@@ -13,6 +13,7 @@ import cc.pe3epwithyou.trident.utils.minecraft
 import com.noxcrew.sheeplib.util.opacity
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
+import kotlin.math.roundToInt
 
 data class CourseState(
     val courseId: String,
@@ -53,7 +54,6 @@ data class CourseState(
             HiddenState -> {
                 // Course -> Hidden
                 animator.frame(300) {
-                    onFrameEnd(runAfterTransition)
                     draw { graphics, x0, y0, frameProgress ->
                         VanillaState.renderStatic(graphics, x0, y0, alpha = 1f - frameProgress)
 
@@ -69,6 +69,11 @@ data class CourseState(
 
                         VanillaState.WIDTH to (VanillaState.HEIGHT + courseStateHeight)
                     }
+
+                }
+                animator.frame(300) {
+                    onFrameEnd(runAfterTransition)
+                    draw { _, _, _, frameProgress -> VanillaState.WIDTH to ((VanillaState.HEIGHT + 9) * (1f - (CubicBezier.SMOOTH.transform(frameProgress)))).roundToInt() }
                 }
             }
 
@@ -87,7 +92,7 @@ data class CourseState(
                             true
                         )
 
-                        VanillaState.WIDTH to (VanillaState.HEIGHT + courseStateHeight)
+                        VanillaState.WIDTH to (VanillaState.HEIGHT + courseStateHeight + 1)
                     }
                 }
             }
@@ -120,11 +125,11 @@ data class CourseState(
             isInversed: Boolean = false,
             alpha: Float = 1f
         ): Pair<Int, Int> {
-            val bgColor = 0x000000.opacity((77 * alpha).toInt())
+            val bgColor = 0x000000.opacity((77 * alpha).roundToInt())
             val eased = CubicBezier.SMOOTH.transform(frameProgress)
             val d = if (isInversed) 1f - eased else eased
 
-            val height = (10 * d + 0.5).toInt()
+            val height = (10 * d).roundToInt()
 
             graphics.renderWithInverseScissor(x0 + 1, y - 1, x0 + VanillaState.WIDTH - 1, y) {
                 graphics.fillRoundedBottom(x0, y - 1, VanillaState.WIDTH, height, bgColor)
@@ -144,7 +149,7 @@ data class CourseState(
                 graphics.disableScissor()
             }
 
-            return VanillaState.WIDTH to height
+            return VanillaState.WIDTH to height - 1
         }
 
         private fun renderText(
