@@ -48,7 +48,7 @@ object DojoInterface {
     }
 
     @JvmStatic
-    fun onCourseCompleted(): Long? {
+    fun onCourseCompleted(): CourseState? {
         val state = stateMachine.getCourseState() ?: return null
 
         val elapsedTicks = state.elapsedTicks()
@@ -57,7 +57,7 @@ object DojoInterface {
         DojoStorage.recordCoursePersonalBest(state.courseId, elapsedTicks)
         stateMachine.requestState(CompletedCourseState(state))
 
-        return elapsedTicks
+        return state
     }
 
     fun getCurrentCourseState() = stateMachine.getCourseState()

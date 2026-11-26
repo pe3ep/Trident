@@ -40,7 +40,7 @@ object DojoStorage {
         }
     }
 
-    fun formattedTime(ticks: Long): String {
+    fun formattedTime(ticks: Long, alwaysShowMinutes: Boolean = false): String {
         require(ticks >= 0L)
 
         val totalSeconds = ticks / 20L
@@ -48,10 +48,10 @@ object DojoStorage {
         val minutes = totalSeconds / 60L
         val seconds = totalSeconds % 60L
 
-        val time = if (minutes > 0L) {
-            "$minutes:${seconds.toString().padStart(2, '0')}"
+        val time = if (alwaysShowMinutes || minutes > 0L) {
+            "${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
         } else {
-            totalSeconds.toString()
+            totalSeconds.toString().padStart(2, '0')
         }
 
         return "$time.${milliseconds.toString().dropLast(1).padStart(2, '0')}"
